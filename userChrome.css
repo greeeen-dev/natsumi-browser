@@ -9,3 +9,23 @@ If you already have one, append the import statement below at the top of your us
 
 /* You can import additional mods above, or add your own userchrome CSS below. */
 @import "extras/extras.css";
+
+/* To have the urlbar be more vertically centered */
+/* TODO: Doesn't seem to work!
+#urlbar[open][zen-floating-urlbar='true'] {
+  top: calc(140vh - var(--zen-toolbar-height) * 1) !important;
+}
+*/
+
+/* To make urlbar bg transparent when pop out happens */
+/* TODO: Doesn't seem to work!
+#main-window {
+  -moz-appearance: none !important;
+}
+
+#urlbar:is([open]) > #urlbar-background {
+  background: rgba(0,0,0,0.5) !important;
+  backdrop-filter: blur(30px) !important;
+  outline: 1px rgba(0,0,0,0.3) !important;
+}
+*/
