@@ -1,0 +1,183 @@
+/* Floating toolbar on the RHS top corner */
+/* Taken from: https://github.com/Naezr/zen-browser-css/blob/main/HiddenToolbar/shy-toolbar.css */
+/*------------------------------------
+ * toolbar on side
+ */
+
+.titlebar-buttonbox-container{overflow: hidden !important;}
+#zen-tabbox-wrapper{z-index: 1 !important;}
+#zen-appcontent-navbar-container{
+  z-index: 4 !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+}
+
+#PersonalToolbar{
+  /* make visible */
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: all !important;
+
+  /* hide not needed */
+  toolbartabstop{
+    display: none !important;
+  }
+
+  /* vertical orientation */
+  display: flex !important;
+  flex-direction: column !important;
+
+  /* size */
+  height: fit-content !important;
+  max-height: calc(100vh - var(--zen-element-separation) * 4) !important;
+  min-height: unset !important;
+  width: 42px !important;
+
+  padding-inline: 0px !important;
+  padding-block: 2px 0 !important;
+
+  /* buttons size */
+  & > *{margin: 0 !important;}
+
+  /* buttons icons size */
+  toolbarbutton > :is(.toolbarbutton-badge-stack, .toolbarbutton-icon){
+    margin: 2px !important;
+    padding: 8px !important;
+    height: 32px !important;
+    width: 32px !important;
+    border-radius: 10px !important;
+  }
+
+  /* firefox account button */
+  #fxa-toolbar-menu-button
+  .toolbarbutton-badge-stack{
+    padding: 6px !important;
+  }
+
+  /* extension buttons */
+  toolbaritem > toolbarbutton{
+    margin-inline: 4px !important;
+  }
+
+  /* background */
+  background: color-mix(in srgb, var(--zen-colors-tertiary) 70%, transparent 30%) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid var(--arrowpanel-border-color) !important;
+  border-radius: var(--zen-border-radius) !important;
+
+  /* position */
+  position: fixed !important;
+
+  top: 0 !important;
+  @media not (-moz-bool-pref: "zen.view.use-single-toolbar")
+  {top: var(--zen-toolbar-height) !important;}
+
+  @media not (-moz-bool-pref: "zen.tabs.vertical.right-side")
+  {right: 0 !important;}
+  @media (-moz-bool-pref: "zen.tabs.vertical.right-side")
+  {left: 0 !important;}
+
+  /* hide & show on hover */
+  transition: margin .4s ease !important;
+  margin-top: calc(var(--zen-element-separation) * 1.5) !important;
+  @media not (-moz-bool-pref: "zen.tabs.vertical.right-side"){
+    margin-right: -42px !important;
+    &:is( :hover, :has([open]) )
+    {margin-right: calc(var(--zen-element-separation) * 1.5) !important;}
+  }
+  @media (-moz-bool-pref: "zen.tabs.vertical.right-side"){
+    margin-left: -42px !important;
+    &:is( :hover, :has([open]) )
+    {margin-left: calc(var(--zen-element-separation) * 1.5) !important;}
+  }
+
+  /* hover hitbox */
+  overflow-x: visible !important;
+  &::after{
+    content: '';
+    top: 0;
+    position: absolute;
+    width: 100px;
+    height: 100%;
+    z-index: -1;
+    @media not (-moz-bool-pref: "zen.tabs.vertical.right-side"){
+      margin-left: calc(-5px - var(--zen-element-separation));
+      left: 0;
+    }
+    @media (-moz-bool-pref: "zen.tabs.vertical.right-side"){
+      margin-right: calc(-5px - var(--zen-element-separation));
+      right: 0;
+    }
+  }
+
+  /* 3 dots indicator */
+  &:is( :hover, :has([open]) )::before{opacity: 0;}
+  &::before{
+    content: '';
+    opacity: .5;
+    top: 0;
+    position: absolute;
+    padding-left: 0px;
+    width: 15px;
+    height: 15px;
+    transform: rotate(90deg);
+    background-image: url(chrome://browser/skin/zen-icons/menu.svg);
+    transition: all .15s ease;
+
+    @media (prefers-color-scheme: dark)
+    {filter: invert()}
+
+    @media not (-moz-bool-pref: "zen.tabs.vertical.right-side"){
+      margin-left: calc(-6px - var(--zen-element-separation));
+      left: 0;
+    }
+    @media (-moz-bool-pref: "zen.tabs.vertical.right-side"){
+      margin-right: calc(-6px - var(--zen-element-separation));
+      right: 0;
+    }
+  }
+}
+
+/* fix fullscreen */
+:root[inDOMFullscreen] {
+  #navigator-toolbox,
+  #zen-appcontent-navbar-container
+  {display: none !important;}
+}
+
+/* customizing mode */
+:root[customizing]{
+  #PersonalToolbar{
+    margin: 5px !important;
+    height: calc(50vh - 10px) !important;
+    min-width: unset !important;
+
+    border-radius: 15px !important;
+    background: transparent !important;
+  }
+  #zen-appcontent-wrapper{
+    @media not (-moz-bool-pref: "zen.tabs.vertical.right-side")
+    {margin-right: 50px !important;}
+    @media (-moz-bool-pref: "zen.tabs.vertical.right-side")
+    {margin-left: 50px !important;}
+  }
+}
+
+/* hide topbar */
+:root[zen-single-toolbar="true"]{
+  #zen-appcontent-navbar-container{
+    transition: height 0.15s ease, opacity 0.1s ease-out, max-height 0.15s ease !important;
+    max-height: var(--zen-element-separation) !important;
+    overflow: hidden !important;
+    .titlebar-buttonbox-container{
+      opacity: 0 !important;
+      transition: opacity 0.1s ease-out !important;
+    }
+  }
+  #zen-appcontent-navbar-container[zen-has-hover]:hover:not(
+    :has(#PersonalToolbar:is( :hover, :has([open]) ))
+  ) {
+    max-height: var(--zen-toolbar-height) !important;
+    .titlebar-buttonbox-container{opacity: 1 !important;}
+  }
+}

@@ -8,3 +8,4 @@ If you already have one, append the import statement below at the top of your us
 @import "natsumi/natsumi.css";
 
 /* You can import additional mods above, or add your own userchrome CSS below. */
+@import "extras/extras.css";

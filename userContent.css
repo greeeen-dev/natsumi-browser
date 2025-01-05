@@ -1,1 +1,146 @@
 @import "natsumi-pages/natsumi-pages.css";
+
+@-moz-document url(about:home), url(about:newtab), url(about:privatebrowsing), url(chrome://browser/content/browser.xul) {
+  body {
+    width: 100%;
+    height: 100vh;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  body::before {
+    content: "";
+    position: absolute;
+    height: 130vh;
+    width: auto;
+    aspect-ratio: 1/1 !important;
+    transform: translate(-50%, -50%);
+    top:100%;
+    left:100%;
+    background-color: #ffffff; /* Color fill */
+    mask-image: url('data:image/svg+xml,<%3Fxml version="1.0" encoding="utf-8"%3F><!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:%23FFFFFF;}</style><path class="st0" d="M16,22.2c3.4,0,6.2-2.8,6.2-6.2c0-3.4-2.8-6.2-6.2-6.2c-3.4,0-6.2,2.8-6.2,6.2C9.8,19.4,12.6,22.2,16,22.2z M20.9,16c0,2.7-2.2,4.9-4.9,4.9s-4.9-2.2-4.9-4.9s2.2-4.9,4.9-4.9S20.9,13.3,20.9,16z"/><path class="st0" d="M26.7,16c0,5.9-4.8,10.7-10.7,10.7S5.3,21.9,5.3,16S10.1,5.3,16,5.3S26.7,10.1,26.7,16z M16,24.6c4.8,0,8.6-3.9,8.6-8.6S20.8,7.4,16,7.4S7.4,11.2,7.4,16S11.2,24.6,16,24.6z"/><path class="st0" d="M32,16c0,8.8-7.2,16-16,16S0,24.8,0,16S7.2,0,16,0S32,7.2,32,16z M16,29.1c7.3,0,13.1-5.9,13.1-13.1S23.3,2.9,16,2.9S2.9,8.7,2.9,16S8.7,29.1,16,29.1z"/></svg>');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    opacity: 5% !important;
+  }
+}
+
+@-moz-document url(about:home), url(about:newtab){
+  :root {
+    --newtab-background-color: rgba(43, 42, 51, 0.0) !important;
+  }
+
+  .search-wrapper {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top:50% !important;
+    left: 50% !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    aspect-ratio: 1/1 !important;
+    /*For Stable*/
+    background-image: url('data:image/svg+xml,<%3Fxml version="1.0" encoding="utf-8"%3F><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:%23f46e51; opacity:90%}</style><path class="st0" d="M16,22.2c3.4,0,6.2-2.8,6.2-6.2c0-3.4-2.8-6.2-6.2-6.2c-3.4,0-6.2,2.8-6.2,6.2C9.8,19.4,12.6,22.2,16,22.2z M20.9,16c0,2.7-2.2,4.9-4.9,4.9s-4.9-2.2-4.9-4.9s2.2-4.9,4.9-4.9S20.9,13.3,20.9,16z"/><path class="st0" d="M26.7,16c0,5.9-4.8,10.7-10.7,10.7S5.3,21.9,5.3,16S10.1,5.3,16,5.3S26.7,10.1,26.7,16z M16,24.6c4.8,0,8.6-3.9,8.6-8.6S20.8,7.4,16,7.4S7.4,11.2,7.4,16S11.2,24.6,16,24.6z"/><path class="st0" d="M32,16c0,8.8-7.2,16-16,16S0,24.8,0,16S7.2,0,16,0S32,7.2,32,16z M16,29.1c7.3,0,13.1-5.9,13.1-13.1S23.3,2.9,16,2.9S2.9,8.7,2.9,16S8.7,29.1,16,29.1z"/></svg>') !important ;
+
+    /*For twilight
+    background-image: url('data:image/svg+xml,<%3Fxml version="1.0" encoding="utf-8"%3F><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:%237493f1; opacity:90%}</style><path class="st0" d="M16,22.2c3.4,0,6.2-2.8,6.2-6.2c0-3.4-2.8-6.2-6.2-6.2c-3.4,0-6.2,2.8-6.2,6.2C9.8,19.4,12.6,22.2,16,22.2z M20.9,16c0,2.7-2.2,4.9-4.9,4.9s-4.9-2.2-4.9-4.9s2.2-4.9,4.9-4.9S20.9,13.3,20.9,16z"/><path class="st0" d="M26.7,16c0,5.9-4.8,10.7-10.7,10.7S5.3,21.9,5.3,16S10.1,5.3,16,5.3S26.7,10.1,26.7,16z M16,24.6c4.8,0,8.6-3.9,8.6-8.6S20.8,7.4,16,7.4S7.4,11.2,7.4,16S11.2,24.6,16,24.6z"/><path class="st0" d="M32,16c0,8.8-7.2,16-16,16S0,24.8,0,16S7.2,0,16,0S32,7.2,32,16z M16,29.1c7.3,0,13.1-5.9,13.1-13.1S23.3,2.9,16,2.9S2.9,8.7,2.9,16S8.7,29.1,16,29.1z"/></svg>') !important ;
+    */
+    background-position: center;
+    background-size: 80px !important;
+    width: fit-content !important;
+    height: 80px !important;
+  }
+
+  .wordmark {
+    opacity: 80%;
+    background-size: 172px !important;
+    width: 172px !important;
+    height: 81px !important;
+  }
+
+  .search-handoff-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-evenly;
+    background-color: rgba(128, 128, 128, 0.2) !important;
+    backdrop-filter: blur(20px) !important;
+  }
+
+  .search-inner-wrapper .fake-editable {
+    opacity: 10% !important;
+    border:1px solid white !important;
+  }
+
+  .search-inner-wrapper {
+    background-color: transparent !important;
+    backdrop-filter: blur(10px) !important;
+    display: none !important;
+  }
+  .search-wrapper .search-inner-wrapper {
+    border-radius: 10px !important;
+  }
+
+  .logo-and-wordmark {
+    margin-block-end: 14px !important;
+  }
+}
+
+@-moz-document url(about:privatebrowsing){
+  .info {
+    display:none !important;
+  }
+
+  .search-wrapper {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top:50% !important;
+    left: 50% !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wordmark {
+    opacity: 80%
+  }
+
+  .search-handoff-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-evenly;
+    background-color: rgba(128, 128, 128, 0.2) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 8px !important;
+  }
+
+  .focused:not(.disabled) {
+    border:1px solid #b069db !important;
+    box-shadow: 0 0 0 1px #b069db, 0 0 0 4px rgba(109, 10, 225, 0.3) !important;
+  }
+
+  .search-inner-wrapper .fake-editable {
+    background-color: transparent !important;
+    border:1px solid white !important;
+    border-radius: 200px !important;
+  }
+
+  .search-inner-wrapper {
+    background-color: transparent !important;
+    backdrop-filter: blur(10px) !important;
+    padding: unset !important;
+    border-radius: 8px !important;
+  }
+  .search-wrapper .search-inner-wrapper {
+    border-radius: 10px !important;
+  }
+
+  .logo-and-wordmark {
+    margin-block-end: 14px !important;
+  }
+
+  .fake-textbox {
+    color:white !important;
+    opacity: 100% !important;
+  }
+}

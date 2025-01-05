@@ -199,6 +199,9 @@ and delay, change the variables in the config.css file.
 ### Experiments
 - `natsumi.experiments.custom-font`: Sets a custom font set in natsumi-config.css.
 
+### Floating toolbar
+- `extras.floating-toolbar`: Adds a floating toolbar on the RHS top.
+
 ## FAQs
 ### "Can I use other userchromes with Natsumi?"
 Sure! Just paste it right below the Natsumi Browser loader (userChrome.css) and you can use your own
