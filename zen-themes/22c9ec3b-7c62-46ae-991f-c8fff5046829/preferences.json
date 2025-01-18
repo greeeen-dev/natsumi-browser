@@ -1,0 +1,120 @@
+[
+    {
+        "property": "uc.theme.bold-text-enable.enabled",
+        "label": "Make numbers Bold",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.theme.font_size",
+        "label": "Select the Size for tab numbers",
+        "type": "dropdown",
+        "defaultValue": "Medium",
+        "options": [
+            {
+                "label": "Extra Small",
+                "value": "XSmall"
+            },
+            {
+                "label": "Small",
+                "value": "Small"
+            },
+            {
+                "label": "Medium (default)",
+                "value": "Medium"
+            },
+            {
+                "label": "Large",
+                "value": "Large"
+            },
+            {
+                "label": "Extra Large",
+                "value": "XLarge"
+            }
+        ]
+    },
+    {
+        "property": "uc.theme.background_shape",
+        "label": "Select the Shape for the tab number background",
+        "type": "dropdown",
+        "defaultValue": "ModeratelyRounded",
+        "options": [
+            {
+                "label": "Square",
+                "value": "Square"
+            },
+            {
+                "label": "Slightly Rounded Square",
+                "value": "SlightlyRounded"
+            },
+            {
+                "label": "Moderately Rounded Square (default)",
+                "value": "ModeratelyRounded"
+            },
+            {
+                "label": "Fully Rounded Square",
+                "value": "FullyRounded"
+            },
+            {
+                "label": "Perfect Circle",
+                "value": "Circle"
+            }
+        ]
+    },
+    {
+        "property": "uc.theme.custom_color_enabled",
+        "label": "(!) Press to enable custom colors (!)",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.theme.number_color",
+        "label": "Hex Code of Custom Text Color (first enable the above checkbox)",
+        "placeholder": "eg. #ff0000",
+        "type": "string",
+        "disabledOn": [
+            "!uc.theme.custom_color_enabled"
+        ]
+    },
+    {
+        "property": "uc.theme.number_background_color",
+        "label": "Hex Code of Custom Background Color (first enable the above checkbox)",
+        "placeholder": "eg. #ff0000",
+        "type": "string",
+        "disabledOn": [
+            "!uc.theme.custom_color_enabled"
+        ]
+    },
+    {
+        "property": "uc.theme.compact_side",
+        "label": "Side of the tab numbers when tabs are Compact",
+        "type": "dropdown",
+        "defaultValue": "Right",
+        "options": [
+            {
+                "label": "Right (default)",
+                "value": "Right"
+            },
+            {
+                "label": "Left",
+                "value": "Left"
+            }
+        ]
+    },
+    {
+        "property": "uc.theme.expanded_side",
+        "label": "Side of the tab numbers when tabs are Expanded",
+        "type": "dropdown",
+        "defaultValue": "Right",
+        "options": [
+            {
+                "label": "Right (default)",
+                "value": "Right"
+            },
+            {
+                "label": "Left",
+                "value": "Left"
+            }
+        ]
+    }
+]
