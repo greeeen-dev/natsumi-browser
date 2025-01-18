@@ -1,0 +1,50 @@
+[
+    {
+        "property": "theme.customstatusbar.radius",
+        "label": "Round the corners. (default: 1000px)",
+        "type": "string",
+        "defaultValue": "1000px",
+        "placeholder": "1000px",
+        "disabledOn": []
+    },
+    {
+        "property": "theme.customstatusbar.margin",
+        "label": "Set the margin. (default: 8px)",
+        "type": "string",
+        "defaultValue": "8px",
+        "placeholder": "8px",
+        "disabledOn": []
+    },
+    {
+        "property": "theme.customstatusbar.border_thickness",
+        "label": "Set the thickness of the border. '2px'",
+        "type": "string",
+        "defaultValue": "2px",
+        "placeholder": "2px",
+        "disabledOn": []
+    },
+    {
+        "property": "theme.customstatusbar.color_border",
+        "label": "Set the border color. '#0e03ad' or 'var(--zen-colors-border)'",
+        "type": "string",
+        "defaultValue": "var(--zen-colors-border)",
+        "placeholder": "var(--zen-colors-border)",
+        "disabledOn": []
+    },
+    {
+        "property": "theme.customstatusbar.color_background",
+        "label": "Set the background color. '#a403ad' or 'var(--zen-colors-tertiary)'",
+        "type": "string",
+        "defaultValue": "var(--zen-colors-tertiary)",
+        "placeholder": "var(--zen-colors-tertiary)",
+        "disabledOn": []
+    },
+    {
+        "property": "theme.customstatusbar.text_color",
+        "label": "Set the text color. '#a403ad' or 'var(--lwt-text-color)'",
+        "type": "string",
+        "defaultValue": "var(--lwt-text-color)",
+        "placeholder": "var(--lwt-text-color)",
+        "disabledOn": []
+    }
+]

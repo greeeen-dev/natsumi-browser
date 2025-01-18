@@ -1,0 +1,68 @@
+[
+    {
+        "property": "uc.minimal-sidebar.hide-alltabs-button.enabled",
+        "label": "Hide the alltabs button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-newtab-button.enabled",
+        "label": "Hide the newtab button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-profile-button.enabled",
+        "label": "Hide the profile button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-expand-sidebar-button.enabled",
+        "label": "Hide the expand sidebar button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-bookmark-button.enabled",
+        "label": "Hide the bookmarks button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-history-button.enabled",
+        "label": "Hide the history button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-preferences-button.enabled",
+        "label": "Hide the preferences button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-sidepanel-button.enabled",
+        "label": "Hide the sidepanel button",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.compact-spacing.enabled",
+        "label": "Make padding above the remaining buttons smaller",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.hide-sidebar.enabled",
+        "label": "Hide all sidebar buttons",
+        "type": "checkbox",
+        "disabledOn": []
+    },
+    {
+        "property": "uc.minimal-sidebar.fix-sidebar-width.enabled",
+        "label": "Fix sidebar width when you hide all buttons and workspaces",
+        "type": "checkbox",
+        "disabledOn": []
+    }
+]
