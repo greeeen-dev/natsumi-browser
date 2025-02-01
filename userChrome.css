@@ -17,6 +17,13 @@ If you already have one, append the import statement below at the top of your us
 }
 */
 
+/* To have the urlbar be more vertically centered */
+/* TODO: Doesn't seem to work!
+#urlbar[open][zen-floating-urlbar='true'] {
+  top: calc(140vh - var(--zen-toolbar-height) * 1) !important;
+}
+*/
+
 /* To make urlbar bg transparent when pop out happens */
 /* TODO: Doesn't seem to work!
 #main-window {
