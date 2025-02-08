@@ -1,0 +1,49 @@
+/* Sidebar expand on hover - might be removable once FF supports it natively */
+/* Main sidebar styling */
+#sidebar-main {
+  width: 50px !important; /* Collapsed width */
+  transition: width 0.075s ease, margin-right 0.075s ease !important; /* Animation speed */
+  z-index: 4 !important; /* Ensure it overlays other elements */
+  margin-right: 0px !important;
+  background: none !important; /* No background in collapsed state */
+}
+
+/* When hovering over the sidebar */
+#sidebar-main:hover {
+  width: 250px !important; /* Expanded width */
+  margin-right: -200px !important; /* Adjust for layout shift */
+  background: #191919 !important; /* Background color */
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.4) !important; /* Optional shadow for depth */
+}
+
+/* Optional styling for smoother transitions */
+#sidebar-main:hover .tabbrowser-tab {
+  width: auto !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Column layout for pin tabs */
+#vertical-pinned-tabs-container {
+	grid-template-columns: none !important;
+}
+
+/* Show pin tabs separator in expanded state */
+#tabbrowser-tabs[expanded] > #vertical-pinned-tabs-container-separator {
+  display: block !important;
+}
+
+/* Hide pin tabs separator in expanded state with no pin tabs */
+#vertical-pinned-tabs-container:empty + #vertical-pinned-tabs-container-separator {
+  display: none !important;
+}
+
+/* Hide close button in collapsed state */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-close-button {
+  display: none !important;
+}
+
+/* Uniform tabs padding */
+#tabbrowser-tabs[orient="vertical"] .tabbrowser-tab {
+	padding-block: 0px !important;
+}
