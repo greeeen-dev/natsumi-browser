@@ -288,12 +288,9 @@ their author(s) have been provided above the used code.
   }
 }
 
-#tabbrowser-tabs {
-  overflow: visible !important;
-
-  &:has(> #zen-browser-tabs-wrapper[style*="translateX"]:not([style*="translateX(0px)"])),
-  &:has(> #zen-current-workspace-indicator[style*="translateX"]:not([style*="translateX(0px)"])){
-    overflow: hidden !important;
+.zen-workspace-tabs-section:is([style*="translateX(100%)"], [style*="translateX(-100%)"]) {
+  .vertical-pinned-tabs-container-separator {
+    opacity: 0 !important;
   }
 }
 
@@ -592,7 +589,7 @@ their author(s) have been provided above the used code.
   padding: 8px 10px !important;
   background-color: var(--natsumi-glass-background) !important;
   border: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.3)) !important;
-  box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), light-dark(black, white)) !important;
+  box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
   transition: opacity 0.2s ease, top 0.2s ease !important;
   backdrop-filter: blur(10px) !important;
   opacity: 0;

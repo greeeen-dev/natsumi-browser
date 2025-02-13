@@ -36,12 +36,16 @@ their author(s) have been provided above the used code.
       --natsumi-primary-color: #aac7ff;
       --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 50%, black 50%);
       --natsumi-colors-secondary: color-mix(in srgb, var(--natsumi-colors-primary) 20%, white 80%);
-      --natsumi-glass-shadow-background: color-mix(in srgb, var(--natsumi-colors-primary) 75%, transparent);
+      --natsumi-glass-shadow-color: color-mix(in srgb, var(--natsumi-colors-primary) 75%, black);
 
       @media (prefers-color-scheme: dark) {
         --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 20%, #1d1d1d 80%);
         --natsumi-colors-secondary: color-mix(in srgb, var(--natsumi-primary-color) 30%, #1d1d1d 70%);
-        --natsumi-glass-shadow-background: color-mix(in srgb, var(--natsumi-colors-secondary) 75%, transparent);
+        --natsumi-glass-shadow-color: color-mix(in srgb, var(--natsumi-colors-secondary) 75%, white);
+
+        @media (-moz-bool-pref: "natsumi.theme.force-dark-shadows") {
+          --natsumi-glass-shadow-color: color-mix(in srgb, var(--natsumi-colors-secondary) 75%, black);
+        }
       }
 
       --toolbarbutton-hover-background: color-mix(in srgb, light-dark(#1d1d1d, #ebebeb) 10%, transparent 90%);
@@ -297,7 +301,7 @@ their author(s) have been provided above the used code.
 
         &[selected] {
           background-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-secondary)) !important;
-          box-shadow: 0 0 5px var(--natsumi-glass-shadow-background) !important;
+          box-shadow: 0 0 5px var(--natsumi-glass-shadow-color) !important;
 
           @media (prefers-color-scheme: light) {
             .downloadTarget {

@@ -90,11 +90,10 @@ their author(s) have been provided above the used code.
       visibility: visible !important;
       animation: none !important;
       pointer-events: none !important;
-      box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+      box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
 
       @media (prefers-color-scheme: dark) {
         border-color: rgba(235, 235, 235, 0.3) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
       }
 
       .close-button-wrapper {
@@ -186,11 +185,10 @@ their author(s) have been provided above the used code.
         background-color: var(--natsumi-glass-background) !important;
         backdrop-filter: blur(10px) !important;
         border: 1px solid rgba(20, 20, 20, 0.2) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+        box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
 
         @media (prefers-color-scheme: dark) {
           border-color: rgba(235, 235, 235, 0.3) !important;
-          box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
         }
 
         .weatherButtonContextMenuWrapper::after {
@@ -258,13 +256,12 @@ their author(s) have been provided above the used code.
       &:hover {
         padding: 19px 16px 3px !important;
         background-color: var(--natsumi-glass-background) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+        box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
         backdrop-filter: blur(10px) !important;
         border: 1px solid rgba(20, 20, 20, 0.2) !important;
 
         @media (prefers-color-scheme: dark) {
           border-color: rgba(235, 235, 235, 0.3) !important;
-          box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
         }
 
         .tile, .top-site-icon {
@@ -280,13 +277,12 @@ their author(s) have been provided above the used code.
     .search-handoff-button {
       border-radius: 50px !important;
       background-color: var(--natsumi-glass-background) !important;
-      box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+      box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
       backdrop-filter: blur(10px) !important;
       border: 1px solid rgba(20, 20, 20, 0.2) !important;
 
       @media (prefers-color-scheme: dark) {
         border-color: rgba(235, 235, 235, 0.3) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
       }
     }
 
@@ -303,7 +299,7 @@ their author(s) have been provided above the used code.
       border-radius: 8px !important;
       backdrop-filter: blur(10px) !important;
       background: var(--natsumi-glass-background) !important;
-      box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), light-dark(black, white)) !important;
+      box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
       border: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.3)) !important;
 
       .modal-message {
@@ -385,13 +381,12 @@ their author(s) have been provided above the used code.
 
     .context-menu {
       background-color: var(--natsumi-glass-background) !important;
-      box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+      box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
       backdrop-filter: blur(10px) !important;
       border: 1px solid rgba(20, 20, 20, 0.2) !important;
 
       @media (prefers-color-scheme: dark) {
         border-color: rgba(235, 235, 235, 0.3) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
       }
 
       .context-menu-list {

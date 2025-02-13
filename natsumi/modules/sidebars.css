@@ -110,7 +110,7 @@ their author(s) have been provided above the used code.
 
       /*noinspection CssInvalidFunction*/
       @media not (-moz-bool-pref: "natsumi.theme.disable-glass-shadow") {
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), light-dark(black, white)) !important;
+        box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
       }
 
       /*noinspection CssInvalidFunction*/
@@ -146,7 +146,7 @@ their author(s) have been provided above the used code.
 /* ==== Tabs sidebar tweaks ==== */
 
 @media (-moz-bool-pref: "natsumi.sidebar.tabs-glass-effect") {
-  @media (-moz-bool-pref: "zen.view.compact") {
+  :root[zen-compact-mode="true"]:not([customizing]) {
     /*noinspection CssInvalidFunction*/
     @media (-moz-bool-pref: "zen.view.compact.hide-tabbar") {
       #navigator-toolbox:not([animate]) {
@@ -157,7 +157,7 @@ their author(s) have been provided above the used code.
 
           /*noinspection CssInvalidFunction*/
           @media not (-moz-bool-pref: "natsumi.theme.disable-glass-shadow") {
-            box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), light-dark(black, white)) !important;
+            box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
           }
         }
 

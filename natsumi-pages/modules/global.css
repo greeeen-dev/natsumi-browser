@@ -33,11 +33,7 @@ their author(s) have been provided above the used code.
   /*noinspection CssInvalidFunction*/
   @media (-moz-bool-pref: "natsumi.global.highlight-accent-color") {
     &::-moz-selection, &::selection {
-      background: var(--natsumi-primary-color) !important;
-
-      @media (prefers-color-scheme: dark) {
-        background: color-mix(in srgb, var(--natsumi-colors-primary) 60%, white) !important;
-      }
+      background: color-mix(in srgb, var(--natsumi-colors-primary) 40%, transparent) !important;
     }
   }
 }

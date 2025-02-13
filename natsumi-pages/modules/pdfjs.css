@@ -85,8 +85,13 @@ their author(s) have been provided above the used code.
         inset: 0 !important;
 
         #viewer .page:first-of-type {
-          margin-top: 60px !important;
+          margin-top: 43px !important;
         }
+      }
+
+      .toolbar {
+        width: 100%;
+        height: 10px;
       }
 
       #toolbarContainer, #sidebarContainer {
@@ -107,13 +112,12 @@ their author(s) have been provided above the used code.
         padding-bottom: 5px !important;
         height: calc(var(--toolbar-height) + 10px) !important;
         border: 1px solid rgba(20, 20, 20, 0.2) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+        box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
         animation: pdfjs-appear 0.3s ease;
         overflow: hidden !important;
 
         @media (prefers-color-scheme: dark) {
           border-color: rgba(235, 235, 235, 0.3) !important;
-          box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
         }
 
         &:has(#loadingBar.hidden) {
@@ -133,7 +137,7 @@ their author(s) have been provided above the used code.
           backdrop-filter: blur(10px);
           border-radius: 10px !important;
           border: 1px solid rgba(20, 20, 20, 0.2) !important;
-          box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+          box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
           animation: secondary-appear 0.2s ease;
 
           &.hidden {
@@ -142,7 +146,6 @@ their author(s) have been provided above the used code.
 
           @media (prefers-color-scheme: dark) {
             border-color: rgba(235, 235, 235, 0.3) !important;
-            box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
           }
 
           &::before, &::after {
@@ -177,11 +180,10 @@ their author(s) have been provided above the used code.
         opacity: 0 !important;
         transition: left 0.2s ease, opacity 0.2s ease !important;
         border: 1px solid rgba(20, 20, 20, 0.2) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+        box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
 
         @media (prefers-color-scheme: dark) {
           border-color: rgba(235, 235, 235, 0.3) !important;
-          box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
         }
 
         #toolbarSidebar {
@@ -303,11 +305,10 @@ their author(s) have been provided above the used code.
         backdrop-filter: blur(10px);
         border-radius: 10px !important;
         border: 1px solid rgba(20, 20, 20, 0.2) !important;
-        box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black) !important;
+        box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
 
         @media (prefers-color-scheme: dark) {
           border-color: rgba(235, 235, 235, 0.3) !important;
-          box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white) !important;
         }
 
         &:is([open]) {
@@ -321,6 +322,34 @@ their author(s) have been provided above the used code.
           @media (prefers-color-scheme: dark) {
             background-color: #363636 !important;
           }
+        }
+      }
+
+      /* Compact mode */
+
+      @media (-moz-bool-pref: "natsumi.pdfjs.compact") {
+        .toolbar {
+          #toolbarContainer {
+            opacity: 0 !important;
+            pointer-events: none;
+            top: -5px !important;
+            transition: opacity 0.3s ease, top 0.3s ease;
+          }
+
+          &:hover, &:has(.toolbarButton:not(#sidebarToggleButton)[aria-expanded="true"]),
+          &:has(input:focus), &:has(select:focus) {
+            height: 52px;
+
+            #toolbarContainer {
+              top: 5px !important;
+              opacity: 1 !important;
+              pointer-events: auto;
+            }
+          }
+        }
+
+        #viewerContainer #viewer .page:first-of-type {
+          margin-top: 0 !important;
         }
       }
 

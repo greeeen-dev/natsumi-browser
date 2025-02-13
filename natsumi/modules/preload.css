@@ -63,6 +63,15 @@ Edit the natsumi-config.css file instead.
   --natsumi-glass-blur-radius: var(--glass-blur-radius, 10px);
   --natsumi-glass-shadow-size: var(--glass-shadow-size, 10px);
   --natsumi-glass-shadow-opacity: var(--glass-shadow-opacity, 75%);
+  --natsumi-glass-shadow-color: color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black);
+
+  @media (prefers-color-scheme: dark) {
+    --natsumi-glass-shadow-color: color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), white);
+
+    @media (-moz-bool-pref: "natsumi.theme.force-dark-shadows") {
+      --natsumi-glass-shadow-color: color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), black);
+    }
+  }
 
   /* Fonts */
   --natsumi-custom-font: var(--custom-font, system-ui);

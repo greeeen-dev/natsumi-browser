@@ -105,6 +105,7 @@ and delay, change the variables in the config.css file.
 - `natsumi.theme.disable-urlbar-animation`: Disables URLbar loading animation for tabs.
 - `natsumi.theme.enable-border-animation`: Enables border loading animation for tabs. This may use up
   quite some GPU.
+- `natsumi.theme.force-dark-shadows`: Forces dark shadows regardless of the current theme/color scheme.
 
 ### URLbar
 - `natsumi.urlbar.compact`: Makes the URLbar smaller when not focused.
@@ -152,6 +153,7 @@ and delay, change the variables in the config.css file.
 
 ### PDF Viewer
 - `natsumi.pdfjs.disabled`: Disables Natsumi PDF Viewer and reverts the PDF viewer back.
+- `natsumi.pdfjs.compact`: Enables compact mode for Natsumi PDF Viewer.
 
 ### Home
 - `natsumi.home.disabled`: Disables Natsumi FF home and reverts the FF home page back.

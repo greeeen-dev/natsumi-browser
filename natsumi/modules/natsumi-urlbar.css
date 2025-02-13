@@ -167,8 +167,14 @@ their author(s) have been provided above the used code.
         }
       }
 
+      .urlbarView-row[has-action][type="clipboard"] {
+        .urlbarView-title-separator::before {
+          opacity: 0 !important;
+        }
+      }
+
       &:not([action-override]) {
-        .urlbarView-row[has-action]:is([type="switchtab"], [type="remotetab"], [type="clipboard"]) {
+        .urlbarView-row[has-action]:is([type="switchtab"], [type="remotetab"]) {
           .urlbarView-action {
             margin-left: 8px !important;
           }
@@ -363,10 +369,11 @@ their author(s) have been provided above the used code.
         transition: backdrop-filter 0.5s ease, background 0.5s ease;
         border: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.3)) !important;
         border-radius: 15px !important;
+        outline: unset !important;
 
         /*noinspection CssInvalidFunction*/
         @media not (-moz-bool-pref: "natsumi.theme.disable-glass-shadow") {
-          box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), light-dark(black, white)) !important;
+          box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
         }
 
         @media (-moz-bool-pref: "natsumi.urlbar.disable-transparency") {
@@ -637,6 +644,7 @@ their author(s) have been provided above the used code.
 
             #urlbar-background {
               opacity: 0 !important;
+              transition: opacity var(--urlbar-anim-time) ease, background-color 0.2s ease 0s, box-shadow 0s ease 0s !important;
             }
 
             .urlbar-input-container {

@@ -75,7 +75,7 @@ their author(s) have been provided above the used code.
 
     /*noinspection CssInvalidFunction*/
     @media not (-moz-bool-pref: "natsumi.theme.disable-glass-shadow") {
-      box-shadow: 0 0 var(--natsumi-glass-shadow-size) color-mix(in srgb, var(--natsumi-colors-secondary) var(--natsumi-glass-shadow-opacity), light-dark(black, white)) !important;
+      box-shadow: 0 0 var(--natsumi-glass-shadow-size) var(--natsumi-glass-shadow-color) !important;
     }
 
     /* Restore old width */
@@ -187,11 +187,6 @@ their author(s) have been provided above the used code.
             background-image: url('chrome://browser/skin/zen-icons/search-page.svg') !important;
             background-repeat: no-repeat !important;
             padding-left: 25px !important;
-            color: black !important;
-
-            @media (prefers-color-scheme: dark) {
-              filter: invert();
-            }
           }
         }
       }
