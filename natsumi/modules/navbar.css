@@ -54,6 +54,10 @@ their author(s) have been provided above the used code.
         border: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.3)) !important;
         backdrop-filter: blur(var(--natsumi-glass-blur-radius)) !important;
 
+        :root[customizing] & {
+          width: auto !important;
+        }
+
         &:not([zen-has-hover]):not([zen-user-show]):not([has-popup-menu]):not(:has(*[open='true'])):not(:focus-within) {
           backdrop-filter: none !important;
         }
