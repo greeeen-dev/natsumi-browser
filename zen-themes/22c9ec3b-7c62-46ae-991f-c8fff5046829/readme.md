@@ -2,7 +2,23 @@
 
 Shows the Number corresponding to each Tab. This can help you navigate between Tabs faster by pressing Cmd + Number of the Tab. (or Ctrl + Number on Windows)
 
-Additions (v1.0.3 - current version):
+Additions (v1.0.7 - current version):
+
+- Reverted back to a previous version.
+
+Additions (v1.0.6):
+
+- Fixed tab numbering across workspaces.
+
+Additions (v1.0.5):
+
+- Fixed incorrect numbering of pinned tabs, removed glance tabs from the tab count.
+
+Additions (v1.0.4):
+
+- Tab Numbers are replaced with Close button on Hover (in Expanded Mode)
+
+Additions (v1.0.3):
 
 - Nicer Design for Expanded Tabs Mode
 - Ability to Change Background Colour, Background Shape
