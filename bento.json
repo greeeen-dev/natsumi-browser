@@ -2,7 +2,7 @@
   "package": {
     "name": "Natsumi Browser",
     "author": "Green (@greeeen-dev)",
-    "version": "3.0.3",
+    "version": "3.1.0",
     "source": "https://github.com/greeeen-dev/natsumi-browser",
     "license_filepath": "LICENSE",
     "include": ["userChrome", "userContent"]

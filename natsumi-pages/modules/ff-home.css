@@ -423,6 +423,75 @@ their author(s) have been provided above the used code.
         }
       }
     }
+    
+    button.toggle-button {
+      /* before pseudoelement has the "toggle" */
+      --color-off: #ff6b6b;
+      --color-on: #11ad79;
+      --color-set: var(--color-off);
+      --natsumi-primary-color: var(--color-set) !important;
+
+      background-color: var(--natsumi-mat-ga-background) !important;
+      border: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.3)) !important;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
+
+      &:hover {
+        background-color: var(--natsumi-mat-ga-background) !important;
+      }
+
+      &::before {
+        background-color: var(--color-off) !important;
+        transition: background-color 0.3s ease, translate 0.3s ease, height 0.3s ease, fill 0.3s ease, background-size 0.3s ease !important;
+        -moz-context-properties: fill;
+        fill: white;
+        background-size: 10px !important;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url('chrome://browser/skin/zen-icons/close.svg');
+      }
+
+      &[aria-pressed="false"] {
+        &:active {
+          &::before {
+            translate: 2px !important;
+            height: 8px !important;
+            background-size: 6px !important;
+          }
+        }
+      }
+
+      &[aria-pressed="true"] {
+        --color-set: var(--color-on) !important;
+        --toggle-bg-color: var(--color-set);
+        --dot-color: white;
+
+        @media not -moz-pref("natsumi.theme.fill-toggle-when-on") {
+          --toggle-bg-color: var(--natsumi-mat-ga-background);
+          --dot-color: var(--color-on);
+        }
+
+        background-color: var(--toggle-bg-color) !important;
+
+        &:hover {
+          background-color: var(--toggle-bg-color) !important;
+        }
+
+        &::before {
+          background-color: var(--dot-color) !important;
+          background-image: url('chrome://browser/skin/zen-icons/checkmark.svg');
+          fill: var(--color-set);
+        }
+
+        &:active {
+          &::before {
+            translate: calc(var(--toggle-dot-transform-x) - 2px) !important;
+            height: 8px !important;
+            background-size: 6px !important;
+          }
+        }
+      }
+    }
   }
 
   /* PB patches */

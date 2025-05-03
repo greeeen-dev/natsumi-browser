@@ -1,0 +1,352 @@
+/*
+
+Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Natsumi Browser uses code from others. The link to the original projects or
+their author(s) have been provided above the used code.
+
+*/
+
+/* ==== Settings tweaks ==== */
+
+@-moz-document url-prefix(about:preferences) {
+    /* Sidebar */
+
+    * {
+        --natsumi-primary-color: var(--zen-primary-color);
+    }
+
+    vbox.navigation {
+        --natsumi-collapsed-animation-time: 0.3s;
+        --in-content-sidebar-width: 260px !important;
+        width: var(--in-content-sidebar-width) !important;
+        box-sizing: content-box !important;
+        padding: 10px !important;
+        background-color: var(--natsumi-colors-secondary) !important;
+        transition: width var(--natsumi-collapsed-animation-time) ease !important;
+
+        #searchInput {
+            width: 100% !important;
+            margin-top: 0 !important;
+            padding: 1px 12px !important;
+            transition: width var(--natsumi-collapsed-animation-time) ease !important;
+
+            &::before {
+                content: "";
+                width: 16px;
+                height: 16px;
+                padding-right: 8px;
+                position: relative;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                background-image: url('chrome://browser/skin/zen-icons/search-glass.svg') !important;
+                background-size: 16px;
+                background-repeat: no-repeat;
+                -moz-context-properties: fill;
+                fill: light-dark(rgb(21, 20, 26), rgb(251, 251, 254));
+                opacity: 0.5;
+            }
+        }
+
+        #categories {
+            padding: 0 !important;
+            transition: width var(--natsumi-collapsed-animation-time) ease !important;
+            width: 100% !important;
+
+            richlistitem.category {
+                border-radius: 20px !important;
+                padding: 0 10px !important;
+                width: var(--in-content-sidebar-width) !important;
+                border: none !important;
+                transition: background-color 0.2s ease, color 0.2s ease, width var(--natsumi-collapsed-animation-time) ease !important;
+
+                .category-name {
+                    transition: font-size var(--natsumi-collapsed-animation-time) ease, opacity var(--natsumi-collapsed-animation-time) ease !important;
+                    font-size: 1em !important;
+                }
+
+                &::before {
+                    display: none !important;
+                }
+
+                &[selected="true"] {
+                    background-color: light-dark(#00000011, #ffffff11) !important;
+                    color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+                    opacity: 1 !important;
+                }
+            }
+        }
+
+        .sidebar-footer-list {
+            margin-bottom: 0 !important;
+
+            .sidebar-footer-link {
+                border: none !important;
+                height: 40px !important;
+                border-radius: 20px !important;
+                transition: background 0.2s ease, width var(--natsumi-collapsed-animation-time) ease !important;
+                width: 100% !important;
+
+                .sidebar-footer-icon {
+                    margin: 12px !important;
+                }
+
+                .sidebar-footer-label {
+                    transition: font-size var(--natsumi-collapsed-animation-time) ease, opacity var(--natsumi-collapsed-animation-time) ease !important;
+                }
+            }
+        }
+
+        @media -moz-pref("natsumi.settings.collapsed") {
+            &:not(:hover):not(:has(#searchInput[focused])) {
+                --in-content-sidebar-width: 40px !important;
+
+                richlistitem.category {
+                    .category-name {
+                        opacity: 0 !important;
+                        font-size: 0 !important;
+                    }
+                }
+
+                .sidebar-footer-list {
+                    .sidebar-footer-link {
+                        .sidebar-footer-label {
+                            font-size: 0 !important;
+                            opacity: 0 !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Main */
+
+    .main-content {
+        background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 60%, light-dark(white, black)) !important;
+
+        groupbox {
+            border: none;
+            background-color: light-dark(
+                    color-mix(in srgb, var(--natsumi-colors-secondary) 20%, white),
+                    color-mix(in srgb, var(--natsumi-colors-secondary) 80%, black)
+            ) !important;
+        }
+
+        checkbox {
+            .checkbox-check {
+                appearance: unset !important;
+                border-radius: 4px;
+                /*background-color: light-dark(white, #444);*/
+                background-color: transparent !important;
+                border: 1px solid light-dark(#ddd, #555);
+                transition: background-color 0.2s ease;
+
+                &[checked="true"] {
+                    background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+                }
+
+                &[disabled="true"] {
+                    opacity: 0.4 !important;
+                }
+            }
+
+            &::before {
+                content: "";
+                position: absolute;
+                background-image: url('chrome://browser/skin/zen-icons/checkmark.svg') !important;
+                fill: light-dark(white, black);
+                -moz-context-properties: fill;
+                width: 0;
+                height: calc(var(--checkbox-size) - 4px);
+                transform: translateX(2px);
+                background-size: calc(var(--checkbox-size) - 4px);
+                background-position: left;
+                background-repeat: no-repeat;
+                transition: width 0s ease;
+                transition-delay: 0.1s;
+            }
+
+            &[checked="true"] {
+                &::before {
+                    transition-duration: 0.2s;
+                    width: calc(var(--checkbox-size) - 4px);
+                }
+            }
+        }
+    }
+
+    /* Icons */
+
+    #category-general .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/settings.svg') !important;
+    }
+
+    #category-zen-looks .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/customize.svg') !important;
+    }
+
+    #category-zen-tabs-management .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/tab.svg') !important;
+    }
+
+    #category-zen-CKS .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/inspect.svg') !important;
+    }
+
+    #category-zen-marketplace .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/edit-theme.svg') !important;
+    }
+
+    #category-home .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/home.svg') !important;
+    }
+
+    #category-search .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/search-glass.svg') !important;
+    }
+
+    #category-privacy .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/security.svg') !important;
+    }
+
+    #category-sync .category-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/send-to-device.svg') !important;
+    }
+
+    #addonsButton .sidebar-footer-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/extension.svg') !important;
+    }
+
+    #helpButton .sidebar-footer-icon {
+        list-style-image: url('chrome://browser/skin/zen-icons/help.svg') !important;
+    }
+
+    .sync-engine-bookmarks {
+        list-style-image: url('chrome://browser/skin/zen-icons/bookmark-star-on-tray.svg') !important;
+    }
+
+    .sync-engine-passwords {
+        list-style-image: url('chrome://browser/skin/zen-icons/passwords.svg') !important;
+    }
+
+    .sync-engine-workspaces {
+        list-style-image: url('chrome://browser/skin/zen-icons/window.svg') !important;
+    }
+
+    .sync-engine-history {
+        list-style-image: url('chrome://browser/skin/zen-icons/history.svg') !important;
+    }
+
+    .sync-engine-tabs {
+        list-style-image: url('chrome://browser/skin/zen-icons/tab.svg') !important;
+    }
+
+    .sync-engine-addons {
+        list-style-image: url('chrome://browser/skin/zen-icons/extension.svg') !important;
+    }
+
+    /* Toggle button */
+
+    button.toggle-button {
+        /* before pseudoelement has the "toggle" */
+        --color-off: #ff6b6b;
+        --color-on: #11ad79;
+        --color-set: var(--color-off);
+        --natsumi-primary-color: var(--color-set) !important;
+
+        background-color: var(--natsumi-mat-ga-background) !important;
+        border: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.3)) !important;
+        transition: background-color 0.3s ease, opacity 0.2s ease;
+        box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
+
+        &:hover {
+            background-color: var(--natsumi-mat-ga-background) !important;
+        }
+
+        &::before {
+            background-color: var(--color-off) !important;
+            transition: background-color 0.3s ease, translate 0.3s ease, height 0.3s ease, fill 0.3s ease, background-size 0.3s ease !important;
+            -moz-context-properties: fill;
+            fill: white;
+            background-size: 10px !important;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('chrome://browser/skin/zen-icons/close.svg');
+        }
+
+        &[aria-pressed="false"] {
+            &:active {
+                &::before {
+                    translate: 2px !important;
+                    height: 8px !important;
+                    background-size: 6px !important;
+                }
+            }
+        }
+
+        &[aria-pressed="true"] {
+            --color-set: var(--color-on) !important;
+            --toggle-bg-color: var(--color-set);
+            --dot-color: white;
+
+            @media not -moz-pref("natsumi.theme.fill-toggle-when-on") {
+            --toggle-bg-color: var(--natsumi-mat-ga-background);
+            --dot-color: var(--color-on);
+        }
+
+            background-color: var(--toggle-bg-color) !important;
+
+            &:hover {
+                background-color: var(--toggle-bg-color) !important;
+            }
+
+            &::before {
+                background-color: var(--dot-color) !important;
+                background-image: url('chrome://browser/skin/zen-icons/checkmark.svg');
+                fill: var(--color-set);
+            }
+
+            &:active {
+                &::before {
+                    translate: calc(var(--toggle-dot-transform-x) - 2px) !important;
+                    height: 8px !important;
+                    background-size: 6px !important;
+                }
+            }
+        }
+    }
+
+    /* Fixes */
+
+    /* Patch layout list width on small screens */
+    #zenLayoutList {
+        flex-wrap: wrap !important;
+    }
+
+    /* A slightly hacky fix for Zen/FF ignoring animations for some reason */
+    #preferences-stack:has(.main-content:hover) vbox.navigation {
+        pointer-events: none !important;
+    }
+}

@@ -34,21 +34,21 @@ their author(s) have been provided above the used code.
     /* Patches collapsed view on macOS */
     /*noinspection ALL*/
     @media not -moz-pref("zen.view.sidebar-expanded") {
-      #zen-sidebar-top-buttons-customization-target {
-        padding-top: 0 !important;
-      }
+    #zen-sidebar-top-buttons-customization-target {
+      padding-top: 0 !important;
+    }
 
-      .titlebar-buttonbox-container {
-        padding: 0 calc(var(--zen-toolbox-padding) / 2) !important;
-        padding-right: var(--zen-toolbox-padding) !important;
-      }
+    .titlebar-buttonbox-container {
+      padding: 0 calc(var(--zen-toolbox-padding) / 2) !important;
+      padding-right: var(--zen-toolbox-padding) !important;
+    }
 
-      &:is([inFullscreen]) {
-        #navigator-toolbox {
-          margin-top: 0 !important;
-        }
+    &:is([inFullscreen]) {
+      #navigator-toolbox {
+        margin-top: 0 !important;
       }
     }
+  }
   }
 
   &[inDOMFullscreen="true"] {
@@ -74,9 +74,9 @@ their author(s) have been provided above the used code.
 /* Multiple toolbars patch */
 
 @media (not -moz-pref("zen.view.use-single-toolbar")) {
-  #identity-box {
-    margin-inline-end: 5px !important;
-  }
+#identity-box {
+  margin-inline-end: 5px !important;
+}
 }
 
 /* Patch and restore List all tabs button */
@@ -162,6 +162,18 @@ toolbarbutton[badged="true"]:not([badge]) {
   &:not([src]), &:-moz-broken {
     border-radius: 4px !important;
   }
+}
+
+/* Better transparency for Linux */
+
+@media -moz-pref("zen.widget.linux.transparency") and (-moz-platform: linux) {
+#zen-main-app-wrapper {
+  --zen-themed-toolbar-bg-transparent: color-mix(
+          in srgb,
+          light-dark(var(--zen-branding-bg), #171717) 60%,
+          transparent
+  ) !important;
+}
 }
 
 /* ==== WIP features (do not touch yet) ==== */

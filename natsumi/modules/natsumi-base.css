@@ -125,11 +125,11 @@ their author(s) have been provided above the used code.
 #fullscreen-warning, #pointerlock-warning {
   border-radius: 50px !important;
   padding: 8px 10px !important;
-  background-color: var(--natsumi-mat-ga-background) !important;
+  background-color: var(--natsumi-mat-hz-background) !important;
   border: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.3)) !important;
-  box-shadow: 0 0 var(--natsumi-mat-ga-shadow-size) var(--natsumi-mat-ga-shadow-color) !important;
+  box-shadow: 0 0 var(--natsumi-mat-hz-shadow-size) var(--natsumi-mat-hz-shadow-color) !important;
   transition: opacity 0.2s ease, top 0.2s ease !important;
-  backdrop-filter: blur(10px) !important;
+  backdrop-filter: saturate(var(--natsumi-mat-hz-saturation)) contrast(var(--natsumi-mat-hz-contrast)) blur(var(--natsumi-mat-hz-blur-radius)) !important;
   opacity: 0;
   margin: 0 !important;
   left: 50% !important;

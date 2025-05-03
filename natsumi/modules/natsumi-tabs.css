@@ -233,7 +233,7 @@ their author(s) have been provided above the used code.
 
   /* Essentials tabs */
   #tabbrowser-tabs:not([movingtab]) {
-    #zen-essentials-container {
+    #zen-essentials-wrapper {
       .tabbrowser-tab {
         &:active {
           scale: 0.9 !important;
@@ -242,8 +242,10 @@ their author(s) have been provided above the used code.
     }
   }
 
-  #zen-essentials-container {
-    overflow: visible !important;
+  #zen-essentials-wrapper {
+    .zen-essentials-container {
+      overflow: visible !important;
+    }
 
     /*noinspection CssInvalidFunction*/
     .tabbrowser-tab {

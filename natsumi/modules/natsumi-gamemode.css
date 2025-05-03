@@ -1,0 +1,260 @@
+/*
+
+Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Natsumi Browser uses code from others. The link to the original projects or
+their author(s) have been provided above the used code.
+
+*/
+
+/* ==== Game mode ==== */
+
+@media -moz-pref("natsumi.gamemode.enabled") {
+  * {
+    @media -moz-pref("natsumi.gamemode.gx-color") {
+      --natsumi-primary-color: #ff1f5a !important;
+    }
+    --natsumi-gamemode-background: color-mix(in srgb, var(--natsumi-primary-color) 15%, light-dark(white, black));
+  }
+
+  /* Force marginless compact */
+  :root:not([customizing]) {
+    .customization-target, #PanelUI-button {
+      toolbarbutton {
+        /*noinspection CssInvalidFunction*/
+        .toolbarbutton-icon, .toolbarbutton-badge-stack {
+          transition: background-color 0.2s ease !important;
+
+          @media -moz-pref("natsumi.theme.opaque-icons") {
+            -moz-context-properties: fill;
+            fill: light-dark(black, white);
+          }
+        }
+      }
+    }
+
+    &[zen-compact-mode="true"] {
+      #zen-appcontent-wrapper:not(:has(#tabbrowser-tabpanels[zen-split-view]), :has(#zen-sidebar-web-panel:not([hidden]):not([pinned]))) {
+        margin: 0 !important;
+
+        #zen-tabbox-wrapper {
+          margin: 0 !important;
+
+          .browserSidebarContainer, browser {
+            margin: 0 !important;
+            border-radius: 0 !important;
+          }
+        }
+
+        @media -moz-pref("zen.view.use-single-toolbar") {
+          @media -moz-pref("natsumi.theme.compact-marginless-hide-bookmarks") {
+            #zen-appcontent-navbar-container:not([zen-has-hover]) {
+              min-height: 0 !important;
+              height: 0 !important;
+            }
+          }
+        }
+      }
+
+      /* Add background color */
+      #titlebar, #zen-appcontent-navbar-container {
+        backdrop-filter: none !important;
+        border-radius: 0 !important;
+        background: var(--natsumi-gamemode-background) none !important;
+      }
+    }
+  }
+
+  #zen-main-app-wrapper, #zen-appcontent-wrapper {
+    appearance: initial !important;
+  }
+
+  #browser {
+    background: var(--natsumi-gamemode-background) none !important;
+  }
+
+  browser {
+    clip-path: unset !important;
+  }
+
+  .browserSidebarContainer {
+    border-radius: 0 !important;
+    box-shadow: unset !important;
+  }
+
+  #urlbar {
+    animation: none !important;
+
+    &[breakout-extend] {
+      #urlbar-background {
+        transition: none !important;
+        backdrop-filter: unset !important;
+        background-color: var(--natsumi-gamemode-background) !important;
+        border: 2px solid light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary)) !important;
+        border-radius: 0 !important;
+
+        &::before, &::after {
+          display: none !important;
+        }
+      }
+
+      .urlbarView-body-inner::after {
+        mask-image: unset;
+        width: 100%;
+        border-radius: 0;
+      }
+    }
+
+    .urlbarView-row {
+      animation: none !important;
+      opacity: 1 !important;
+
+      .urlbarView-row-inner {
+        transition: none !important;
+        border-radius: 0 !important;
+      }
+
+      .urlbarView-type-icon {
+        animation: none !important;
+        opacity: 1 !important;
+      }
+
+      &:hover {
+        .urlbarView-row-inner {
+          transform: unset !important;
+        }
+      }
+    }
+  }
+
+  findbar {
+    transition: none !important;
+    animation: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: unset !important;
+    background-color: var(--natsumi-gamemode-background) !important;
+
+    &:has(.findbar-textbox:is([status="notfound"])) {
+      box-shadow: none !important;
+      background-color: var(--natsumi-gamemode-background) !important;
+    }
+
+    &[hidden], &::before {
+      display: none !important;
+    }
+
+    &::after {
+      border-radius: 0 !important;
+      mask-image: none !important;
+    }
+
+    hbox[anonid="findbar-textbox-wrapper"]::after {
+      mask-image: none !important;
+      width: 100% !important;
+    }
+  }
+
+  #zen-main-app-wrapper:not(:has(#zen-welcome)) #tabbrowser-tabs:not([movingtab]) {
+    .tabbrowser-tab:active {
+      scale: 1 !important;
+    }
+
+    #zen-essentials-container {
+      .tabbrowser-tab {
+        &:active {
+          scale: 1 !important;
+        }
+      }
+    }
+  }
+
+  .tabbrowser-tab {
+    .tab-background {
+      border-radius: 0 !important;
+    }
+  }
+
+  #vertical-pinned-tabs-container, #tabbrowser-arrowscrollbox {
+    /*noinspection CssInvalidFunction*/
+    .tabbrowser-tab:not([zen-glance-tab]) {
+      .tab-background {
+        animation: none !important;
+        backdrop-filter: unset !important;
+
+        &::after {
+          border-radius: 0 !important;
+          width: calc(100% - var(--natsumi-tabs-blade-size-offset) - calc(var(--tab-block-margin) * 2)) !important;
+          height: calc(100% - var(--natsumi-tabs-blade-size-offset) - calc(var(--tab-block-margin) * 2)) !important;
+          top: var(--natsumi-tabs-blade-position-offset) !important;
+          left: var(--natsumi-tabs-blade-position-offset) !important;
+          mask-image: unset !important;
+        }
+      }
+    }
+  }
+
+  #zen-essentials-container {
+    .tabbrowser-tab:not([zen-glance-tab]) {
+      .tab-stack {
+        &::before {
+          display: none !important;
+        }
+
+        .tab-background {
+          &::before {
+            border-radius: 0 !important;
+          }
+        }
+      }
+    }
+  }
+
+  tab-group {
+    border-radius: 0 !important;
+    scale: 1 !important;
+  }
+
+  #sidebar-box {
+    transition: unset !important;
+    backdrop-filter: unset !important;
+    background-color: var(--natsumi-gamemode-background) !important;
+    border-radius: 0 !important;
+  }
+  
+  #zen-media-controls-toolbar {
+    & > toolbaritem {
+      backdrop-filter: none !important;
+      border-radius: 0 !important;
+      background: color-mix(in srgb, var(--natsumi-primary-color) 30%, light-dark(white, black)) !important;
+      
+      &::before, &::after {
+        display: none !important;
+      }
+    }
+  }
+  
+  #zen-workspaces-button .subviewbutton[active] {
+    backdrop-filter: none !important;
+  }
+}
