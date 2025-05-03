@@ -178,6 +178,10 @@ and delay, change the variables in the config.css file.
 ### Library
 - `natsumi.library.disabled`: Disables Natsumi Library and reverts the library style back.
 
+### Gamemode
+- `natsumi.gamemode.enabled`: Enables Natsumi Gamemode.
+- `natsumi.gamemode.gx-color`: Adds a red-pink accent color for aesthetics.
+
 ### PDF Viewer
 - `natsumi.pdfjs.disabled`: Disables Natsumi PDF Viewer and reverts the PDF viewer back.
 - `natsumi.pdfjs.compact`: Enables compact mode for Natsumi PDF Viewer.
