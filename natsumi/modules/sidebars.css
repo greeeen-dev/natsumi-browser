@@ -229,6 +229,14 @@ their author(s) have been provided above the used code.
   }
 }
 
+/* ==== Sidebar Rounded corners ==== */
+/*noinspection CssInvalidFunction*/
+@media -moz-pref("natsumi.sidebar.rounded-corners") {
+  #navigator-toolbox {
+    border-radius: var(--zen-border-radius) !important;
+  }
+}
+
 /* ==== Tabs sidebar tweaks ==== */
 
 @media -moz-pref("natsumi.sidebar.tabs-glass-effect") {
