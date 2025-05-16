@@ -146,6 +146,7 @@ and delay, change the variables in the config.css file.
 - `natsumi.sidebar.tabs-glass-effect`: Adds Glass material for the sidebar on compact mode.
 - `natsumi.sidebar.unlimited-pinned-tabs`: Removes the limit on the maximum number of tabs being shown
   in the pinned section of the vertical tabs.
+- `natsumi.sidebar.rounded-corners`: Rounds the sidebar corners.
 
 ### Sidebar (Firefox)
 - `natsumi.sidebar.ff-sidebar-blur`: Enables blur on Firefox sidebar when it is floating/unpinned.
