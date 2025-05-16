@@ -120,7 +120,7 @@ You will need to install Natsumi by copying its files to your profile's chrome f
 ### Natsumi Browser
 #### If you already have a userChrome.css/userContent.css file
 1. Copy natsumi-config.css and natsumi folder to your chrome folder.
-2. Add `@import "natsumi/natsumi.css";` to the beginning of your userChrome.css file. 
+2. Add `@import "natsumi/natsumi.css";` to the beginning of your userChrome.css file.
 3. Add `@import "natsumi/natsumi-pages.css";` to the beginning of your userContent.css file.
 4. Restart your browser and enjoy!
 
@@ -219,7 +219,7 @@ you will need to keep certain files (preload, postload, natsumi-config) for Nats
 > [!CAUTION]
 > By modifying any part of Natsumi, you are responsible for any issues that may arise. If things do
 > break, I will most likely not offer support for it.
-> 
+>
 > If you installed Natsumi as part of another skin, your installation may be considered modified.
 > Please check with the skin's developer for assistance in this case.
 
@@ -273,7 +273,7 @@ If the issue still persists, open an issue or report the bug to the developer th
 
 ### "Can I use your code for my browser?"
 If your browser is open-source and licensed under the GPLv3 or later (or AGPLv3 or later), then yes.
-Otherwise, please contact me so I can grant you permission. 
+Otherwise, please contact me so I can grant you permission.
 
 ## Acknowledgements
 Thank you to:
