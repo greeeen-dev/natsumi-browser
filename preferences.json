@@ -232,11 +232,6 @@
   },
   {
     "type": "checkbox",
-    "property": "natsumi.gamemode.disabled",
-    "label": "Disable Natsumi Gamemode and Revert Style"
-  },
-  {
-    "type": "checkbox",
     "property": "natsumi.gamemode.enabled",
     "label": "Enable Natsumi Gamemode"
   },
