@@ -61,7 +61,7 @@
     "property": "natsumi.urlbar.disable-transparency",
     "label": "Disable URLbar Background Transparency",
     "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": false}}
+      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
     ]
   },
     {
@@ -69,7 +69,7 @@
     "property": "natsumi.urlbar.force-nowrap",
     "label": "Prevents Wrapping to Make Things More Compact Regardless of Window Width",
     "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": false}}
+      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
     ]
   },
     {
@@ -77,7 +77,7 @@
     "property": "natsumi.urlbar.no-compact",
     "label": "Disables some animations and Makes the Natsumi URLbar Lighter",
     "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": false}}
+      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
     ]
   },
     {
@@ -85,7 +85,7 @@
     "property": "natsumi.urlbar.light",
     "label": "Disables Comapact URLbar When Not Focused",
     "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": false}}
+      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
     ]
   },
   {
