@@ -19,7 +19,9 @@
     "property": "natsumi.theme.compact-marginless-hide-bookmarks",
     "label": "Hides the Bookmarks Bar in Marginless Compact Mode",
     "conditions": [
-      {"if": {"property": "natsumi.theme.compact-marginless", "value": true}}
+      {
+        "if": { "property": "natsumi.theme.compact-marginless", "value": true }
+      }
     ]
   },
   {
@@ -40,12 +42,12 @@
   {
     "type": "checkbox",
     "property": "natsumi.theme.force-glass-dark-shadows",
-    "label": "Forces Dark Shadow on Natsumi Glass"
+    "label": "Force Dark Shadow on Natsumi Glass"
   },
   {
     "type": "checkbox",
     "property": "natsumi.theme.opaque-icons",
-    "label": "Makes Toolbar Icon Outlines Opaque"
+    "label": "Make Toolbar Icon Outlines Opaque"
   },
   {
     "type": "separator",
@@ -59,37 +61,264 @@
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.disable-transparency",
-    "label": "Disable URLbar Background Transparency",
-    "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
-    ]
+    "label": "Disable URLbar Background Transparency"
   },
-    {
+  {
     "type": "checkbox",
     "property": "natsumi.urlbar.force-nowrap",
-    "label": "Prevents Wrapping to Make Things More Compact Regardless of Window Width",
-    "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
-    ]
+    "label": "Prevent Wrapping to Make Things More Compact Regardless of Window Width"
   },
-    {
+  {
     "type": "checkbox",
     "property": "natsumi.urlbar.no-compact",
-    "label": "Disables some animations and Makes the Natsumi URLbar Lighter",
-    "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
-    ]
+    "label": "Disable some animations and Makes the Natsumi URLbar Lighter"
   },
-    {
+  {
     "type": "checkbox",
     "property": "natsumi.urlbar.light",
-    "label": "Disables Comapact URLbar When Not Focused",
-    "conditions": [
-      {"if": {"property": "natsumi.urlbar.disabled", "value": true}}
-    ]
+    "label": "Disable Comapact URLbar When Not Focused"
   },
   {
     "type": "separator",
     "label": "Navbar"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.navbar.glass-effect",
+    "label": "Add Glass Effect to Navbar on Compact Mode"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.navbar.float",
+    "label": "Make the Navbar Float",
+    "conditions": [
+      { "if": { "property": "natsumi.navbar.glass-effect", "value": true } }
+    ]
+  },
+  {
+    "type": "separator",
+    "label": "Sidebar (Vertical Tabs)"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.container-tabs-border",
+    "label": "Add a Border to Container Tabs"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.container-tabs-border-no-inactive",
+    "label": "Disable Container Tabs Border If They are Not Selected",
+    "conditions": [
+      {
+        "if": {
+          "property": "natsumi.sidebar.container-tabs-border",
+          "value": true
+        }
+      }
+    ]
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.disable-bigger-tab-label",
+    "label": "Disable Bigger Tab Labels - Sets Them Back to Default"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.disable-bigger-tab-label",
+    "label": "Disable Bigger Tab Labels - Sets Them Back to Default"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.tabs-glass-effect",
+    "label": "Add a Glass Material Compact Mode"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.unlimited-pinned-tabs",
+    "label": "Remove The Pinned Tab Limit"
+  },
+  {
+    "type": "separator",
+    "label": "Sidebar (Firefox)"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.unlimited-pinned-tabs",
+    "label": "Remove The Pinned Tab Limit"
+  },
+  {
+    "type": "separator",
+    "label": "Sidebar (Firefox)"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-blur",
+    "label": "Enable Blur on Firefox Sidebar When Floating/Unpinned"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-float",
+    "label": "Make the Firefox Sidebar Float on Top of the Website"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-glass",
+    "label": "Add Glass Material to Firefox Sidebar"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-haze",
+    "label": "Add Haze Material to Firefox Sidebar"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-mistcrylic",
+    "label": "Add Mistcrylic Material to Firefox Sidebar"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar.opaque",
+    "label": "Disable Transparent Background for Firefox Sidebar"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-position-center",
+    "label": "Vertically Center Firefox Sidebar Panel if Floating"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-position-bottom",
+    "label": "Move Firefox Sidebar Panel to Bottom if Floating (Overrides Center)"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.sidebar.ff-sidebar-resizable",
+    "label": "Make the Firefox Sidebar Resizable"
+  },
+  {
+    "type": "separator",
+    "label": "Findbar"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.findbar.disabled",
+    "label": "Disable Natsumi Findbar and Revert Style"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.findbar.disable-not-found-bg",
+    "label": "Disable Red Background When No Results"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.findbar.wider-findbar",
+    "label": "Increase Maximum Findbar Width to 720px"
+  },
+  {
+    "type": "separator",
+    "label": "Miniplayer"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.miniplayer.blur-fix",
+    "label": "Fix Blur on the Miniplayer"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.miniplayer.disable-accent",
+    "label": "Disable Accent Glow Effect on Miniplayer"
+  },
+  {
+    "type": "separator",
+    "label": "Picture-in-Picture"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.pip.disabled",
+    "label": "Disable Natsumi PiP and Revert Style"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.pip.native-border-radius",
+    "label": "Make PiP Controls Border Radius Look More Native"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.pip.rounded",
+    "label": "Make PiP Window Round (Windows Only)"
+  },
+  {
+    "type": "separator",
+    "label": "Library"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.library.disabled",
+    "label": "Disable Natsumi Library and Revert Style"
+  },
+  {
+    "type": "separator",
+    "label": "Gamemode"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.gamemode.enabled",
+    "label": "Enable Natsumi Gamemode"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.gamemode.gx-color",
+    "label": "Add Red-Pink Accent Color for Gamemode"
+  },
+  {
+    "type": "separator",
+    "label": "PDF Viewer"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.pdfjs.disabled",
+    "label": "Disable Natsumi PDF Viewer and Revert Style"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.pdfjs.compact",
+    "label": "Enable Compact Mode for Natsumi PDF Viewer"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.pdfjs.compact-dynamic",
+    "label": "Disable Compact Mode When PDF Sidebar is Expanded"
+  },
+  {
+    "type": "separator",
+    "label": "Home"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.home.disabled",
+    "label": "Disable Natsumi FF Home and Revert FF Home Page"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.home.custom-background",
+    "label": "Use Custom Background as Home Screen Background"
+  },
+  {
+    "type": "separator",
+    "label": "Global Tweaks"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.global.highlight-accent-color",
+    "label": "Use Accent Color for Highlighting"
+  },
+  {
+    "type": "separator",
+    "label": "Experiments"
+  },
+  {
+    "type": "checkbox",
+    "property": "natsumi.experiments.custom-font",
+    "label": "Set Custom Font from natsumi-config.css"
   }
 ]
