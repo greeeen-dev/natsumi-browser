@@ -143,15 +143,6 @@
   },
   {
     "type": "checkbox",
-    "property": "natsumi.sidebar.unlimited-pinned-tabs",
-    "label": "Remove The Pinned Tab Limit"
-  },
-  {
-    "type": "separator",
-    "label": "Sidebar (Firefox)"
-  },
-  {
-    "type": "checkbox",
     "property": "natsumi.sidebar.ff-sidebar-blur",
     "label": "Enable Blur on Firefox Sidebar When Floating/Unpinned"
   },
@@ -207,12 +198,18 @@
   {
     "type": "checkbox",
     "property": "natsumi.findbar.disable-not-found-bg",
-    "label": "Disable Red Background When No Results"
+    "label": "Disable Red Background When No Results",
+    "conditions": [
+      { "if": { "property": "natsumi.findbar.disabled", "value": false } }
+    ]
   },
   {
     "type": "checkbox",
     "property": "natsumi.findbar.wider-findbar",
-    "label": "Increase Maximum Findbar Width to 720px"
+    "label": "Increase Maximum Findbar Width to 720px",
+    "conditions": [
+      { "if": { "property": "natsumi.findbar.disabled", "value": false } }
+    ]
   },
   {
     "type": "separator",
@@ -240,12 +237,18 @@
   {
     "type": "checkbox",
     "property": "natsumi.pip.native-border-radius",
-    "label": "Make PiP Controls Border Radius Look More Native"
+    "label": "Make PiP Controls Border Radius Look More Native",
+    "conditions": [
+      { "if": { "property": "natsumi.pip.disabled", "value": false } }
+    ]
   },
   {
     "type": "checkbox",
     "property": "natsumi.pip.rounded",
-    "label": "Make PiP Window Round (Windows Only)"
+    "label": "Make PiP Window Round (Windows Only)",
+    "conditions": [
+      { "if": { "property": "natsumi.pip.disabled", "value": false } }
+    ]
   },
   {
     "type": "separator",
@@ -282,12 +285,18 @@
   {
     "type": "checkbox",
     "property": "natsumi.pdfjs.compact",
-    "label": "Enable Compact Mode for Natsumi PDF Viewer"
+    "label": "Enable Compact Mode for Natsumi PDF Viewer",
+    "conditions": [
+      { "if": { "property": "natsumi.pdfjs.disabled", "value": false } }
+    ]
   },
   {
     "type": "checkbox",
     "property": "natsumi.pdfjs.compact-dynamic",
-    "label": "Disable Compact Mode When PDF Sidebar is Expanded"
+    "label": "Disable Compact Mode When PDF Sidebar is Expanded",
+    "conditions": [
+      { "if": { "property": "natsumi.pdfjs.disabled", "value": false } }
+    ]
   },
   {
     "type": "separator",
@@ -301,7 +310,10 @@
   {
     "type": "checkbox",
     "property": "natsumi.home.custom-background",
-    "label": "Use Custom Background as Home Screen Background"
+    "label": "Use Custom Background as Home Screen Background",
+    "conditions": [
+      { "if": { "property": "natsumi.home.disabled", "value": false } }
+    ]
   },
   {
     "type": "separator",
