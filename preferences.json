@@ -17,12 +17,7 @@
   {
     "type": "checkbox",
     "property": "natsumi.theme.compact-marginless-hide-bookmarks",
-    "label": "Hides the Bookmarks Bar in Marginless Compact Mode",
-    "conditions": [
-      {
-        "if": { "property": "natsumi.theme.compact-marginless", "value": true }
-      }
-    ]
+    "label": "Hides the Bookmarks Bar in Marginless Compact Mode"
   },
   {
     "type": "checkbox",
@@ -61,34 +56,22 @@
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.disable-transparency",
-    "label": "Disable URLbar Background Transparency",
-    "conditions": [
-      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
-    ]
+    "label": "Disable URLbar Background Transparency"
   },
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.force-nowrap",
-    "label": "Prevent Wrapping to Make Things More Compact Regardless of Window Width",
-    "conditions": [
-      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
-    ]
+    "label": "Prevent Wrapping to Make Things More Compact Regardless of Window Width"
   },
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.no-compact",
-    "label": "Disable some animations and Makes the Natsumi URLbar Lighter",
-    "conditions": [
-      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
-    ]
+    "label": "Disable some animations and Makes the Natsumi URLbar Lighter"
   },
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.light",
-    "label": "Disable Comapact URLbar When Not Focused",
-    "conditions": [
-      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
-    ]
+    "label": "Disable Comapact URLbar When Not Focused"
   },
   {
     "type": "separator",
@@ -102,10 +85,7 @@
   {
     "type": "checkbox",
     "property": "natsumi.navbar.float",
-    "label": "Make the Navbar Float",
-    "conditions": [
-      { "if": { "property": "natsumi.navbar.glass-effect", "value": true } }
-    ]
+    "label": "Make the Navbar Float"
   },
   {
     "type": "separator",
@@ -119,20 +99,7 @@
   {
     "type": "checkbox",
     "property": "natsumi.sidebar.container-tabs-border-no-inactive",
-    "label": "Disable Container Tabs Border If They are Not Selected",
-    "conditions": [
-      {
-        "if": {
-          "property": "natsumi.sidebar.container-tabs-border",
-          "value": true
-        }
-      }
-    ]
-  },
-  {
-    "type": "checkbox",
-    "property": "natsumi.sidebar.disable-bigger-tab-label",
-    "label": "Disable Bigger Tab Labels - Sets Them Back to Default"
+    "label": "Disable Container Tabs Border If They are Not Selected"
   },
   {
     "type": "checkbox",
@@ -210,18 +177,12 @@
   {
     "type": "checkbox",
     "property": "natsumi.findbar.disable-not-found-bg",
-    "label": "Disable Red Background When No Results",
-    "conditions": [
-      { "if": { "property": "natsumi.findbar.disabled", "value": false } }
-    ]
+    "label": "Disable Red Background When No Results"
   },
   {
     "type": "checkbox",
     "property": "natsumi.findbar.wider-findbar",
-    "label": "Increase Maximum Findbar Width to 720px",
-    "conditions": [
-      { "if": { "property": "natsumi.findbar.disabled", "value": false } }
-    ]
+    "label": "Increase Maximum Findbar Width to 720px"
   },
   {
     "type": "separator",
@@ -249,18 +210,12 @@
   {
     "type": "checkbox",
     "property": "natsumi.pip.native-border-radius",
-    "label": "Make PiP Controls Border Radius Look More Native",
-    "conditions": [
-      { "if": { "property": "natsumi.pip.disabled", "value": false } }
-    ]
+    "label": "Make PiP Controls Border Radius Look More Native"
   },
   {
     "type": "checkbox",
     "property": "natsumi.pip.rounded",
-    "label": "Make PiP Window Round (Windows Only)",
-    "conditions": [
-      { "if": { "property": "natsumi.pip.disabled", "value": false } }
-    ]
+    "label": "Make PiP Window Round (Windows Only)"
   },
   {
     "type": "separator",
@@ -283,18 +238,12 @@
   {
     "type": "checkbox",
     "property": "natsumi.gamemode.enabled",
-    "label": "Enable Natsumi Gamemode",
-    "conditions": [
-      { "if": { "property": "natsumi.gamemode.disabled", "value": false } }
-    ]
+    "label": "Enable Natsumi Gamemode"
   },
   {
     "type": "checkbox",
     "property": "natsumi.gamemode.gx-color",
-    "label": "Add Red-Pink Accent Color for Gamemode",
-    "conditions": [
-      { "if": { "property": "natsumi.gamemode.disabled", "value": false } }
-    ]
+    "label": "Add Red-Pink Accent Color for Gamemode"
   },
   {
     "type": "separator",
@@ -308,18 +257,12 @@
   {
     "type": "checkbox",
     "property": "natsumi.pdfjs.compact",
-    "label": "Enable Compact Mode for Natsumi PDF Viewer",
-    "conditions": [
-      { "if": { "property": "natsumi.pdfjs.disabled", "value": false } }
-    ]
+    "label": "Enable Compact Mode for Natsumi PDF Viewer"
   },
   {
     "type": "checkbox",
     "property": "natsumi.pdfjs.compact-dynamic",
-    "label": "Disable Compact Mode When PDF Sidebar is Expanded",
-    "conditions": [
-      { "if": { "property": "natsumi.pdfjs.disabled", "value": false } }
-    ]
+    "label": "Disable Compact Mode When PDF Sidebar is Expanded"
   },
   {
     "type": "separator",
@@ -333,10 +276,7 @@
   {
     "type": "checkbox",
     "property": "natsumi.home.custom-background",
-    "label": "Use Custom Background as Home Screen Background",
-    "conditions": [
-      { "if": { "property": "natsumi.home.disabled", "value": false } }
-    ]
+    "label": "Use Custom Background as Home Screen Background"
   },
   {
     "type": "separator",
