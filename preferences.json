@@ -232,6 +232,11 @@
   },
   {
     "type": "checkbox",
+    "property": "natsumi.gamemode.disabled",
+    "label": "Disable Natsumi Gamemode and Revert Style"
+  },
+  {
+    "type": "checkbox",
     "property": "natsumi.gamemode.enabled",
     "label": "Enable Natsumi Gamemode"
   },
@@ -290,5 +295,177 @@
     "type": "checkbox",
     "property": "natsumi.experiments.custom-font",
     "label": "Set Custom Font from natsumi-config.css"
+  },
+  {
+    "type": "separator",
+    "label": "Base Theme"
+  },
+  {
+    "label": "Accent Color",
+    "defaultValue": "var(--zen-primary-color)",
+    "placeholder": "#aabbcc or var(--zen-primary-color)",
+    "property": "natsumi.accent-color",
+    "type": "string"
+  },
+  {
+    "label": "Pages Accent Color",
+    "defaultValue": "#a0d490",
+    "placeholder": "#aabbcc",
+    "property": "natsumi.pages-accent-color",
+    "type": "string"
+  },
+  {
+    "label": "Glass Blur Radius",
+    "defaultValue": "20px",
+    "placeholder": "20px",
+    "property": "natsumi.glass-blur-radius",
+    "type": "string"
+  },
+  {
+    "label": "Glass Shadow Size",
+    "defaultValue": "10px",
+    "placeholder": "10px",
+    "property": "natsumi.glass-shadow-size",
+    "type": "string"
+  },
+  {
+    "label": "Glass Shadow Opacity",
+    "defaultValue": "75%",
+    "placeholder": "75%",
+    "property": "natsumi.glass-shadow-opacity",
+    "type": "string"
+  },
+  {
+    "label": "URLbar Appear Animation Duration",
+    "defaultValue": "0.25s",
+    "placeholder": "0.25s",
+    "property": "natsumi.urlbar-appear-animation-duration",
+    "type": "string"
+  },
+  {
+    "label": "URLbar Results Animation Duration",
+    "defaultValue": "0.5s",
+    "placeholder": "0.5s",
+    "property": "natsumi.urlbar-results-animation-duration",
+    "type": "string"
+  },
+  {
+    "label": "URLbar Individual Result Animation Duration",
+    "defaultValue": "0.75s",
+    "placeholder": "0.75s",
+    "property": "natsumi.urlbar-individual-result-animation-duration",
+    "type": "string"
+  },
+  {
+    "label": "URLbar Individual Result Animation Delay",
+    "defaultValue": "0.05s",
+    "placeholder": "0.05s",
+    "property": "natsumi.urlbar-individual-result-animation-delay",
+    "type": "string"
+  },
+  {
+    "label": "URLbar Individual Result Animation Delay Offset",
+    "defaultValue": "0.05s",
+    "placeholder": "0.05s",
+    "property": "natsumi.urlbar-individual-result-animation-delay-offset",
+    "type": "string"
+  },
+  {
+    "label": "URLbar Individual Result Expand Size",
+    "defaultValue": "1.05",
+    "placeholder": "1.05",
+    "property": "natsumi.urlbar-individual-result-expand-size",
+    "type": "string"
+  },
+  {
+    "label": "Reload Border Animation Duration",
+    "defaultValue": "0.2s",
+    "placeholder": "0.2s",
+    "property": "natsumi.reload-border-animation-duration",
+    "type": "string"
+  },
+  {
+    "label": "Reload Border Animation Rotation Duration",
+    "defaultValue": "2s",
+    "placeholder": "2s",
+    "property": "natsumi.reload-border-animation-rotation-duration",
+    "type": "string"
+  },
+  {
+    "label": "Reload Border Animation Exit Duration",
+    "defaultValue": "1s",
+    "placeholder": "1s",
+    "property": "natsumi.reload-border-animation-exit-duration",
+    "type": "string"
+  },
+  {
+    "label": "Reload Border Margin",
+    "defaultValue": "4px",
+    "placeholder": "4px",
+    "property": "natsumi.reload-border-margin",
+    "type": "string"
+  },
+  {
+    "label": "Reload URLbar Animation Duration",
+    "defaultValue": "0.2s",
+    "placeholder": "0.2s",
+    "property": "natsumi.reload-urlbar-animation-duration",
+    "type": "string"
+  },
+  {
+    "label": "Reload URLbar Animation Fadein Duration",
+    "defaultValue": "2s",
+    "placeholder": "2s",
+    "property": "natsumi.reload-urlbar-animation-fadein-duration",
+    "type": "string"
+  },
+  {
+    "label": "Container Tabs Normal Gradient Width",
+    "defaultValue": "25%",
+    "placeholder": "25%",
+    "property": "natsumi.container-tabs-normal-gradient-width",
+    "type": "string"
+  },
+  {
+    "label": "Container Tabs Expanded Gradient Width",
+    "defaultValue": "50%",
+    "placeholder": "50%",
+    "property": "natsumi.container-tabs-expanded-gradient-width",
+    "type": "string"
+  },
+  {
+    "label": "Floating Firefox Sidebar X Offset",
+    "defaultValue": "20px",
+    "placeholder": "20px",
+    "property": "natsumi.ff-sidebar-x-offset",
+    "type": "string"
+  },
+  {
+    "label": "Floating Firefox Sidebar Y Offset",
+    "defaultValue": "20px",
+    "placeholder": "20px",
+    "property": "natsumi.ff-sidebar-y-offset",
+    "type": "string"
+  },
+  {
+    "label": "Custom Font (must be installed)",
+    "defaultValue": "'Nunito'",
+    "placeholder": "'Nunito'",
+    "property": "natsumi.custom-font",
+    "type": "string"
+  },
+  {
+    "label": "PDF.js Topbar Max Width",
+    "defaultValue": "750px",
+    "placeholder": "750px or calc(100% - 10px)",
+    "property": "natsumi.pdfjs-topbar-max-width",
+    "type": "string"
+  },
+  {
+    "label": "FF Home Background URL",
+    "defaultValue": "url('')",
+    "placeholder": "url('...')",
+    "property": "natsumi.home-background-url",
+    "type": "string"
   }
 ]
