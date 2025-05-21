@@ -56,27 +56,39 @@
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.disabled",
-    "label": "Disable Natsumi URLbar"
+    "label": "Disable Natsumi URLbar and Revert Style"
   },
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.disable-transparency",
-    "label": "Disable URLbar Background Transparency"
+    "label": "Disable URLbar Background Transparency",
+    "conditions": [
+      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
+    ]
   },
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.force-nowrap",
-    "label": "Prevent Wrapping to Make Things More Compact Regardless of Window Width"
+    "label": "Prevent Wrapping to Make Things More Compact Regardless of Window Width",
+    "conditions": [
+      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
+    ]
   },
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.no-compact",
-    "label": "Disable some animations and Makes the Natsumi URLbar Lighter"
+    "label": "Disable some animations and Makes the Natsumi URLbar Lighter",
+    "conditions": [
+      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
+    ]
   },
   {
     "type": "checkbox",
     "property": "natsumi.urlbar.light",
-    "label": "Disable Comapact URLbar When Not Focused"
+    "label": "Disable Comapact URLbar When Not Focused",
+    "conditions": [
+      { "if": { "property": "natsumi.urlbar.disabled", "value": false } }
+    ]
   },
   {
     "type": "separator",
@@ -265,13 +277,24 @@
   },
   {
     "type": "checkbox",
+    "property": "natsumi.gamemode.disabled",
+    "label": "Disable Natsumi Gamemode and Revert Style"
+  },
+  {
+    "type": "checkbox",
     "property": "natsumi.gamemode.enabled",
-    "label": "Enable Natsumi Gamemode"
+    "label": "Enable Natsumi Gamemode",
+    "conditions": [
+      { "if": { "property": "natsumi.gamemode.disabled", "value": false } }
+    ]
   },
   {
     "type": "checkbox",
     "property": "natsumi.gamemode.gx-color",
-    "label": "Add Red-Pink Accent Color for Gamemode"
+    "label": "Add Red-Pink Accent Color for Gamemode",
+    "conditions": [
+      { "if": { "property": "natsumi.gamemode.disabled", "value": false } }
+    ]
   },
   {
     "type": "separator",
