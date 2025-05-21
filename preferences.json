@@ -1,0 +1,51 @@
+[
+    {
+        "type": "text",
+        "label": "**Configs**",
+        "margin": "10px 0 15px 0",
+        "size": "20px"
+    },
+    {
+        "type": "separator",
+        "label": "Base Theme"
+    },
+    {
+        "type": "checkbox",
+        "property": "natsumi.theme.compact-marginless",
+        "label": "Remove Margins From Compact Mode"
+    },
+    {
+        "type": "checkbox",
+        "property": "natsumi.theme.compact-marginless-hide-bookmarks",
+        "label": "Hides the Bookmarks Bar in Marginless Compact Mode",
+    },
+    {
+        "type": "checkbox",
+        "property": "natsumi.theme.consistent-toolbar-button-size",
+        "label": "Consistent Button Size",
+    },
+      {
+        "type": "checkbox",
+        "property": "natsumi.theme.enable-border-animation",
+        "label": "Enables a Border Loading Animation for Tabs - May Be GPU Heavy",
+    },
+        {
+        "type": "checkbox",
+        "property": "natsumi.theme.force-blur",
+        "label": "Force Background Blue Regardless of Whether a Blurred Element is Shown",
+    },
+          {
+        "type": "checkbox",
+        "property": "natsumi.theme.force-glass-dark-shadows",
+        "label": "Forces Dark Shdown on Natsumi Glass",
+    },
+            {
+        "type": "checkbox",
+        "property": "natsumi.theme.opaque-icons",
+        "label": "Makes Toolbar Icon Outlines Opaque",
+    },
+    {
+        "type": "separator",
+        "label": "URLbar"
+    }
+]
