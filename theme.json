@@ -1,0 +1,19 @@
+{
+    "id": "natsumi-browser",
+    "name": "Natsumi Browser",
+    "description": "A userchrome for Zen Browser that makes things flow.",
+    "homepage": "https://github.com/Anoms12/natsumi-browser",
+    "preferences": "https://raw.githubusercontent.com/Anoms12/natsumi-browser/main/preferences.json",
+    "style": "https://raw.githubusercontent.com/Anoms12/natsumi-browser/main/chrome.css",
+    "readme": "https://raw.githubusercontent.com/Anoms12/natsumi-browser/main/README.md",
+    "image": "https://raw.githubusercontent.com/Anoms12/natsumi-browser/main/image.jpg",
+    "author": " greeeen-dev",
+    "version": "3.1.0",
+    "tags": [
+        "sine",
+        "Theme",
+        "Natsumi"
+    ],
+    "createdAt": "2025-05-21",
+    "updatedAt": "2025-05-21"
+}
