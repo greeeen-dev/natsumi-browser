@@ -18,7 +18,7 @@ body:
           required: true
         - label: My installation of Natsumi Browser was not modified whatsoever.
           required: true
-        - label: My issue is reproducible without Zen Mods or additional CSS applied.
+        - label: My issue is reproducible without Floorp Mods or additional CSS applied.
           required: true
         - label: I've provided as much info/evidence as I can.
           required: true
@@ -31,10 +31,10 @@ body:
     validations:
       required: true
   - type: input
-    id: zenversion
+    id: floorpversion
     attributes:
-      label: Zen Browser Version
-      description: What Zen Browser version did you use when you encountered the bug?
+      label: Floorp Browser Version
+      description: What Floorp Browser version did you use when you encountered the bug?
       placeholder: 1.7.1b, 1.7.2t, etc.
     validations:
       required: true
