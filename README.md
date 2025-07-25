@@ -130,6 +130,9 @@ You will need to install Natsumi by copying its files to your profile's chrome f
 3. Copy natsumi-config.css and natsumi folder to the chrome folder.
 4. Restart your browser and enjoy!
 
+#### Advanced setup: If you are a techie who wants to keep your files up-to-date with new changes over time
+After following either of the above steps, if you are interested in ensuring that you upgrade to the latest version of Natsumi as new changes are released, you can simply clone the repository into the `chrome` folder.
+
 #### Installing via Sine
 While installing via Sine is possible, this is not recommended for Floorp users due to issues with icons.
 See [#123](https://github.com/greeeen-dev/natsumi-browser/issues/123).
