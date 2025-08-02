@@ -1,3 +1,8 @@
+// ==UserScript==
+// @include   main
+// @ignorecache
+// ==/UserScript==
+
 /*
 
 Natsumi Browser - A userchrome for Firefox and more that makes things flow.
@@ -24,27 +29,46 @@ SOFTWARE.
 
 */
 
-/* ==== Theme: Transgender ==== */
-/* Trans rights are human rights! 🏳️‍⚧️ */
+import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
-@media -moz-pref("natsumi.theme.type", "transgender") {
-  :root[windowtype*="navigator:browser"] body {
-    #browser::before {
-      opacity: var(--natsumi-theme-gradient-opacity) !important;
-      background: linear-gradient(180deg, #5bcefa, #f5a9b8, white, #f5a9b8, #5bcefa) !important;
+function detectFork() {
+    let browserTitle = "";
 
-      @media (prefers-color-scheme: dark) {
-        background: linear-gradient(180deg, #316a80, #745259, #aaa, #745259, #316a80) !important;
-      }
+    try {
+        browserTitle = document.body.parentNode.attributes["data-title-default"].nodeValue;
+    } catch (e) {
+        console.error("Error detecting fork:", e);
+        return null;
     }
 
-    &::after {
-      background-color: transparent !important;
-    }
-  }
+    let forkName = "firefox";
 
-  #navigator-toolbox {
-    --natsumi-toolbox-color: light-dark(#5bcefa, #316a80) !important;
-    --natsumi-toolbox-color-inactive: light-dark(#5bcefa, #316a80) !important;
-  }
+    console.log(browserTitle);
+
+    if (browserTitle === "Ablaze Floorp") {
+        forkName = "floorp";
+    } else if (browserTitle === "Waterfox") {
+        forkName = "waterfox";
+    }
+
+    return forkName;
+}
+
+let disableAutoFork = false;
+
+if (ucApi.Prefs.get("natsumi.browser.disable-auto-detect").exists()) {
+    disableAutoFork = ucApi.Prefs.get("natsumi.browser.disable-auto-detect").value;
+}
+
+if (disableAutoFork) {
+    console.warn("Automatic fork detection is disabled.");
+} else {
+    let forkName = detectFork();
+
+    if (forkName) {
+        console.log(`Detected browser fork: ${forkName}`);
+        ucApi.Prefs.set("natsumi.browser.type", forkName);
+    } else {
+        console.warn("Could not detect browser fork.");
+    }
 }

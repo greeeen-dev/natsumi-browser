@@ -22,9 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Natsumi Browser uses code from others. The link to the original projects or
-their author(s) have been provided above the used code.
-
 */
 
 /* ==== Natsumi theming engine ==== */
@@ -33,6 +30,7 @@ their author(s) have been provided above the used code.
 
 /* Load themes */
 @import "themes/colorful.css";
+@import "themes/playful.css";
 @import "themes/gradient.css";
 @import "themes/gradient-complementary.css";
 @import "themes/lucid.css";
@@ -53,21 +51,40 @@ their author(s) have been provided above the used code.
   --natsumi-theme-gradient-opacity: 0.5;
 
   @media (-moz-platform: linux) {
-    background-color: color-mix(in srgb, light-dark(#ebebeb, #171717) 60%, transparent);
+    &::before, &::after {
+      border-radius: 5px !important;
+    }
   }
 
   /* Gradient color (overrides solid colors) */
-  &::before {
+  #browser::before {
     --natsumi-theme-gradient-color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
     --natsumi-theme-gradient-color-right: light-dark(var(--natsumi-colors-secondary), color-mix(in srgb, var(--natsumi-primary-color) 50%, black));
     content: "";
     background: linear-gradient(135deg, var(--natsumi-theme-gradient-color-left), var(--natsumi-theme-gradient-color-right));
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    bottom: 0;
     position: absolute;
-    z-index: -998;
+    z-index: -997;
     transition: opacity 0.3s ease;
     opacity: 0;
+  }
+
+  /* Better translucency for Linux */
+  &::before {
+    content: "";
+    background-color: light-dark(#ebebeb, #171717);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -999;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+
+    @media (-moz-platform: linux) {
+      opacity: 0.6 !important;
+    }
   }
 
   /* Solid color */
@@ -77,19 +94,19 @@ their author(s) have been provided above the used code.
     width: 100%;
     height: 100%;
     position: absolute;
-    z-index: -999;
+    z-index: -998;
     transition: background-color 0.3s ease;
     opacity: var(--natsumi-theme-color-opacity);
   }
 
   @media -moz-pref("natsumi.theme.gray-out-when-inactive") {
     &:-moz-window-inactive {
-      &::before {
-        opacity: 0 !important;
-      }
-
       &::after {
         background-color: transparent !important;
+      }
+
+      #browser::before {
+        opacity: 0 !important;
       }
     }
   }
@@ -105,7 +122,7 @@ their author(s) have been provided above the used code.
 /* Theme colors */
 :root[windowtype*="navigator:browser"] {
   /* Use theme color if possible */
-  &[lwt-icon-fill-attention] body::after {
+  &[lwt-icon-fill-attention] #browser::before {
     background-color: var(--lwt-accent-color);
   }
 }

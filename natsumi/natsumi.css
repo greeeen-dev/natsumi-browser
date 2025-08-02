@@ -22,9 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Natsumi Browser uses code from others. The link to the original projects or
-their author(s) have been provided above the used code.
-
 */
 
 /* ==== Load config and Natsumi Browser ==== */
@@ -40,7 +37,10 @@ their author(s) have been provided above the used code.
 @import "modules/urlbar.css";
 @import "modules/findbar.css";
 @import "modules/pip.css";
+@import "modules/welcome.css";
 @import "modules/floorp/base.css";
 @import "modules/floorp/icons.css";
 @import "modules/floorp/split-view.css";
 @import "modules/floorp/panel-sidebar.css";
+@import "modules/floorp/workspaces.css";
+@import "modules/waterfox/base.css";

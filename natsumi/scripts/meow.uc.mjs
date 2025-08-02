@@ -1,3 +1,8 @@
+// ==UserScript==
+// @include   main
+// @ignorecache
+// ==/UserScript==
+
 /*
 
 Natsumi Browser - A userchrome for Firefox and more that makes things flow.
@@ -24,27 +29,17 @@ SOFTWARE.
 
 */
 
-/* ==== Theme: Transgender ==== */
-/* Trans rights are human rights! 🏳️‍⚧️ */
+// literally just a script for meowing because i felt cute :3
 
-@media -moz-pref("natsumi.theme.type", "transgender") {
-  :root[windowtype*="navigator:browser"] body {
-    #browser::before {
-      opacity: var(--natsumi-theme-gradient-opacity) !important;
-      background: linear-gradient(180deg, #5bcefa, #f5a9b8, white, #f5a9b8, #5bcefa) !important;
-
-      @media (prefers-color-scheme: dark) {
-        background: linear-gradient(180deg, #316a80, #745259, #aaa, #745259, #316a80) !important;
-      }
-    }
-
-    &::after {
-      background-color: transparent !important;
-    }
-  }
-
-  #navigator-toolbox {
-    --natsumi-toolbox-color: light-dark(#5bcefa, #316a80) !important;
-    --natsumi-toolbox-color-inactive: light-dark(#5bcefa, #316a80) !important;
-  }
+function makeCatNoisesBecauseIFeltVeryCuteWhenWritingThisSoHereIsAFunctionWithAnExcessivelyLongNameThatMakesRandomCatNoises() {
+    const catNoises = [
+        "meow",
+        "mrrp",
+        "mrrow",
+        "nya"
+    ]
+    const catNoise = catNoises[Math.floor(Math.random() * catNoises.length)];
+    console.log(`${catNoise} :3`);
 }
+
+makeCatNoisesBecauseIFeltVeryCuteWhenWritingThisSoHereIsAFunctionWithAnExcessivelyLongNameThatMakesRandomCatNoises();

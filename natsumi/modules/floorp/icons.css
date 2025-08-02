@@ -22,9 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Natsumi Browser uses code from others. The link to the original projects or
-their author(s) have been provided above the used code.
-
 */
 
 /* ==== Lucide icons for Floorp ==== */
@@ -378,6 +375,16 @@ their author(s) have been provided above the used code.
 
   tab-group[collapsed] .tab-group-label::before {
     mask-image: url("../../icons/lucide/folder-filled.svg") !important;
+  }
+
+  /* Tab close button */
+  #tabbrowser-tabs[expanded] #tabbrowser-arrowscrollbox {
+    .tabbrowser-tab .tab-close-button {
+      padding: 4px !important;
+      list-style-image: url("../../icons/lucide/close.svg") !important;
+      -moz-context-properties: stroke, stroke-opacity !important;
+      stroke: currentColor !important;
+    }
   }
 }
 

@@ -1,0 +1,584 @@
+/*
+
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Welcome pane ==== */
+
+@keyframes icon-fadein {
+  0% {
+    opacity: 0;
+    width: 60vh;
+    height: 60vh;
+    filter: blur(100px);
+  }
+
+  15% {
+    opacity: 1;
+    width: 48vh;
+    height: 48vh;
+    filter: blur(0);
+  }
+
+  85% {
+    opacity: 1;
+    width: 40vh;
+    height: 40vh;
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    width: 28vh;
+    height: 28vh;
+    filter: blur(100px);
+  }
+}
+
+@keyframes icon-fadein-background {
+  0% {
+    background-color: transparent;
+  }
+
+  5% {
+    background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+  }
+
+  45% {
+    background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+  }
+
+  65% {
+    background-color: transparent;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes button-fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes text-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes panel-fadein {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes basic-fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes basic-fadeout {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+#natsumi-welcome {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998 !important;
+
+  &:not(:has(#natsumi-welcome-content:hover)) {
+    -moz-window-dragging: drag;
+  }
+
+  #natsumi-icon {
+    width: 40vh;
+    height: 40vh;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    list-style-image: url("../icons/natsumi.png");
+  }
+
+  .natsumi-welcome-button {
+    opacity: 0;
+  }
+
+  #natsumi-slogan-1, #natsumi-slogan-2 {
+    opacity: 0;
+    margin: 0 auto !important;
+    margin-bottom: 10px !important;
+    font-size: 50px;
+
+    span {
+      margin-right: 10px !important;
+    }
+  }
+
+  .natsumi-welcome-pane-body {
+    margin-top: 10px !important;
+  }
+
+  #natsumi-welcome-content {
+    width: 60%;
+    height: 60%;
+    border-radius: 15px;
+    margin: auto !important;
+
+    #natsumi-welcome-content-container {
+      flex-direction: column;
+      flex: 1;
+      padding: 10% 6% !important;
+    }
+
+    #natsumi-welcome-content-preview {
+      flex: 1;
+    }
+
+    .natsumi-welcome-pane {
+      flex-direction: column;
+    }
+  }
+
+  #natsumi-corner-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    @media (-moz-platform: macos) {
+      left: unset;
+      right: 20px;
+    }
+
+    #natsumi-corner-icon-image {
+      width: 50px;
+      height: 50px;
+      list-style-image: url("../icons/natsumi.png");
+      margin-right: 5px !important;
+    }
+
+    #natsumi-corner-icon-label {
+      margin: auto 0 !important;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+  #natsumi-welcome-button-next {
+    min-width: 66px !important;
+    min-height: 40px !important;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    background-color: var(--natsumi-primary-color) !important;
+    background-image: url("../icons/lucide/move-right.svg");
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    -moz-context-properties: stroke, stroke-opacity !important;
+    stroke: black;
+    margin: 0 auto !important;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--natsumi-primary-color) 90%, black) !important;
+    }
+  }
+
+  #natsumi-welcome-title {
+    font-weight: bold;
+    font-size: 28px;
+    margin-bottom: 10px !important;
+  }
+
+  .natsumi-welcome-paragraph {
+    font-size: medium;
+  }
+
+  &.natsumi-welcome-initial-animation {
+    animation: icon-fadein-background 10s ease;
+
+    #natsumi-icon {
+      animation: icon-fadein 3.5s linear;
+      animation-fill-mode: forwards;
+    }
+
+    #natsumi-welcome-button-next {
+      animation: button-fadein 0.2s ease;
+      animation-delay: 4.5s;
+      animation-fill-mode: forwards;
+    }
+
+    #natsumi-corner-icon {
+      transition-delay: 4.5s;
+      opacity: 1;
+    }
+
+    #natsumi-slogan-1, #natsumi-slogan-2 {
+      animation: text-appear 0.5s ease;
+      animation-fill-mode: forwards;
+      font-weight: bold;
+    }
+
+    #natsumi-slogan-1 {
+      animation-delay: 3.5s;
+    }
+
+    #natsumi-slogan-2 {
+      animation-delay: 4s;
+
+      span {
+        background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
+        background-clip: text;
+        color: transparent;
+        background-size: calc(100% + 20px);
+
+        @media (prefers-color-scheme: light) {
+          filter: saturate(3);
+          color: rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+
+    #natsumi-welcome-content {
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      transition-delay: 4.5s;
+      background-color: light-dark(white, #222);
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    #natsumi-welcome-content-body {
+      margin: auto !important;
+    }
+  }
+
+  &.natsumi-welcome-ready {
+    #natsumi-icon {
+      display: none !important;
+    }
+
+    #natsumi-welcome-content {
+      background-color: light-dark(white, #222);
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    #natsumi-corner-icon {
+      opacity: 0;
+    }
+
+    .natsumi-welcome-button {
+      opacity: 1;
+    }
+
+    #natsumi-welcome-button-next {
+      margin-top: auto !important;
+    }
+
+    .natsumi-welcome-pane {
+      animation: panel-fadein 0.2s ease;
+      animation-fill-mode: forwards;
+    }
+
+    .natsumi-welcome-pane-body {
+      flex-direction: column;
+    }
+
+    .natsumi-welcome-paragraph {
+      margin-bottom: 10px !important;
+    }
+
+    .natsumi-welcome-selection-container {
+      flex-wrap: wrap;
+      gap: 10px;
+      overflow-y: scroll;
+    }
+
+    .natsumi-welcome-selection {
+      border-radius: 5px;
+      flex-direction: column;
+      border: 2px solid light-dark(#ccc, #777) !important;
+      padding: 10px !important;
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color);
+      }
+
+      &.selected {
+        border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+      }
+
+      .natsumi-welcome-selection-label {
+        font-size: 12px !important;
+      }
+
+      .natsumi-welcome-selection-preview {
+        margin-bottom: 10px !important;
+      }
+    }
+
+    /* Layout pane */
+    #natsumi-welcome-layout {
+      .natsumi-welcome-selection-preview {
+        width: 140px;
+        height: 80px;
+        border-radius: 4px;
+        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+
+        &::before {
+          content: "";
+          width: 102px;
+          height: 60px;
+          margin: auto 4px 4px auto !important;
+          border-radius: 2px !important;
+          background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
+          border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+          box-sizing: border-box !important;
+        }
+
+        &#natsumi-welcome-single-toolbar::before {
+          height: 70px !important;
+        }
+      }
+    }
+
+    /* Colors pane */
+    #natsumi-welcome-colors {
+      .natsumi-welcome-selection {
+        border-radius: 50%;
+        padding: 5px !important;
+      }
+
+      .natsumi-welcome-selection-preview {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 0 !important;
+        border-radius: 50%;
+
+        &#natsumi-welcome-light-green {
+          background-color: #a0d490;
+        }
+
+        &#natsumi-welcome-sky-blue {
+          background-color: #aac7ff;
+        }
+
+        &#natsumi-welcome-turquoise {
+          background-color: #74d7cb;
+        }
+
+        &#natsumi-welcome-yellow {
+          background-color: #dec663;
+        }
+
+        &#natsumi-welcome-peach-orange {
+          background-color: #ffb787;
+        }
+
+        &#natsumi-welcome-warmer-pink {
+          background-color: #ff9eb3;
+        }
+
+        &#natsumi-welcome-beige {
+          background-color: #dec1b1;
+        }
+
+        &#natsumi-welcome-light-red {
+          background-color: #ffb1c0;
+        }
+
+        &#natsumi-welcome-muted-pink {
+          background-color: #ddbcf3;
+        }
+
+        &#natsumi-welcome-pink {
+          background-color: #f6b0ea;
+        }
+
+        &#natsumi-welcome-lavender-purple {
+          background-color: #d4bbff;
+        }
+
+        &#natsumi-welcome-system-accent {
+          background-color: AccentColor;
+        }
+      }
+    }
+
+    /* Themes pane */
+    #natsumi-welcome-themes {
+      .natsumi-welcome-selection {
+        border-radius: 10px;
+        padding: 5px !important;
+      }
+
+      .natsumi-welcome-selection-preview {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 0 !important;
+        border-radius: 4px;
+        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+
+        &#natsumi-welcome-theme-default {
+          background-color: light-dark(#ebebeb, #171717);
+        }
+
+        &#natsumi-welcome-theme-gradient {
+          --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
+          --color-right: light-dark(var(--natsumi-colors-secondary), color-mix(in srgb, var(--natsumi-primary-color) 50%, black));
+          background: linear-gradient(135deg, var(--color-left), var(--color-right));
+        }
+
+        &#natsumi-welcome-theme-cgradient {
+          --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
+          background-color: var(--color-left);
+
+          &::before {
+            content: "";
+            width: 100%;
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(135deg, transparent, var(--color-left));
+            filter: invert(1);
+          }
+        }
+
+        &#natsumi-welcome-theme-colorful {
+          background-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary));
+        }
+
+        &#natsumi-welcome-theme-playful {
+          background-color: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-primary-color) 70%, black)) !important;
+          filter: saturate(2);
+        }
+
+        &#natsumi-welcome-theme-lucid {
+          background: radial-gradient(closest-side, light-dark(var(--natsumi-primary-color), var(--natsumi-colors-secondary)), light-dark(white, #222));
+        }
+
+        &#natsumi-welcome-theme-oled {
+          background-color: light-dark(white, black);
+        }
+
+        &#natsumi-welcome-theme-lgbtq {
+          background: linear-gradient(180deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
+
+          @media (prefers-color-scheme: dark) {
+            background: linear-gradient(180deg, #994444, #895f46, #8d804b, #3e8663, #3e456d, #625084);
+          }
+        }
+
+        &#natsumi-welcome-theme-transgender {
+          background: linear-gradient(180deg, #5bcefa, #f5a9b8, white, #f5a9b8, #5bcefa);
+
+          @media (prefers-color-scheme: dark) {
+            background: linear-gradient(180deg, #316a80, #745259, #aaa, #745259, #316a80);
+          }
+        }
+      }
+    }
+  }
+}
+
+body[natsumi-welcome] {
+  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  #sidebar-main, #TabsToolbar-customization-target {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  #nav-bar {
+    min-height: 40px !important;
+  }
+
+  @media not (-moz-platform: macos) {
+    .titlebar-buttonbox-container {
+      margin-left: auto !important;
+    }
+  }
+
+  @media not (-moz-pref("sidebar.verticalTabs")) {
+    #navigator-toolbox {
+      z-index: 999 !important;
+    }
+  }
+}
+
+:root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) body[natsumi-welcome] {
+  @media not (-moz-platform: macos) {
+    #navigator-toolbox {
+      z-index: 999 !important;
+    }
+  }
+}
+
+body:not([natsumi-welcome]) {
+  #natsumi-welcome {
+    display: none !important;
+  }
+}

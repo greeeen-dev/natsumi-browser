@@ -11,7 +11,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
-      artifacts: write
 
     steps:
       - uses: actions/checkout@v4
@@ -47,8 +46,8 @@ jobs:
       - name: Rename (macOS)
         if: ${{ matrix.os == 'macos-latest' }}
         run:
-          mv build/installer.bin build/natsumi-installer-macos-arm64
-          mv build_intel/installer.bin build/natsumi-installer-macos-intel
+          mv build/installer.bin build/natsumi-installer-macos-arm64;
+          mv build_intel/installer.bin build_intel/natsumi-installer-macos-intel
       - name: Rename (PowerShell)
         if: ${{ matrix.os == 'windows-latest' }}
         run: Rename-Item -Path build/installer.exe -NewName natsumi-installer.exe
@@ -71,7 +70,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         with:
           name: natsumi-installer-linux
-          path: build/natsumi-installer-linux-x64
+          path: build/natsumi-installer-linux
           retention-days: 7
       - name: Upload package (PowerShell)
         uses: actions/upload-artifact@v4
@@ -109,12 +108,11 @@ jobs:
           commit: ${{ github.ref }}
           draft: true
           skipIfReleaseExists: true
-          artifacts: [
-            'natsumi-installer-macos-arm64/natsumi-installer-macos-arm64',
-            'natsumi-installer-macos-intel/natsumi-installer-macos-x64',
-            'natsumi-installer-linux/natsumi-installer-linux-x64',
-            'natsumi-installer-windows/natsumi-installer.exe'
-          ]
+          artifactErrorsFailBuild: true
+          artifacts: 'natsumi-installer-macos-arm64/natsumi-installer-macos-arm64,
+            natsumi-installer-macos-x64/natsumi-installer-macos-intel,
+            natsumi-installer-linux/natsumi-installer-linux,
+            natsumi-installer-windows/natsumi-installer.exe'
 
 
 

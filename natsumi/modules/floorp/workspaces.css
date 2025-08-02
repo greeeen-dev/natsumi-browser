@@ -1,0 +1,121 @@
+/*
+
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Floorp Workspaces ==== */
+
+:root[data-title-default="Ablaze Floorp"] {
+  #workspacesToolbarButtonPanel {
+    #workspacesPopupContent {
+      padding: 0 !important;
+    }
+
+    /*noinspection CssInvalidPropertyValue*/
+    #workspacesPopupFooter {
+      order: -2;
+      margin: auto 0 !important;
+      width: -moz-available !important;
+
+      toolbarbutton {
+        width: 28px !important;
+        height: 28px !important;
+        margin: 0 3px !important;
+        transition: background 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          background-color: var(--natsumi-button-hover-color) !important;
+        }
+
+        &:active {
+          background-color: var(--natsumi-button-active-color) !important;
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .toolbarbutton-icon {
+          width: 28px !important;
+          height: 28px !important;
+          padding: 6px !important;
+        }
+      }
+
+      #workspacesCreateNewWorkspaceButton {
+        .toolbarbutton-text {
+          display: none !important;
+        }
+      }
+
+      #workspacesManageworkspacesServicesButton {
+        margin-right: 0 !important;
+      }
+
+      /*noinspection CssInvalidPropertyValue*/
+      &::before {
+        content: "Workspaces";
+        font-weight: bold;
+        font-size: 12px !important;
+        width: -moz-available !important;
+      }
+    }
+
+    #workspacesPopupSeparator {
+      order: -1;
+    }
+
+    .workspaceButton {
+      padding: 2px !important;
+      padding-left: 6px !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color) !important;
+      }
+
+      .toolbarbutton-icon {
+        width: 24px !important;
+        height: 24px !important;
+        padding: 4px !important;
+        border: 1px solid var(--natsumi-colors-border) !important;
+      }
+
+      .toolbarbutton-text {
+        font-size: 12px !important;
+      }
+
+      &[data-selected="true"] {
+        font-weight: bold !important;
+
+        .toolbarbutton-icon {
+          background-color: var(--natsumi-primary-color) !important;
+        }
+
+        .toolbarbutton-text {
+          color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        }
+      }
+    }
+  }
+}

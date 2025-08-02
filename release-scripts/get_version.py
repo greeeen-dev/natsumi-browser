@@ -40,7 +40,5 @@ else:
     raw_version = data['version']
     version = 'v' + data['version']
 
-release = data['release']
-
 with open(env_file, "a") as myfile:
-    myfile.write(f"RAW_VERSION={raw_version}\nVERSION={version}\nRELEASE={release}")
+    myfile.write(f"RAW_VERSION={raw_version}\nVERSION={version}")

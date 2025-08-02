@@ -22,9 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Natsumi Browser uses code from others. The link to the original projects or
-their author(s) have been provided above the used code.
-
 */
 
 /* ==== Base theme ==== */
@@ -58,12 +55,23 @@ their author(s) have been provided above the used code.
 
     #statuspanel {
       max-width: calc(100% - 10px) !important;
+      height: calc(26px) !important;
+      padding-top: 0 !important;
+      padding-inline: 10px !important;
       margin: 10px !important;
+      border: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
+      border-radius: 13px !important;
+      background-color: var(--natsumi-colors-secondary) !important;
 
       #statuspanel-label {
-        padding: 5px 8px !important;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
-        border-radius: 13px !important;
+        border: none !important;
+        background: none !important;
+        margin: auto !important;
+        padding: 0 !important;
+
+        &::before {
+          margin: auto 0 !important;
+        }
       }
     }
   }
@@ -95,7 +103,7 @@ their author(s) have been provided above the used code.
   -moz-window-dragging: drag;
 }
 
-#nav-bar-customization-target, #PanelUI-button {
+#nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {
   toolbarbutton {
     --toolbarbutton-outer-padding: 4px;
     max-height: 40px !important;
@@ -339,4 +347,202 @@ their author(s) have been provided above the used code.
 
 #notification-popup .popup-notification-secondary-button {
   display: flex !important;
+}
+
+.tools-and-extensions {
+  justify-content: space-between !important;
+  padding-bottom: var(--natsumi-browser-separation) !important;
+
+  &[orientation="horizontal"] {
+    width: calc(100% - calc(var(--natsumi-browser-separation) * 2)) !important;
+    padding-inline: var(--natsumi-browser-separation) !important;
+  }
+}
+
+@media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+  #vertical-tabs {
+    min-height: 100% !important;
+  }
+
+  #tabbrowser-tabs::after {
+    border-color: transparent !important;
+  }
+}
+
+/* Single toolbar view */
+@media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
+  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) {
+    #navigator-toolbox {
+      width: var(--natsumi-sidebar-width) !important;
+      min-height: 85px !important;
+      z-index: 1 !important;
+    }
+
+    @media not (-moz-platform: macos) {
+      .titlebar-buttonbox-container {
+        margin-left: 0 !important;
+        min-height: 40px !important;
+        position: absolute;
+        left: 100vw;
+        transform: translateX(-100%);
+        z-index: 999 !important;
+      }
+    }
+
+    #nav-bar-customization-target {
+      min-height: 40px;
+      order: 1 !important;
+
+      & > toolbarbutton, & > toolbaritem, & > toolbarspring {
+        display: none !important;
+      }
+
+      #back-button, #forward-button, #stop-reload-button, #urlbar-container {
+        display: flex !important;
+      }
+
+      @media -moz-pref("natsumi.theme.single-toolbar-show-menu-button") {
+        max-width: fit-content !important;
+        margin-left: auto !important;
+      }
+
+      @media not -moz-pref("natsumi.theme.single-toolbar-show-menu-button") {
+        #unified-extensions-button  {
+          display: flex !important;
+          order: -1 !important;
+          margin-right: auto !important;
+        }
+      }
+    }
+
+    #urlbar-container {
+      --urlbar-margin-inline: var(--space-medium) !important;
+      position: absolute !important;
+      width: calc(var(--natsumi-sidebar-width) - calc(var(--space-medium) * 2)) !important;
+      left: 0 !important;
+      top: 40px !important;
+    }
+
+    #vertical-tabs {
+      padding-top: 82px !important;
+    }
+
+    #unified-extensions-button {
+      padding-left: var(--space-medium) !important;
+    }
+
+    #PanelUI-button {
+      padding-left: calc(var(--space-medium) - 4px) !important;
+    }
+
+    #stop-reload-button {
+      padding-right: var(--space-small) !important;
+    }
+
+    #PersonalToolbar {
+      visibility: visible !important;
+      width: calc(100vw - var(--natsumi-sidebar-width)) !important;
+      margin-left: var(--natsumi-sidebar-width) !important;
+      padding-left: 0 !important;
+      padding-top: 6px !important;
+      padding-bottom: 6px !important;
+      margin-top: -41px !important;
+      overflow: visible !important;
+
+      #personal-bookmarks {
+        transition: visibility 0.2s ease !important;
+      }
+
+      @media not (-moz-platform: macos) {
+        width: calc(100vw - var(--natsumi-sidebar-width) - var(--natsumi-window-buttons-width)) !important;
+      }
+
+      &[collapsed=true] {
+        #personal-bookmarks, toolbarbutton, toolbaritem {
+          visibility: collapse !important;
+        }
+      }
+
+      @media (not (-moz-platform: macos)) or (-moz-pref("natsumi.theme.show-bookmarks-on-hover")) {
+        &:hover[collapsed=true] {
+          min-height: 28px !important;
+          max-height: 28px !important;
+
+          #personal-bookmarks, toolbarbutton, toolbaritem {
+            visibility: visible !important;
+          }
+
+          #personal-bookmarks {
+            min-height: 28px !important;
+          }
+        }
+      }
+    }
+
+    #browser {
+      position: absolute !important;
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+
+    #tabbrowser-tabbox {
+      margin-top: var(--natsumi-browser-separation) !important;
+      transition: margin-top 0.2s ease !important;
+
+      @media (-moz-platform: windows) {
+        margin-top: calc(var(--natsumi-browser-separation) + 2px) !important;
+      }
+    }
+
+    &:has(#PersonalToolbar[collapsed="false"]) #tabbrowser-tabbox, body:has([natsumi-welcome]) #tabbrowser-tabbox {
+      margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
+      @media (-moz-platform: windows) {
+        margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
+      }
+    }
+
+    @media (not (-moz-platform: macos)) or (-moz-pref("natsumi.theme.show-bookmarks-on-hover")) {
+      &:has(#PersonalToolbar:hover) #tabbrowser-tabbox {
+        margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
+
+        /* Probably redundant but keeping it here just in case */
+        @media (-moz-platform: windows) {
+          margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
+        }
+      }
+    }
+
+    @media not (-moz-platform: macos) {
+      &:has(.titlebar-buttonbox-container:hover) {
+        #PersonalToolbar[collapsed=true] {
+          min-height: 28px !important;
+          max-height: 28px !important;
+
+          #personal-bookmarks {
+            visibility: visible !important;
+            min-height: 28px !important;
+          }
+        }
+
+        #tabbrowser-tabbox {
+          margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
+
+          @media (-moz-platform: windows) {
+            margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
+          }
+        }
+      }
+    }
+
+    &[inDOMFullscreen="true"] #tabbrowser-tabbox, &[inDOMFullscreen="true"]:has(#PersonalToolbar[collapsed="false"]) #tabbrowser-tabbox {
+      transition: none !important;
+      margin-top: 0 !important;
+    }
+
+    @media not -moz-pref("natsumi.theme.single-toolbar-show-menu-button") {
+      #PanelUI-button {
+        display: none !important;
+      }
+    }
+  }
 }

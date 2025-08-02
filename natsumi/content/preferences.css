@@ -1,0 +1,387 @@
+/*
+
+Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Preferences ==== */
+
+@-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
+  #natsumi-settings .category-icon {
+    list-style-image: url("../icons/lucide/paintbrush.svg");
+    -moz-context-properties: stroke, stroke-opacity !important;
+    stroke: currentColor;
+  }
+
+  .natsumi-mc-chooser {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: var(--space-medium) 0;
+  }
+
+  .natsumi-mc-choice {
+    border: 2px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+    border-radius: 5px;
+    width: 200px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      background-color: var(--natsumi-button-hover-color);
+    }
+
+    &.selected {
+      border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+    }
+
+    .natsumi-mc-choice-image-container {
+      flex: 1;
+
+      .natsumi-mc-choice-image-browser, .natsumi-mc-choice-image-browser-additional {
+        &::before {
+          content: "";
+          width: calc(100% - 10px);
+          height: calc(100% - 14px);
+          border-radius: 2px;
+          border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+          background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
+          margin: auto 4px 4px;
+
+          @media -moz-pref("sidebar.verticalTabs") {
+            width: calc(100% - 34px);
+            margin-left: auto;
+          }
+        }
+      }
+
+      .natsumi-mc-choice-image-browser {
+        width: 100%;
+        margin: 10px 35px;
+        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        border-radius: 5px;
+        overflow: hidden;
+
+        .natsumi-mc-choice-image-browser-additional {
+          width: 100%;
+        }
+
+        &:has(.natsumi-mc-choice-image-browser-additional) {
+          &::before {
+            display: none;
+          }
+        }
+
+        &#multiple-toolbars {
+          flex-direction: column !important;
+
+          &::before {
+            height: calc(100% - 14px) !important;
+            width: calc(100% - 34px) !important;
+            margin-left: auto;
+          }
+
+          &::after {
+            border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+            content: "";
+            width: 50px;
+            height: 2px;
+            background-color: var(--natsumi-button-hover-color);
+            margin-top: 2px !important;
+            order: -1 !important;
+            border-radius: 2px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+
+        &#single-toolbar {
+          flex-direction: row !important;
+
+          &::before {
+            height: calc(100% - 10px) !important;
+            width: calc(100% - 34px) !important;
+            margin-left: auto;
+          }
+
+          &::after {
+            border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+            content: "";
+            width: 22px;
+            height: 2px;
+            background-color: var(--natsumi-button-hover-color);
+            margin-top: 10px !important;
+            order: -1 !important;
+            border-radius: 2px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+
+        &#default {
+          background-color: light-dark(#ebebeb, #171717);
+        }
+
+        &#gradient {
+          --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
+          --color-right: light-dark(var(--natsumi-colors-secondary), color-mix(in srgb, var(--natsumi-primary-color) 50%, black));
+          background: linear-gradient(135deg, var(--color-left), var(--color-right));
+        }
+
+        &#gradient-complementary {
+          background: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
+
+          .natsumi-mc-choice-image-browser-additional {
+            background: linear-gradient(135deg, transparent, light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white)));
+            filter: invert(1);
+
+            &::before {
+              filter: invert(1);
+            }
+          }
+        }
+
+        &#colorful {
+          background-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary)) !important;
+        }
+
+        &#playful {
+          background-color: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-primary-color) 70%, black)) !important;
+          filter: saturate(2);
+
+          &::before {
+            filter: saturate(0.5);
+          }
+        }
+
+        &#lucid {
+          background: radial-gradient(closest-side, light-dark(var(--natsumi-primary-color), var(--natsumi-colors-secondary)), light-dark(white, #222)) !important;
+        }
+
+        &#oled {
+          background-color: light-dark(white, black);
+        }
+
+        &#lgbtq {
+          background: linear-gradient(180deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
+
+          @media (prefers-color-scheme: dark) {
+            background: linear-gradient(180deg, #994444, #895f46, #8d804b, #3e8663, #3e456d, #625084);
+          }
+        }
+
+        &#transgender {
+          background: linear-gradient(180deg, #5bcefa, #f5a9b8, white, #f5a9b8, #5bcefa);
+
+          @media (prefers-color-scheme: dark) {
+            background: linear-gradient(180deg, #316a80, #745259, #aaa, #745259, #316a80);
+          }
+        }
+      }
+    }
+
+    .natsumi-mc-choice-label {
+      padding: 10px;
+    }
+  }
+
+  #natsumiColorsGroup {
+    .natsumi-mc-choice {
+      width: 102px;
+      height: 104px;
+
+      .natsumi-mc-choice-image-container {
+        width: 80px;
+        height: 80px;
+        margin: 10px;
+        border-radius: 40px;
+        background-color: var(--natsumi-primary-color);
+        overflow: hidden;
+
+        &::before {
+          content: "";
+          margin-top: 40px;
+          width: 40px;
+          height: 40px;
+          background-color: var(--natsumi-colors-secondary);
+        }
+
+        &::after {
+          content: "";
+          margin-top: 40px;
+          width: 40px;
+          height: 40px;
+          background-color: var(--natsumi-colors-tertiary);
+        }
+      }
+    }
+
+    .natsumi-mc-choice-label {
+      display: none;
+    }
+  }
+
+  #natsumiPipMaterialGroup, #natsumiPDFMaterialGroup, #natsumiURLbarLayoutGroup {
+    .natsumi-mc-choice {
+      .natsumi-mc-choice-image-browser {
+        display: block;
+        background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
+        gap: 0;
+      }
+    }
+  }
+
+  #natsumiPipMaterialGroup {
+    .natsumi-mc-choice-image-browser {
+      &::before {
+        display: block;
+        margin: 50px auto 5px;
+        width: 100px;
+        height: 2px;
+        border-radius: 3px;
+        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+        background-color: var(--natsumi-mat-hz-background);
+        backdrop-filter: saturate(3) contrast(2) blur(var(--natsumi-mat-hz-blur-radius));
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      &::after {
+        display: block;
+        content: "";
+        width: 30px;
+        height: 8px;
+        border-radius: 5px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 4px;
+        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+        background-color: var(--natsumi-mat-hz-background);
+        backdrop-filter: saturate(3) contrast(2) blur(var(--natsumi-mat-hz-blur-radius));
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      &#mat-hz-tinted {
+        &::before {
+          background-color: var(--natsumi-mat-hz-background-tinted);
+        }
+
+        &::after {
+          background-color: var(--natsumi-mat-hz-background-tinted);
+        }
+      }
+    }
+  }
+
+  #natsumiPDFMaterialGroup {
+    .natsumi-mc-choice-image-browser {
+      &::before {
+        display: block;
+        margin: 5px auto;
+        width: 100px;
+        height: 5px;
+        border-radius: 4px;
+        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+        background-color: var(--natsumi-mat-hz-background);
+        backdrop-filter: saturate(3) contrast(2) blur(var(--natsumi-mat-hz-blur-radius));
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      &::after {
+        display: block;
+        content: "";
+        width: 30px;
+        height: 53px;
+        border-radius: 4px;
+        margin-left: 4px;
+        margin-right: auto;
+        margin-top: 4px;
+        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+        background-color: var(--natsumi-mat-hz-background);
+        backdrop-filter: saturate(3) contrast(2) blur(var(--natsumi-mat-hz-blur-radius));
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      &#mat-hz-tinted {
+        &::before {
+          background-color: var(--natsumi-mat-hz-background-tinted);
+        }
+
+        &::after {
+          background-color: var(--natsumi-mat-hz-background-tinted);
+        }
+      }
+
+      &#mat-ga {
+        &::before {
+          background-color: var(--natsumi-mat-ga-background);
+          backdrop-filter: blur(var(--natsumi-mat-ga-blur-radius));
+          box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
+        }
+
+        &::after {
+          background-color: var(--natsumi-mat-ga-background);
+          backdrop-filter: blur(var(--natsumi-mat-ga-blur-radius));
+          box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
+        }
+      }
+    }
+  }
+
+  #natsumiURLbarLayoutGroup {
+    .natsumi-mc-choice-image-browser {
+      background: light-dark(#ebebeb, #171717) !important;
+
+      &::before {
+        display: block;
+        margin-top: 8px;
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        width: 75px;
+        height: 45px;
+        margin-top: -60px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+        background-color: var(--natsumi-mat-hz-background-tinted);
+        backdrop-filter: saturate(3) contrast(2) blur(var(--natsumi-mat-hz-blur-radius));
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+      }
+    }
+
+    #urlbar-classic {
+      &::after {
+        margin-top: -74px;
+        width: 60px;
+        height: 40px;
+        background-color: light-dark(white, #777);
+        border: 1px solid light-dark(rgba(20, 20, 20, 0.3), rgba(235, 235, 235, 0.3));
+        backdrop-filter: none;
+      }
+    }
+  }
+}

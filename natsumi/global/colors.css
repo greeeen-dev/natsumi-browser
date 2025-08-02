@@ -35,7 +35,7 @@ their author(s) have been provided above the used code.
   }
 }
 
-@media -moz-pref("natsumi.theme.accent-color", "turqouise") {
+@media -moz-pref("natsumi.theme.accent-color", "turquoise") {
   * {
     --natsumi-custom-primary-color: #74d7cb;
   }

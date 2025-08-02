@@ -22,9 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Natsumi Browser uses code from others. The link to the original projects or
-their author(s) have been provided above the used code.
-
 */
 
 /* ==== Preload ==== */
@@ -36,6 +33,7 @@ their author(s) have been provided above the used code.
   --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 50%, black 50%);
   --natsumi-colors-secondary: color-mix(in srgb, var(--natsumi-colors-primary) 20%, white 80%);
   --natsumi-colors-tertiary: color-mix(in srgb, var(--natsumi-primary-color) 2%, white 98%);
+  --natsumi-colors-border: color-mix(in srgb, var(--natsumi-colors-secondary) 97%, black 3%);
   --natsumi-colors-primary-foreground: color-mix(in srgb, var(--natsumi-primary-color) 80%, white 20%);
   --natsumi-ff-background-color: color-mix(in srgb, var(--natsumi-primary-color) 25%, white);
   --natsumi-button-hover-color: rgba(0, 0, 0, 0.1);
@@ -45,6 +43,7 @@ their author(s) have been provided above the used code.
     --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 20%, #1d1d1d 80%);
     --natsumi-colors-secondary: color-mix(in srgb, var(--natsumi-primary-color) 30%, #1d1d1d 70%);
     --natsumi-colors-tertiary: color-mix(in srgb, var(--natsumi-primary-color) 1%, #1d1d1d 99%);
+    --natsumi-colors-border: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, rgb(79, 79, 79) 80%);
     --natsumi-colors-primary-foreground: color-mix(in srgb, var(--natsumi-primary-color) 80%, white 20%);
     --natsumi-ff-background-color: color-mix(in srgb, var(--natsumi-primary-color) 15%, black);
     --natsumi-button-hover-color: rgba(255, 255, 255, 0.1);

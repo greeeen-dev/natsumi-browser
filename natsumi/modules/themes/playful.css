@@ -21,30 +21,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/* ==== Theme: Transgender ==== */
-/* Trans rights are human rights! 🏳️‍⚧️ */
+/* ==== Theme: Playful Solid ==== */
+/* A higher saturation version of Colorful Solid. */
 
-@media -moz-pref("natsumi.theme.type", "transgender") {
-  :root[windowtype*="navigator:browser"] body {
-    #browser::before {
-      opacity: var(--natsumi-theme-gradient-opacity) !important;
-      background: linear-gradient(180deg, #5bcefa, #f5a9b8, white, #f5a9b8, #5bcefa) !important;
-
-      @media (prefers-color-scheme: dark) {
-        background: linear-gradient(180deg, #316a80, #745259, #aaa, #745259, #316a80) !important;
-      }
-    }
-
-    &::after {
-      background-color: transparent !important;
-    }
+@media -moz-pref("natsumi.theme.type", "playful") {
+  :root[windowtype*="navigator:browser"] body::after {
+    background-color: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-primary-color) 70%, black)) !important;
+    filter: saturate(2);
   }
 
   #navigator-toolbox {
-    --natsumi-toolbox-color: light-dark(#5bcefa, #316a80) !important;
-    --natsumi-toolbox-color-inactive: light-dark(#5bcefa, #316a80) !important;
+    --natsumi-toolbox-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary)) !important;
+    --natsumi-toolbox-color-inactive: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary)) !important;
   }
 }

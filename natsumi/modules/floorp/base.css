@@ -22,9 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Natsumi Browser uses code from others. The link to the original projects or
-their author(s) have been provided above the used code.
-
 */
 
 /* ==== Floorp base ==== */
@@ -83,6 +80,122 @@ their author(s) have been provided above the used code.
     }
   }
 
+  #nora-statusbar {
+    background: transparent !important;
+
+    &:not(.hidden) {
+      min-height: 40px !important;
+    }
+
+    #workspaces-toolbar-button {
+      margin: 0 4px !important;
+    }
+  }
+
+  &:has(#nora-statusbar:not(.hidden)) #browser::before {
+    bottom: -40px !important;
+  }
+
+  @media not -moz-pref("natsumi.sidebar.hide-workspace-indicator") {
+    #sidebar-main[style*="--natsumi-workspace-name"] {
+      #tabbrowser-arrowscrollbox {
+        &::before {
+          content: var(--natsumi-workspace-name);
+          width: 100%;
+          height: 40px;
+          font-weight: bold !important;
+          font-size: small !important;
+          vertical-align: middle !important;
+          padding: 12px var(--tab-inline-padding) !important;
+          margin-bottom: 4px !important;
+          color: color-mix(in srgb, light-dark(black, white) 50%, transparent);
+        }
+      }
+
+      &[style*="--natsumi-workspace-icon"] {
+        #tabbrowser-arrowscrollbox {
+          &::before {
+            padding-left: calc(var(--tab-inline-padding) + 23px) !important;
+            background-image: var(--natsumi-workspace-icon) !important;
+            background-size: 16px;
+            background-repeat: no-repeat;
+            background-position-x: var(--tab-inline-padding);
+            background-position-y: center;
+          }
+        }
+      }
+
+      &:not([sidebar-launcher-expanded]) {
+        &[style*="--natsumi-workspace-icon"] {
+          #tabbrowser-arrowscrollbox {
+            &::before {
+              content: "" !important;
+              width: 40px !important;
+              padding: 12px 0 !important;
+            }
+          }
+        }
+
+        &:not([style*="--natsumi-workspace-icon"]) {
+          #tabbrowser-arrowscrollbox {
+            &::before {
+              background-image: none !important;
+              padding: 12px 0 !important;
+              width: 1ch !important;
+              margin-inline: auto !important;
+              overflow: hidden !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media -moz-pref("natsumi.sidebar.workspaces-as-icons") {
+    #workspaces-toolbar-button {
+      overflow: hidden !important;
+
+      .toolbarbutton-icon, .toolbarbutton-text {
+        opacity: 0 !important;
+        position: absolute;
+      }
+
+      .natsumi-workspace-icon {
+        display: inline-flex !important;
+        position: relative;
+        width: 16px;
+        height: 16px;
+        background-image: var(--natsumi-workspace-icon) !important;
+        margin: 6px !important;
+
+        &::before {
+          content: "";
+          width: 4px;
+          height: 4px;
+          position: absolute;
+          background: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+          border-radius: 50%;
+          left: 50%;
+          translate: -50% 0;
+          bottom: -6px;
+          opacity: 0;
+        }
+
+        &.natsumi-workspace-active::before {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  @media not -moz-pref("natsumi.sidebar.workspaces-as-icons") {
+    #workspaces-toolbar-button {
+      .natsumi-workspace-icon {
+        display: none;
+      }
+    }
+  }
+
   @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
     @keyframes panel-appear {
       0% {
@@ -135,6 +248,76 @@ their author(s) have been provided above the used code.
 
       &:not(:hover) {
       }
+    }
+  }
+
+  @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
+    &:not([customizing]) #nora-statusbar.hidden {
+      display: flex !important;
+      justify-content: space-between !important;
+      flex-wrap: wrap;
+      position: absolute;
+      left: var(--natsumi-browser-separation);
+      bottom: calc(var(--natsumi-browser-separation) + var(--space-small) + 40px);
+      width: calc(var(--natsumi-sidebar-width) - calc(var(--natsumi-browser-separation) * 2)) !important;
+      background: transparent !important;
+
+      @media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+        bottom: var(--natsumi-browser-separation) !important;
+      }
+
+      #status-text {
+        display: none !important;
+      }
+    }
+
+    &:not([customizing]):has(sidebar-main:not([expanded])) #nora-statusbar.hidden {
+      flex-direction: column !important;
+      bottom: calc(var(--natsumi-sidebar-options-height) + var(--space-small) + var(--natsumi-browser-separation));
+      left: 7px !important;
+      width: 36px !important;
+
+      toolbarbutton {
+        margin-block: 3px !important;
+      }
+
+      .toolbarbutton-text {
+        display: none !important;
+      }
+
+      @media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+        bottom: var(--natsumi-browser-separation) !important;
+      }
+
+      @media -moz-pref("natsumi.sidebar.workspaces-as-icons") {
+        #workspaces-toolbar-button {
+          flex-direction: column !important;
+          flex: 1 !important;
+          max-height: unset !important;
+
+          .natsumi-workspace-icon {
+            min-height: 16px !important;
+
+            &::before {
+              bottom: 50% !important;
+              left: -6px !important;
+              translate: 0 50% !important;
+            }
+          }
+        }
+      }
+    }
+
+    &:has(#nora-statusbar.hidden) #vertical-tabs {
+      padding-bottom: calc(40px + var(--natsumi-browser-separation)) !important;
+    }
+
+    &:has(#nora-statusbar.hidden) #vertical-tabs {
+      padding-bottom: calc(var(--natsumi-statusbar-height) + 3px + var(--natsumi-browser-separation)) !important;
+    }
+
+    #tabbrowser-tabs::after {
+      border-bottom: var(--tabstrip-inner-border) !important;
     }
   }
 }
