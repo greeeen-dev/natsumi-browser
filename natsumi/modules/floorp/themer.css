@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -24,28 +24,25 @@ SOFTWARE.
 
 */
 
-/* ==== Load config and Natsumi Browser ==== */
+/* ==== Floorp-specific theming engine extension ==== */
 
-@import "../natsumi-config.css";
-@import "modules/preload.css";
-@import "global/colors.css";
-@import "modules/themer.css";
-@import "modules/base.css";
-@import "modules/backdrop-blur.css";
-@import "modules/single-toolbar.css";
-@import "modules/tabs.css";
-@import "modules/folders.css";
-@import "modules/urlbar.css";
-@import "modules/findbar.css";
-@import "modules/pip.css";
-@import "modules/notifications.css";
-@import "modules/compact-mode.css";
-@import "modules/welcome.css";
-@import "modules/floorp/themer.css";
-@import "modules/floorp/base.css";
-@import "modules/floorp/icons.css";
-@import "modules/floorp/split-view.css";
-@import "modules/floorp/panel-sidebar.css";
-@import "modules/floorp/workspaces.css";
-@import "modules/waterfox/base.css";
-@import "modules/firefox/welcome.css";
+:root[data-title-default="Ablaze Floorp"] {
+  * {
+    --natsumi-primary-color: var(--floorp-tab-panel-bg-color, var(--natsumi-custom-primary-color, var(--natsumi-accent-color, #a0d490)));
+  }
+
+  /* Override accent color if theme color is set */
+  @media not -moz-pref("natsumi.theme.force-natsumi-color") {
+    &[lwt-icon-fill-attention] {
+      * {
+        --natsumi-primary-color: var(--floorp-tab-panel-bg-color, var(--lwt-accent-color)) !important;
+
+        @media -moz-pref("natsumi.theme.use-tab-theme-color") {
+          .tabbrowser-tab {
+            --natsumi-primary-color: var(--floorp-tab-panel-bg-color, var(--lwt-tab-line-color)) !important;
+          }
+        }
+      }
+    }
+  }
+}

@@ -53,8 +53,8 @@ SOFTWARE.
 
   #urlbar {
     --natsumi-urlbar-button-end-radius: 6px;
-    --natsumi-urlbar-button-accent-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-secondary));
-    --natsumi-urlbar-hover-background-color: light-dark(transparent, rgba(255, 255, 255, 0.3));
+    --natsumi-urlbar-button-accent-color: light-dark(var(--natsumi-colors-secondary-alt), var(--natsumi-button-active-color));
+    --natsumi-urlbar-hover-background-color: var(--natsumi-colors-urlbar-background);
     --natsumi-urlbar-search-engine-color: var(--natsumi-button-hover-color);
     --natsumi-urlbar-search-engine-text: light-dark(black, white);
 
@@ -83,7 +83,7 @@ SOFTWARE.
     &:not([open]) {
       @media (not -moz-pref("natsumi.theme.single-toolbar")) or (not -moz-pref("sidebar.verticalTabs")) {
         border-radius: 16px !important;
-        border: 1px solid var(--natsumi-colors-primary) !important;
+      border: 1px solid light-dark(var(--natsumi-colors-border-alt), var(--natsumi-button-active-color)) !important;
         transition: border 0.2s ease !important;
         height: 32px !important;
 
@@ -112,7 +112,7 @@ SOFTWARE.
         }
 
         #identity-icon-box {
-          background-color: color-mix(in srgb, var(--natsumi-urlbar-button-accent-color) 50%, white) !important;
+          background-color: var(--natsumi-urlbar-button-accent-color) !important;
           border-radius: 13px !important;
           border-start-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
           border-end-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
@@ -124,7 +124,7 @@ SOFTWARE.
         }
 
         #tracking-protection-icon-container {
-          background-color: color-mix(in srgb, var(--natsumi-urlbar-button-accent-color) 50%, white) !important;
+          background-color: var(--natsumi-urlbar-button-accent-color) !important;
           border-radius: 0 !important;
           border-start-start-radius: 13px !important;
           border-end-start-radius: 13px !important;
@@ -136,7 +136,7 @@ SOFTWARE.
         }
 
         #identity-permission-box {
-          background-color: color-mix(in srgb, var(--natsumi-urlbar-button-accent-color) 50%, white) !important;
+          background-color: var(--natsumi-urlbar-button-accent-color) !important;
           border-radius: 0 !important;
           border-start-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
           border-end-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
@@ -148,7 +148,7 @@ SOFTWARE.
         }
 
         #notification-popup-box {
-          background-color: color-mix(in srgb, var(--natsumi-urlbar-button-accent-color) 50%, white) !important;
+          background-color: var(--natsumi-urlbar-button-accent-color) !important;
           border-radius: 0 !important;
           border-start-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
           border-end-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
@@ -161,7 +161,7 @@ SOFTWARE.
         }
 
         #urlbar-searchmode-switcher {
-          background-color: color-mix(in srgb, var(--natsumi-urlbar-button-accent-color) 50%, white) !important;
+          background-color: var(--natsumi-urlbar-button-accent-color) !important;
           border-start-start-radius: 13px !important;
           border-end-start-radius: 13px !important;
           border-start-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
@@ -194,7 +194,7 @@ SOFTWARE.
         }
 
         #searchmode-switcher-chicklet {
-          background-color: color-mix(in srgb, var(--natsumi-urlbar-button-accent-color) 50%, white) !important;
+          background-color: var(--natsumi-urlbar-button-accent-color) !important;
           border-start-start-radius: 0 !important;
           border-end-start-radius: 0 !important;
           border-start-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
