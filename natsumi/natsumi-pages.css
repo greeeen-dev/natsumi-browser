@@ -33,5 +33,6 @@ SOFTWARE.
 @import "content/ff-home.css";
 @import "content/preferences.css";
 @import "content/global.css";
+@import "content/firefox/preferences.css";
 
 /* Do NOT enter any additional CSS below. */

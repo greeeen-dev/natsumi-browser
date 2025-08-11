@@ -343,7 +343,8 @@ function createThemesPane() {
         "Paint your browser",
         `
             <div class="natsumi-welcome-paragraph">
-                Choose a theme that you like. It'll be used as the browser's background.
+                Choose a theme that you like. It'll be used as the browser's background.<br/>
+                You can also build your own theme in your browser's preferences page after setup.
             </div>
             <div class="natsumi-welcome-selection-container">
                 ${themesSelection}

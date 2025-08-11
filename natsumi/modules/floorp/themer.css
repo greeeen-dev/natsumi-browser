@@ -24,19 +24,25 @@ SOFTWARE.
 
 */
 
-/* ==== Firefox welcome pane next button fix ==== */
+/* ==== Floorp-specific theming engine extension ==== */
 
-:root[data-title-default="Mozilla Firefox"] {
-  #natsumi-welcome-button-next {
-    background-image: none !important;
+:root[data-title-default="Ablaze Floorp"] {
+  * {
+    --natsumi-primary-color: var(--floorp-tab-panel-bg-color, var(--natsumi-custom-primary-color, var(--natsumi-accent-color, #a0d490)));
+  }
 
-    &::before {
-      content: "";
-      width: 24px;
-      height: 24px;
-      margin: auto;
-      background-color: black;
-      mask-image: url("../../icons/lucide-firefox/move-right.svg");
+  /* Override accent color if theme color is set */
+  @media not -moz-pref("natsumi.theme.force-natsumi-color") {
+    &[lwt-icon-fill-attention] {
+      * {
+        --natsumi-primary-color: var(--floorp-tab-panel-bg-color, var(--lwt-accent-color)) !important;
+
+        @media -moz-pref("natsumi.theme.use-tab-theme-color") {
+          .tabbrowser-tab {
+            --natsumi-primary-color: var(--floorp-tab-panel-bg-color, var(--lwt-tab-line-color)) !important;
+          }
+        }
+      }
     }
   }
 }

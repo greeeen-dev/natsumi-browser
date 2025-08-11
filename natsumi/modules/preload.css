@@ -32,9 +32,12 @@ SOFTWARE.
   --natsumi-primary-color: var(--natsumi-custom-primary-color, var(--natsumi-accent-color, #a0d490));
   --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 50%, black 50%);
   --natsumi-colors-secondary: color-mix(in srgb, var(--natsumi-colors-primary) 20%, white 80%);
+  --natsumi-colors-secondary-alt: color-mix(in srgb, var(--natsumi-primary-color) 40%, white 60%);
   --natsumi-colors-tertiary: color-mix(in srgb, var(--natsumi-primary-color) 2%, white 98%);
   --natsumi-colors-border: color-mix(in srgb, var(--natsumi-colors-secondary) 97%, black 3%);
+  --natsumi-colors-border-alt: color-mix(in srgb, var(--natsumi-colors-secondary-alt) 90%, black 10%);
   --natsumi-colors-primary-foreground: color-mix(in srgb, var(--natsumi-primary-color) 80%, white 20%);
+  --natsumi-colors-urlbar-background: color-mix(in srgb, var(--natsumi-primary-color) 10%, white 80%);
   --natsumi-ff-background-color: color-mix(in srgb, var(--natsumi-primary-color) 25%, white);
   --natsumi-button-hover-color: rgba(0, 0, 0, 0.1);
   --natsumi-button-active-color: var(--natsumi-colors-secondary);
@@ -42,9 +45,12 @@ SOFTWARE.
   @media (prefers-color-scheme: dark) {
     --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 20%, #1d1d1d 80%);
     --natsumi-colors-secondary: color-mix(in srgb, var(--natsumi-primary-color) 30%, #1d1d1d 70%);
+    --natsumi-colors-secondary-alt: var(--natsumi-colors-secondary);
     --natsumi-colors-tertiary: color-mix(in srgb, var(--natsumi-primary-color) 1%, #1d1d1d 99%);
     --natsumi-colors-border: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, rgb(79, 79, 79) 80%);
+    --natsumi-colors-border-alt: var(--natsumi-colors-border);
     --natsumi-colors-primary-foreground: color-mix(in srgb, var(--natsumi-primary-color) 80%, white 20%);
+    --natsumi-colors-urlbar-background: transparent;
     --natsumi-ff-background-color: color-mix(in srgb, var(--natsumi-primary-color) 15%, black);
     --natsumi-button-hover-color: rgba(255, 255, 255, 0.1);
     --natsumi-button-active-color: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);

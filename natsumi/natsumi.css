@@ -41,6 +41,7 @@ SOFTWARE.
 @import "modules/notifications.css";
 @import "modules/compact-mode.css";
 @import "modules/welcome.css";
+@import "modules/floorp/themer.css";
 @import "modules/floorp/base.css";
 @import "modules/floorp/icons.css";
 @import "modules/floorp/split-view.css";

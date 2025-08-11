@@ -31,6 +31,19 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+import { NatsumiNotification } from "./notifications.sys.mjs";
+import {
+    customThemeLoader,
+    customColorLoader,
+    colorPresetNames,
+    colorPresetOffsets,
+    colorPresetOrders,
+    availablePresets,
+    gradientTypes,
+    gradientTypeNames,
+    applyCustomColor,
+    applyCustomTheme
+} from "./custom-theme.sys.mjs";
 
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
@@ -44,6 +57,1101 @@ function testAlert() {
 function setStringPreference(preference, value) {
     // noinspection JSUnresolvedReference
     ucApi.Prefs.set(preference, value);
+}
+
+class CustomThemePicker {
+    constructor(id, loaderMethod, applyMethod, targetPref, singleColor = false, allowOpacity = true) {
+        this.id = id;
+        this.loaderMethod = loaderMethod;
+        this.applyMethod = applyMethod;
+        this.targetPref = targetPref;
+        this.singleColor = singleColor;
+        this.allowOpacity = allowOpacity;
+        this.preset = null;
+        this.gradientType = "linear";
+        this.angle = 0;
+        this.colors = [];
+        this.newColorAllowed = true;
+        this.lastSelected = null;
+        this.layer = 0;
+        this.theme = "light";
+        this.data = {"light": {"0": {}, "1": {}}, "dark": {"0": {}, "1": {}}}
+        this.node = null;
+
+        // Configs
+        this.availableLayers = 2;
+        this.version = 1;
+
+        if (this.singleColor) {
+            this.data = {"color": {}};
+        }
+    }
+
+    init() {
+        let node = document.getElementById(this.id);
+
+        if (!node) {
+            throw new Error("Could not find theme picker node.");
+        }
+
+        if (this.node) {
+            console.warn("Theme picker node already initialized.");
+            return;
+        }
+
+        this.node = node;
+
+        if (this.singleColor) {
+            node.setAttribute("natsumi-single-color", "");
+        }
+
+        if (!this.allowOpacity) {
+            node.setAttribute("natsumi-no-opacity", "");
+        }
+
+        // Load custom theme data from preferences
+        let customThemeData = ucApi.Prefs.get(this.targetPref);
+        if (customThemeData.exists()) {
+            try {
+                let toLoad = JSON.parse(customThemeData.value);
+
+                if (!toLoad["version"]) {
+                    toLoad["version"] = 1;
+                }
+
+                this.data = this.loaderMethod(toLoad);
+            } catch (e) {
+                console.error("Failed to parse custom theme data:", e);
+            }
+        }
+
+        this.loadLayer(0);
+
+        if (this.colors.length > 0) {
+            this.setLastSelected("0");
+            this.renderButtons();
+        }
+
+        this.renderAngle();
+
+        // Add listener to grid
+        let customThemeColorGrid = this.node.querySelector(".natsumi-custom-theme-grid");
+        customThemeColorGrid.addEventListener("click", (event) => {
+            if (event.button !== 0) {
+                return;
+            }
+
+            let relativeX = event.offsetX;
+            let relativeY = event.offsetY;
+
+            // Add a new color at the clicked position
+            this.addNewColor(relativeX, relativeY);
+        });
+        customThemeColorGrid.addEventListener("mouseenter", (event) => {
+            this.newColorAllowed = true;
+        });
+        customThemeColorGrid.addEventListener("mouseleave", (event) => {
+            this.newColorAllowed = false;
+        });
+
+        // Add listeners for top controls
+        for (let i = 0; i < this.availableLayers; i++) {
+            let layerButton = this.node.querySelector(`.natsumi-custom-layer-${i + 1}`);
+            layerButton.addEventListener("click", (event) => {
+                this.loadLayer(i);
+                layerButton.setAttribute("selected", "");
+
+                for (let j = 0; j < this.availableLayers; j++) {
+                    if (j !== i) {
+                        this.node.querySelector(`.natsumi-custom-layer-${j + 1}`).removeAttribute("selected");
+                    }
+                }
+            });
+        }
+
+        let lightModeButton = this.node.querySelector(".natsumi-custom-mode-light");
+        let darkModeButton = this.node.querySelector(".natsumi-custom-mode-dark");
+
+        if (!this.singleColor) {
+            lightModeButton.addEventListener("click", (event) => {
+                this.theme = "light";
+                lightModeButton.setAttribute("selected", "");
+                darkModeButton.removeAttribute("selected");
+                this.loadLayer(this.layer);
+            });
+            darkModeButton.addEventListener("click", (event) => {
+                this.theme = "dark";
+                darkModeButton.setAttribute("selected", "");
+                lightModeButton.removeAttribute("selected");
+                this.loadLayer(this.layer);
+            });
+        }
+
+        let importButton = this.node.querySelector(".natsumi-custom-import");
+        let exportButton = this.node.querySelector(".natsumi-custom-export");
+
+        if (!this.singleColor) {
+            importButton.addEventListener("click", (event) => {
+                this.import();
+            });
+            exportButton.addEventListener("click", (event) => {
+                this.export();
+            });
+        }
+
+        // Add listeners for gradient controls
+        let presetButton = this.node.querySelector(".natsumi-preset-button");
+        let gradientTypeButton = this.node.querySelector(".natsumi-gradient-button");
+        let resetButton = this.node.querySelector(".natsumi-reset-button");
+        let hexInput = this.node.querySelector(".natsumi-hex-input");
+        let hexButton = this.node.querySelector(".natsumi-hex-button");
+
+        if (!this.singleColor) {
+            presetButton.addEventListener("click", (event) => {
+                this.cyclePreset();
+            });
+
+            gradientTypeButton.addEventListener("click", (event) => {
+                this.cycleGradientType();
+            });
+        }
+
+        resetButton.addEventListener("click", (event) => {
+            this.removeAllColors();
+        });
+
+        hexButton.addEventListener("click", (event) => {
+            let hexInputContainer = this.node.querySelector(".natsumi-custom-theme-hex-input");
+            if (hexInputContainer.attributes["hidden"]) {
+                hexInputContainer.removeAttribute("hidden");
+            } else {
+                hexInputContainer.setAttribute("hidden", "");
+                this.node.querySelector(".natsumi-hex-input").value = "";
+            }
+        });
+
+        // Add listener for HEX input field
+        hexInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                let hexCode = hexInput.value.trim();
+
+                if (!hexCode) {
+                    alert("Please enter a valid HEX code.");
+                    return;
+                }
+
+                try {
+                    this.addNewColorHex(hexCode);
+                    hexInput.value = "";
+                } catch (e) {
+                    alert(e.message || "Invalid HEX code.");
+                }
+            }
+        });
+
+        // Add listener for HEX submit button
+        let hexSubmitButton = this.node.querySelector(".natsumi-hex-submit");
+        hexSubmitButton.addEventListener("click", (event) => {
+            let hexInputNode = this.node.querySelector(".natsumi-hex-input");
+            let hexCode = hexInputNode.value.trim();
+
+            if (!hexCode) {
+                alert("Please enter a valid HEX code.");
+                return;
+            }
+
+            try {
+                this.addNewColorHex(hexCode);
+                hexInputNode.value = "";
+            } catch (e) {
+                alert(e.message || "Invalid HEX code.");
+            }
+        });
+
+        // Add listeners for sliders
+        let luminositySliderNode = this.node.querySelector(".natsumi-color-slider-luminosity");
+        let opacitySliderNode = this.node.querySelector(".natsumi-color-slider-opacity");
+        luminositySliderNode.addEventListener("mousedown", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            this.sliderEvent("luminosity", event);
+        });
+
+        if (this.allowOpacity) {
+            opacitySliderNode.addEventListener("mousedown", (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                this.sliderEvent("opacity", event);
+            });
+        }
+
+        // Add listener for gradient angle
+        let gradientAngleNode = this.node.querySelector(".natsumi-gradient-angle");
+        gradientAngleNode.addEventListener("mousedown", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+
+            document.onmouseup = this.resetListeners;
+            document.onmousemove = (event => {
+                let relativeX = event.clientX - gradientAngleNode.getBoundingClientRect().left;
+                let relativeY = event.clientY - gradientAngleNode.getBoundingClientRect().top;
+                this.moveAngle(relativeX, relativeY);
+            });
+        });
+    }
+
+    async import() {
+        let uploadNode = document.createElement("input");
+        uploadNode.type = "file";
+        uploadNode.accept = ".json";
+        uploadNode.style.display = "none";
+        uploadNode.setAttribute("moz-accept", ".json");
+        uploadNode.setAttribute("accept", ".json");
+        uploadNode.click();
+
+        let uploadTimeout;
+
+        const filePromise = new Promise((resolve, reject) => {
+            uploadNode.onchange = (event) => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+
+                const file = uploadNode.files[0];
+                if (!file) {
+                    reject("No file selected.");
+                    return;
+                }
+
+                resolve(file);
+            };
+
+            uploadNode.onabort = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+                reject("User aborted import.");
+            }
+
+            uploadTimeout = setTimeout(() => {
+                reject("Import timed out.");
+            }, 120000);
+        });
+
+        try {
+            const content = await filePromise;
+            uploadNode.remove();
+            const text = await content.text();
+            let toLoad = JSON.parse(text);
+
+            if (!toLoad["version"]) {
+                toLoad["version"] = 1;
+            }
+
+            this.data = this.loaderMethod(toLoad);
+        } catch(e) {
+            console.error("Import failed:", e);
+            return;
+        }
+
+        this.loadLayer(this.layer);
+        this.saveLayer();
+
+        let notification = new NatsumiNotification("Theme imported successfully!", null, "chrome://natsumi/content/icons/lucide/download.svg");
+        notification.addToContainer();
+    }
+
+    export() {
+        const dataString = JSON.stringify(this.data, null, 4);
+        const blob = new Blob([dataString], { type: "application/json" });
+        const exportUrl = URL.createObjectURL(blob);
+        let downloadNode = document.createElement("a");
+        downloadNode.href = exportUrl;
+        downloadNode.download = "natsumi-gradient.json";
+
+        try {
+            document.body.appendChild(downloadNode);
+            downloadNode.click();
+            let notification = new NatsumiNotification("Theme exported successfully!", null, "chrome://natsumi/content/icons/lucide/upload.svg");
+            notification.addToContainer();
+        } catch(e) {
+            console.error("Failed to export theme data:", e);
+        }
+
+        downloadNode.remove();
+        URL.revokeObjectURL(exportUrl);
+    }
+
+    loadSingleColor() {
+        this.colors = [];
+        if (this.data["color"]) {
+            this.colors.push(this.data["color"]);
+        }
+    }
+
+    loadLayer(layer) {
+        if (this.singleColor) {
+            this.loadSingleColor();
+            return;
+        }
+
+        if (layer < 0 || layer >= this.availableLayers) {
+            return;
+        }
+
+        this.layer = layer;
+        this.gradientType = "linear";
+        this.angle = 0;
+        this.colors = [];
+        this.preset = null;
+        this.lastSelected = null;
+
+        if (!this.data[this.theme]) {
+            return;
+        }
+
+        if (!this.data[this.theme][`${layer}`]) {
+            return;
+        }
+
+        if (this.data[this.theme][`${layer}`]["background"]) {
+            let layerData = this.data[this.theme][`${layer}`];
+
+            if (layerData["background"]["type"]) {
+                this.gradientType = layerData["background"]["type"];
+            }
+
+            if (layerData["background"]["angle"]) {
+                this.angle = layerData["background"]["angle"];
+            }
+
+            if (layerData["background"]["preset"]) {
+                this.preset = layerData["background"]["preset"];
+            }
+
+            if (layerData["background"]["colors"]) {
+                this.colors = layerData["background"]["colors"];
+            }
+
+            this.lastSelected = "0";
+        }
+
+        this.renderGrid();
+        this.renderSliders();
+        this.renderButtons();
+        this.renderAngle();
+    }
+
+    saveLayer() {
+        if (this.singleColor) {
+            this.data["color"] = this.colors[0];
+        } else {
+            this.data[this.theme][`${this.layer}`] = {
+                "background": {
+                    "type": this.gradientType,
+                    "angle": this.angle,
+                    "preset": this.preset,
+                    "colors": this.colors
+                }
+            };
+        }
+
+        this.data["version"] = this.version;
+
+        ucApi.Prefs.set(this.targetPref, JSON.stringify(this.data));
+        this.applyMethod();
+    }
+
+    generateNode() {
+        let nodeString = `
+            <div id="${this.id}" class="natsumi-custom-theme-container">
+                <div class="natsumi-custom-theme-picker">
+                    <div class="natsumi-custom-theme-top-controls">
+                        <div class="natsumi-custom-theme-top-button natsumi-custom-layer-1" selected=""></div>
+                        <div class="natsumi-custom-theme-top-button natsumi-custom-layer-2"></div>
+                        <div class="natsumi-custom-theme-top-separator"></div>
+                        <div class="natsumi-custom-theme-top-button natsumi-custom-mode-light" selected=""></div>
+                        <div class="natsumi-custom-theme-top-button natsumi-custom-mode-dark"></div>
+                        <div class="natsumi-custom-theme-top-separator"></div>
+                        <div class="natsumi-custom-theme-top-button natsumi-custom-import"></div>
+                        <div class="natsumi-custom-theme-top-button natsumi-custom-export"></div>
+                    </div>
+                    <div class="natsumi-custom-theme-grid-container">
+                        <div class="natsumi-custom-theme-grid"></div>
+                        <div class="natsumi-custom-theme-empty">
+                            Click anywhere on the grid to add a color.<br/>
+                            Right-click on a color to remove it.
+                        </div>
+                    </div>
+                    <div class="natsumi-custom-theme-controls">
+                        <div class="natsumi-custom-theme-controls-button natsumi-preset-button">
+                            <div class="natsumi-custom-theme-controls-icon"></div>
+                            <div class="natsumi-custom-theme-controls-label">
+                                Floating
+                            </div>
+                        </div>
+                        <div class="natsumi-custom-theme-controls-button natsumi-gradient-button">
+                            <div class="natsumi-custom-theme-controls-icon"></div>
+                            <div class="natsumi-custom-theme-controls-label">
+                                Linear
+                            </div>
+                        </div>
+                        <div class="natsumi-custom-theme-controls-button natsumi-reset-button">
+                            <div class="natsumi-custom-theme-controls-icon"></div>
+                        </div>
+                        <div class="natsumi-custom-theme-controls-button natsumi-hex-button">
+                            <div class="natsumi-custom-theme-controls-icon"></div>
+                        </div>
+                    </div>
+                    <div class="natsumi-custom-theme-hex-input" hidden="">
+                        <html:input class="natsumi-hex-input" type="text" placeholder="HEX code (e.g. #ff0000)"/>
+                        <div class="natsumi-hex-submit"></div>
+                    </div>
+                    <div class="natsumi-custom-theme-bottom-controls">
+                        <div class="natsumi-custom-theme-sliders">
+                            <div class="natsumi-custom-theme-luminosity">
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-luminosity">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                    <div class="natsumi-custom-theme-slider-icon-0"></div>
+                                </div>
+                            </div>
+                            <div class="natsumi-custom-theme-opacity">
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-opacity">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                    <div class="natsumi-custom-theme-slider-icon-0"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="natsumi-custom-theme-angle">
+                            <div class="natsumi-gradient-angle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return convertToXUL(nodeString);
+    }
+
+    calculateAngleRadiusGrid(relativeX, relativeY, radian = false) {
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
+
+        return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
+    }
+
+    calculateAngleRadius(relativeX, relativeY, width, height, radian = false, lockRadius = false) {
+        // Calculate the center of object
+        let centerX = width / 2;
+        let centerY = height / 2;
+
+        // Calculate the angle and radius from the center
+        let angle = Math.atan2(relativeY - centerY, relativeX - centerX) + (0.5 * Math.PI);
+        let radius = Math.sqrt(Math.pow(relativeX - centerX, 2) + Math.pow(relativeY - centerY, 2)) / (width / 2);
+
+        if (angle < 0 || angle >= (2 * Math.PI)) {
+            angle = (angle + (2 * Math.PI)) % (2 * Math.PI);
+        }
+
+        if (!radian) {
+            angle = angle * (180 / Math.PI);
+        }
+
+        if (radius > centerX) {
+            // Cap radius
+            radius = centerX;
+        }
+
+        if (lockRadius) {
+            radius = 1;
+        }
+
+        return {"angle": angle, "radius": Math.min(radius, 1)};
+    }
+
+    calculatePositionGrid(angle, radius, radian = false) {
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
+
+        return this.calculatePosition(angle, radius, gridWidth, gridHeight, radian);
+    }
+
+    calculatePosition(angle, radius, width, height, radian = false) {
+        if (!radian) {
+            angle = angle * (Math.PI / 180); // Convert to radians
+        }
+
+        // Ensure radius is within bounds
+        radius = Math.max(0, Math.min(radius, 1));
+        angle = angle % (2 * Math.PI) - (0.5 * Math.PI);
+
+        // Calculate the center of the grid
+        let centerX = width / 2;
+        let centerY = height / 2;
+
+        // Calculate the position based on angle and radius
+        let posX = centerX - 24 + (centerX * radius * Math.cos(angle));
+        let posY = centerY - 24 + (centerX * radius * Math.sin(angle));
+
+        return {"x": posX, "y": posY};
+    }
+
+    normalizeAngle(angle) {
+        return (angle + 360) % 360;
+    }
+
+    hsbToHsl(h, s, b) {
+        const l = (b / 100) * (100 - s / 2);
+        s = l === 0 || l === 1 ? 0 : ((b - l) / Math.min(l, 100 - l)) * 100;
+        return {"hue": h, "saturation": s, "luminosity": l};
+    }
+
+    rgbToHsb(r, g, b) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const delta = max - min;
+
+        // Calculate hue
+        let hue = 0;
+        if (delta > 0) {
+            switch (max) {
+                case r:
+                    hue = this.normalizeAngle(60 * ((g - b) / delta % 6));
+                    break;
+                case g:
+                    hue = this.normalizeAngle(60 * ((b - r) / delta + 2));
+                    break;
+                case b:
+                    hue = this.normalizeAngle(60 * ((r - g) / delta + 4));
+                    break;
+            }
+        }
+
+        // Calculate saturation
+        let saturation = 0;
+        if (max !== 0) {
+            saturation = delta / max;
+        }
+
+        return {"hue": hue, "saturation": saturation, "value": max};
+    }
+
+    generateCssColorCode(hue, saturation, brightness, alpha) {
+        let hslColor = this.hsbToHsl(hue, saturation, brightness);
+        return `hsla(${hue}, ${hslColor.saturation}%, ${Math.floor(hslColor.luminosity * 100)}%, ${alpha})`;
+    }
+
+    generateCssColorCodeFromData(colorData, full_value = false) {
+        const hue = Math.floor(colorData["angle"]);
+        const saturation = Math.floor(colorData["radius"] * 100);
+        let value = colorData["value"] ?? 1;
+        let opacity = colorData["opacity"] ?? 1;
+
+        if (full_value) {
+            value = 1;
+            opacity = 1;
+        }
+
+        return this.generateCssColorCode(hue, saturation, value, opacity);
+    }
+
+    resetListeners() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+
+    ensureOrder() {
+        if (this.singleColor) {
+            return;
+        }
+
+        let presetOrder = null;
+        if (this.preset) {
+            presetOrder = colorPresetOrders[this.preset];
+        }
+
+        for (let index in this.colors) {
+            if (presetOrder) {
+                this.colors[index]["order"] = presetOrder[Number.parseInt(index)];
+            } else {
+                this.colors[index]["order"] = Number.parseInt(index);
+            }
+        }
+    }
+
+    ensurePreset() {
+        if (this.singleColor) {
+            return;
+        }
+
+        this.ensureOrder();
+
+        if (this.preset) {
+            const presetOffsets = colorPresetOffsets[this.preset];
+
+            for (let colorIndex in this.colors) {
+                if (Number.parseInt(colorIndex) in presetOffsets) {
+                    this.colors[colorIndex]["angle"] = (this.colors[0]["angle"] + presetOffsets[Number.parseInt(colorIndex)]) % 360;
+                    this.colors[colorIndex]["radius"] = this.colors[0]["radius"];
+                    this.colors[colorIndex]["value"] = this.colors[0]["value"];
+                    this.colors[colorIndex]["opacity"] = this.colors[0]["opacity"];
+                    this.colors[colorIndex]["code"] = this.generateCssColorCodeFromData(this.colors[colorIndex]);
+                } else {
+                    console.warn(`No preset offset for color index ${colorIndex} in preset ${this.preset}`);
+                }
+            }
+        }
+    }
+
+    renderGrid() {
+        let gridContainerNode = this.node.querySelector(".natsumi-custom-theme-grid-container");
+
+        if (this.colors.length === 0) {
+            gridContainerNode.setAttribute("natsumi-is-empty", "");
+        } else {
+            gridContainerNode.removeAttribute("natsumi-is-empty");
+        }
+
+        let gridNode = this.node.querySelector(".natsumi-custom-theme-grid");
+        gridNode.innerHTML = "";
+
+        if (this.preset) {
+            this.ensurePreset();
+        } else {
+            this.ensureOrder();
+        }
+
+        let selectedColorData = null
+        if (this.lastSelected !== null && this.lastSelected in this.colors) {
+            selectedColorData = this.colors[this.lastSelected];
+        }
+        if (this.preset) {
+            selectedColorData = this.colors["0"];
+        }
+
+        let sliderColor = null;
+        let colorPickerNode = this.node.querySelector(".natsumi-custom-theme-picker");
+
+        if (selectedColorData) {
+            sliderColor = this.generateCssColorCodeFromData(selectedColorData, true);
+
+            if ((45 <= selectedColorData["angle"] && selectedColorData["angle"] <= 205) || selectedColorData["radius"] <= 0.5) {
+                colorPickerNode.style.setProperty("--natsumi-slider-custom-stroke", "black");
+            } else {
+                colorPickerNode.style.setProperty("--natsumi-slider-custom-stroke", "white");
+            }
+        } else {
+            sliderColor = "#ff0000";
+            colorPickerNode.style.removeProperty("--natsumi-slider-custom-stroke");
+        }
+
+        colorPickerNode.style.setProperty("--natsumi-last-selected-color", sliderColor);
+
+        for (let colorIndex in this.colors) {
+            let colorData = this.colors[colorIndex];
+            let colorNode = document.createElement("div");
+            colorNode.classList.add("natsumi-custom-theme-color");
+            colorNode.style.setProperty("--natsumi-selected-color", `${colorData.code}`);
+
+            let colorDisplayNode = document.createElement("div");
+            colorDisplayNode.classList.add("natsumi-custom-theme-color-display");
+            colorNode.appendChild(colorDisplayNode);
+
+            if (colorIndex === "0") {
+                colorNode.classList.add("natsumi-custom-theme-primary-color");
+            }
+
+            if (colorIndex === this.lastSelected) {
+                colorNode.setAttribute("selected", "");
+            } else {
+                colorNode.removeAttribute("selected");
+            }
+
+            let colorNodePosition = this.calculatePositionGrid(colorData.angle, colorData.radius);
+            colorNode.style.translate = `${colorNodePosition.x}px ${colorNodePosition.y}px`;
+            colorNode.style.setProperty("--natsumi-color-index", `"${colorData.order + 1}"`);
+
+            if ((45 <= colorData.angle && colorData.angle <= 205 && colorData.value >= 0.8 && colorData.opacity >= 0.6) || (colorData.radius <= 0.5 && colorData.value >= 0.8)) {
+                colorNode.style.setProperty("--natsumi-color-index-color", "black");
+            } else if (colorData.opacity < 0.6 && colorData.value >= 0.8) {
+                colorNode.style.setProperty("--natsumi-color-index-color", "light-dark(black, white)");
+            } else {
+                colorNode.style.setProperty("--natsumi-color-index-color", "white");
+            }
+
+            gridNode.appendChild(colorNode);
+            colorNode.addEventListener("mousedown", (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+
+                document.onmouseup = this.resetListeners;
+                document.onmousemove = (event => {
+                    let observeColorIndex = colorIndex;
+
+                    if (this.preset) {
+                        observeColorIndex = "0";
+                    }
+
+                    let relativeX = event.clientX - gridNode.getBoundingClientRect().left;
+                    let relativeY = event.clientY - gridNode.getBoundingClientRect().top;
+                    this.moveColor(observeColorIndex, relativeX, relativeY);
+                });
+            });
+            colorNode.addEventListener("contextmenu", (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                this.removeColor(colorIndex);
+            });
+            colorNode.addEventListener("click", (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                this.setLastSelected(colorIndex);
+            });
+        }
+    }
+
+    addNewColor(relativeX, relativeY) {
+        if (!this.newColorAllowed) {
+            return;
+        }
+
+        let maxColors = 6;
+        if (ucApi.Prefs.get("natsumi.theme.max-custom-colors").exists()) {
+            maxColors = Math.max(6, ucApi.Prefs.get("natsumi.theme.max-custom-colors").value);
+        }
+
+        if (this.singleColor) {
+            maxColors = 1;
+        }
+
+        if (this.colors.length >= maxColors) {
+            return;
+        }
+
+        if (this.preset) {
+            this.preset = null;
+        }
+
+        const circlePosData = this.calculateAngleRadiusGrid(relativeX, relativeY);
+        const hue = Math.floor(circlePosData["angle"]);
+        const saturation = Math.floor(circlePosData["radius"] * 100);
+        const value = 1;
+        const opacity = 1;
+
+        const colorData = {
+            "code": this.generateCssColorCode(hue, saturation, value, opacity),
+            "angle": circlePosData["angle"],
+            "radius": circlePosData["radius"],
+            "value": value,
+            "opacity": opacity,
+            "order": this.colors.length
+        }
+
+        this.colors.push(colorData);
+        this.setLastSelected(`${this.colors.length - 1}`);
+        this.renderButtons();
+        this.saveLayer();
+    }
+
+    addNewColorHex(code) {
+        if (code.startsWith("#")) {
+            code = code.slice(1);
+        }
+
+        if (code.length !== 6 && (code.length !== 8 && this.allowOpacity)) {
+            throw new Error("This is not a valid HEX code.");
+        }
+
+        if (!/^[0-9a-fA-F]{6}$/.test(code) && !/^[0-9a-fA-F]{8}$/.test(code)) {
+            throw new Error("This is not a valid HEX code.");
+        }
+
+        if (this.preset) {
+            this.preset = null;
+        }
+
+        const r = parseInt(code.slice(0, 2), 16);
+        const g = parseInt(code.slice(2, 4), 16);
+        const b = parseInt(code.slice(4, 6), 16);
+        let a = 1;
+
+        if (code.length === 8) {
+            a = parseInt(code.slice(6, 8), 16) / 255;
+        }
+
+        const hsb = this.rgbToHsb(r, g, b);
+
+        const colorData = {
+            "code": this.generateCssColorCode(hsb.hue, hsb.saturation * 100, hsb.value, a),
+            "angle": hsb.hue,
+            "radius": hsb.saturation,
+            "value": hsb.value,
+            "opacity": a,
+            "order": this.colors.length
+        }
+
+        this.colors.push(colorData);
+        this.setLastSelected(`${this.colors.length - 1}`);
+        this.renderButtons();
+        this.saveLayer();
+    }
+
+    moveColor(index, relativeX, relativeY) {
+        if (index < 0 || index >= this.colors.length) {
+            console.error("Invalid color index:", index);
+            return;
+        }
+
+        if (this.preset) {
+            if (!availablePresets[this.colors.length].includes(this.preset)) {
+                this.preset = null;
+            }
+
+            if (index !== "0") {
+                return;
+            }
+        }
+
+        const circlePosData = this.calculateAngleRadiusGrid(relativeX, relativeY);
+        this.colors[index]["angle"] = circlePosData["angle"];
+        this.colors[index]["radius"] = circlePosData["radius"];
+        this.colors[index]["code"] = this.generateCssColorCodeFromData(this.colors[index]);
+
+        this.setLastSelected(index);
+        this.saveLayer();
+    }
+
+    moveAngle(relativeX, relativeY) {
+        if (this.singleColor) {
+            return;
+        }
+
+        let angleNode = this.node.querySelector(".natsumi-gradient-angle");
+
+        // Only allow angle modification since radial gradients don't have angles to adjust
+        if (this.gradientType === "linear" || this.gradientType === "conic") {
+            const angleData = this.calculateAngleRadius(relativeX, relativeY, angleNode.getBoundingClientRect().width, angleNode.getBoundingClientRect().height, false, true);
+            this.angle = angleData["angle"];
+        }
+
+        this.renderAngle();
+        this.saveLayer();
+    }
+
+    moveSlider(slider, relativeX) {
+        let sliderNode = this.node.querySelector(`.natsumi-color-slider-${slider}`);
+        if (!sliderNode) {
+            return;
+        }
+
+        // Get slider width
+        let sliderWidth = sliderNode.getBoundingClientRect().width;
+        relativeX = Math.max(0, Math.min(relativeX, sliderWidth));
+
+        // The sliders are inverted (left = 1, right = 0), so we'd need to factor that in
+        let sliderValue = 1 - (relativeX / sliderWidth);
+
+        if (this.lastSelected === null) {
+            // No color selected here, so we can't modify its properties
+            return;
+        }
+
+        if (slider === "luminosity") {
+            this.setColorProperties(this.lastSelected, sliderValue);
+        } else if (slider === "opacity") {
+            this.setColorProperties(this.lastSelected, null, sliderValue);
+        }
+
+        sliderNode.style.setProperty("--natsumi-slider-position", `${relativeX}px`);
+
+        this.renderGrid();
+        this.saveLayer();
+    }
+
+    renderSliders() {
+        let luminositySliderNode = this.node.querySelector(".natsumi-color-slider-luminosity");
+        let opacitySliderNode = this.node.querySelector(".natsumi-color-slider-opacity");
+
+        let colorData = null;
+        if (this.lastSelected !== null && this.lastSelected in this.colors) {
+            colorData = this.colors[this.lastSelected];
+        }
+        if (this.preset) {
+            colorData = this.colors["0"];
+        }
+
+        if (colorData) {
+            const sliderWidth = Math.max(luminositySliderNode.getBoundingClientRect().width, 290);
+            const luminosityPosition = sliderWidth * (1 - colorData["value"]);
+            const opacityPosition = sliderWidth * (1 - colorData["opacity"]);
+            luminositySliderNode.style.setProperty("--natsumi-slider-position", `${luminosityPosition}px`);
+            opacitySliderNode.style.setProperty("--natsumi-slider-position", `${opacityPosition}px`);
+        } else {
+            luminositySliderNode.style.setProperty("--natsumi-slider-position", "0px");
+            opacitySliderNode.style.setProperty("--natsumi-slider-position", "0px");
+        }
+    }
+
+    renderButtons() {
+        let presetButtonNode = this.node.querySelector(".natsumi-preset-button .natsumi-custom-theme-controls-label");
+        let gradientTypeButtonNode = this.node.querySelector(".natsumi-gradient-button .natsumi-custom-theme-controls-label");
+
+        presetButtonNode.innerHTML = `${colorPresetNames[this.preset]}`;
+        gradientTypeButtonNode.innerHTML = `${gradientTypeNames[this.gradientType]}`;
+    }
+
+    renderAngle() {
+        let angleNode = this.node.querySelector(".natsumi-gradient-angle");
+        const angleData = this.calculatePosition(this.angle, 1, 60, 60);
+        angleNode.style.setProperty("--natsumi-angle-position", `${angleData.x}px ${angleData.y}px`);
+        angleNode.style.setProperty("--natsumi-angle-string", `"${Math.floor(this.angle)}°"`);
+
+        if (this.gradientType !== "linear" && this.gradientType !== "conic") {
+            angleNode.setAttribute("disabled", "");
+        } else {
+            angleNode.removeAttribute("disabled");
+        }
+    }
+
+    sliderEvent(slider, event) {
+        let sliderNode = this.node.querySelector(`.natsumi-color-slider-${slider}`);
+        if (!sliderNode) {
+            return;
+        }
+
+        const immediateRelativeX = event.clientX - sliderNode.getBoundingClientRect().left;
+        this.moveSlider(slider, immediateRelativeX);
+
+        document.onmouseup = this.resetListeners;
+        document.onmousemove = (event => {
+            const relativeX = event.clientX - sliderNode.getBoundingClientRect().left;
+            this.moveSlider(slider, relativeX);
+        });
+    }
+
+    setLastSelected(index) {
+        if (this.preset) {
+            index = "0";
+        }
+
+        const numericalIndex = Number.parseInt(index);
+        if (isNaN(numericalIndex) || numericalIndex < 0 || numericalIndex >= this.colors.length) {
+            return;
+        }
+
+        this.lastSelected = index;
+        this.renderGrid();
+        this.renderSliders();
+    }
+
+    setColorProperties(index, brightness = null, opacity = null) {
+        if (index < 0 || index >= this.colors.length) {
+            console.error("Invalid color index:", index);
+            return;
+        }
+
+        if (brightness !== null) {
+            this.colors[index]["value"] = brightness;
+        }
+
+        if (opacity !== null) {
+            this.colors[index]["opacity"] = opacity;
+        }
+
+        this.colors[index]["code"] = this.generateCssColorCodeFromData(this.colors[index]);
+        this.renderGrid();
+        this.saveLayer();
+    }
+
+    removeColor(index) {
+        if (index < 0 || index >= this.colors.length) {
+            console.error("Invalid color index:", index);
+            return;
+        }
+
+        this.colors.splice(index, 1);
+
+        if (this.preset) {
+            this.preset = null;
+        }
+
+        this.setLastSelected(`${this.colors.length - 1}`);
+        if (this.colors.length === 0) {
+            this.lastSelected = null;
+            this.renderGrid();
+            this.renderSliders();
+        }
+        this.renderButtons();
+        this.saveLayer();
+    }
+
+    removeAllColors() {
+        this.colors = [];
+        this.preset = null;
+        this.angle = 0;
+        this.gradientType = "linear";
+        this.lastSelected = null;
+        this.renderGrid();
+        this.renderSliders();
+        this.renderButtons();
+        this.renderAngle();
+        this.saveLayer();
+    }
+
+    cyclePreset() {
+        if (this.singleColor) {
+            return;
+        }
+
+        const currentPreset = this.preset;
+        const presetIndex = availablePresets[this.colors.length].indexOf(currentPreset);
+
+        let nextPreset = null;
+        let nextPresetIndex = presetIndex + 1
+
+        if (nextPresetIndex < availablePresets[this.colors.length].length) {
+            nextPreset = availablePresets[this.colors.length][nextPresetIndex];
+        }
+
+        if (currentPreset === nextPreset) {
+            return;
+        }
+
+        this.preset = nextPreset;
+
+        this.setLastSelected("0");
+        this.renderButtons();
+        this.saveLayer();
+    }
+
+    cycleGradientType() {
+        if (this.singleColor) {
+            return;
+        }
+
+        const currentGradient = this.gradientType;
+        const gradientTypeList = Object.keys(gradientTypes);
+        const gradientIndex = gradientTypeList.indexOf(currentGradient);
+
+        let nextGradient = "linear";
+        let nextGradientIndex = gradientIndex + 1
+
+        if (nextGradientIndex < gradientTypeList.length) {
+            nextGradient = gradientTypeList[nextGradientIndex];
+        }
+
+        this.gradientType = nextGradient;
+        this.renderGrid();
+        this.renderSliders();
+        this.renderButtons();
+        this.renderAngle();
+        this.saveLayer();
+    }
 }
 
 class CheckboxChoice {
@@ -205,6 +1313,12 @@ const themes = {
         "Transgender",
         "Trans rights are human rights!",
         "<div id='transgender' class='natsumi-mc-choice-image-browser'></div>"
+    ),
+    "custom": new MCChoice(
+        "custom",
+        "Custom",
+        "Make your own theme!",
+        "<div id='custom' class='natsumi-mc-choice-image-browser'></div>"
     )
 }
 
@@ -307,7 +1421,13 @@ const colors = {
         "Use the system accent color.",
         "",
         "AccentColor"
-    )
+    ),
+    /*"custom": new MCChoice(
+        "custom",
+        "Custom",
+        "Pick a color of your choice!",
+        ""
+    )*/
 }
 
 const urlbarLayouts = {
@@ -497,7 +1617,6 @@ function addLayoutPane() {
     // Set listeners for each button
     let layoutButtons = layoutNode.querySelectorAll(".natsumi-mc-choice");
     layoutButtons.forEach(button => {
-        console.log("Adding listener to button:", button);
         button.addEventListener("click", () => {
             let selectedValue = button.getAttribute("value") === "true";
             console.log("Changing layout:", selectedValue);
@@ -510,7 +1629,6 @@ function addLayoutPane() {
     // Set listeners for each checkbox
     let checkboxes = layoutNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -555,6 +1673,9 @@ function addThemesPane() {
         "Gray out background when the browser window is inactive"
     )
 
+    let customThemePickerUi = new CustomThemePicker("natsumiCustomThemePicker", customThemeLoader, applyCustomTheme, "natsumi.theme.custom-theme-data");
+
+    themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
 
@@ -567,7 +1688,6 @@ function addThemesPane() {
     // Set listeners for each button
     let themeButtons = themeNode.querySelectorAll(".natsumi-mc-choice");
     themeButtons.forEach(button => {
-        console.log("Adding listener to button:", button);
         button.addEventListener("click", () => {
             let selectedValue = button.getAttribute("value");
             console.log("Changing theme:", selectedValue);
@@ -580,7 +1700,6 @@ function addThemesPane() {
     // Set listeners for each checkbox
     let checkboxes = themeNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -597,6 +1716,7 @@ function addThemesPane() {
     });
 
     prefsView.insertBefore(themeNode, homePane);
+    customThemePickerUi.init();
 }
 
 function addColorsPane() {
@@ -619,6 +1739,9 @@ function addColorsPane() {
         true
     )
 
+    //let customColorPickerUi = new CustomThemePicker("natsumiCustomColorPicker", customColorLoader, applyCustomColor, "natsumi.theme.custom-color-data", true, false);
+
+    //colorSelection.registerExtras("natsumiCustomColorPickerBox", customColorPickerUi);
     colorSelection.registerExtras("natsumiThemeColorBox", checkBoxExtraColor);
 
     for (let color in colors) {
@@ -630,7 +1753,6 @@ function addColorsPane() {
     // Set listeners for each button
     let colorButtons = colorNode.querySelectorAll(".natsumi-mc-choice");
     colorButtons.forEach(button => {
-        console.log("Adding listener to button:", button);
         button.addEventListener("click", () => {
             let selectedValue = button.getAttribute("value");
             console.log("Changing color:", selectedValue);
@@ -642,7 +1764,6 @@ function addColorsPane() {
 
     let checkboxesColor = colorNode.querySelectorAll("checkbox");
     checkboxesColor.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -659,6 +1780,7 @@ function addColorsPane() {
     });
 
     prefsView.insertBefore(colorNode, homePane);
+    //customColorPickerUi.init();
 }
 
 function addSidebarWorkspacesPane() {
@@ -698,7 +1820,6 @@ function addSidebarWorkspacesPane() {
     // Set listeners for each checkbox
     let checkboxes = sidebarWorkspacesNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -781,7 +1902,6 @@ function addSidebarButtonsPane() {
     // Set listeners for each checkbox
     let checkboxes = sidebarButtonsNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -829,7 +1949,6 @@ function addPipMaterialPane() {
     // Set listeners for each button
     let materialButtons = materialNode.querySelectorAll(".natsumi-mc-choice");
     materialButtons.forEach(button => {
-        console.log("Adding listener to button:", button);
         button.addEventListener("click", () => {
             let selectedValue = button.getAttribute("value");
             console.log("Changing theme:", selectedValue);
@@ -866,7 +1985,6 @@ function addPipBehaviorPane() {
     // Set listeners for each checkbox
     let checkboxes = pipBehaviorNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -906,7 +2024,6 @@ function addPDFMaterialPane() {
     // Set listeners for each button
     let materialButtons = materialNode.querySelectorAll(".natsumi-mc-choice");
     materialButtons.forEach(button => {
-        console.log("Adding listener to button:", button);
         button.addEventListener("click", () => {
             let selectedValue = button.getAttribute("value");
             console.log("Changing theme:", selectedValue);
@@ -962,7 +2079,6 @@ function addPDFCompactPane() {
     // Set listeners for each checkbox
     let checkboxes = compactNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -1006,7 +2122,6 @@ function addURLbarLayoutPane() {
     // Set listeners for each button
     let layoutButtons = layoutNode.querySelectorAll(".natsumi-mc-choice");
     layoutButtons.forEach(button => {
-        console.log("Adding listener to button:", button);
         button.addEventListener("click", () => {
             let selectedValue = button.getAttribute("value") === "true";
             console.log("Changing theme:", selectedValue);
@@ -1051,7 +2166,6 @@ function addURLbarBehaviorPane() {
     // Set listeners for each checkbox
     let checkboxes = behaviorNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;
@@ -1094,7 +2208,6 @@ function addShortcutsTogglePane() {
     // Set listeners for each checkbox
     let checkboxes = generalNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
-        console.log("Adding listener to checkbox:", checkbox);
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
             let isChecked = checkbox.checked;

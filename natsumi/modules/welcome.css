@@ -345,6 +345,7 @@ SOFTWARE.
 
     .natsumi-welcome-paragraph {
       margin-bottom: 10px !important;
+      flex-direction: column;
     }
 
     .natsumi-welcome-selection-container {

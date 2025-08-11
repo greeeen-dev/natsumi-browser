@@ -1,0 +1,119 @@
+/*
+
+Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Firefox Preferences fixes ==== */
+
+@-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
+  #natsumi-settings .category-icon {
+    background-color: currentColor;
+    mask-image: url("../../icons/lucide-firefox/paintbrush.svg");
+  }
+
+  #custom::after {
+    background-image: none !important;
+    background-color: light-dark(black, white);
+    mask-image: url("../../icons/lucide-firefox/palette.svg");
+    mask-size: 32px;
+  }
+
+  .natsumi-custom-mode-light, .natsumi-custom-mode-dark, .natsumi-custom-import, .natsumi-custom-export {
+    &::before {
+      background-color: light-dark(black, white);
+    }
+  }
+
+  .natsumi-custom-mode-light::before {
+    mask-image: url("../../icons/lucide-firefox/luminosity-1.svg");
+  }
+
+  .natsumi-custom-mode-dark::before {
+    mask-image: url("../../icons/lucide-firefox/luminosity-0.svg");
+  }
+
+  .natsumi-custom-import::before {
+    mask-image: url("../../icons/lucide-firefox/download.svg");
+  }
+
+  .natsumi-custom-export::before {
+    mask-image: url("../../icons/lucide-firefox/upload.svg");
+  }
+
+  .natsumi-custom-theme-controls-icon {
+    background-color: light-dark(black, white);
+    mask-size: 20px;
+    mask-position: center;
+    mask-repeat: no-repeat;
+  }
+
+  .natsumi-preset-button .natsumi-custom-theme-controls-icon {
+    mask-image: url("../../icons/lucide-firefox/color-presets.svg");
+  }
+
+  .natsumi-gradient-button .natsumi-custom-theme-controls-icon {
+    mask-image: url("../../icons/lucide-firefox/gradient-type.svg");
+  }
+
+  .natsumi-reset-button .natsumi-custom-theme-controls-icon {
+    mask-image: url("../../icons/lucide-firefox/rotate-right.svg");
+  }
+
+  .natsumi-hex-button .natsumi-custom-theme-controls-icon {
+    mask-image: url("../../icons/lucide-firefox/type.svg");
+  }
+
+  .natsumi-hex-submit::before {
+    background-color: light-dark(black, white);
+    mask-image: url("../../icons/lucide-firefox/plus.svg");
+  }
+
+  .natsumi-custom-theme-slider-icon-1, .natsumi-custom-theme-slider-icon-0 {
+    mask-size: 20px;
+  }
+
+  .natsumi-color-slider-luminosity {
+    .natsumi-custom-theme-slider-icon-1 {
+      background-color: var(--natsumi-slider-custom-stroke, white);
+      mask-image: url("../../icons/lucide-firefox/luminosity-1.svg");
+    }
+
+    .natsumi-custom-theme-slider-icon-0 {
+      background-color: white;
+      mask-image: url("../../icons/lucide-firefox/luminosity-0.svg");
+    }
+  }
+
+  .natsumi-color-slider-opacity {
+    .natsumi-custom-theme-slider-icon-1 {
+      background-color: var(--natsumi-slider-custom-stroke, white);
+      mask-image: url("../../icons/lucide-firefox/opacity-1.svg");
+    }
+
+    .natsumi-custom-theme-slider-icon-0 {
+      background-color: light-dark(black, white);
+      mask-image: url("../../icons/lucide-firefox/opacity-0.svg");
+    }
+  }
+}

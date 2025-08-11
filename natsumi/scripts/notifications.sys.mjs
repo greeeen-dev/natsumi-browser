@@ -24,6 +24,8 @@ SOFTWARE.
 
 */
 
+import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+
 // Set this to true to disable hiding notifications.
 // HIGHLY NOT RECOMMENDED for production environments.
 const debugNotifications = false;
@@ -112,9 +114,16 @@ export class NatsumiNotification {
         this.body = body;
         this.subtext = subtext;
         this.icon = icon;
+        this.document = null;
+
+        ucApi.Windows.forEach((browserDocument, browserWindow) => {
+            if (browserDocument.hasFocus()) {
+                this.document = browserDocument;
+            }
+        });
 
         // Create notification element
-        this.notificationElement = document.createElement("div");
+        this.notificationElement = this.document.createElement("div");
         this.notificationElement.classList.add("natsumi-notification");
         this.notificationElement.setAttribute("natsumi-notification-time", time.toString());
 
@@ -125,13 +134,13 @@ export class NatsumiNotification {
         }
 
         // Add body
-        let bodyElement = document.createElement("div");
+        let bodyElement = this.document.createElement("div");
         bodyElement.classList.add("natsumi-notification-body");
         bodyElement.textContent = this.body;
 
         // Add subtext if provided
         if (this.subtext) {
-            let subtextElement = document.createElement("div");
+            let subtextElement = this.document.createElement("div");
             subtextElement.classList.add("natsumi-notification-subtext");
             subtextElement.textContent = this.subtext;
             bodyElement.appendChild(subtextElement);
@@ -143,7 +152,7 @@ export class NatsumiNotification {
 
     addToContainer() {
         // Append the notification element to the notifications container
-        let notificationsContainer = document.getElementById("natsumi-notifications-container");
+        let notificationsContainer = this.document.getElementById("natsumi-notifications-container");
 
         if (notificationsContainer) {
             let firstNotification = notificationsContainer.querySelector(".natsumi-notification");

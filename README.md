@@ -130,6 +130,14 @@ Take your browser to the next level with Append!
 Natsumi Append adds a Customize Natsumi pane to the preferences page, so you can easily customize
 your installation of Natsumi graphically. No more figuring out which config does what.
 
+### 🖌️ Create your own custom look.
+#### Create your own themes that feel personal, not generated.
+
+![](./images/custom-themes.png)
+
+Not happy with Natsumi's base themes? Take full control of Natsumi's theming engine and create your
+very own gradient, all without being forced to stick to a specific color palette.
+
 ### 🧘 Introducing Single Toolbar.
 #### Move everything to the sidebar for a cleaner look.
 ![](./images/single-toolbar.png)
@@ -219,6 +227,8 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   to be used instead of the current Firefox theme's colors.
 - `natsumi.theme.use-tab-theme-color` (boolean): Uses the tab border color as the accent color for Blade.
   This may break Blade on some themes.
+- `natsumi.theme.max-custom-colors` (integer): The maximum number of custom colors you can choose. Minimum
+  and default is 6.
 - `natsumi.theme.disable-translucency` (boolean): Disables the translucency effect.
 - `natsumi.theme.gray-out-when-inactive` (boolean): Grays out the browser when inactive.
 - `natsumi.theme.single-toolbar` (boolean): Enables Single Toolbar layout. **Natsumi Append required.**

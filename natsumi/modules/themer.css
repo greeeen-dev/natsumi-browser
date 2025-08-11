@@ -38,6 +38,7 @@ SOFTWARE.
 @import "themes/frutiger-aero.css";
 @import "themes/lgbtq.css";
 @import "themes/transgender.css";
+@import "themes/custom.css";
 
 /*noinspection CssInvalidPropertyValue*/
 :root:not([windowtype*="ssb-window"]) body {
@@ -51,7 +52,7 @@ SOFTWARE.
   --natsumi-theme-gradient-opacity: 0.5;
 
   @media (-moz-platform: linux) {
-    &::before, &::after {
+    &::after, #browser::before {
       border-radius: 5px !important;
     }
   }
@@ -71,7 +72,7 @@ SOFTWARE.
     opacity: 0;
   }
 
-  /* Better translucency for Linux */
+  /* Better translucency for Linux (also acts as a background for no translucency mode) */
   &::before {
     content: "";
     background-color: light-dark(#ebebeb, #171717);
@@ -84,6 +85,10 @@ SOFTWARE.
 
     @media (-moz-platform: linux) {
       opacity: 0.6 !important;
+    }
+
+    @media -moz-pref("natsumi.theme.disable-translucency") {
+      opacity: 1 !important;
     }
   }
 
