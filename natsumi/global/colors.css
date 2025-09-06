@@ -91,6 +91,7 @@ their author(s) have been provided above the used code.
 
 @media -moz-pref("natsumi.theme.accent-color", "system") {
   * {
-    --natsumi-custom-primary-color: AccentColor;
+    --natsumi-custom-primary-color: oklch(from AccentColor 0.825 0.1 h);
+;
   }
 }
