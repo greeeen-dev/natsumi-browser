@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -170,8 +170,7 @@ SOFTWARE.
         --natsumi-conflict-item-color: white;
         flex-direction: column;
         flex: 1;
-        border: 2px solid transparent;
-        padding: 5px;
+        padding: 7px;
         border-radius: 8px;
 
         & > * {
@@ -184,9 +183,8 @@ SOFTWARE.
           min-height: 36px;
           max-height: 36px;
           margin-top: 5px;
-          border: 2px solid var(--natsumi-conflict-item-color);
           border-radius: 6px;
-          background-color: light-dark(color-mix(in srgb, var(--natsumi-conflict-item-color) 20%, white), color-mix(in srgb, var(--natsumi-conflict-item-color) 20%, black));
+          background-color: color-mix(in srgb, var(--natsumi-conflict-item-color) 20%, transparent);
           padding: 6px;
           -moz-context-properties: stroke, stroke-opacity !important;
           stroke: var(--natsumi-conflict-item-color);
@@ -210,8 +208,15 @@ SOFTWARE.
         }
 
         &[selected] {
-          border-color: var(--natsumi-conflict-item-color);
-          background-color: light-dark(color-mix(in srgb, var(--natsumi-conflict-item-color) 20%, white), color-mix(in srgb, var(--natsumi-conflict-item-color) 20%, black))
+          background: linear-gradient(135deg, light-dark(color-mix(in srgb, var(--natsumi-conflict-item-color) 50%, white), color-mix(in srgb, var(--natsumi-conflict-item-color) 50%, black)), transparent);
+
+          .natsumi-shortcut-conflict-item-icon {
+            --natsumi-conflict-item-color: light-dark(black, white) !important;
+          }
+
+          .natsumi-shortcut-conflict-item-title, .natsumi-shortcut-conflict-item-description {
+            color: light-dark(black, white);
+          }
         }
 
         &[value="0"] {
@@ -230,7 +235,7 @@ SOFTWARE.
         }
 
         &[value="1"] {
-          --natsumi-conflict-item-color: blue;
+          --natsumi-conflict-item-color: light-dark(blue, lightblue);
           --natsumi-conflict-item-icon: url("../icons/lucide/kbs-double-tap.svg");
         }
       }

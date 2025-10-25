@@ -6,7 +6,7 @@
 
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -32,6 +32,7 @@ SOFTWARE.
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import {NatsumiNotification} from "./notifications.sys.mjs";
+import {resetTabStyleIfNeeded} from "./reset-tab-style.sys.mjs";
 
 let natsumiWelcomeObject = null;
 
@@ -243,6 +244,16 @@ class NatsumiWelcome {
                             "warning"
                         )
                         restartNotificationObject.addToContainer();
+                    }
+
+                    if (tabStyleReset) {
+                        let tabStyleResetObject = new NatsumiNotification(
+                            "Heads up: your tab style was reset to Proton.",
+                            "If you want to use other tab styles, simply enable the Classic tab design in settings.",
+                            "chrome://natsumi/content/icons/lucide/info.svg",
+                            10000
+                        )
+                        tabStyleResetObject.addToContainer();
                     }
                 }, 4800);
             });
@@ -481,6 +492,7 @@ function createURLbarPane() {
 const welcomeAudioUrl = "https://github.com/MX-Linux/mx-sound-theme-borealis/raw/refs/heads/master/Borealis/stereo/desktop-login.ogg";
 
 let welcomeViewed = false;
+let tabStyleReset = false;
 if (ucApi.Prefs.get("natsumi.welcome.viewed").exists()) {
     welcomeViewed = ucApi.Prefs.get("natsumi.welcome.viewed").value;
 }
@@ -512,4 +524,14 @@ if (!welcomeViewed) {
     // Add event handler for next button
     let nextButton = document.getElementById("natsumi-welcome-button-next");
     nextButton.addEventListener("click", handleNextButton);
+
+    // Set tab style if needed
+    let isFloorp = false;
+    if (ucApi.Prefs.get("natsumi.browser.type").exists) {
+        isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
+    }
+
+    if (isFloorp) {
+        tabStyleReset = resetTabStyleIfNeeded();
+    }
 }

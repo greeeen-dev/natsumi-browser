@@ -1,0 +1,308 @@
+/*
+
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Tabs design (Fusion) ==== */
+/* Fusion is a Lepton-like tab design that 'connects' tabs with website content. */
+
+@media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "fusion") {
+  /* Add border to web content */
+  @media -moz-pref("sidebar.verticalTabs") {
+    :root:not([inDOMFullscreen="true"]):not([drawtitle]) body:not([natsumi-compact-mode]) {
+      #tabbrowser-tabbox {
+        padding-top: var(--natsumi-browser-separation);
+
+        @media -moz-pref("sidebar.position_start") {
+          padding-left: var(--natsumi-browser-separation);
+        }
+
+        @media not -moz-pref("sidebar.position_start") {
+          padding-right: var(--natsumi-browser-separation);
+        }
+
+        &::before {
+          content: "";
+          position: absolute;
+          width: calc(100% + var(--natsumi-browser-separation));
+          height: calc(100% + var(--natsumi-browser-separation));
+          margin-left: calc(var(--natsumi-browser-separation) * -1);
+          margin-top: calc(var(--natsumi-browser-separation) * -1);
+          background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
+
+          @media -moz-pref("sidebar.position_start") {
+            border-radius: calc(var(--natsumi-browser-border-radius) + var(--natsumi-browser-separation)) 0 0 0;
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+            border-radius: 0 calc(var(--natsumi-browser-border-radius) + var(--natsumi-browser-separation)) 0 0;
+          }
+        }
+      }
+
+      #browser:has(#sidebar-box:not([hidden])) {
+        #sidebar-box {
+          margin-top: var(--natsumi-browser-separation);
+
+          &::before {
+            content: "";
+            position: absolute;
+            width: calc(100% + calc(var(--natsumi-browser-separation) * 2) + 2px);
+            height: calc(100% + calc(var(--natsumi-browser-separation) * 2) + 2px);
+            margin-left: calc(var(--natsumi-browser-separation) * -1 - 1px);
+            margin-top: calc(var(--natsumi-browser-separation) * -1 - 1px);
+            background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
+          }
+
+          @media -moz-pref("sidebar.position_start") {
+            margin-left: var(--natsumi-browser-separation);
+
+            &::before {
+              border-radius: calc(var(--natsumi-browser-border-radius) + var(--natsumi-browser-separation)) 0 0 0;
+            }
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+            margin-right: var(--natsumi-browser-separation) !important;
+
+            &::before {
+              border-radius: 0 calc(var(--natsumi-browser-border-radius) + var(--natsumi-browser-separation)) 0 0;
+            }
+          }
+        }
+
+        #tabbrowser-tabbox {
+          padding-inline: 0 !important;
+
+          &::before {
+            border-radius: 0 !important;
+          }
+        }
+      }
+
+      &:not(:has(#panel-sidebar-select-box)) {
+        @media -moz-pref("sidebar.position_start") {
+          #tabbrowser-tabbox::before {
+            left: var(--natsumi-browser-separation);
+          }
+        }
+      }
+
+      @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+        &:has(#panel-sidebar-select-box):not(:has(#panel-sidebar-box[style*="; width:"]:not([data-floating="true"]))) {
+          @media -moz-pref("sidebar.position_start") {
+            #tabbrowser-tabbox::before {
+              left: var(--natsumi-browser-separation);
+            }
+
+            &[natsumi-panel-sidebar-on-right] {
+              #panel-sidebar-select-box {
+                margin-bottom: 0 !important;
+                padding-bottom: var(--natsumi-browser-separation) !important;
+                border-radius: 0 8px 0 0 !important;
+                background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
+              }
+            }
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+            &:not([natsumi-panel-sidebar-on-right]) {
+              #panel-sidebar-select-box {
+                margin-bottom: 0 !important;
+                padding-bottom: var(--natsumi-browser-separation) !important;
+                border-radius: 8px 0 0 0 !important;
+                background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
+              }
+            }
+          }
+        }
+      }
+
+      &:has(#panel-sidebar-box[style*="; width:"]:not([data-floating="true"])) {
+        #tabbrowser-tabbox {
+          padding: 0 !important;
+
+          &::before {
+            display: none;
+          }
+        }
+
+        #sidebar-box {
+          margin-top: 0 !important;
+
+          @media -moz-pref("sidebar.position_start") {
+            margin-left: 0 !important;
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+            margin-right: 0 !important;
+          }
+
+          &::before {
+            display: none;
+          }
+        }
+
+        #tabbrowser-arrowscrollbox {
+          .tabbrowser-tab[selected] {
+            .tab-background {
+              margin-inline: var(--tab-inner-inline-margin) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media not -moz-pref("sidebar.verticalTabs") {
+    #browser, #nav-bar {
+      background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
+    }
+
+    #nav-bar {
+      border-radius: 8px 8px 0 0 !important;
+    }
+  }
+
+  #tabbrowser-arrowscrollbox {
+    .tabbrowser-tab {
+      --natsumi-tab-highlight-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+
+      &[usercontextid] {
+        --natsumi-tab-highlight-color: var(--identity-icon-color);
+
+        @media -moz-pref("natsumi.tabs.fusion-highlight") {
+          .tab-background::before {
+            @media -moz-pref("sidebar.verticalTabs") {
+              height: 35%;
+              top: 30%;
+            }
+
+            @media not -moz-pref("sidebar.verticalTabs") {
+              width: 35%;
+              left: 30%;
+            }
+          }
+
+          .tab-context-line {
+            display: none !important;
+          }
+        }
+      }
+
+      .tab-background {
+        --natsumi-fusion-border-radius: 4px;
+        border-radius: var(--natsumi-fusion-border-radius) !important;
+
+        @media -moz-pref("natsumi.tabs.fusion-highlight") {
+          --natsumi-fusion-border-radius: 0 !important;
+
+          &::before {
+            content: "";
+            position: absolute;
+            background-color: var(--natsumi-tab-highlight-color);
+
+            @media -moz-pref("sidebar.verticalTabs") {
+              width: 2px;
+              height: 0;
+              top: 50%;
+              transition: height 0.1s linear, top 0.1s linear;
+
+              @media -moz-pref("sidebar.position_start") {
+                left: var(--tab-inner-inline-margin);
+              }
+            }
+
+            @media not -moz-pref("sidebar.verticalTabs") {
+              width: 0;
+              height: 2px;
+              top: var(--tab-block-margin);
+              left: 50%;
+              transition: width 0.1s linear, left 0.1s linear;
+            }
+          }
+        }
+      }
+    }
+
+    .tabbrowser-tab {
+      &:hover, &[selected] {
+        .tab-background {
+          @media -moz-pref("natsumi.tabs.fusion-highlight") {
+            &::before {
+              @media -moz-pref("sidebar.verticalTabs") {
+                height: calc(100% - 4px);
+                top: 2px;
+              }
+
+              @media not -moz-pref("sidebar.verticalTabs") {
+                width: 100%;
+                left: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .tabbrowser-tab[selected] {
+      .tab-background {
+        background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
+
+        @media not -moz-pref("sidebar.verticalTabs") {
+          margin-bottom: 0 !important;
+          border-radius: var(--natsumi-fusion-border-radius) var(--natsumi-fusion-border-radius) 0 0 !important;
+        }
+      }
+    }
+  }
+
+  #sidebar-main:not([sidebar-launcher-expanded]) {
+    #tabbrowser-arrowscrollbox {
+      .tabbrowser-tab .tab-background {
+        width: calc(var(--tab-collapsed-background-width) + var(--tab-inner-inline-margin)) !important;
+      }
+    }
+  }
+
+  body:not([natsumi-compact-mode]) {
+    #tabbrowser-arrowscrollbox {
+      .tabbrowser-tab {
+        .tab-background {
+          @media -moz-pref("sidebar.verticalTabs") {
+            @media -moz-pref("sidebar.position_start") {
+              border-radius: var(--natsumi-fusion-border-radius) 0 0 var(--natsumi-fusion-border-radius) !important;
+              margin-right: 0 !important;
+            }
+
+            @media not -moz-pref("sidebar.position_start") {
+            border-radius: 0 var(--natsumi-fusion-border-radius) var(--natsumi-fusion-border-radius) 0 !important;
+            margin-left: 0 !important;
+          }
+          }
+        }
+      }
+    }
+  }
+}

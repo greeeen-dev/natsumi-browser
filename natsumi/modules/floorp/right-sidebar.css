@@ -37,25 +37,13 @@ SOFTWARE.
       display: none !important;
     }
 
-    #nora-statusbar.hidden {
+    #nora-statusbar[style*="display:none;"] {
       left: unset !important;
       right: var(--natsumi-browser-separation);
     }
 
     &:has(#panel-sidebar-select-box) {
-      &:not([inDOMFullscreen="true"]):not([drawtitle]) body:not([natsumi-compact-mode]) #browser:not([data-is-child="true"]) {
-        #tabbrowser-tabbox {
-          padding-left: 0 !important;
-        }
-      }
-
       body[natsumi-panel-sidebar-on-right] {
-        &:not([inDOMFullscreen="true"]):not([drawtitle]) #browser:not([data-is-child="true"]) {
-          #tabbrowser-tabbox {
-            padding-left: var(--natsumi-browser-separation) !important;
-          }
-        }
-
         @media -moz-pref("natsumi.theme.single-toolbar") {
           #navigator-toolbox {
             right: calc(var(--natsumi-browser-separation) + 36px);
@@ -66,8 +54,16 @@ SOFTWARE.
           }
         }
 
-        #nora-statusbar.hidden {
+        #nora-statusbar[style*="display:none;"] {
           right: calc(calc(var(--natsumi-browser-separation) * 2) + 36px);
+        }
+      }
+
+      body:not([natsumi-panel-sidebar-on-right]):not([natsumi-compact-mode]) {
+        #browser:not([data-is-child="true"]) {
+          #tabbrowser-tabbox {
+            margin-left: 0 !important;
+          }
         }
       }
 

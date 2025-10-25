@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -40,6 +40,17 @@ SOFTWARE.
       not -moz-pref("natsumi.theme.compact-style", "toolbar")
     ) or -moz-pref("natsumi.theme.single-toolbar") {
       margin-left: var(--natsumi-browser-separation) !important;
+    }
+
+    @media -moz-pref("natsumi.theme.compact-marginless") {
+      &:not(:has(#tabbrowser-tabpanels[split-view="true"])) {
+        margin: 0 !important;
+
+        .browserSidebarContainer {
+          border: none !important;
+          border-radius: 0 !important;
+        }
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -114,14 +114,14 @@ SOFTWARE.
         top: 0 !important;
         border-radius: 50% !important;
         transition: opacity 0.3s ease, top 0.3s ease, background-color 0.2s ease, box-shadow 0.2s ease !important;
-        backdrop-filter: var(--natsumi-material-background) !important;
+        backdrop-filter: var(--natsumi-material-backdrop) !important;
         background-color: var(--natsumi-material-background) !important;
         box-shadow: var(--natsumi-material-shadow) !important;
         background-size: 16px !important;
         border: var(--natsumi-material-border) !important;
 
         &:hover {
-          background-color: var(--natsumi-button-hover-color) !important;
+          background-color: color-mix(in srgb, var(--natsumi-material-background) 70%, white) !important;
         }
 
         &:active {

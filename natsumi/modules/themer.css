@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -43,7 +43,11 @@ SOFTWARE.
 /*noinspection CssInvalidPropertyValue*/
 :root:not([windowtype*="ssb-window"]) body {
   /* Make window translucent (except on PWAs) */
-  appearance: -moz-window-titlebar !important;
+  appearance: -moz-sidebar;
+
+  @media -moz-pref("natsumi.theme.use-legacy-translucency") {
+    appearance: -moz-window-titlebar;
+  }
 }
 
 /* Theme color engine */

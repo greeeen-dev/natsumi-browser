@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -38,6 +38,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "content/pdfjs.css";
 @import "content/ff-home.css";
 @import "content/preferences.css";
+@import "content/preferences-customize.css";
 @import "content/preferences-shortcuts.css";
 @import "content/preferences-about.css";
 @import "content/global.css";

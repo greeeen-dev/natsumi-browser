@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - Welcome to your personal internet.
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -22,27 +22,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Natsumi Browser uses code from others. The link to the original projects or
-their author(s) have been provided above the used code.
-
 */
 
-/* ==== Material: Haze ==== */
+/* ==== Tabs design (Material) ==== */
+/* Material is a tab design inspired by Zen's alpha tab design. */
 
-/*
-Haze is Natsumi's primary material, incorporating the background elements right into the
-foreground like a dynamic gradient.
-*/
-* {
-  --natsumi-mat-hz-background: rgba(255, 255, 255, 0.8);
-  --natsumi-mat-hz-backdrop: saturate(3) contrast(2) blur(100px);
-  --natsumi-mat-hz-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  --natsumi-mat-hz-border: 2px solid rgba(20, 20, 20, 0.1);
-  --natsumi-mat-hz-border-thin: 1px solid rgba(20, 20, 20, 0.1);
+@media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "material") {
+  #tabbrowser-arrowscrollbox {
+    .tabbrowser-tab {
+      & > .tab-stack > .tab-background {
+        box-shadow: none !important;
+      }
 
-  @media (prefers-color-scheme: dark) {
-    --natsumi-mat-hz-background: rgba(0, 0, 0, 0.8);
-    --natsumi-mat-hz-border: 2px solid rgba(235, 235, 235, 0.1);
-    --natsumi-mat-hz-border-thin: 1px solid rgba(235, 235, 235, 0.1);
+      &[selected], &[visuallyselected] {
+        & > .tab-stack > .tab-background {
+          background-color: color-mix(in srgb, var(--natsumi-primary-color), light-dark(white, black)) !important;
+          border: 1px solid light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2)) !important;
+
+          @media -moz-pref("natsumi.theme.type", "oled") {
+            border: none !important;
+          }
+        }
+      }
+    }
   }
 }

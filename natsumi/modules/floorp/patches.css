@@ -38,7 +38,8 @@ SOFTWARE.
 }
 
 /* Floorp 12.3.0 patch: allow hiding the undo closed tab button that keeps being added to toolbar */
-body[natsumi-patches*="floorp-12-3-0-undo-closed-tab"], body[natsumi-patches*="floorp-12-3-1-undo-closed-tab"] {
+body[natsumi-patches*="floorp-12-3-0-undo-closed-tab"], body[natsumi-patches*="floorp-12-3-1-undo-closed-tab"],
+body[natsumi-patches*="floorp-12-3-2-undo-closed-tab"] {
   @media -moz-pref("natsumi.theme.patch-undo-closed-tab-button") {
     #undo-closed-tab {
       display: none !important;

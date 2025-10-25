@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -50,12 +50,15 @@ SOFTWARE.
 
   @media -moz-pref("natsumi.miniplayer.scroll-view") {
     display: inline-flex !important;
-    margin-top: calc(var(--tab-block-margin) + 5px) !important;
     overflow-x: scroll;
     flex-direction: row;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     gap: 10px;
+
+    &:not([hide-margin]) {
+      margin-top: calc(var(--tab-block-margin) + 5px) !important;
+    }
   }
 }
 
@@ -210,8 +213,7 @@ SOFTWARE.
   }
 
   .natsumi-miniplayer-seekbar-container {
-    /* Disable this for now */
-    display: none !important;
+    display: none;
     padding-inline: 4px !important;
     margin-top: 4px !important;
 
@@ -449,7 +451,7 @@ SOFTWARE.
 }
 
 @media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
-  #natsumi-miniplayer-container {
+  #natsumi-miniplayer-container:not([hide-margin]) {
     margin-bottom: var(--natsumi-browser-separation) !important;
   }
 }

@@ -5,7 +5,7 @@
 
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -83,6 +83,13 @@ class NatsumiMiniplayerCounter {
                     this._node.removeChild(this._node.lastChild);
                 }
             }
+        }
+
+        const miniplayerNode = document.getElementById("natsumi-miniplayer-container");
+        if (this._visibleMiniplayers === 0) {
+            miniplayerNode.setAttribute("hide-margin", "true");
+        } else {
+            miniplayerNode.removeAttribute("hide-margin");
         }
 
         this.updateSelected();

@@ -1,8 +1,3 @@
-// ==UserScript==
-// @include   main
-// @ignorecache
-// ==/UserScript==
-
 /*
 
 Natsumi Browser - Welcome to your personal internet.
@@ -31,39 +26,32 @@ SOFTWARE.
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
-function selectUrlbarContents() {
-    // Check if floating URLbar is disabled
-    if (ucApi.Prefs.get("natsumi.urlbar.do-not-float").exists()) {
-        if (ucApi.Prefs.get("natsumi.urlbar.do-not-float").value) {
-            return;
+export function resetTabStyleIfNeeded() {
+    let isProton = false;
+    if (ucApi.Prefs.get("floorp.design.configs").exists()) {
+        let floorpDesignConfig = JSON.parse(ucApi.Prefs.get("floorp.design.configs").value);
+        isProton = floorpDesignConfig["globalConfigs"]["userInterface"] === "proton";
+
+        // Check if other tab styles can be used
+        let usesClassicTabs = false;
+        let usesCustomTabs = false;
+        if (ucApi.Prefs.get("natsumi.tabs.use-custom-type").exists()) {
+            usesCustomTabs = ucApi.Prefs.get("natsumi.tabs.use-custom-type").value;
+        }
+        if (ucApi.Prefs.get("natsumi.tabs.type").exists()) {
+            usesClassicTabs = ucApi.Prefs.get("natsumi.tabs.type").value === "classic";
+        }
+
+        // If the Classic tab design is in use, we can safely ignore the check
+        if (usesClassicTabs && usesCustomTabs) {
+            return false;
+        }
+
+        if (!isProton) {
+            floorpDesignConfig["globalConfigs"]["userInterface"] = "proton";
+            ucApi.Prefs.set("floorp.design.configs", JSON.stringify(floorpDesignConfig));
         }
     }
 
-    let urlbarInput = document.getElementById("urlbar-input");
-    urlbarInput.select();
-}
-
-// Create mutator listener
-let urlbarNode = document.getElementById("urlbar");
-let wasSelected = false;
-let wasOpened = false;
-
-if (urlbarNode) {
-    let urlbarMutationObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            // Check if open attribute exists
-            if (urlbarNode.hasAttribute("open") && !wasSelected && !wasOpened) {
-                selectUrlbarContents();
-            }
-
-            wasOpened = urlbarNode.hasAttribute("open");
-            wasSelected = urlbarNode.hasAttribute("usertyping");
-        });
-    });
-
-    // Observe the URL bar for changes
-    urlbarMutationObserver.observe(urlbarNode, {
-        attributes: true,
-        attributeFilter: ["open", "usertyping"]
-    });
+    return !isProton;
 }

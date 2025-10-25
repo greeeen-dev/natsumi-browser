@@ -82,12 +82,36 @@ SOFTWARE.
     order: 8 !important;
   }
 
-  body:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-box {
-    margin-left: var(--natsumi-browser-separation) !important;
+  body[natsumi-panel-sidebar-on-right] #panel-sidebar-box {
+    @media -moz-pref("natsumi.theme.single-toolbar") {
+      @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+        margin-right: var(--natsumi-browser-separation) !important;
+      }
+    }
+  }
+
+  body[natsumi-compact-mode]:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-box {
+    @media not (-moz-pref("natsumi.theme.compact-style", "toolbar")) {
+      @media -moz-pref("sidebar.position_start") {
+        margin-left: var(--natsumi-browser-separation) !important;
+      }
+    }
+  }
+
+  body[natsumi-compact-mode][natsumi-panel-sidebar-on-right] #panel-sidebar-box {
+    @media not (-moz-pref("natsumi.theme.compact-style", "toolbar")) {
+      @media not -moz-pref("sidebar.position_start") {
+        margin-right: var(--natsumi-browser-separation) !important;
+      }
+    }
   }
 
   body[natsumi-panel-sidebar-on-right] #panel-sidebar-box {
-    margin-right: var(--natsumi-browser-separation) !important;
+    @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+      @media -moz-pref("sidebar.position_start") {
+        margin-right: var(--natsumi-browser-separation) !important;
+      }
+    }
   }
 
   body:not([natsumi-panel-sidebar-on-right]) #browser:has(#panel-sidebar-box[data-floating="false"][style*="; width"]) #tabbrowser-tabbox {
@@ -128,6 +152,87 @@ SOFTWARE.
             height: calc(100vh - 40px) !important;
             margin-top: 34px !important;
           }
+        }
+      }
+    }
+  }
+
+  @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+    #panel-sidebar-select-box {
+      position: absolute;
+      z-index: 999;
+      background-color: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      overflow: visible !important;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: calc(var(--natsumi-browser-separation) * -1);
+        width: var(--natsumi-browser-separation);
+
+        @media not -moz-pref("natsumi.theme.single-toolbar") {
+          height: calc(100vh - var(--natsumi-browser-separation) - 40px) !important;
+        }
+
+        @media -moz-pref("natsumi.theme.single-toolbar") {
+          height: calc(100vh - calc(var(--natsumi-browser-separation) * 2)) !important;
+        }
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+
+      @media not -moz-pref("natsumi.theme.single-toolbar") {
+        height: calc(100vh - var(--natsumi-browser-separation) - 40px) !important;
+      }
+
+      @media -moz-pref("natsumi.theme.single-toolbar") {
+        height: calc(100vh - calc(var(--natsumi-browser-separation) * 2)) !important;
+      }
+    }
+
+    body:not([natsumi-panel-sidebar-on-right]) {
+      #panel-sidebar-select-box {
+        transition: left 0.2s ease 1s, opacity 0.2s ease 1s;
+        left: -36px;
+
+        @media -moz-pref("natsumi.theme.single-toolbar") {
+          @media -moz-pref("sidebar.position_start") {
+            height: calc(100vh - var(--natsumi-browser-separation) - 86px) !important;
+            top: calc(86px - var(--natsumi-browser-separation));
+          }
+        }
+
+        &:hover {
+          transition: left 0.2s ease, opacity 0.2s ease;
+          left: 0;
+        }
+      }
+    }
+
+    body[natsumi-panel-sidebar-on-right] {
+      #panel-sidebar-select-box {
+        transition: right 0.2s ease 1s, opacity 0.2s ease 1s !important;
+        right: -36px;
+
+        &::before {
+          left: unset;
+          right: -6px;
+        }
+
+        @media -moz-pref("natsumi.theme.single-toolbar") {
+          @media not -moz-pref("sidebar.position_start") {
+            height: calc(100vh - var(--natsumi-browser-separation) - 86px) !important;
+            top: calc(86px - var(--natsumi-browser-separation));
+          }
+        }
+
+        &:hover {
+          transition: right 0.2s ease, opacity 0.2s ease !important;
+          right: 0;
         }
       }
     }

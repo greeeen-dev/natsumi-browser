@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Zen Browser that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -132,11 +132,23 @@ SOFTWARE.
       }
 
       #toolbarViewerLeft, #toolbarViewerMiddle, #toolbarViewerRight {
-        background: var(--natsumi-material-background) !important;
-        backdrop-filter: var(--natsumi-material-backdrop);
-        box-shadow: var(--natsumi-material-shadow) !important;
-        border: var(--natsumi-material-border) !important;
         border-radius: 18px;
+        border: 2px solid transparent;
+
+        &::before {
+          content: "";
+          width: 100%;
+          height: 32px;
+          background: red;
+          position: absolute;
+          border-radius: 18px;
+          margin-left: -2px;
+          background: var(--natsumi-material-background) !important;
+          box-shadow: var(--natsumi-material-shadow) !important;
+          border: var(--natsumi-material-border) !important;
+          backdrop-filter: var(--natsumi-material-backdrop);
+          z-index: -1;
+        }
 
         .toolbarButtonWithContainer:first-of-type button, #zoomOutButton, #viewFindButton, &:has(#viewFindButton.hidden) #previous {
           border-start-start-radius: 50% !important;
@@ -147,6 +159,10 @@ SOFTWARE.
           border-start-end-radius: 4px !important;
           border-end-end-radius: 4px !important;
         }
+      }
+
+      #toolbarViewerMiddle, #toolbarViewerRight {
+        position: sticky;
       }
 
       #toolbarViewerLeft, #toolbarViewerMiddle {

@@ -5,7 +5,7 @@
 
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -44,6 +44,7 @@ class NatsumiPatchesManager {
         new NatsumiPatch("floorp-12-3-0-navbar", "floorp", "12.3.0"),
         new NatsumiPatch("floorp-12-3-0-undo-closed-tab", "floorp", "12.3.0"),
         new NatsumiPatch("floorp-12-3-1-undo-closed-tab", "floorp", "12.3.1"),
+        new NatsumiPatch("floorp-12-3-2-undo-closed-tab", "floorp", "12.3.2"),
     ]
 
     static getPatches() {

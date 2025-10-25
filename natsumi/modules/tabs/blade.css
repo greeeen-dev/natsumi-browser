@@ -1,0 +1,286 @@
+/*
+
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Tabs design (Natsumi Blade) ==== */
+/* Natsumi Blade is a modern and sleek tab design that adapts to context. */
+
+@keyframes backdrop-fadein {
+  from {
+    backdrop-filter: saturate(1) contrast(1);
+  }
+
+  to {
+    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+  }
+}
+
+/* Base Natsumi design (Blade) */
+@media not -moz-pref("natsumi.tabs.use-custom-type") {
+  #tabbrowser-arrowscrollbox {
+    /*noinspection CssInvalidFunction*/
+    .tabbrowser-tab {
+      --natsumi-tab-highlight-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary));
+      --natsumi-tab-idle-width: 0;
+      --natsumi-tab-idle-opacity: 0;
+
+      &[usercontextid] {
+        --natsumi-tab-highlight-color: var(--identity-icon-color);
+        --natsumi-tab-idle-width: 40%;
+        --natsumi-tab-idle-opacity: 1;
+      }
+
+      @media -moz-pref("sidebar.verticalTabs") {
+        padding: 0 !important;
+      }
+
+      .tab-loading-burst[bursting]::before {
+        fill: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+      }
+
+      .tab-text {
+        font-size: 12px;
+      }
+
+      .tab-stack {
+        transition: scale 0.2s ease;
+      }
+
+      &:active:not([style*="transform"]):not(:has(.tab-close-button:hover)) .tab-stack {
+        scale: 0.95 !important;
+      }
+
+      @media -moz-pref("sidebar.verticalTabs") {
+        .tab-group-line {
+          display: none !important;
+        }
+      }
+
+      &:has(.tab-close-button:hover) {
+        transition: opacity 0.2s ease !important;
+        --natsumi-tab-highlight-color: rgb(255, 100, 100);
+      }
+
+      & > .tab-stack > .tab-background {
+        transition: background-color 0.2s ease, backdrop-filter 0.2s ease !important;
+        overflow: visible !important;
+        border-radius: var(--natsumi-tab-border-radius) !important;
+        outline: none !important;
+        backdrop-filter: saturate(1) contrast(1);
+        --natsumi-tab-height: var(--floorp-tab-min-height, var(--tab-min-height));
+
+        .tab-context-line {
+          display: none !important;
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          width: var(--natsumi-tab-idle-width);
+          height: calc(var(--natsumi-tab-height) - 4px);
+          opacity: var(--natsumi-tab-idle-opacity);
+          border: 2px solid var(--natsumi-tab-highlight-color) !important;
+          background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
+          border-radius: calc(var(--natsumi-tab-border-radius) - 1px);
+          mask-image: linear-gradient(to right, black, transparent 30%);
+          transition: width 0.2s ease, opacity 0.2s ease, background-color 0.2s ease, border 0.2s ease;
+
+          @media -moz-pref("natsumi.browser.type", "floorp") {
+            height: max(calc(var(--natsumi-tab-height) - 8px), 28px);
+          }
+
+          @media -moz-pref("sidebar.verticalTabs") {
+            left: 0;
+          }
+        }
+      }
+
+      &:hover {
+        & > .tab-stack > .tab-background {
+          &::after {
+            width: calc(100% - calc(var(--tab-inner-inline-margin) * 2));
+            opacity: 1;
+          }
+        }
+      }
+
+      &[selected], &[visuallyselected] {
+        /*noinspection CssInvalidFunction*/
+        & > .tab-stack > .tab-background {
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+          background-color: var(--natsumi-mat-hz-background) !important;
+          animation: backdrop-fadein 0.2s ease;
+
+          @media -moz-pref("natsumi.sidebar.blur-tab-button") {
+            animation: backdrop-with-blur-fadein 0.2s ease;
+          }
+
+          animation-fill-mode: forwards;
+
+          &::after {
+            width: calc(100% - 4px);
+            opacity: 1;
+          }
+        }
+      }
+
+      &[multiselected] {
+        & > .tab-stack > .tab-background {
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.5) !important;
+
+          &::after {
+            width: 100%;
+            opacity: 1;
+          }
+        }
+      }
+
+      &:has(.tab-close-button:active) {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  /* Pinned tabs */
+  #pinned-tabs-container, #vertical-pinned-tabs-container {
+    --tab-height-with-margin-padding: calc(41px + (2 * var(--tab-block-margin)));
+
+    .tab-background {
+      border-radius: var(--natsumi-tab-border-radius) !important;
+    }
+
+    .tabbrowser-tab {
+      .tab-stack {
+        transition: scale 0.2s ease;
+      }
+
+      &:active:not([style*="transform"]) .tab-stack {
+        scale: 0.95 !important;
+      }
+    }
+
+    @media not -moz-pref("natsumi.tabs.disable-pinned-tabs-favicon") {
+      .tab-background::before {
+        content: "";
+        width: 200% !important;
+        height: 200% !important;
+        left: 50% !important;
+        top: 50% !important;
+        translate: -50% -50% !important;
+        opacity: 0;
+        transition: opacity 0.2s ease !important;
+      }
+
+      .tab-background::after {
+        background-color: transparent;
+        transition: background-color 0.2s ease;
+      }
+
+      .tabbrowser-tab[selected][style*="--natsumi-tab-icon"] {
+        .tab-background {
+          background: transparent !important;
+          overflow: clip !important;
+          position: relative !important;
+        }
+
+        .tab-background::before {
+          background-image: var(--natsumi-tab-icon);
+          background-position: center;
+          background-size: contain !important;
+          position: absolute;
+          background-clip: padding-box !important;
+          filter: blur(20px) saturate(200%);
+          border-radius: var(--natsumi-tab-border-radius);
+          opacity: 1;
+        }
+
+        .tab-background::after {
+          content: "";
+          position: absolute;
+          margin-right: 2px !important;
+          margin-top: 2px !important;
+          width: calc(100% - 4px);
+          height: calc(100% - 4px);
+          background: var(--natsumi-mat-hz-background);
+          border-radius: calc(var(--natsumi-tab-border-radius) - 2px);
+
+          @media not -moz-pref("sidebar.verticalTabs") {
+            margin-left: 2px !important;
+          }
+        }
+      }
+    }
+  }
+
+  #tabbrowser-tabs[expanded] {
+    #pinned-tabs-container, #vertical-pinned-tabs-container {
+      --tab-height-with-margin-padding: calc(45px + (2 * var(--tab-block-margin)));
+    }
+  }
+
+  #tabbrowser-tabs[expanded] #tabbrowser-arrowscrollbox {
+    .tabbrowser-tab .tab-close-button {
+      border-radius: 10px !important;
+      transition: background-color 0.2s ease !important;
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color) !important;
+      }
+    }
+  }
+
+  #sidebar-main:not([sidebar-launcher-expanded]) {
+    .tabbrowser-tab {
+      min-width: var(--floorp-tab-min-height, var(--tab-min-height)) !important;
+
+      & > .tab-stack > .tab-background {
+        min-width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
+        margin: 2px auto !important;
+      }
+    }
+
+    #tabbrowser-arrowscrollbox .tabbrowser-tab {
+      & > .tab-stack > .tab-background {
+        &::after {
+          width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
+        }
+      }
+    }
+  }
+
+  #tabs-newtab-button, #vertical-tabs-newtab-button {
+    min-height: calc(max(var(--floorp-tab-min-height, 36px), 36px) - 4px) !important;
+    transition: background-color 0.2s ease;
+    border-radius: var(--natsumi-tab-border-radius) !important;
+    
+    .toolbarbutton-text {
+      font-size: 12px;
+    }
+    
+    .toolbarbutton-icon {
+      margin-bottom: 1px !important;
+    }
+  }
+}
