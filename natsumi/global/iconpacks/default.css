@@ -1,0 +1,48 @@
+* {
+  /* Toolbar icons */
+  --natsumi-icon-back: url("chrome://browser/skin/back.svg");
+  --natsumi-icon-forward: url("chrome://browser/skin/forward.svg");
+  --natsumi-icon-reload: url("chrome://browser/skin/reload.svg");
+  --natsumi-icon-stop: var(--natsumi-icon-close);
+  --natsumi-icon-sidebar: url("chrome://browser/skin/sidebar-expanded.svg");
+  --natsumi-icon-sidebar-collapsed: url("chrome://browser/skin/sidebar-collapsed.svg");
+  --natsumi-icon-account: url("chrome://browser/skin/fxa/avatar-empty.svg");
+  --natsumi-icon-extensions: url("chrome://mozapps/skin/extensions/extension.svg");
+  --natsumi-icon-view: url("chrome://browser/skin/firefox-view.svg");
+  --natsumi-icon-tabs: url("chrome://browser/skin/tabs.svg");
+  --natsumi-icon-downloads: url("chrome://browser/skin/downloads/downloads.svg");
+  --natsumi-icon-history: url("chrome://browser/skin/history.svg");
+  --natsumi-icon-save-page: url("chrome://browser/skin/save.svg");
+  --natsumi-icon-print: url("chrome://global/skin/icons/print.svg");
+  --natsumi-icon-find: var(--natsumi-icon-search);
+  --natsumi-icon-open: url("chrome://browser/skin/open.svg");
+  --natsumi-icon-zoomout: var(--natsumi-icon-minus);
+  --natsumi-icon-zoomin: var(--natsumi-icon-plus);
+  --natsumi-icon-cut: url("chrome://browser/skin/edit-cut.svg");
+  --natsumi-icon-copy: url("chrome://global/skin/icons/edit-copy.svg");
+  --natsumi-icon-paste: url("chrome://browser/skin/edit-paste.svg");
+  --natsumi-icon-repairencoding: url("chrome://browser/skin/characterEncoding.svg");
+  --natsumi-icon-email: url("chrome://browser/skin/mail.svg");
+  --natsumi-icon-passwords: url("chrome://browser/skin/login.svg");
+  --natsumi-icon-synced: url("chrome://browser/skin/synced-tabs.svg");
+  --natsumi-icon-panic: url("chrome://browser/skin/forget.svg");
+  --natsumi-icon-privatebrowsing: url("chrome://browser/skin/privateBrowsing.svg");
+  --natsumi-icon-profiler: url("chrome://devtools/skin/images/tool-profiler.svg");
+  --natsumi-icon-developer: url("chrome://global/skin/icons/developer.svg");
+  --natsumi-icon-screenshot: url("chrome://browser/skin/screenshot.svg");
+  --natsumi-icon-import: url("chrome://browser/skin/import.svg");
+  --natsumi-icon-newwindow: url("chrome://browser/skin/window.svg");
+  --natsumi-icon-fullscreen: url("chrome://browser/skin/fullscreen.svg");
+  --natsumi-icon-bookmarks: url("chrome://browser/skin/bookmark-star-on-tray.svg");
+  --natsumi-icon-home: url("chrome://browser/skin/home.svg");
+  --natsumi-icon-library: url("chrome://browser/skin/library.svg");
+  --natsumi-icon-newtab: url("chrome://browser/skin/new-tab.svg");
+  --natsumi-icon-menu: url("chrome://browser/skin/menu.svg");
+
+  /* Common actions */
+  --natsumi-icon-minus: url("chrome://browser/skin/minus.svg");
+  --natsumi-icon-plus: url("chrome://browser/skin/plus.svg");
+  --natsumi-icon-settings: url("chrome://global/skin/icons/settings.svg");
+  --natsumi-icon-search: url("chrome://global/skin/icons/search-glass.svg");
+  --natsumi-icon-close: url("chrome://global/skin/icons/close.svg");
+}
