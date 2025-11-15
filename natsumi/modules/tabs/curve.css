@@ -24,31 +24,20 @@ SOFTWARE.
 
 */
 
-/* ==== Tabs design (Natsumi Blade) ==== */
-/* Natsumi Blade is a modern and sleek tab design that adapts to context. */
+/* ==== Tabs design (Curve) ==== */
+/* Curve is a tab design inspired by Natsumi v2. */
 
-@keyframes backdrop-fadein {
-  from {
-    backdrop-filter: saturate(1) contrast(1);
-  }
-
-  to {
-    backdrop-filter: var(--natsumi-mat-hz-backdrop);
-  }
-}
-
-/* Base Natsumi design (Blade) */
-@media not -moz-pref("natsumi.tabs.use-custom-type") {
+@media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "curve") {
   #tabbrowser-arrowscrollbox {
     /*noinspection CssInvalidFunction*/
     .tabbrowser-tab {
-      --natsumi-tab-highlight-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary));
+      --natsumi-tab-highlight-color: var(--natsumi-primary-color);
       --natsumi-tab-idle-width: 0;
       --natsumi-tab-idle-opacity: 0;
 
       &[usercontextid] {
         --natsumi-tab-highlight-color: var(--identity-icon-color);
-        --natsumi-tab-idle-width: 40%;
+        --natsumi-tab-idle-width: 25%;
         --natsumi-tab-idle-opacity: 1;
       }
 
@@ -85,7 +74,7 @@ SOFTWARE.
 
       & > .tab-stack > .tab-background {
         transition: background-color 0.2s ease, backdrop-filter 0.2s ease !important;
-        overflow: visible !important;
+        overflow: hidden !important;
         border-radius: var(--natsumi-tab-border-radius) !important;
         outline: none !important;
         backdrop-filter: saturate(1) contrast(1);
@@ -95,20 +84,28 @@ SOFTWARE.
           display: none !important;
         }
 
+        &::before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.1));
+          opacity: 0;
+        }
+
         &::after {
           content: "";
           position: absolute;
           width: var(--natsumi-tab-idle-width);
-          height: calc(var(--natsumi-tab-height) - 4px);
+          height: var(--natsumi-tab-height);
           opacity: var(--natsumi-tab-idle-opacity);
-          border: 2px solid var(--natsumi-tab-highlight-color) !important;
           background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
           border-radius: calc(var(--natsumi-tab-border-radius) - 1px);
-          mask-image: linear-gradient(to right, black, transparent 30%);
+          mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
           transition: width 0.2s ease, opacity 0.2s ease, background-color 0.2s ease, border 0.2s ease;
 
           @media -moz-pref("natsumi.browser.type", "floorp") {
-            height: max(calc(var(--natsumi-tab-height) - 8px), 28px);
+            height: max(calc(var(--natsumi-tab-height) - 4px), 28px);
           }
 
           @media -moz-pref("sidebar.verticalTabs") {
@@ -120,7 +117,7 @@ SOFTWARE.
       &:hover {
         & > .tab-stack > .tab-background {
           &::after {
-            width: calc(100% - calc(var(--tab-inner-inline-margin) * 2));
+            width: 50%;
             opacity: 1;
           }
         }
@@ -129,18 +126,15 @@ SOFTWARE.
       &[selected], &[visuallyselected], &[natsumi-glimpse-selected] {
         /*noinspection CssInvalidFunction*/
         & > .tab-stack > .tab-background {
-          box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
-          background-color: var(--natsumi-mat-hz-background) !important;
-          animation: backdrop-fadein 0.2s ease;
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.5) !important;
+          background-color: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.12)) !important;
 
-          @media -moz-pref("natsumi.sidebar.blur-tab-button") {
-            animation: backdrop-with-blur-fadein 0.2s ease;
+          &::before {
+            opacity: 1;
           }
 
-          animation-fill-mode: forwards;
-
           &::after {
-            width: calc(100% - 4px);
+            width: 50%;
             opacity: 1;
           }
         }
@@ -277,11 +271,11 @@ SOFTWARE.
     min-height: calc(max(var(--floorp-tab-min-height, 36px), 36px) - 4px) !important;
     transition: background-color 0.2s ease;
     border-radius: var(--natsumi-tab-border-radius) !important;
-    
+
     .toolbarbutton-text {
       font-size: 12px;
     }
-    
+
     .toolbarbutton-icon {
       margin-bottom: 1px !important;
     }

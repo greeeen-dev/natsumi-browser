@@ -74,6 +74,10 @@ SOFTWARE.
     border-left: none !important;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
+    @media (-moz-mac-tahoe-theme) {
+      border-radius: 8px !important;
+    }
+
     .toolbarbutton-icon {
       --natsumi-button-hover-color: transparent !important;
       --natsumi-button-active-color: transparent !important;
@@ -110,13 +114,11 @@ SOFTWARE.
     }
   }
 
-  @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") {
+  @media -moz-pref("natsumi.sidebar.legacy-workspace-indicator") and -moz-pref("floorp.workspaces.enabled") {
     #natsumi-workspace-indicator {
-      display: none;
+      display: none !important;
     }
-  }
 
-  @media (not -moz-pref("natsumi.sidebar.hide-workspace-indicator")) and -moz-pref("floorp.workspaces.enabled") {
     #sidebar-main[style*="--natsumi-workspace-name"] {
       #tabbrowser-arrowscrollbox {
         &::before {

@@ -26,12 +26,12 @@ SOFTWARE.
 
 /* ==== Backdrop blur ==== */
 
-:has(#urlbar[open], #fullscreen-warning:not([hidden]), #pointerlock-warning:not([hidden]), .natsumi-notification) {
+:has(#urlbar[open], #fullscreen-warning:not([hidden]), #pointerlock-warning:not([hidden]), .natsumi-notification, #natsumi-glimpse-launcher[open]) {
   .deck-selected browser, .browserSidebarContainer[split] browser {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 }
 
-.deck-selected:has(findbar:not([hidden="true"])) browser, .browserSidebarContainer[split]:has(findbar:not([hidden="true"])) browser {
+.deck-selected:has(findbar:not([hidden])) browser, .browserSidebarContainer[split]:has(findbar:not([hidden="true"])) browser {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }

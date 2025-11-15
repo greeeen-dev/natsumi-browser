@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - Welcome to your personal internet.
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -24,6 +24,17 @@ SOFTWARE.
 
 */
 
-/* ==== Microsoft Fluent UI icons ==== */
-@import "pdfjs.css";
-@import "preferences.css";
+/* ==== Tabs design (Classic) ==== */
+/* Just the standard Firefox tabs design */
+
+@media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "classic") {
+  .tabbrowser-tab {
+    &[natsumi-glimpse-selected] {
+      & > .tab-stack > .tab-background {
+        background-color: var(--tab-selected-bgcolor) !important;
+        box-shadow: var(--tab-selected-shadow);
+        outline-color: var(--tab-selected-outline-color);
+      }
+    }
+  }
+}

@@ -118,11 +118,64 @@ export class NatsumiShortcutActions {
         document.body.natsumiWorkspacesWrapper.setCurrentWorkspaceID(newWorkspaceId);
     }
 
-    static toggleNatsumiToolkit() {
-        if (document.body.hasAttribute("natsumi-toolkit")) {
-            document.body.removeAttribute("natsumi-toolkit");
+    static closeGlimpse() {
+        if (!window.natsumiGlimpse) {
+            return;
+        }
+
+        if (window.natsumiGlimpse.currentGlimpseTab) {
+            // Get Glimpse tab
+            let glimpseParentTabId = window.natsumiGlimpse.currentGlimpseTab.linkedPanel;
+            let glimpseData = window.natsumiGlimpse.glimpse[glimpseParentTabId];
+
+            if (glimpseData) {
+                window.natsumiGlimpse.deactivateGlimpseWithAnim(glimpseData.glimpseTabId);
+            }
+        }
+    }
+
+    static graduateGlimpse() {
+        if (!window.natsumiGlimpse) {
+            return;
+        }
+
+        if (window.natsumiGlimpse.currentGlimpseTab) {
+            // Get Glimpse tab
+            let glimpseParentTabId = window.natsumiGlimpse.currentGlimpseTab.linkedPanel;
+            let glimpseData = window.natsumiGlimpse.glimpse[glimpseParentTabId];
+
+            if (glimpseData) {
+                window.natsumiGlimpse.graduateGlimpseWithAnim(glimpseData.glimpseTabId);
+            }
+        }
+    }
+
+    static openNewTab() {
+        let replaceNewTab = false;
+
+        if (ucApi.Prefs.get("natsumi.tabs.replace-new-tab").exists()) {
+            replaceNewTab = ucApi.Prefs.get("natsumi.tabs.replace-new-tab").value;
+        }
+
+        if (replaceNewTab) {
+            let commandEvent = new Event("command", {bubbles: true, cancelable: true});
+            document.body.natsumiURLBarController.openAsNewTab(commandEvent);
         } else {
-            document.body.setAttribute("natsumi-toolkit", "");
+            // Open new tab
+            let keyElement = document.getElementById("key_newNavigatorTab");
+            keyElement.doCommand();
+        }
+    }
+
+    static clearUnpinnedTabs() {
+        if (document.body.natsumiUnpinnedTabsClearer) {
+            document.body.natsumiUnpinnedTabsClearer.clearTabs();
+        }
+    }
+
+    static openGlimpseLauncher() {
+        if (document.body.natsumiGlimpseLauncher) {
+            document.body.natsumiGlimpseLauncher.activateLauncher();
         }
     }
 }

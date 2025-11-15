@@ -1272,6 +1272,34 @@ class MCChoice {
     }
 }
 
+class RadioChoice extends MCChoice {
+    constructor(value, label, description) {
+        super(value, label, description, "", "");
+    }
+
+    generateNode(selected = false, color = false) {
+        let nodeString = `
+            <radio class="natsumi-radio-choice" title="${this.description}" value="${this.value}">
+                <image class="radio-check"></image>
+                <hbox class="radio-label-box" align="center" flex="1">
+                    <image class="radio-icon"></image>
+                    <label class="radio-label" flex="1">${this.label}</label>
+                </hbox>
+            </radio>
+        `;
+        let node = convertToXUL(nodeString);
+        let choiceButton = node.querySelector(".natsumi-radio-choice");
+
+        if (selected) {
+            choiceButton.setAttribute("selected", "true");
+            let checkNode = choiceButton.querySelector(".radio-check");
+            checkNode.setAttribute("selected", "true");
+        }
+
+        return node;
+    }
+}
+
 const layouts = {
     "default": new MCChoice(
         false,
@@ -1521,6 +1549,34 @@ const compactStyles = {
     )
 }
 
+const glimpseKeys = {
+    "alt": new RadioChoice(
+        "alt",
+        "Alt (Option)",
+        ""
+    ),
+    "ctrl": new RadioChoice(
+        "ctrl",
+        "Control",
+        ""
+    ),
+    "meta": new RadioChoice(
+        "meta",
+        "Meta (Super/Command)",
+        ""
+    ),
+    "shift": new RadioChoice(
+        "shift",
+        "Shift",
+        ""
+    ),
+    "hold": new RadioChoice(
+        "hold",
+        "Hold click",
+        ""
+    )
+}
+
 const tabDesigns = {
     "default": new MCChoice(
         "default",
@@ -1528,6 +1584,32 @@ const tabDesigns = {
         "A modern and sleek, yet dynamic tab design.",
         `
             <div id='tab-blade' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+                </div>
+            </div>
+        `
+    ),
+    "origin": new MCChoice(
+        "origin",
+        "Origin",
+        "A box-like design inspired by Natsumi v1.",
+        `
+            <div id='tab-origin' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+                </div>
+            </div>
+        `
+    ),
+    "curve": new MCChoice(
+        "curve",
+        "Curve",
+        "A curve-like design inspired by Natsumi v2.",
+        `
+            <div id='tab-curve' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
                     <div class='natsumi-mc-tab-icon'></div>
                     <div class='natsumi-mc-tab-text'></div>
@@ -1726,6 +1808,45 @@ class MultipleChoicePreference {
         }
 
         let form = node.querySelector(".natsumi-mc-chooser");
+        for (let option in this.options) {
+            let choice = this.options[option];
+            const selected = (this.getSelected() === choice.value);
+            let choiceNode = choice.generateNode(selected, color);
+            form.appendChild(choiceNode);
+        }
+        return node;
+    }
+}
+
+class RadioPreference extends MultipleChoicePreference {
+    constructor(id, preference, label, description, overrideDefault = null) {
+        super(id, preference, label, description, overrideDefault);
+    }
+
+    generateNode(color = false) {
+        let nodeString = `
+            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                <html:h2>${this.label}</html:h2>
+                <html:div id="${this.id}Settings">
+                    <description class="description-deemphasized">
+                        ${this.description}
+                    </description>
+                    <radiogroup class="natsumi-radio-chooser">
+                    </radiogroup>
+                </html:div>
+            </groupbox>
+        `
+        let node = convertToXUL(nodeString);
+        let groupNode = node.querySelector(`#${this.id}Group`);
+
+        for (let extra in this.extras) {
+            let extraNode = convertToXUL(`<vbox id="${extra}"></vbox>`)
+            let extraBox = extraNode.querySelector(`#${extra}`);
+            extraBox.appendChild(this.extras[extra].generateNode());
+            groupNode.appendChild(extraNode);
+        }
+
+        let form = node.querySelector(".natsumi-radio-chooser");
         for (let option in this.options) {
             let choice = this.options[option];
             const selected = (this.getSelected() === choice.value);
@@ -2048,6 +2169,13 @@ function addIconsPane() {
         iconSelection.registerOption(iconPack, icons[iconPack]);
     }
 
+    // Alt back forward icons
+    iconSelection.registerExtras("natsumiIconsAltBackForward", new CheckboxChoice(
+        "natsumi.theme.icons-alt-back-forward",
+        "natsumiIconsAltBackForward",
+        "Use alternative Back/Forward icons"
+    ));
+
     let iconNode = iconSelection.generateNode();
 
     // Set listeners for each button
@@ -2059,6 +2187,24 @@ function addIconsPane() {
             setStringPreference("natsumi.theme.icons", selectedValue);
             iconButtons.forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
+        });
+    });
+
+    // Set listeners for each checkbox
+    let checkboxes = iconNode.querySelectorAll("checkbox");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("command", () => {
+            let prefName = checkbox.getAttribute("preference");
+            let isChecked = checkbox.checked;
+
+            if (checkbox.getAttribute("opposite") === "true") {
+                isChecked = !isChecked;
+            }
+
+            console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            // noinspection JSUnresolvedReference
+            ucApi.Prefs.set(prefName, isChecked);
         });
     });
 
@@ -2199,6 +2345,21 @@ function addSidebarWorkspacesPane() {
         true
     ));
 
+    let workspacesIndicatorSubgroup = new OptionsGroup(
+        "natsumiSidebarWorkspaceIndicatorOptions",
+        "",
+        ""
+    );
+
+    workspacesIndicatorSubgroup.registerOption("natsumiSidebarLegacyWorkspaceIndicator", new CheckboxChoice(
+        "natsumi.sidebar.legacy-workspace-indicator",
+        "natsumiSidebarLegacyWorkspaceIndicator",
+        "Use legacy Workspace indicator style",
+        "Use this if the new Workspaces indicator causes issues."
+    ));
+
+    workspacesGroup.registerOption("natsumiSidebarWorkspaceIndicatorOptions", workspacesIndicatorSubgroup);
+
     workspacesGroup.registerOption("natsumiSidebarWorkspacesAsIcons", new CheckboxChoice(
         "natsumi.sidebar.workspaces-as-icons",
         "natsumiSidebarWorkspacesAsIcons",
@@ -2206,10 +2367,21 @@ function addSidebarWorkspacesPane() {
         "This does not make each icon clickable to switch Workspaces (for now)."
     ));
 
+    workspacesGroup.registerOption("natsumiSidebarWorkspaceSpecificPins", new CheckboxChoice(
+        "natsumi.tabs.workspace-specific-pins",
+        "natsumiSidebarWorkspaceSpecificPins",
+        "Enable Workspace-specific pinned tabs"
+    ));
+
     let sidebarWorkspacesNode = workspacesGroup.generateNode();
 
     // Set listeners for each checkbox
     let checkboxes = sidebarWorkspacesNode.querySelectorAll("checkbox");
+    let legacyIndicatorCheckbox = sidebarWorkspacesNode.getElementById("natsumiSidebarLegacyWorkspaceIndicator");
+    if (ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").exists()) {
+        legacyIndicatorCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").value}`);
+    }
+
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
@@ -2217,6 +2389,10 @@ function addSidebarWorkspacesPane() {
 
             if (checkbox.getAttribute("opposite") === "true") {
                 isChecked = !isChecked;
+            }
+
+            if (checkbox.id === "natsumiSidebarHideWorkspaceIndicator") {
+                legacyIndicatorCheckbox.setAttribute("disabled", `${isChecked}`);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -2318,6 +2494,53 @@ function addSidebarButtonsPane() {
         }
     }
 
+    buttonsGroup.registerOption("natsumiSidebarHideClearTabs", new CheckboxChoice(
+        "natsumi.sidebar.hide-clear-tabs",
+        "natsumiSidebarHideClearTabs",
+        "Show clear unpinned tabs button",
+        "Clear your unpinned tabs all in one go.",
+        true
+    ));
+
+    let clearTabsSubgroup = new OptionsGroup(
+        "natsumiSidebarClearTabsOptions",
+        "",
+        ""
+    );
+
+    clearTabsSubgroup.registerOption("natsumiSidebarClearKeepSelected", new CheckboxChoice(
+        "natsumi.sidebar.clear-keep-selected",
+        "natsumiSidebarClearKeepSelected",
+        "Keep selected tabs on clear",
+        "Any selected tabs will be kept when using the clear unpinned tabs button."
+    ));
+
+    clearTabsSubgroup.registerOption("natsumiSidebarClearOpenTab", new CheckboxChoice(
+        "natsumi.sidebar.clear-open-newtab",
+        "natsumiSidebarClearOpenTab",
+        "Open new tab on clear",
+        "This will open a new tab if all tabs have been cleared."
+    ));
+
+    if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
+        if (ucApi.Prefs.get("natsumi.browser.type").value === "floorp") {
+            clearTabsSubgroup.registerOption("natsumiSidebarClearMergeWithWorkspaces", new CheckboxChoice(
+                "natsumi.sidebar.clear-merge-with-workspaces",
+                "natsumiSidebarClearMergeWithWorkspaces",
+                "Merge button with Workspaces indicator"
+            ));
+        }
+    }
+
+    buttonsGroup.registerOption("natsumiSidebarClearTabsOptions", clearTabsSubgroup);
+
+    buttonsGroup.registerOption("natsumiSidebarReplaceNewTab", new CheckboxChoice(
+        "natsumi.tabs.replace-new-tab",
+        "natsumiSidebarReplaceNewTab",
+        "Replace New Tab",
+        "This will remove the New Tab entirely and open the URL bar instead. Warning: This will override browser.urlbar.openintab."
+    ));
+
     buttonsGroup.registerOption("natsumiSidebarHideControls", new CheckboxChoice(
         "natsumi.sidebar.hide-sidebar-controls",
         "natsumiSidebarHideControls",
@@ -2348,8 +2571,19 @@ function addSidebarButtonsPane() {
 
     let sidebarButtonsNode = buttonsGroup.generateNode();
 
+    let keepSelectedCheckbox = sidebarButtonsNode.querySelector("#natsumiSidebarClearKeepSelected");
+    let openNewTabCheckbox = sidebarButtonsNode.querySelector("#natsumiSidebarClearOpenTab");
+    let mergeWithWorkspacesCheckbox = sidebarButtonsNode.querySelector("#natsumiSidebarClearMergeWithWorkspaces");
     let newTabPositionCheckbox = sidebarButtonsNode.querySelector("#natsumiSidebarNewTabPosition");
 
+    if (ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").exists()) {
+        keepSelectedCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+        openNewTabCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+
+        if (mergeWithWorkspacesCheckbox) {
+            mergeWithWorkspacesCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+        }
+    }
     if (ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").exists()) {
         newTabPositionCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").value}`);
     }
@@ -2365,7 +2599,14 @@ function addSidebarButtonsPane() {
                 isChecked = !isChecked;
             }
 
-            if (checkbox.id === "natsumiSidebarHideNewTab") {
+            if (checkbox.id === "natsumiSidebarHideClearTabs") {
+                keepSelectedCheckbox.setAttribute("disabled", `${isChecked}`);
+                openNewTabCheckbox.setAttribute("disabled", `${isChecked}`);
+
+                if (mergeWithWorkspacesCheckbox) {
+                    mergeWithWorkspacesCheckbox.setAttribute("disabled", `${isChecked}`);
+                }
+            } else if (checkbox.id === "natsumiSidebarHideNewTab") {
                 newTabPositionCheckbox.setAttribute("disabled", `${isChecked}`);
             }
 
@@ -2443,7 +2684,7 @@ function addCompactBehaviorPane() {
 
     // Create choices group
     let compactBehaviorGroup = new OptionsGroup(
-        "natsumiCOmpactBehavior",
+        "natsumiCompactBehavior",
         "Behavior",
         "Tweak how you want Compact Mode to behave."
     );
@@ -2476,6 +2717,145 @@ function addCompactBehaviorPane() {
     });
 
     prefsView.insertBefore(compactBehaviorNode, homePane);
+}
+
+function addGlimpseBehaviorPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let glimpseBehaviorGroup = new OptionsGroup(
+        "natsumiGlimpseBehavior",
+        "Behavior",
+        "Tweak how you want Glimpse to behave."
+    );
+
+    glimpseBehaviorGroup.registerOption("natsumiGlimpseEnabled", new CheckboxChoice(
+        "natsumi.glimpse.enabled",
+        "natsumiGlimpseEnabled",
+        "Enable Glimpse"
+    ));
+
+    glimpseBehaviorGroup.registerOption("natsumiGlimpseRightControls", new CheckboxChoice(
+        "natsumi.glimpse.controls-on-right",
+        "natsumiGlimpseRightControls",
+        "Move Glimpse controls to the right"
+    ));
+
+    let glimpseBehaviorNode = glimpseBehaviorGroup.generateNode();
+
+    // Set listeners for each checkbox
+    let checkboxes = glimpseBehaviorNode.querySelectorAll("checkbox");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("command", () => {
+            let prefName = checkbox.getAttribute("preference");
+            let isChecked = checkbox.checked;
+
+            if (checkbox.getAttribute("opposite") === "true") {
+                isChecked = !isChecked;
+            }
+
+            console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            // noinspection JSUnresolvedReference
+            ucApi.Prefs.set(prefName, isChecked);
+        });
+    });
+
+    prefsView.insertBefore(glimpseBehaviorNode, homePane);
+}
+
+function addGlimpseKeyPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Check if glimpse key exists
+    let defaultOverride = null;
+    if (ucApi.Prefs.get("natsumi.glimpse.key").exists()) {
+        defaultOverride = ucApi.Prefs.get("natsumi.glimpse.key").value;
+    }
+
+    // Create theme selection
+    let glimpseKeySelection = new RadioPreference(
+        "natsumiGlimpseKey",
+        "natsumi.glimpse.key",
+        "Activation method",
+        "Choose how Glimpse should be activated.",
+        defaultOverride
+    );
+
+    for (let activationKey in glimpseKeys) {
+        glimpseKeySelection.registerOption(activationKey, glimpseKeys[activationKey]);
+    }
+
+    let glimpseKeyNode = glimpseKeySelection.generateNode();
+
+    // Set listeners for each button
+    let glimpseKeyButtons = glimpseKeyNode.querySelectorAll(".natsumi-radio-choice");
+    glimpseKeyButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            let selectedValue = button.getAttribute("value");
+            console.log("Changing key:", selectedValue);
+            setStringPreference("natsumi.glimpse.key", selectedValue);
+            glimpseKeyButtons.forEach((btn) => {
+                btn.removeAttribute("selected")
+                let radioCheck = btn.querySelector(".radio-check");
+                radioCheck.removeAttribute("selected");
+            });
+            button.setAttribute("selected", "true");
+            let radioCheck = button.querySelector(".radio-check");
+            radioCheck.setAttribute("selected", "true");
+        });
+    });
+
+    prefsView.insertBefore(glimpseKeyNode, homePane);
+}
+
+function addGlimpseAccessibilityPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let glimpseAccessibilityGroup = new OptionsGroup(
+        "natsumiGlimpseAccessibility",
+        "Accessibility",
+        "Tweak Glimpse to make it easier to use."
+    );
+
+    glimpseAccessibilityGroup.registerOption("natsumiGlimpseIndicator", new CheckboxChoice(
+        "natsumi.glimpse.show-indicator",
+        "natsumiGlimpseIndicator",
+        "Show Glimpse indicator above content"
+    ));
+
+    glimpseAccessibilityGroup.registerOption("natsumiGlimpseBorder", new CheckboxChoice(
+        "natsumi.glimpse.alt-border",
+        "natsumiGlimpseBorder",
+        "Use an alternate border color for Glimpse",
+        "This may help as a quick way to identify Glimpse tabs."
+    ));
+
+    let glimpseAccessibilityNode = glimpseAccessibilityGroup.generateNode();
+
+    // Set listeners for each checkbox
+    let checkboxes = glimpseAccessibilityNode.querySelectorAll("checkbox");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("command", () => {
+            let prefName = checkbox.getAttribute("preference");
+            let isChecked = checkbox.checked;
+
+            if (checkbox.getAttribute("opposite") === "true") {
+                isChecked = !isChecked;
+            }
+
+            console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            // noinspection JSUnresolvedReference
+            ucApi.Prefs.set(prefName, isChecked);
+        });
+    });
+
+    prefsView.insertBefore(glimpseAccessibilityNode, homePane);
 }
 
 function addSidebarMiniplayerPane() {
@@ -2656,14 +3036,14 @@ function addPDFCompactPane() {
     // Create choices group
     let compactGroup = new OptionsGroup(
         "natsumiPDFCompact",
-        "Compact Mode",
-        "Compact Mode lets you focus on the document at hand by hiding the sidebar and toolbar when you don't need it."
+        "Toolbar autohide",
+        "Toolbar autohide lets you focus on the document at hand by hiding the sidebar and toolbar when you don't need it."
     );
 
     compactGroup.registerOption("natsumiPDFEnableCompact", new CheckboxChoice(
         "natsumi.pdfjs.compact",
         "natsumiPDFEnableCompact",
-        "Enable Compact Mode"
+        "Enable Toolbar autohide"
     ));
 
     let compactSubgroup = new OptionsGroup(
@@ -2675,8 +3055,8 @@ function addPDFCompactPane() {
     compactSubgroup.registerOption("natsumiPDFDynamicCompact", new CheckboxChoice(
         "natsumi.pdfjs.compact-dynamic",
         "natsumiPDFDynamicCompact",
-        "Dynamic Compact Mode",
-        "Compact Mode will automatically disable if the sidebar is open."
+        "Dynamic autohide",
+        "Toolbar autohide will automatically disable if the sidebar is open."
     ));
 
     compactGroup.registerOption("natsumiPDFCompactOptions", compactSubgroup);
@@ -2797,6 +3177,47 @@ function addURLbarBehaviorPane() {
     prefsView.insertBefore(behaviorNode, homePane);
 }
 
+function addMiscPreferencesPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let miscPreferencesGroup = new OptionsGroup(
+        "natsumiMiscPreferences",
+        "Preferences",
+        "Tweak how you want the preferences page to look."
+    );
+
+    miscPreferencesGroup.registerOption("natsumiMiscPreferencesRevert", new CheckboxChoice(
+        "natsumi.theme.classic-preferences",
+        "natsumiMiscPreferencesRevert",
+        "Revert to classic preferences look",
+        "If you don't like Natsumi's custom preferences design, you can enable this to disable it."
+    ));
+
+    let miscPreferencesNode = miscPreferencesGroup.generateNode();
+
+    // Set listeners for each checkbox
+    let checkboxes = miscPreferencesNode.querySelectorAll("checkbox");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("command", () => {
+            let prefName = checkbox.getAttribute("preference");
+            let isChecked = checkbox.checked;
+
+            if (checkbox.getAttribute("opposite") === "true") {
+                isChecked = !isChecked;
+            }
+
+            console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            // noinspection JSUnresolvedReference
+            ucApi.Prefs.set(prefName, isChecked);
+        });
+    });
+
+    prefsView.insertBefore(miscPreferencesNode, homePane);
+}
+
 function addPreferencesPanes() {
     // Category nodes
     let appearanceNode = convertToXUL(`
@@ -2822,6 +3243,11 @@ function addPreferencesPanes() {
             </div>
         </groupbox>
     `);
+    let glimpseNode = convertToXUL(`
+        <hbox id="natsumiGlimpseCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
+            <html:h1>Glimpse</html:h1>
+        </hbox>
+    `);
     let miniPlayerNode = convertToXUL(`
         <hbox id="natsumiMiniplayerCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
             <html:h1>Miniplayer</html:h1>
@@ -2842,6 +3268,11 @@ function addPreferencesPanes() {
             <html:h1>URL Bar</html:h1>
         </hbox>
     `);
+    let miscNode = convertToXUL(`
+        <hbox id="natsumiMiscCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
+            <html:h1>Miscellaneous</html:h1>
+        </hbox>
+    `);
 
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
@@ -2860,6 +3291,11 @@ function addPreferencesPanes() {
     prefsView.insertBefore(compactModeNode, homePane);
     addCompactStylesPane();
     addCompactBehaviorPane();
+
+    prefsView.insertBefore(glimpseNode, homePane);
+    addGlimpseBehaviorPane();
+    addGlimpseKeyPane();
+    addGlimpseAccessibilityPane();
 
     prefsView.insertBefore(miniPlayerNode, homePane);
     addSidebarMiniplayerPane();
@@ -2893,8 +3329,43 @@ function addPreferencesPanes() {
         addURLbarLayoutPane();
         addURLbarBehaviorPane();
     }
+
+    prefsView.insertBefore(miscNode, homePane);
+    addMiscPreferencesPane();
+}
+
+function addHideFloorpWarnings() {
+    let isFloorp = false;
+    if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
+        if (ucApi.Prefs.get("natsumi.browser.type").value === "floorp") {
+            isFloorp = true;
+        }
+    }
+
+    if (!isFloorp) {
+        return;
+    }
+
+    let mainPrefPane = document.getElementById("mainPrefPane");
+
+    // Create "hide warning"
+    let hideWarnings = `
+        <div id="natsumi-hide-floorp-warnings">Hide these warnings</div>
+    `
+
+    let hideWarningsFragment = convertToXUL(hideWarnings);
+    mainPrefPane.parentElement.insertBefore(hideWarningsFragment, mainPrefPane);
+
+    // Get node
+    let hideWarningsNode = document.getElementById("natsumi-hide-floorp-warnings");
+
+    // Set event listener
+    hideWarningsNode.addEventListener("click", () => {
+        ucApi.Prefs.set("natsumi.theme.floorp-hide-preferences-warnings", true);
+    });
 }
 
 console.log("Loading prefs panes...");
 addToSidebar();
 addPreferencesPanes();
+addHideFloorpWarnings();

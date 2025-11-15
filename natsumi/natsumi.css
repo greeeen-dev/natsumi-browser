@@ -48,6 +48,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/notifications.css";
 @import "modules/right-sidebar.css";
 @import "modules/compact-mode.css";
+@import "modules/glimpse.css";
 @import "modules/welcome.css";
 @import "modules/experiments.css";
 @import "modules/icons.css";

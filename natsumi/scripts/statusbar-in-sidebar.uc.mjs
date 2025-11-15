@@ -32,86 +32,150 @@ SOFTWARE.
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
-function copySidebarWidth() {
-    // Only run this if vertical tabs are enabled
-    if (!ucApi.Prefs.get("sidebar.verticalTabs").value) {
-        return;
+class NatsumiStatusBarHandler {
+    constructor() {
+        this.sidebarNode = null;
+        this.statusBarNode = null;
+        this.isWaterfox = false;
+        this.disableStatusBar = false;
+        this.sidebarObserver = null;
+        this.statusBarObserver = null;
     }
 
-    let sidebar = document.querySelector("#sidebar-main");
+    init() {
+        let isFloorp = false;
+        if (ucApi.Prefs.get("natsumi.browser.type").exists) {
+            this.isWaterfox = ucApi.Prefs.get("natsumi.browser.type").value === "waterfox";
+            isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
+        }
 
-    // Usually the sidebar should always exist, but if it doesn't, we can just return
-    if (!sidebar) {
-        return;
+        if (isFloorp || this.isWaterfox) {
+            this.initStatusBarHeightCopy();
+        } else {
+            this.disableStatusBar = true;
+        }
+
+        this.sidebarNode = document.getElementById("sidebar-main");
+        this.sidebarObserver = new MutationObserver(() => {
+            this.copySidebarWidth();
+            this.copyStatusBarHeight();
+            this.copyWindowButtonsWidth();
+
+            // Copy sidebar options height if the shadow root exists
+            let sidebarNodeSR = this.sidebarNode.shadowRoot;
+            if (sidebarNodeSR) {
+                this.copySidebarOptionsHeight();
+            }
+        });
+        this.sidebarObserver.observe(this.sidebarNode, {attributes: true, attributeFilter: ["style", "sidebar-launcher-expanded", "sidebar-ongoing-animations"]});
     }
 
-    let width = sidebar.style.width;
+    initStatusBarHeightCopy() {
+        if (this.statusBarObserver) {
+            return;
+        }
 
-    if (!width || width.length === 0) {
-        width = "242px";
+        this.statusBarNode = document.querySelector("#nora-statusbar");
+        if (this.isWaterfox) {
+            this.statusBarNode = document.querySelector("#status-bar");
+        }
+
+        if (this.statusBarNode) {
+            this.statusBarObserver = new MutationObserver(() => {
+                document.body.natsumiStatusBarHandler.copyStatusBarHeight();
+            });
+
+            this.statusBarObserver.observe(this.statusBarNode, {attributes: true, childList: true, subtree: true});
+        }
     }
 
-    document.body.style.setProperty("--natsumi-sidebar-width", width);
-}
+    copySidebarWidth() {
+        // Only run this if vertical tabs are enabled
+        if (!ucApi.Prefs.get("sidebar.verticalTabs").value) {
+            return;
+        }
 
-function copySidebarOptionsHeight() {
-    // The buttons strip is in a shadow root, so we'll need to do some more work here
-    let sidebarNode = document.querySelector("#sidebar-main").querySelector("sidebar-main");
-    let sidebarNodeSR = sidebarNode.shadowRoot;
+        let sidebar = document.querySelector("#sidebar-main");
 
-    if (!sidebarNodeSR) {
-        console.warn("Sidebar shadow root not found, likely needs to be ran later.");
-        return;
+        // Usually the sidebar should always exist, but if it doesn't, we can just return
+        if (!sidebar) {
+            return;
+        }
+
+        let width = sidebar.style.width;
+
+        if (!width || width.length === 0) {
+            width = "242px";
+        }
+
+        document.body.style.setProperty("--natsumi-sidebar-width", width);
     }
 
-    let sidebarOptions = sidebarNodeSR.querySelector(".tools-and-extensions");
+    copySidebarOptionsHeight() {
+        // The buttons strip is in a shadow root, so we'll need to do some more work here
+        let sidebarNode = document.querySelector("#sidebar-main").querySelector("sidebar-main");
+        let sidebarNodeSR = sidebarNode.shadowRoot;
 
-    if (!sidebarOptions) {
-        return;
+        if (!sidebarNodeSR) {
+            console.warn("Sidebar shadow root not found, likely needs to be ran later.");
+            return;
+        }
+
+        let sidebarOptions = sidebarNodeSR.querySelector(".tools-and-extensions");
+
+        if (!sidebarOptions) {
+            return;
+        }
+
+        const height = sidebarOptions.offsetHeight;
+
+        document.body.style.setProperty("--natsumi-sidebar-options-height", `${height}px`);
     }
 
-    const height = sidebarOptions.offsetHeight;
+    copyStatusBarHeight() {
+        // Init status bar stuff if required
+        this.initStatusBarHeightCopy();
 
-    document.body.style.setProperty("--natsumi-sidebar-options-height", `${height}px`);
-}
+        if (this.disableStatusBar) {
+            return;
+        }
 
-function copyStatusBarHeight() {
-    let sidebarNode = document.querySelector("#sidebar-main");
+        let sidebarNode = document.querySelector("#sidebar-main");
 
-    // Set a variable to the status bar height
-    let statusBarFloorp = document.querySelector("#nora-statusbar");
-    let statusBarWaterfox = document.querySelector("#status-bar");
+        if (!this.statusBarNode) {
+            if (this.isWaterfox) {
+                this.statusBarNode = document.querySelector("#status-bar");
+            } else {
+                this.statusBarNode = document.querySelector("#nora-statusbar");
+            }
 
-    if (!statusBarFloorp && !statusBarWaterfox) {
-        return;
+            if (!this.statusBarNode) {
+                // It's still null so return
+                return;
+            }
+        }
+
+        // For some reason, offsetHeight is null but scrollHeight is correct.
+        // Probably due to nora-statusbar having absolute position
+        let height = this.statusBarNode.scrollHeight;
+
+        sidebarNode.style.setProperty("--natsumi-statusbar-height", `${height}px`);
     }
 
-    // For some reason, offsetHeight is null but scrollHeight is correct.
-    // Probably due to nora-statusbar having absolute position
-    let height = null;
+    copyWindowButtonsWidth() {
+        let windowButtonsNode = document.querySelector("#nav-bar .titlebar-buttonbox-container");
 
-    if (statusBarFloorp) {
-        height = statusBarFloorp.scrollHeight;
-    } else if (statusBarWaterfox) {
-        height = statusBarWaterfox.scrollHeight;
-    }
+        if (!windowButtonsNode) {
+            return;
+        }
 
-    sidebarNode.style.setProperty("--natsumi-statusbar-height", `${height}px`);
-}
+        const width = windowButtonsNode.getClientRects()[0].width + "px";
 
-function copyWindowButtonsWidth() {
-    let windowButtonsNode = document.querySelector("#nav-bar .titlebar-buttonbox-container");
+        let navBar = document.querySelector("#navigator-toolbox");
 
-    if (!windowButtonsNode) {
-        return;
-    }
-
-    const width = windowButtonsNode.getClientRects()[0].width + "px";
-
-    let navBar = document.querySelector("#navigator-toolbox");
-
-    if (navBar) {
-        navBar.style.setProperty("--natsumi-window-buttons-width", width);
+        if (navBar) {
+            navBar.style.setProperty("--natsumi-window-buttons-width", width);
+        }
     }
 }
 
@@ -122,6 +186,11 @@ let isWaterfox = false;
 if (ucApi.Prefs.get("natsumi.browser.type").exists) {
     isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
     isWaterfox = ucApi.Prefs.get("natsumi.browser.type").value === "waterfox";
+}
+
+if (!document.body.natsumiStatusBarHandler) {
+    document.body.natsumiStatusBarHandler = new NatsumiStatusBarHandler();
+    document.body.natsumiStatusBarHandler.init();
 }
 
 if (!sidebar) {
@@ -139,48 +208,9 @@ if (!sidebar) {
     }
 }
 
-console.log("Sidebar found!", sidebar);
-
 if (sidebar) {
-    // If the sidebar exists (and the browser is Floorp), copy its width
-
-    copySidebarWidth();
-    copyStatusBarHeight();
-    copyWindowButtonsWidth();
-
-    let sidebarObserver = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutationRecord) {
-            copySidebarWidth();
-
-            // Also copy sidebar toolbar heights in case things change
-            copyStatusBarHeight();
-
-            // And window buttons, too
-            copyWindowButtonsWidth();
-
-            // Copy sidebar options height if the shadow root exists
-            let sidebarNodeSR = mutationRecord.target.querySelector("sidebar-main").shadowRoot;
-            if (sidebarNodeSR) {
-                copySidebarOptionsHeight();
-            }
-        });
-    });
-    sidebarObserver.observe(sidebar, {attributes: true, attributeFilter: ["style"]});
-
-    if (isFloorp || isWaterfox) {
-        let statusBarFloorp = document.querySelector("#nora-statusbar");
-        let statusBarWaterfox = document.querySelector("#status-bar");
-        let statusBarObserver = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutationRecord) {
-                copyStatusBarHeight();
-            });
-        });
-
-        if (statusBarFloorp && isFloorp) {
-            statusBarObserver.observe(statusBarFloorp, {attributes: true, childList: true, subtree: true});
-        }
-        if (statusBarWaterfox && isWaterfox) {
-            statusBarObserver.observe(statusBarWaterfox, {attributes: true, childList: true, subtree: true});
-        }
-    }
+    // If the sidebar exists, copy its width
+    document.body.natsumiStatusBarHandler.copySidebarWidth();
+    document.body.natsumiStatusBarHandler.copySidebarOptionsHeight();
+    document.body.natsumiStatusBarHandler.copyWindowButtonsWidth();
 }

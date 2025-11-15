@@ -155,8 +155,8 @@ SOFTWARE.
 @media -moz-pref("natsumi.browser.type", "floorp") {
   #tabbrowser-tabpanels {
     /* Hide browser windows that aren't open */
-    .browserSidebarContainer:not(.deck-selected):not([split="true"]) {
-      --natsumi-border-width: 0 !important;
+    .browserSidebarContainer:not(.deck-selected):not([split="true"]):not(:has(browser[natsumi-has-glimpse])) {
+      --natsumi-border-width: 0;
     }
 
     &[split-view="true"] {

@@ -49,6 +49,16 @@ SOFTWARE.
     list-style-image: url("../../../icons/lucide/arrow-right.svg") !important;
   }
 
+  @media -moz-pref("natsumi.theme.icons-alt-back-forward") {
+    #back-button {
+      list-style-image: url("../../../icons/lucide/arrow-left-alt.svg") !important;
+    }
+
+    #forward-button {
+      list-style-image: url("../../../icons/lucide/arrow-right-alt.svg") !important;
+    }
+  }
+
   #reload-button {
     list-style-image: url("../../../icons/lucide/rotate-right.svg") !important;
   }

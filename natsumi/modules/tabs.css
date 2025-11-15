@@ -28,13 +28,28 @@ SOFTWARE.
 
 /* Import tab designs */
 @import url("tabs/blade.css");
+@import url("tabs/origin.css");
+@import url("tabs/curve.css");
 @import url("tabs/fusion.css");
 @import url("tabs/material.css");
 @import url("tabs/hexagonal.css");
+@import url("tabs/classic.css");
 
 /* Global tweaks for tabs */
 .tabbrowser-tab {
   --attention-dot-color: transparent !important;
+}
+
+#tabbrowser-arrowscrollbox .tabbrowser-tab {
+  &[natsumi-glimpse-selected] {
+    .tab-label-container {
+      opacity: 1 !important;
+    }
+
+    .tab-close-button {
+      display: flex !important;
+    }
+  }
 }
 
 /* New tab button position */

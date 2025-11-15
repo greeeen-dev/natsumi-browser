@@ -165,9 +165,11 @@ SOFTWARE.
         }
 
         #tabbrowser-arrowscrollbox {
-          .tabbrowser-tab[selected] {
-            .tab-background {
-              margin-inline: var(--tab-inner-inline-margin) !important;
+          .tabbrowser-tab {
+            &[selected], &[natsumi-glimpse-selected] {
+              & > .tab-stack > .tab-background {
+                margin-inline: var(--tab-inner-inline-margin) !important;
+              }
             }
           }
         }
@@ -193,7 +195,7 @@ SOFTWARE.
         --natsumi-tab-highlight-color: var(--identity-icon-color);
 
         @media -moz-pref("natsumi.tabs.fusion-highlight") {
-          .tab-background::before {
+          & > .tab-stack > .tab-background::before {
             @media -moz-pref("sidebar.verticalTabs") {
               height: 35%;
               top: 30%;
@@ -211,7 +213,7 @@ SOFTWARE.
         }
       }
 
-      .tab-background {
+      & > .tab-stack > .tab-background {
         --natsumi-fusion-border-radius: 4px;
         border-radius: var(--natsumi-fusion-border-radius) !important;
 
@@ -247,8 +249,8 @@ SOFTWARE.
     }
 
     .tabbrowser-tab {
-      &:hover, &[selected] {
-        .tab-background {
+      &:hover, &[selected], &[natsumi-glimpse-selected] {
+        & > .tab-stack > .tab-background {
           @media -moz-pref("natsumi.tabs.fusion-highlight") {
             &::before {
               @media -moz-pref("sidebar.verticalTabs") {
@@ -266,13 +268,16 @@ SOFTWARE.
       }
     }
 
-    .tabbrowser-tab[selected] {
-      .tab-background {
-        background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
+    .tabbrowser-tab {
+      &[selected], &[natsumi-glimpse-selected] {
+        & > .tab-stack > .tab-background {
+          box-shadow: var(--tab-selected-shadow);
+          background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
 
-        @media not -moz-pref("sidebar.verticalTabs") {
-          margin-bottom: 0 !important;
-          border-radius: var(--natsumi-fusion-border-radius) var(--natsumi-fusion-border-radius) 0 0 !important;
+          @media not -moz-pref("sidebar.verticalTabs") {
+            margin-bottom: 0 !important;
+            border-radius: var(--natsumi-fusion-border-radius) var(--natsumi-fusion-border-radius) 0 0 !important;
+          }
         }
       }
     }
@@ -280,7 +285,7 @@ SOFTWARE.
 
   #sidebar-main:not([sidebar-launcher-expanded]) {
     #tabbrowser-arrowscrollbox {
-      .tabbrowser-tab .tab-background {
+      .tabbrowser-tab > .tab-stack > .tab-background {
         width: calc(var(--tab-collapsed-background-width) + var(--tab-inner-inline-margin)) !important;
       }
     }
@@ -289,7 +294,7 @@ SOFTWARE.
   body:not([natsumi-compact-mode]) {
     #tabbrowser-arrowscrollbox {
       .tabbrowser-tab {
-        .tab-background {
+        & > .tab-stack > .tab-background {
           @media -moz-pref("sidebar.verticalTabs") {
             @media -moz-pref("sidebar.position_start") {
               border-radius: var(--natsumi-fusion-border-radius) 0 0 var(--natsumi-fusion-border-radius) !important;
@@ -297,10 +302,22 @@ SOFTWARE.
             }
 
             @media not -moz-pref("sidebar.position_start") {
-            border-radius: 0 var(--natsumi-fusion-border-radius) var(--natsumi-fusion-border-radius) 0 !important;
-            margin-left: 0 !important;
+              border-radius: 0 var(--natsumi-fusion-border-radius) var(--natsumi-fusion-border-radius) 0 !important;
+              margin-left: 0 !important;
+            }
           }
-          }
+        }
+      }
+    }
+  }
+
+  #pinned-tabs-container {
+    .tabbrowser-tab {
+      &[natsumi-glimpse-selected] {
+        & > .tab-stack > .tab-background {
+          background-color: var(--tab-selected-bgcolor) !important;
+          box-shadow: var(--tab-selected-shadow);
+          outline-color: var(--tab-selected-outline-color);
         }
       }
     }

@@ -60,7 +60,7 @@ SOFTWARE.
 
       body {
         @media (prefers-color-scheme: dark) {
-          background-color: color-mix(in srgb, var(--natsumi-colors-tertiary) 70%, #0f0f0f 30%) !important;
+          background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%) !important;
         }
       }
 

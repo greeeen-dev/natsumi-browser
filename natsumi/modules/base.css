@@ -26,6 +26,26 @@ SOFTWARE.
 
 /* ==== Base theme ==== */
 
+@keyframes dialog-stack-fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-popup {
+  0% {
+    translate: 0 15px;
+  }
+
+  100% {
+    translate: 0;
+  }
+}
+
 #nav-bar {
   border: none !important;
 }
@@ -38,9 +58,10 @@ SOFTWARE.
     outline: none !important;
 
     .browserSidebarContainer {
-      border: var(--natsumi-border-width) solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
+      --natsumi-browser-border-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+      border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color) !important;
       border-radius: var(--natsumi-browser-border-radius) !important;
-      overflow: hidden !important;
+      overflow: hidden;
 
       &:has(.devtools-toolbox-side-iframe) {
         .browserContainer browser {
@@ -185,6 +206,10 @@ SOFTWARE.
       padding: 6px !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
       border-radius: 4px !important;
+
+      @media (-moz-mac-tahoe-theme) {
+        border-radius: 8px !important;
+      }
     }
 
     .avatar-container {
@@ -224,30 +249,6 @@ SOFTWARE.
   .unified-extensions-item-action-button {
     overflow: visible !important;
   }
-
-  /*#workspaces-toolbar-button {
-    &::before {
-      content: "";
-      width: 100%;
-      height: 100%;
-      background-color: red !important;
-    }
-
-    &:hover {
-      background-color: transparent !important;
-    }
-
-    &:hover .toolbarbutton-icon {
-      background-color: transparent !important;
-    }
-
-    &:active, &[open], &[checked] {
-      .toolbarbutton-icon {
-        background-color: transparent !important;
-        box-shadow: none !important;
-      }
-    }
-  }*/
 
   .toolbarbutton-badge-stack {
     padding: 0 !important;
@@ -311,11 +312,15 @@ SOFTWARE.
 
   /*noinspection CssInvalidFunction*/
   .pointerlockfswarning-domain-text, .pointerlockfswarning-generic-text {
-    color: light-dark(black, white);
+    color: black !important;
     font-size: 14px !important;
     margin-left: 10px !important;
     margin-right: 0 !important;
     padding-right: 5px !important;
+
+    @media (prefers-color-scheme: dark) {
+      color: white !important;
+    }
   }
 
   &[onscreen] {
@@ -355,7 +360,7 @@ SOFTWARE.
       width: 16px;
       height: 16px;
       position: absolute;
-      background-color: light-dark(black, white);
+      background-color: black;
       left: 50%;
       top: 50%;
       background-repeat: no-repeat;
@@ -364,6 +369,10 @@ SOFTWARE.
       mask-image: var(--natsumi-fullscreen-button);
       mask-size: 28px;
       mask-position: center;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: white;
+      }
     }
 
     &:hover {
@@ -431,4 +440,79 @@ SOFTWARE.
   #tabbrowser-tabs::after {
     border-color: transparent !important;
   }
+}
+
+/* Dialogs */
+.dialogStack:not([hidden]) {
+  animation: dialog-stack-fadein 0.3s ease;
+
+  .dialogBox {
+    animation: dialog-popup 0.3s ease;
+  }
+}
+
+/* Tabs clearer */
+#natsumi-tabs-clearer {
+  margin: 2px var(--tab-inner-inline-margin) !important;
+  gap: 8px;
+
+  @media -moz-pref("natsumi.sidebar.hide-clear-tabs") {
+    display: none !important;
+  }
+
+  #natsumi-tabs-clearer-separator {
+    flex: 1;
+    border-top: var(--tabstrip-inner-border) !important;
+    margin-block: auto;
+  }
+
+  #natsumi-tabs-clearer-button {
+    -moz-context-properties: stroke, fill;
+    stroke: light-dark(black, white);
+    color: light-dark(black, white);
+    transition: opacity 0.2s ease;
+    font-size: 11px;
+    padding-left: 15px;
+    background-image: url("../icons/lucide/clear-tabs.svg");
+    background-size: 11px;
+    background-repeat: no-repeat;
+    opacity: 0.4;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+#tabbrowser-tabs[expanded] #natsumi-tabs-clearer {
+  @media -moz-pref("natsumi.sidebar.clear-merge-with-workspaces") {
+    display: none !important;
+  }
+}
+
+#tabbrowser-tabs:not([expanded]) #natsumi-tabs-clearer {
+  #natsumi-tabs-clearer-separator {
+    display: none !important;
+  }
+
+  #natsumi-tabs-clearer-button {
+    width: 12px;
+    height: 12px;
+    font-size: 0;
+    padding-left: 0 !important;
+    background-size: 12px;
+
+    @media -moz-pref("sidebar.verticalTabs") {
+      margin-inline: auto;
+      margin-bottom: 4px;
+    }
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      margin-block: auto;
+    }
+  }
+}
+
+#vertical-pinned-tabs-splitter[hidden="true"] {
+  display: none !important;
 }

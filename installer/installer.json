@@ -5,7 +5,7 @@
     "version": "5.6.4",
     "version_rc": null,
     "version_beta": null,
-    "version_alpha": null,
+    "version_alpha": "6.0.0-a.3",
     "source": "https://github.com/greeeen-dev/natsumi-browser"
   }
 }

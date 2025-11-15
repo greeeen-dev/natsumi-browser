@@ -58,19 +58,27 @@ function addAboutPane() {
         <hbox id="natsumiAboutCategory" class="subcategory" data-category="paneNatsumiAbout" hidden="true">
             <html:h1>About Natsumi</html:h1>
         </hbox>
+        <groupbox id="natsumiAboutExperimentalWarning" data-category="paneNatsumiAbout" hidden="true">
+            <div class="natsumi-settings-info warning">
+                <div class="natsumi-settings-info-icon"></div>
+                <div class="natsumi-settings-info-text">
+                    You're on an experimental version of Natsumi. Don't panic, and stay safe!
+                </div>
+            </div>
+        </groupbox>
         <groupbox id="natsumiAboutGroup" class="subcategory" data-category="paneNatsumiAbout" hidden="true">
             <div id="natsumi-about-container">
-                <div id="natsumi-about-icon"></div>
-                <div id="natsumi-about-name">Natsumi Browser</div>
-                <div id="natsumi-about-version-container">
-                    <div id="natsumi-about-version"></div>
-                    <div id="natsumi-about-stability-badge"></div>
-                </div>
-                <div class="natsumi-about-vertical-separator"></div>
-                <div id="natsumi-about-mission-container">
-                    <div id="natsumi-about-mission">
-                        Natsumi is built to make your browser more beautiful and functional, yet remain as customizable
-                        as possible.                        
+                <div id="natsumi-about-box">
+                    <div id="natsumi-about-icon"></div>
+                    <div id="natsumi-about-info-container">
+                        <div id="natsumi-about-name">Natsumi Browser</div>
+                        <div id="natsumi-about-version-container">
+                            <div id="natsumi-about-version"></div>
+                            <div id="natsumi-about-stability-badge"></div>
+                        </div>
+                        <div id="natsumi-about-browser-container">
+                            <div id="natsumi-about-browser-version"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="natsumi-about-vertical-separator"></div>
@@ -87,15 +95,20 @@ function addAboutPane() {
 
     // Set metadata
     let versionNode = document.getElementById("natsumi-about-version");
+    versionNode.textContent = `Version ${version}`;
+
+    let browserVersionNode = document.getElementById("natsumi-about-browser-version");
     if (forkedFox) {
-        versionNode.textContent = `${version} on ${browserName} ${forkedVersion} (Firefox ${browserVersion})`;
+        browserVersionNode.textContent = `Running on ${browserName} ${forkedVersion} (Firefox ${browserVersion})`;
     } else {
-        versionNode.textContent = `${version} on Firefox ${browserVersion}`;
+        browserVersionNode.textContent = `Running on Firefox ${browserVersion}`;
     }
 
     let stabilityBadge = document.getElementById("natsumi-about-stability-badge");
+    let experimentalWarning = document.getElementById("natsumiAboutExperimentalWarning");
     if (isStable) {
         stabilityBadge.setAttribute("hidden", "true");
+        experimentalWarning.style.display = "none";
     }
 }
 

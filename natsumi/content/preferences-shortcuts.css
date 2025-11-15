@@ -33,6 +33,45 @@ SOFTWARE.
     stroke: currentColor;
   }
 
+  #natsumi-shortcut-reset, #natsumi-shortcut-import, #natsumi-shortcut-export {
+    padding-left: 32px;
+    padding-right: 6px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    -moz-context-properties: stroke, stroke-opacity;
+    stroke: light-dark(black, white);
+    background-size: 20px;
+    background-position: 6px center;
+    background-repeat: no-repeat;
+    align-items: center;
+    user-select: none;
+
+    &:hover {
+      background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
+    }
+
+    &:active {
+      background-color: var(--natsumi-button-active-color);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  #natsumi-shortcut-reset {
+    margin-inline: auto 10px;
+    background-image: url("../icons/lucide/rotate-right.svg");
+  }
+
+  #natsumi-shortcut-import {
+    margin-right: 10px;
+    background-image: url("../icons/lucide/download.svg");
+  }
+
+  #natsumi-shortcut-export {
+    background-image: url("../icons/lucide/upload.svg");
+  }
+
   .natsumi-categorized-shortcuts-container {
     flex-direction: column !important;
     gap: 4px;
@@ -131,7 +170,7 @@ SOFTWARE.
           background-image: url("../icons/lucide/enter.svg");
         }
 
-        &[value="back"]::before {
+        &[value="back"]::before, &[value="backspace"]::before {
           background-image: url("../icons/lucide/backspace.svg");
         }
 

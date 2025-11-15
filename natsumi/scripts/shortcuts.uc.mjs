@@ -135,11 +135,12 @@ export class NatsumiKeyboardShortcut {
 }
 
 class NatsumiNativeKeyboardShortcut extends NatsumiKeyboardShortcut {
-    constructor(meta, ctrl, alt, shift, key, command, isDevSet) {
+    constructor(meta, ctrl, alt, shift, key, command, isDevSet, interceptedBy = null) {
         super(meta, ctrl, alt, shift, key, 3, false);
         this.command = command; // The command that this shortcut triggers
         this.isDevSet = isDevSet; // If true, this shortcut is part of the developer toolbox shortcuts
         this.isNativeShortcut = true;
+        this.interceptedBy = interceptedBy; // If set, a Natsumi shortcut can intercept this native shortcut
     }
 
     static fromShortcutElement(shortcutElement) {
@@ -208,7 +209,11 @@ class NatsumiKBSManager {
             "toggleCompactMode": new NatsumiKeyboardShortcut(false, true, false, true, "s", 0, true),
             "toggleCompactSidebar": new NatsumiKeyboardShortcut(false, true, true, true, "s", 0, true),
             "toggleCompactNavbar": new NatsumiKeyboardShortcut(false, true, true, true, "t", 0, true),
-            //"toggleNatsumiToolkit": new NatsumiKeyboardShortcut(false, true, true, false, "t", 0, true)
+            "closeGlimpse": new NatsumiKeyboardShortcut(false, false, true, true, "w", 3, false),
+            "graduateGlimpse": new NatsumiKeyboardShortcut(false, false, true, true, "f", 3, false),
+            "natsumiNewTab": new NatsumiKeyboardShortcut(false, true, false, false, "t", 3, true),
+            "natsumiClearUnpinnedTabs": new NatsumiKeyboardShortcut(false, true, true, false, "w", 0, true),
+            "openGlimpseLauncher": new NatsumiKeyboardShortcut(false, true, true, false, "n", 0, true)
         };
         this.shortcutActions = {
             "copyCurrentUrl": NatsumiShortcutActions.copyCurrentUrl,
@@ -217,7 +222,11 @@ class NatsumiKBSManager {
             "toggleCompactMode": NatsumiShortcutActions.toggleCompactMode,
             "toggleCompactSidebar": NatsumiShortcutActions.toggleCompactSidebar,
             "toggleCompactNavbar": NatsumiShortcutActions.toggleCompactNavbar,
-            //"toggleNatsumiToolkit": NatsumiShortcutActions.toggleNatsumiToolkit
+            "closeGlimpse": NatsumiShortcutActions.closeGlimpse,
+            "graduateGlimpse": NatsumiShortcutActions.graduateGlimpse,
+            "natsumiNewTab": NatsumiShortcutActions.openNewTab,
+            "natsumiClearUnpinnedTabs": NatsumiShortcutActions.clearUnpinnedTabs,
+            "openGlimpseLauncher": NatsumiShortcutActions.openGlimpseLauncher
         };
         this.shortcutsPending = {};
         this.shortcutCustomizationData = {};
@@ -242,6 +251,16 @@ class NatsumiKBSManager {
                 "unregistered": false,
                 "shortcutMode": 3
             },
+            "key_dom": {
+                "customKeybinds": true,
+                "meta": Services.appinfo.OS.toLowerCase() === "darwin",
+                "ctrl": Services.appinfo.OS.toLowerCase() !== "darwin",
+                "alt": true,
+                "shift": true,
+                "key": "w",
+                "unregistered": false,
+                "shortcutMode": 3
+            },
             "key_screenshot": {
                 "customKeybinds": true,
                 "meta": Services.appinfo.OS.toLowerCase() === "darwin",
@@ -252,6 +271,9 @@ class NatsumiKBSManager {
                 "unregistered": false,
                 "shortcutMode": 3
             }
+        }
+        this.interceptions = {
+            "key_newNavigatorTab": "natsumiNewTab"
         }
 
         // Add browser-specific shortcuts
@@ -317,7 +339,7 @@ class NatsumiKBSManager {
         }
     }
 
-    addDevShortcuts () {
+    addDevShortcuts() {
         let devShortcuts = document.getElementById("devtoolsKeyset").children;
         for (let i = 0; i < devShortcuts.length; i++) {
             let devShortcut = devShortcuts[i];
@@ -515,7 +537,16 @@ class NatsumiKBSManager {
         }}
         */
 
-        for (const shortcutName in this.shortcutCustomizationData) {
+        let allShortcutNames = Object.keys(this.shortcutCustomizationData);
+
+        // Get intercepted shortcuts
+        for (const nativeShortcutId in this.interceptions) {
+            if (!allShortcutNames.includes(nativeShortcutId)) {
+                allShortcutNames.push(nativeShortcutId);
+            }
+        }
+
+        for (const shortcutName of allShortcutNames) {
             // Update shortcut keybind in the native handler
             let shortcutObject = this.shortcuts[shortcutName];
             let keyElement = document.getElementById(shortcutName);
@@ -542,9 +573,68 @@ class NatsumiKBSManager {
                 // Disable shortcut if needed
                 // If the shortcut is not set to be handled natively, the native event handlers should be
                 // disabled to prevent duplicate execution of shortcut
-                if (shortcutObject.unregistered || shortcutObject.shortcutMode === 2 || shortcutObject.shortcutMode === 0) {
+                if (
+                    shortcutObject.unregistered || shortcutObject.shortcutMode === 2 ||
+                    shortcutObject.shortcutMode === 0 || shortcutObject.interceptedBy
+                ) {
                     keyElement.setAttribute("disabled", "true");
                     originalKeyNode.setAttribute("disabled", "true");
+
+                    if (shortcutObject.interceptedBy) {
+                        // Apply custom shortcut to the intercepting Natsumi shortcut
+                        let interceptingShortcut = this.shortcuts[shortcutObject.interceptedBy];
+                        if (interceptingShortcut) {
+                            let interceptingKeyNode = document.getElementById(shortcutObject.interceptedBy);
+                            if (interceptingKeyNode) {
+                                // Set modifiers
+                                let modifiers = [];
+                                if (shortcutObject.meta) {
+                                    modifiers.push("accel");
+                                }
+                                if (shortcutObject.ctrl) {
+                                    modifiers.push("control");
+                                }
+                                if (shortcutObject.alt) {
+                                    modifiers.push("alt");
+                                }
+                                if (shortcutObject.shift) {
+                                    modifiers.push("shift");
+                                }
+                                if (modifiers.length > 0) {
+                                    interceptingKeyNode.setAttribute("modifiers", modifiers.join(","));
+                                } else {
+                                    interceptingKeyNode.removeAttribute("modifiers");
+                                }
+
+                                // Set key or keycode
+                                if (shortcutObject.key.length === 1) {
+                                    interceptingKeyNode.setAttribute("key", shortcutObject.key.toUpperCase());
+                                } else if (shortcutObject.key.length > 1) {
+                                    interceptingKeyNode.setAttribute("keycode", `VK_${shortcutObject.key.toUpperCase()}`);
+                                }
+
+                                // Disable intercepting shortcut if needed
+                                if (
+                                    interceptingShortcut.unregistered || interceptingShortcut.shortcutMode === 2 ||
+                                    interceptingShortcut.shortcutMode === 0
+                                ) {
+                                    interceptingKeyNode.setAttribute("disabled", "true");
+                                } else {
+                                    interceptingKeyNode.removeAttribute("disabled");
+                                }
+                            }
+
+                            // Apply shortcuts to the intercepting shortcut object
+                            interceptingShortcut.setShortcutKeybind(
+                                shortcutObject.meta,
+                                shortcutObject.ctrl,
+                                shortcutObject.alt,
+                                shortcutObject.shift,
+                                shortcutObject.key
+                            );
+                            interceptingShortcut.setShortcutMode(shortcutObject.shortcutMode);
+                        }
+                    }
                 } else {
                     keyElement.removeAttribute("disabled");
 
@@ -632,6 +722,10 @@ class NatsumiKBSManager {
             );
         }
 
+        if (this.interceptions[shortcut]) {
+            shortcutObject.interceptedBy = this.interceptions[shortcut];
+        }
+
         if (typeof data.unregistered === "boolean") {
             shortcutObject.unregistered = data.unregistered;
         }
@@ -651,10 +745,14 @@ class NatsumiKBSManager {
         }
     }
 
-    updateAllShortcuts() {
+    updateAllShortcuts(baseOnly = false) {
         // This function will only apply shortcut customizations and will not apply them
         for (const shortcutName in this.shortcuts) {
-            const data = this.shortcutCustomizationData[shortcutName] || this.baseCustomizations[shortcutName];
+            let data = this.shortcutCustomizationData[shortcutName] || this.baseCustomizations[shortcutName];
+
+            if (baseOnly) {
+                data = this.baseCustomizations[shortcutName];
+            }
 
             if (!data) {
                 continue;
@@ -677,12 +775,131 @@ class NatsumiKBSManager {
         }
     }
 
-    async saveCustomizationData() {
+    async saveCustomizationData(data = null) {
+        if (typeof data === "object" && data !== null) {
+            this.shortcutCustomizationData = data;
+        }
+
         try {
             await IOUtils.writeJSON(this.filePath, this.shortcutCustomizationData);
         } catch (e) {
             console.error("Failed to save Natsumi KBS customization data:", e);
         }
+    }
+
+    async resetAllShortcuts(saveChanges = true) {
+        // Reset all shortcuts to default
+        if (saveChanges) {
+            await this.saveCustomizationData({});
+        }
+
+        for (const shortcutName in this.shortcuts) {
+            const shortcut = this.shortcuts[shortcutName];
+            shortcut.resetShortcut();
+        }
+
+        // Reapply initial customizations
+        this.applyMacShortcuts();
+
+        if (saveChanges) {
+            this.applyCustomShortcuts();
+        }
+    }
+
+    async replaceShortcuts(data) {
+        let shouldAbort = false;
+
+        // Run sanity check
+        let hasShortcutsData = false;
+        const availableKeys = [
+            "customKeybinds",
+            "shortcutMode",
+            "unregistered",
+            "meta",
+            "ctrl",
+            "alt",
+            "shift",
+            "key"
+        ]
+        const requiredKeys = [
+            "customKeybinds",
+            "shortcutMode"
+        ];
+
+        for (const key in data) {
+            if (this.shortcuts[key]) {
+                hasShortcutsData = true;
+
+                // Check if required keys exist
+                let dataKeys = Object.keys(data[key]);
+                let hasRequiredKeys = requiredKeys.every(reqKey => dataKeys.includes(reqKey));
+                let hasOnlyAvailableKeys = dataKeys.every(dataKey => availableKeys.includes(dataKey));
+
+                if (!hasRequiredKeys || !hasOnlyAvailableKeys) {
+                    console.error(`Shortcut data for ${key} has invalid data, aborting replacement.`);
+                    hasShortcutsData = false;
+                    break;
+                }
+            }
+        }
+
+        if (!hasShortcutsData) {
+            console.error("No valid shortcut data found, aborting replacement.");
+            return false;
+        }
+
+        // Reset shortcuts
+        await this.resetAllShortcuts(false);
+        this.applyMacShortcuts();
+        this.updateAllShortcuts(true);
+
+        // Apply shortcuts first
+        for (const shortcutName in this.shortcuts) {
+            const shortcutData = data[shortcutName];
+
+            if (!shortcutData) {
+                continue;
+            }
+
+            try {
+                this.updateShortcut(shortcutName, shortcutData, false);
+            } catch (e) {
+                console.error(`Failed to update shortcut ${shortcutName}:`, e);
+            }
+        }
+
+        // Check for conflicts
+        for (const shortcutName in this.shortcuts) {
+            const shortcutData = data[shortcutName];
+
+            if (!shortcutData) {
+                continue;
+            }
+            if (!shortcutData["customKeybinds"]) {
+                continue;
+            }
+
+            const conflicts = this.checkConflicts(shortcutName, shortcutData);
+
+            if (conflicts) {
+                shouldAbort = true;
+                console.error(`${shortcutName} conflicts with ${conflicts}, aborting replacement.`);
+                break;
+            }
+        }
+
+        if (shouldAbort) {
+            // Revert to initial shortcuts
+            this.initialApplyCustomShortcuts();
+        } else {
+            // Save customization data
+            await this.saveCustomizationData();
+
+            // Apply shortcuts
+            this.applyCustomShortcuts();
+        }
+
+        return !shouldAbort;
     }
 
     getKeyCombination(event) {
@@ -711,8 +928,26 @@ class NatsumiKBSManager {
     }
 
     checkConflicts(targetShortcut, keyCombination) {
+        let ignoreCheck = [];
+
+        // Populate dictionary of shortcuts to check for conflicts
+        for (const shortcutName in this.shortcuts) {
+            const shortcut = this.shortcuts[shortcutName];
+
+            if (shortcut.interceptedBy) {
+                ignoreCheck.push(shortcut.interceptedBy);
+            }
+            if (shortcutName === targetShortcut || shortcut.interceptedBy === targetShortcut) {
+                ignoreCheck.push(shortcutName);
+            }
+        }
+
         for (const shortcutName in this.shortcuts) {
             if (targetShortcut === shortcutName) {
+                continue;
+            }
+
+            if (ignoreCheck.includes(shortcutName)) {
                 continue;
             }
 
@@ -850,6 +1085,11 @@ class NatsumiKBSManager {
 
         // If the shortcut is set to be handled by Firefox, do nothing here
         if (selectedShortcutObject.nativeHandle) {
+            return;
+        }
+
+        // If the shortcut is intercepted by another Natsumi shortcut, do nothing here
+        if (selectedShortcutObject.interceptedBy) {
             return;
         }
 
