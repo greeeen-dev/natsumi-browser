@@ -49,6 +49,32 @@ let shortcutsMap = {
             }
         }
     },
+    "glimpse": {
+        "name": "Glimpse",
+        "shortcuts": {
+            "closeGlimpse": {
+                "name": "Close Glimpse Tab"
+            },
+            "graduateGlimpse": {
+                "name": "Expand Glimpse Tab"
+            },
+            "cycleGlimpse": {
+                "name": "Next Glimpse Tab"
+            },
+            "cycleGlimpseReverse": {
+                "name": "Previous Glimpse Tab"
+            },
+            "toggleGlimpseChain": {
+                "name": "Toggle Glimpse Chaining"
+            },
+            "initiateGlimpseChain": {
+                "name": "Initiate Glimpse Chain"
+            },
+            "openGlimpseLauncher": {
+                "name": "Open Glimpse Launcher"
+            }
+        }
+    },
     "navigation": {
         "name": "Navigation",
         "shortcuts": {
@@ -158,6 +184,9 @@ let shortcutsMap = {
         "shortcuts": {
             "key_close": {
                 "name": "Close Tab"
+            },
+            "natsumiClearUnpinnedTabs": {
+                "name": "Close Unpinned Tabs"
             },
             "key_closeWindow": {
                 "name": "Close Window"
@@ -436,6 +465,7 @@ class NatsumiShortcutsPrefPane {
         this.selected = null;
         this.editing = false;
         this.editInterval = null;
+        this.resetTimeout = null;
     }
 
     init() {
@@ -449,9 +479,44 @@ class NatsumiShortcutsPrefPane {
         let shortcutsNode = convertToXUL(`
             <hbox id="natsumiShortcutsCategory" class="subcategory" data-category="paneNatsumiShortcuts" hidden="true">
                 <html:h1>Customize Keyboard Shortcuts</html:h1>
+                <div id="natsumi-shortcut-reset">Reset</div>
+                <div id="natsumi-shortcut-import">Import</div>
+                <div id="natsumi-shortcut-export">Export</div>
             </hbox>
         `);
         prefsPane.appendChild(shortcutsNode);
+
+        // Set event handlers for import/export buttons
+        let resetButton = document.getElementById("natsumi-shortcut-reset");
+        let importButton = document.getElementById("natsumi-shortcut-import");
+        let exportButton = document.getElementById("natsumi-shortcut-export");
+        resetButton.addEventListener("click", () => {
+            let currentResetButton = document.getElementById("natsumi-shortcut-reset");
+            if (currentResetButton.hasAttribute("natsumi-confirm-reset")) {
+                this.resetAllShortcuts();
+                currentResetButton.removeAttribute("natsumi-confirm-reset");
+                currentResetButton.textContent = "Reset";
+
+                if (this.resetTimeout) {
+                    clearTimeout(this.resetTimeout);
+                    this.resetTimeout = null;
+                }
+            } else {
+                currentResetButton.setAttribute("natsumi-confirm-reset", "");
+                currentResetButton.textContent = "Confirm";
+
+                this.resetTimeout = setTimeout(() => {
+                    currentResetButton.removeAttribute("natsumi-confirm-reset");
+                    currentResetButton.textContent = "Reset";
+                }, 30000);
+            }
+        });
+        importButton.addEventListener("click", () => {
+            this.importShortcuts();
+        })
+        exportButton.addEventListener("click", () => {
+            this.exportShortcuts();
+        });
 
         // Create note for Floorp users
         let warningNodeString = `
@@ -592,6 +657,126 @@ class NatsumiShortcutsPrefPane {
         this.initialized = true;
     }
 
+    async resetAllShortcuts() {
+        await browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.resetAllShortcuts();
+        this.reloadAllShortcuts();
+    }
+
+    async importShortcuts() {
+        let uploadNode = document.createElement("input");
+        uploadNode.type = "file";
+        uploadNode.accept = ".json";
+        uploadNode.style.display = "none";
+        uploadNode.setAttribute("moz-accept", ".json");
+        uploadNode.setAttribute("accept", ".json");
+        uploadNode.click();
+
+        let uploadTimeout;
+
+        const filePromise = new Promise((resolve, reject) => {
+            uploadNode.onchange = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+
+                const file = uploadNode.files[0];
+                if (!file) {
+                    reject("No file selected.");
+                    return;
+                }
+
+                resolve(file);
+            };
+
+            uploadNode.onabort = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+                reject("User aborted import.");
+            }
+
+            uploadTimeout = setTimeout(() => {
+                reject("Import timed out.");
+            }, 120000);
+        });
+
+        try {
+            const content = await filePromise;
+            uploadNode.remove();
+            const text = await content.text();
+            let toLoad = JSON.parse(text);
+            const importSuccess = await browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.replaceShortcuts(toLoad);
+
+            if (!importSuccess) {
+                console.error("Import failed: Shortcuts handler rejected data.");
+                let notification = new NatsumiNotification(
+                    "Could not import shortcuts.",
+                    "The shortcuts handler rejected the imported data. Your old shortcuts are unchanged.",
+                    "chrome://natsumi/content/icons/lucide/caution.svg",
+                    10000,
+                    "caution"
+                );
+                notification.addToContainer();
+                return;
+            }
+        } catch(e) {
+            console.error("Import failed:", e);
+            let notification = new NatsumiNotification(
+                "Something went wrong.",
+                "Your shortcuts could not be imported due to an unexpected error.",
+                "chrome://natsumi/content/icons/lucide/caution.svg",
+                10000,
+                "caution"
+            );
+            notification.addToContainer();
+            return;
+        }
+
+        this.reloadAllShortcuts();
+
+        let notification = new NatsumiNotification("Shortcuts imported successfully!", null, "chrome://natsumi/content/icons/lucide/download.svg");
+        notification.addToContainer();
+    }
+
+    exportShortcuts() {
+        const dataString = JSON.stringify(browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcutCustomizationData, null, 4);
+        const blob = new Blob([dataString], { type: "application/json" });
+        const exportUrl = URL.createObjectURL(blob);
+        let downloadNode = document.createElement("a");
+        downloadNode.href = exportUrl;
+        downloadNode.download = "natsumi-shortcuts.json";
+
+        try {
+            document.body.appendChild(downloadNode);
+            downloadNode.click();
+            let notification = new NatsumiNotification("Shortcuts exported successfully!", null, "chrome://natsumi/content/icons/lucide/upload.svg");
+            notification.addToContainer();
+        } catch(e) {
+            console.error("Failed to export shortcuts data:", e);
+        }
+
+        downloadNode.remove();
+        URL.revokeObjectURL(exportUrl);
+    }
+
+    reloadAllShortcuts() {
+        for (let categoryKey in shortcutsMap) {
+            const categoryShortcuts = shortcutsMap[categoryKey].shortcuts;
+
+            for (let shortcutKey in categoryShortcuts) {
+                // Skip uncustomizable shortcuts
+                if (!availableShortcuts.includes(shortcutKey)) {
+                    continue;
+                }
+
+                // Get shortcuts node
+                let shortcutNode = document.getElementById(shortcutKey);
+                this.updateShortcutKeybindsDisplay(shortcutNode);
+                this.updateShortcutConflictDisplay(shortcutNode);
+            }
+        }
+    }
+
     selectShortcut(shortcutElement, removeIfSelected = true) {
         if (this.selected === shortcutElement && !removeIfSelected) {
             return;
@@ -675,7 +860,7 @@ class NatsumiShortcutsPrefPane {
             let conflictShortcut = browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.checkConflicts(this.selected.id, keyCombi);
 
             if (conflictShortcut) {
-                let conflictName = this.selected.id;
+                let conflictName = conflictShortcut;
 
                 for (let categoryKey in shortcutsMap) {
                     const categoryShortcuts = shortcutsMap[categoryKey].shortcuts;
@@ -710,7 +895,8 @@ class NatsumiShortcutsPrefPane {
                 "shortcutMode": shortcutObject.shortcutMode
             }
 
-            if (keyCombi.key === "backspace") {
+            // Unregister shortcut if backspace is pressed without modifiers
+            if (keyCombi.key === "backspace" && !modifierPressed) {
                 customizationData = {
                     "customKeybinds": false,
                     "unregistered": true,
@@ -744,7 +930,8 @@ class NatsumiShortcutsPrefPane {
         event.stopPropagation();
     }
 
-    updateShortcutKeybindsDisplay(shortcutElement, metaOverride, ctrlOverride, altOverride, shiftOverride, keyOverride) {
+    updateShortcutKeybindsDisplay(shortcutElement, metaOverride = null, ctrlOverride = null, altOverride = null,
+                                  shiftOverride = null, keyOverride = null) {
         // Get shortcut object
         let shortcutObject = browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcuts[shortcutElement.id];
         if (!shortcutObject) {
@@ -762,8 +949,16 @@ class NatsumiShortcutsPrefPane {
         // Clear existing keybinds
         keybindDisplay.textContent = "";
 
-        // If the shortcut is unassigned, display that instead
-        if (shortcutObject.unregistered) {
+        // If the shortcut is unassigned, display that instead (unless there's an override)
+        let hasOverride = (
+            (metaOverride !== null) ||
+            (ctrlOverride !== null) ||
+            (altOverride !== null) ||
+            (shiftOverride !== null) ||
+            (keyOverride !== null && keyOverride !== "")
+        )
+
+        if (shortcutObject.unregistered && !hasOverride) {
             let unassignedDisplay = document.createElement("div");
             unassignedDisplay.classList.add("natsumi-shortcut-unassigned");
             unassignedDisplay.textContent = "Not assigned";
@@ -830,6 +1025,7 @@ class NatsumiShortcutsPrefPane {
                 "enter",
                 "escape",
                 "back",
+                "backspace",
                 "delete",
                 "space",
                 "left",
@@ -853,6 +1049,7 @@ class NatsumiShortcutsPrefPane {
                     "enter": "Enter",
                     "escape": "Esc",
                     "back": "Backspace",
+                    "backspace": "Backspace",
                     "delete": "Del"
                 }
 

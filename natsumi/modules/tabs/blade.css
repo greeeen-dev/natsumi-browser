@@ -114,6 +114,10 @@ SOFTWARE.
           @media -moz-pref("sidebar.verticalTabs") {
             left: 0;
           }
+
+          @media not -moz-pref("sidebar.verticalTabs") {
+            height: max(calc(var(--natsumi-tab-height) - 12px), 32px) !important;
+          }
         }
       }
 
@@ -126,7 +130,7 @@ SOFTWARE.
         }
       }
 
-      &[selected], &[visuallyselected] {
+      &[selected], &[visuallyselected], &[natsumi-glimpse-selected] {
         /*noinspection CssInvalidFunction*/
         & > .tab-stack > .tab-background {
           box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
@@ -169,6 +173,7 @@ SOFTWARE.
 
     .tab-background {
       border-radius: var(--natsumi-tab-border-radius) !important;
+      transition: background-color 0.2s ease;
     }
 
     .tabbrowser-tab {
@@ -197,8 +202,10 @@ SOFTWARE.
         background-color: transparent;
         transition: background-color 0.2s ease;
       }
+    }
 
-      .tabbrowser-tab[selected][style*="--natsumi-tab-icon"] {
+    .tabbrowser-tab[selected], .tabbrowser-tab[natsumi-glimpse-selected] {
+      &[style*="--natsumi-tab-icon"] {
         .tab-background {
           background: transparent !important;
           overflow: clip !important;

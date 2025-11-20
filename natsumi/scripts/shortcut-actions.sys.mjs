@@ -118,11 +118,111 @@ export class NatsumiShortcutActions {
         document.body.natsumiWorkspacesWrapper.setCurrentWorkspaceID(newWorkspaceId);
     }
 
-    static toggleNatsumiToolkit() {
-        if (document.body.hasAttribute("natsumi-toolkit")) {
-            document.body.removeAttribute("natsumi-toolkit");
+    static closeGlimpse() {
+        if (!window.natsumiGlimpse) {
+            return;
+        }
+
+        if (window.natsumiGlimpse.currentGlimpseTab) {
+            // Get Glimpse tab
+            let glimpseParentTabId = window.natsumiGlimpse.currentGlimpseTab.linkedPanel;
+            let glimpseData = window.natsumiGlimpse.glimpse[glimpseParentTabId];
+
+            if (glimpseData) {
+                let currentGlimpseIndex = glimpseData["index"];
+                let currentGlimpseTab = glimpseData["tabs"][currentGlimpseIndex];
+
+                if (glimpseData["tabs"].length <= 1) {
+                    window.natsumiGlimpse.deactivateGlimpseWithAnim(currentGlimpseTab);
+                } else {
+                    window.natsumiGlimpse.deactivateGlimpse(currentGlimpseTab, true);
+                }
+            }
+        }
+    }
+
+    static graduateGlimpse() {
+        if (!window.natsumiGlimpse) {
+            return;
+        }
+
+        if (window.natsumiGlimpse.currentGlimpseTab) {
+            // Get Glimpse tab
+            let glimpseParentTabId = window.natsumiGlimpse.currentGlimpseTab.linkedPanel;
+            let glimpseData = window.natsumiGlimpse.glimpse[glimpseParentTabId];
+
+            if (glimpseData) {
+                let currentGlimpseIndex = glimpseData["index"];
+                let currentGlimpseTab = glimpseData["tabs"][currentGlimpseIndex];
+                window.natsumiGlimpse.graduateGlimpseWithAnim(currentGlimpseTab);
+            }
+        }
+    }
+
+    static cycleGlimpse(forward = true) {
+        if (!window.natsumiGlimpse) {
+            return;
+        }
+
+        if (window.natsumiGlimpse.currentGlimpseTab) {
+            // Get Glimpse tab
+            let glimpseParentTabId = window.natsumiGlimpse.currentGlimpseTab.linkedPanel;
+            let glimpseData = window.natsumiGlimpse.glimpse[glimpseParentTabId];
+
+            if (glimpseData) {
+                window.natsumiGlimpse.cycleGlimpseTabs(glimpseParentTabId, forward);
+            }
+        }
+    }
+
+    static toggleGlimpseChain() {
+        if (document.body.natsumiGlimpseChainer) {
+            const chainActive = document.body.natsumiGlimpseChainer.chainingGlimpse;
+
+            if (chainActive) {
+                document.body.natsumiGlimpseChainer.cancelChain();
+            } else {
+                document.body.natsumiGlimpseChainer.activateChaining();
+            }
+        }
+    }
+
+    static releaseGlimpseChain() {
+        if (document.body.natsumiGlimpseChainer) {
+            const chainActive = document.body.natsumiGlimpseChainer.chainingGlimpse;
+
+            if (chainActive) {
+                document.body.natsumiGlimpseChainer.releaseChain();
+            }
+        }
+    }
+
+    static openNewTab() {
+        let replaceNewTab = false;
+
+        if (ucApi.Prefs.get("natsumi.tabs.replace-new-tab").exists()) {
+            replaceNewTab = ucApi.Prefs.get("natsumi.tabs.replace-new-tab").value;
+        }
+
+        if (replaceNewTab) {
+            let commandEvent = new Event("command", {bubbles: true, cancelable: true});
+            document.body.natsumiURLBarController.openAsNewTab(commandEvent);
         } else {
-            document.body.setAttribute("natsumi-toolkit", "");
+            // Open new tab
+            let keyElement = document.getElementById("key_newNavigatorTab");
+            keyElement.doCommand();
+        }
+    }
+
+    static clearUnpinnedTabs() {
+        if (document.body.natsumiUnpinnedTabsClearer) {
+            document.body.natsumiUnpinnedTabsClearer.clearTabs();
+        }
+    }
+
+    static openGlimpseLauncher() {
+        if (document.body.natsumiGlimpseLauncher) {
+            document.body.natsumiGlimpseLauncher.activateLauncher();
         }
     }
 }

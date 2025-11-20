@@ -528,6 +528,10 @@ SOFTWARE.
           color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
         }
 
+        &:not(:has(.urlbarView-url[title])) .urlbarView-action {
+          padding-left: 0 !important;
+        }
+
         &[searchmode] {
           /* Search engine colors */
           --natsumi-urlbar-search-engine-color: var(--natsumi-primary-color);

@@ -28,85 +28,8 @@ import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
 // Set this to true to disable hiding notifications.
 // HIGHLY NOT RECOMMENDED for production environments.
-const debugNotifications = false;
-const overflowThreshold = 4;
-
-export class NatsumiNotificationsParent {
-    constructor(attachToExisting = false) {
-        // Check if notifications container exists
-        this.notificationsContainer = document.getElementById("natsumi-notifications-container");
-
-        if (this.notificationsContainer && !attachToExisting) {
-            throw new Error("cannot attach to an existing notifications node");
-        }
-
-        if (!this.notificationsContainer) {
-            // Create notifications container if it doesn't exist
-            this.notificationsContainer = document.createElement("div");
-            this.notificationsContainer.id = "natsumi-notifications-container";
-            document.body.appendChild(this.notificationsContainer);
-        }
-
-        this.notificationsMutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains("natsumi-notification")) {
-                        this.handleNotification(node);
-                    }
-                });
-            });
-        });
-
-        // Observe the notifications container for added nodes
-        this.notificationsMutationObserver.observe(this.notificationsContainer, {
-            childList: true
-        });
-    }
-
-    handleNotification(notificationNode) {
-        if (debugNotifications) {
-            return;
-        }
-
-        let notificationTimeout = notificationNode.getAttribute("natsumi-notification-time");
-
-        setTimeout(() => {
-            this.removeNotification(notificationNode);
-        }, parseInt(notificationTimeout, 10) || 5000);
-    }
-
-    removeNotification(notificationNode) {
-        if (notificationNode) {
-            try {
-                notificationNode.setAttribute("natsumi-notification-disappear", "");
-            } catch (e) {
-                console.warn("Failed to remove notification:", e);
-                return;
-            }
-
-            // Wait for the notification to disappear
-            setTimeout(() => {
-                try {
-                    notificationNode.remove();
-                } catch (e) {
-                    console.warn("Failed to remove notification after disappear:", e);
-                }
-            }, 300);
-
-            // Check number of notifications left
-            const notificationsContainer = document.getElementById("natsumi-notifications-container");
-            if (notificationsContainer) {
-                const allNotifications = notificationsContainer.querySelectorAll(".natsumi-notification");
-
-                if (allNotifications.length <= overflowThreshold) {
-                    notificationsContainer.style.removeProperty("--natsumi-notifications-overflow");
-                } else {
-                    notificationsContainer.style.setProperty("--natsumi-notifications-overflow", `"+${allNotifications.length - overflowThreshold}"`);
-                }
-            }
-        }
-    }
-}
+export const debugNotifications = false;
+export const overflowThreshold = 4;
 
 export class NatsumiNotification {
     constructor(body, subtext = null, icon = null, time = 5000, type = "info") {

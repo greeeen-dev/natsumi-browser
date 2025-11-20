@@ -32,36 +32,55 @@ SOFTWARE.
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
-let wasDisabled = false;
-
-function getPanelSidebarPosition() {
-    if (wasDisabled) {
-        // We cannot determine the position here, the panel sidebar likely doesn't exist
-        return;
+class NatsumiPanelSidebarHandler {
+    constructor() {
+        this.wasDisabled = false;
     }
 
-    let isRight = false;
-    if (ucApi.Prefs.get("floorp.panelSidebar.config").exists()) {
-        const panelSidebarConfig = JSON.parse(ucApi.Prefs.get("floorp.panelSidebar.config").value);
-        isRight = panelSidebarConfig["position_start"] ?? false;
+    init() {
+        let browser = document.getElementById("browser");
+        if (browser) {
+            Services.prefs.addObserver("floorp.panelSidebar.enabled", this.getPanelSidebarPosition);
+            Services.prefs.addObserver("floorp.panelSidebar.config", this.getPanelSidebarPosition);
+        }
+
+        this.updateSidebarRemoved();
+        this.getPanelSidebarPosition();
     }
 
-    isRight = isRight && !checkSidebarRemoved();
+    getPanelSidebarPosition() {
+        if (this.wasDisabled) {
+            // We cannot determine the position here, the panel sidebar likely doesn't exist
+            return;
+        }
 
-    if (isRight) {
-        document.body.setAttribute("natsumi-panel-sidebar-on-right", "");
-    } else {
-        document.body.removeAttribute("natsumi-panel-sidebar-on-right");
+        let isRight = false;
+        if (ucApi.Prefs.get("floorp.panelSidebar.config").exists()) {
+            const panelSidebarConfig = JSON.parse(ucApi.Prefs.get("floorp.panelSidebar.config").value);
+            isRight = panelSidebarConfig["position_start"] ?? false;
+        }
+
+        isRight = isRight && !this.checkSidebarRemoved();
+
+        if (isRight) {
+            document.body.setAttribute("natsumi-panel-sidebar-on-right", "");
+        } else {
+            document.body.removeAttribute("natsumi-panel-sidebar-on-right");
+        }
     }
-}
 
-function checkSidebarRemoved() {
-    if (ucApi.Prefs.get("floorp.panelSidebar.enabled").exists()) {
-        return !ucApi.Prefs.get("floorp.panelSidebar.enabled").value;
+    checkSidebarRemoved() {
+        if (ucApi.Prefs.get("floorp.panelSidebar.enabled").exists()) {
+            return !ucApi.Prefs.get("floorp.panelSidebar.enabled").value;
+        }
+
+        // This is enabled on Floorp by default, so we'd need to return false here
+        return false;
     }
 
-    // This is enabled on Floorp by default, so we'd need to return false here
-    return false;
+    updateSidebarRemoved() {
+        this.wasDisabled = this.checkSidebarRemoved();
+    }
 }
 
 let isFloorp = false;
@@ -69,14 +88,7 @@ if (ucApi.Prefs.get("natsumi.browser.type").exists) {
     isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
 }
 
-if (isFloorp) {
-    wasDisabled = checkSidebarRemoved();
-
-    let browser = document.getElementById("browser");
-    if (browser) {
-        Services.prefs.addObserver("floorp.panelSidebar.enabled", getPanelSidebarPosition);
-        Services.prefs.addObserver("floorp.panelSidebar.config", getPanelSidebarPosition);
-    }
-
-    getPanelSidebarPosition();
+if (isFloorp && !document.body.natsumiPanelSidebarHandler) {
+    document.body.natsumiPanelSidebarHandler = new NatsumiPanelSidebarHandler();
+    document.body.natsumiPanelSidebarHandler.init();
 }

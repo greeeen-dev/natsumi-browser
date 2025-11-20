@@ -91,7 +91,7 @@ SOFTWARE.
     }
 
     &[natsumi-notification-type="caution"] {
-      --natsumi-primary-color: #ffaa00;
+      --natsumi-primary-color: #ff0000;
     }
 
     &:nth-child(n+5) {

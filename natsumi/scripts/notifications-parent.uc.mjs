@@ -29,9 +29,91 @@ SOFTWARE.
 
 */
 
-import {NatsumiNotificationsParent} from "./notifications.sys.mjs";
+import { debugNotifications, overflowThreshold } from "./notifications.sys.mjs";
+
+class NatsumiNotificationsParent {
+    constructor() {
+        // Check if notifications container exists
+        this.notificationsContainer = null;
+    }
+
+    init(attachToExisting = false) {
+        this.notificationsContainer = document.getElementById("natsumi-notifications-container");
+
+        if (this.notificationsContainer && !attachToExisting) {
+            throw new Error("cannot attach to an existing notifications node");
+        }
+
+        if (!this.notificationsContainer) {
+            // Create notifications container if it doesn't exist
+            this.notificationsContainer = document.createElement("div");
+            this.notificationsContainer.id = "natsumi-notifications-container";
+            document.body.appendChild(this.notificationsContainer);
+        }
+
+        this.notificationsMutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains("natsumi-notification")) {
+                        this.handleNotification(node);
+                    }
+                });
+            });
+        });
+
+        // Observe the notifications container for added nodes
+        this.notificationsMutationObserver.observe(this.notificationsContainer, {
+            childList: true
+        });
+    }
+
+    handleNotification(notificationNode) {
+        if (debugNotifications) {
+            return;
+        }
+
+        let notificationTimeout = notificationNode.getAttribute("natsumi-notification-time");
+
+        setTimeout(() => {
+            this.removeNotification(notificationNode);
+        }, parseInt(notificationTimeout, 10) || 5000);
+    }
+
+    removeNotification(notificationNode) {
+        if (notificationNode) {
+            try {
+                notificationNode.setAttribute("natsumi-notification-disappear", "");
+            } catch (e) {
+                console.warn("Failed to remove notification:", e);
+                return;
+            }
+
+            // Wait for the notification to disappear
+            setTimeout(() => {
+                try {
+                    notificationNode.remove();
+                } catch (e) {
+                    console.warn("Failed to remove notification after disappear:", e);
+                }
+            }, 300);
+
+            // Check number of notifications left
+            const notificationsContainer = document.getElementById("natsumi-notifications-container");
+            if (notificationsContainer) {
+                const allNotifications = notificationsContainer.querySelectorAll(".natsumi-notification");
+
+                if (allNotifications.length <= overflowThreshold) {
+                    notificationsContainer.style.removeProperty("--natsumi-notifications-overflow");
+                } else {
+                    notificationsContainer.style.setProperty("--natsumi-notifications-overflow", `"+${allNotifications.length - overflowThreshold}"`);
+                }
+            }
+        }
+    }
+}
 
 const notificationsContainer = document.getElementById("natsumi-notifications-container");
 if (!notificationsContainer) {
-    new NatsumiNotificationsParent();
+    document.body.natsumiNotificationsParent = new NatsumiNotificationsParent();
+    document.body.natsumiNotificationsParent.init();
 }

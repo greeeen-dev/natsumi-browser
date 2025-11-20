@@ -28,13 +28,28 @@ SOFTWARE.
 
 /* Import tab designs */
 @import url("tabs/blade.css");
+@import url("tabs/origin.css");
+@import url("tabs/curve.css");
 @import url("tabs/fusion.css");
 @import url("tabs/material.css");
 @import url("tabs/hexagonal.css");
+@import url("tabs/classic.css");
 
 /* Global tweaks for tabs */
 .tabbrowser-tab {
   --attention-dot-color: transparent !important;
+}
+
+#tabbrowser-arrowscrollbox .tabbrowser-tab {
+  &[natsumi-glimpse-selected] {
+    .tab-label-container {
+      opacity: 1 !important;
+    }
+
+    .tab-close-button {
+      display: flex !important;
+    }
+  }
 }
 
 /* New tab button position */
@@ -68,5 +83,29 @@ SOFTWARE.
 
   #vertical-tabs-newtab-button {
     display: none !important;
+  }
+}
+
+/* Glimpse indicator */
+.tab-content[natsumi-glimpse-indicator] {
+  &::before {
+    content: var(--natsumi-glimpse-tabs);
+    font-size: small;
+    margin-left: 4px;
+    padding: 2px 4px 2px 24px;
+    border-radius: 6px;
+    height: 16px;
+    order: 1;
+    -moz-context-properties: stroke, fill;
+    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.2));
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: 4px center;
+    stroke: light-dark(black, white);
+    background-image: url("../icons/lucide/glimpse.svg");
+  }
+
+  .tab-close-button {
+    order: 2;
   }
 }

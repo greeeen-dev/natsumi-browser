@@ -39,11 +39,27 @@ SOFTWARE.
     gap: 5px;
   }
 
+  #natsumi-about-box {
+    background-color: var(--natsumi-mat-th-background);
+    backdrop-filter: var(--natsumi-mat-th-backdrop);
+    border: var(--natsumi-mat-th-border-thin);
+    box-shadow: var(--natsumi-mat-th-shadow);
+    border-radius: 24px;
+    width: 100%;
+  }
+
+  #natsumi-about-info-container {
+    flex-direction: column;
+    gap: 5px;
+    margin-block: auto;
+  }
+
   #natsumi-about-icon {
     width: 128px;
     height: 128px;
     background-image: url("../icons/natsumi.png") !important;
     background-size: 128px;
+    margin-block: auto;
   }
 
   #natsumi-about-name {
@@ -55,8 +71,9 @@ SOFTWARE.
     margin: auto 0;
   }
 
-  #natsumi-about-version, #natsumi-about-mission {
-    font-size: small;
+  #natsumi-about-version, #natsumi-about-browser-version {
+    font-size: medium;
+    font-family: monospace;
     opacity: 0.7;
   }
 

@@ -4,7 +4,7 @@
   "author": "greeeen-dev",
   "name": "Natsumi Browser",
   "description": "A skin for Firefox and its forks that makes things flow.",
-  "version": "5.6.5",
+  "version": "6.0.0-a.4",
   "createdAt": "2024-12-06T10:19:47Z",
   "readme": "https://raw.githubusercontent.com/greeeen-dev/natsumi-browser/main/README.md",
   "image": "https://github.com/greeeen-dev/natsumi-browser/raw/dev/images/main-backgroundless.png",
@@ -12,6 +12,7 @@
     "chrome": "https://raw.githubusercontent.com/greeeen-dev/natsumi-browser/main/userChrome.css",
     "content": "https://raw.githubusercontent.com/greeeen-dev/natsumi-browser/main/userContent.css"
   },
+  "chromeManifest": "sine-chrome.manifest",
   "tags": [
     "content",
     "chrome",
@@ -22,5 +23,143 @@
     "firefox",
     "waterfox",
     "librewolf"
-  ]
+  ],
+  "scripts": {
+    "natsumi/scripts/": {
+      "preferences.uc.mjs": {
+        "loadOrder": 10,
+        "include": [
+          "about:preferences*",
+          "about:settings*"
+        ]
+      },
+      "shortcuts.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "statusbar-in-sidebar.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "pip.uc.mjs": {
+        "include": [
+          "chrome://global/content/pictureinpicture/player.xhtml*"
+        ]
+      },
+      "notifications.sys.mjs": {},
+      "sidebar-actions.uc.mjs": {
+        "loadOrder": 12,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "miniplayer.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "natsumi-welcome.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "notifications-parent.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "compact-mode.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "split-view.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "preferences-about.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "about:preferences*",
+          "about:settings*"
+        ]
+      },
+      "panel-sidebar.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "urlbar.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "preferences-shortcuts.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "about:preferences*",
+          "about:settings*"
+        ]
+      },
+      "pinned-tabs-icon.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "postload.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "reset-tab-style.sys.mjs": {},
+      "floorp-tab-style.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "detect-fork.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "meow.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "shortcut-actions.sys.mjs": {},
+      "single-toolbar-customization.sys.mjs": {},
+      "glimpse.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "single-toolbar.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "patches.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "custom-theme.sys.mjs": {},
+      "workspaces.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      }
+    }
+  }
 }

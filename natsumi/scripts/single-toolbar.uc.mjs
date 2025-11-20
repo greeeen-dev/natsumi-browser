@@ -36,160 +36,171 @@ import {
     resetCustomizableToolbar
 } from "./single-toolbar-customization.sys.mjs";
 
-let hoverTimeout = null;
-let hoveredElements = 0;
-
-function setHover(isWindowButton = false) {
-    let singleToolbarEnabled = false;
-    if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-        singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+class NatsumiSingleToolbarManager {
+    constructor() {
+        this.hoverTimeout = null;
+        this.hoveredElements = 0;
     }
 
-    if (!singleToolbarEnabled) {
-        hoveredElements = 0;
-        document.body.removeAttribute("natsumi-bookmarks-hover");
-        return;
-    }
+    init() {
+        this.detectBookmarkHover();
 
-    if (isWindowButton) {
-        let isMac = Services.appinfo.OS.toLowerCase() !== "darwin";
-        let forcedLeft = false;
-
-        if (ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").exists()) {
-            forcedLeft = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
+        // Check if single toolbar is active
+        let singleToolbarEnabled = false;
+        if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
+            singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
         }
 
-        if ((isMac || forcedLeft) && isWindowButton) {
-            return;
-        }
-    }
-
-    if (hoverTimeout) {
-        clearTimeout(hoverTimeout);
-    }
-
-    hoveredElements++;
-    document.body.setAttribute("natsumi-bookmarks-hover", "");
-}
-
-function removeHover(isWindowButton = false) {
-    let singleToolbarEnabled = false;
-    if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-        singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-    }
-
-    if (!singleToolbarEnabled) {
-        hoveredElements = 0;
-        document.body.removeAttribute("natsumi-bookmarks-hover");
-        return;
-    }
-
-    if (isWindowButton) {
-        let isMac = Services.appinfo.OS.toLowerCase() !== "darwin";
-        let forcedLeft = false;
-
-        if (ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").exists()) {
-            forcedLeft = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
+        if (singleToolbarEnabled) {
+            // Check if customization file exists
+            IOUtils.exists(customizationFilePath).then((exists) => {
+                if (!exists) {
+                    enableCustomizableToolbar();
+                }
+            });
         }
 
-        if ((isMac || forcedLeft) && isWindowButton) {
-            return;
-        }
-    }
+        // Create observer for single toolbar pref
+        Services.prefs.addObserver("natsumi.theme.single-toolbar", async () => {
+            // Since the pref already exists, we don't need to check for its existence
+            let singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
 
-    hoveredElements--;
-    if (hoveredElements > 0) {
-        return;
-    } else if (hoveredElements < 0) {
-        hoveredElements = 0;
-    }
-
-    hoverTimeout = setTimeout(() => {
-        document.body.removeAttribute("natsumi-bookmarks-hover");
-    }, 1000);
-}
-
-function detectBookmarkHover() {
-    let bookmarksToolbar = document.getElementById("PersonalToolbar");
-    let windowButtonsContainer = document.querySelector("#PersonalToolbar .titlebar-buttonbox-container");
-
-    if (!windowButtonsContainer) {
-        let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
-        windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
-        bookmarksToolbar.appendChild(windowButtonsContainer);
-    }
-
-    if (bookmarksToolbar) {
-        bookmarksToolbar.addEventListener("mouseover", (event) => {
-            setHover();
+            if (singleToolbarEnabled) {
+                await enableCustomizableToolbar();
+            } else {
+                await resetCustomizableToolbar();
+            }
         });
-        bookmarksToolbar.addEventListener("mouseout", (event) => {
-            removeHover();
-        });
-    }
 
-    if (windowButtonsContainer) {
-        windowButtonsContainer.addEventListener("mouseover", (event) => {
-            console.log(event);
-            setHover(true);
-        });
-        windowButtonsContainer.addEventListener("mouseout", (event) => {
-            removeHover(true);
-        });
-    }
-}
+        // Add event listeners for customization
+        window.gNavToolbox.addEventListener("aftercustomization", () => {
+            let singleToolbarEnabled = false;
+            if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
+                singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+            }
 
-detectBookmarkHover();
+            if (!singleToolbarEnabled) {
+                return;
+            }
 
-// Check if single toolbar is active
-let singleToolbarEnabled = false;
-if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-    singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-}
-
-if (singleToolbarEnabled) {
-    // Check if customization file exists
-    IOUtils.exists(customizationFilePath).then((exists) => {
-        if (!exists) {
             enableCustomizableToolbar();
+        })
+        window.gNavToolbox.addEventListener("customizationready", () => {
+            let singleToolbarEnabled = false;
+            if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
+                singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+            }
+
+            if (!singleToolbarEnabled) {
+                return;
+            }
+
+            resetCustomizableToolbar();
+        });
+    }
+
+    setHover(isWindowButton = false) {
+        let singleToolbarEnabled = false;
+        if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
+            singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
         }
-    });
+
+        if (!singleToolbarEnabled) {
+            this.hoveredElements = 0;
+            document.body.removeAttribute("natsumi-bookmarks-hover");
+            return;
+        }
+
+        if (isWindowButton) {
+            let isMac = Services.appinfo.OS.toLowerCase() !== "darwin";
+            let forcedLeft = false;
+
+            if (ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").exists()) {
+                forcedLeft = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
+            }
+
+            if ((isMac || forcedLeft) && isWindowButton) {
+                return;
+            }
+        }
+
+        if (this.hoverTimeout) {
+            clearTimeout(this.hoverTimeout);
+        }
+
+        this.hoveredElements++;
+        document.body.setAttribute("natsumi-bookmarks-hover", "");
+    }
+
+    removeHover(isWindowButton = false) {
+        let singleToolbarEnabled = false;
+        if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
+            singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+        }
+
+        if (!singleToolbarEnabled) {
+            this.hoveredElements = 0;
+            document.body.removeAttribute("natsumi-bookmarks-hover");
+            return;
+        }
+
+        if (isWindowButton) {
+            let isMac = Services.appinfo.OS.toLowerCase() !== "darwin";
+            let forcedLeft = false;
+
+            if (ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").exists()) {
+                forcedLeft = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
+            }
+
+            if ((isMac || forcedLeft) && isWindowButton) {
+                return;
+            }
+        }
+
+        this.hoveredElements--;
+        if (this.hoveredElements > 0) {
+            return;
+        } else if (this.hoveredElements < 0) {
+            this.hoveredElements = 0;
+        }
+
+        this.hoverTimeout = setTimeout(() => {
+            document.body.removeAttribute("natsumi-bookmarks-hover");
+        }, 1000);
+    }
+
+    detectBookmarkHover() {
+        let bookmarksToolbar = document.getElementById("PersonalToolbar");
+        let windowButtonsContainer = document.querySelector("#PersonalToolbar .titlebar-buttonbox-container");
+
+        if (!windowButtonsContainer) {
+            let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
+            windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
+            bookmarksToolbar.appendChild(windowButtonsContainer);
+        }
+
+        if (bookmarksToolbar) {
+            bookmarksToolbar.addEventListener("mouseover", (event) => {
+                this.setHover();
+            });
+            bookmarksToolbar.addEventListener("mouseout", (event) => {
+                this.removeHover();
+            });
+        }
+
+        if (windowButtonsContainer) {
+            windowButtonsContainer.addEventListener("mouseover", (event) => {
+                console.log(event);
+                this.setHover(true);
+            });
+            windowButtonsContainer.addEventListener("mouseout", (event) => {
+                this.removeHover(true);
+            });
+        }
+    }
 }
 
-// Create observer for single toolbar pref
-Services.prefs.addObserver("natsumi.theme.single-toolbar", async () => {
-    // Since the pref already exists, we don't need to check for its existence
-    let singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-
-    if (singleToolbarEnabled) {
-        await enableCustomizableToolbar();
-    } else {
-        await resetCustomizableToolbar();
-    }
-});
-
-// Add event listeners for customization
-window.gNavToolbox.addEventListener("aftercustomization", () => {
-    let singleToolbarEnabled = false;
-    if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-        singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-    }
-
-    if (!singleToolbarEnabled) {
-        return;
-    }
-
-    enableCustomizableToolbar();
-})
-window.gNavToolbox.addEventListener("customizationready", () => {
-    let singleToolbarEnabled = false;
-    if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-        singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-    }
-
-    if (!singleToolbarEnabled) {
-        return;
-    }
-
-    resetCustomizableToolbar();
-});
+if (!document.body.natsumiSingleToolbarManager) {
+    document.body.natsumiSingleToolbarManager = new NatsumiSingleToolbarManager();
+    document.body.natsumiSingleToolbarManager.init();
+}

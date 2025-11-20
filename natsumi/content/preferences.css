@@ -1,0 +1,208 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Preferences theme ==== */
+
+@-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
+  @media not -moz-pref("natsumi.theme.classic-preferences") {
+    body {
+      @media (prefers-color-scheme: dark) {
+        background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%) !important;
+      }
+    }
+
+    .pane-container {
+      min-width: -moz-available !important;
+    }
+
+    .sticky-container {
+      background: transparent !important;
+      position: absolute !important;
+      width: calc(100vw - var(--in-content-sidebar-width) - 60px) !important;
+
+      @media (max-width: 830px) {
+        width: calc(100vw - 104px) !important;
+      }
+
+      .sticky-inner-container {
+        min-width: 100% !important;
+      }
+    }
+
+    .pane-container {
+      padding-top: 88px !important;
+    }
+
+    #searchInput {
+      width: 100% !important;
+      height: 36px !important;
+      background-color: var(--natsumi-mat-th-background);
+      backdrop-filter: var(--natsumi-mat-th-backdrop) !important;
+      border-radius: 19px !important;
+      border: var(--natsumi-mat-th-border-thin);
+      box-shadow: var(--natsumi-mat-hz-shadow);
+    }
+
+    #input[type="search"] {
+      background-color: transparent !important;
+      border: none !important;
+      height: 36px !important;
+      border-radius: 18px !important;
+    }
+
+    .navigation {
+      margin: 20px 0 20px 20px !important;
+      padding: 10px !important;
+      background-color: var(--natsumi-mat-th-background);
+      backdrop-filter: var(--natsumi-mat-th-backdrop) !important;
+      border: var(--natsumi-mat-th-border-thin);
+      border-radius: 10px !important;
+      width: var(--in-content-sidebar-width);
+      box-shadow: var(--natsumi-mat-hz-shadow);
+
+      @media (max-width: 830px) {
+        width: unset !important;
+        margin: 20px 10px 20px 20px !important;
+      }
+
+      richlistbox {
+        width: 100% !important;
+      }
+
+      richlistitem {
+        margin-inline: 0 !important;
+        border-radius: 10px !important;
+
+        &[selected] {
+          color: color-mix(in srgb, var(--natsumi-primary-color) 70%, black 30%) !important;
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--natsumi-primary-color) !important;
+          }
+        }
+
+        @media (max-width: 830px) {
+          padding-inline: 11px !important;
+        }
+      }
+
+      .sidebar-footer-list {
+        margin: 0 !important;
+
+        .sidebar-footer-link {
+          @media (max-width: 830px) {
+            margin-inline: auto !important;
+          }
+        }
+      }
+
+      #categories {
+        margin-top: 0 !important;
+      }
+    }
+
+    checkbox {
+      .checkbox-check {
+        appearance: none !important;
+        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        border-radius: 4px;
+        transition: border 0.3s ease, background-color 0.3s ease;
+
+        &[checked="true"] {
+          border: none;
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+          -moz-context-properties: stroke;
+          stroke: light-dark(white, black);
+          background-size: 14px;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-image: url("../icons/lucide/check.svg");
+
+          &[disabled="true"] {
+            filter: grayscale(1);
+          }
+        }
+
+        &[disabled="true"] {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    radio {
+      .radio-check {
+        appearance: none !important;
+        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        border-radius: 50%;
+        background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+        transition: border 0.3s ease, outline 0.3s ease, background-color 0.3s ease;
+
+        &[selected="true"] {
+          border: 1px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+          background-color: transparent;
+        }
+      }
+
+      &::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        margin-left: 3px;
+        margin-right: -13px;
+        border-radius: 50%;
+        background: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &[selected="true"] {
+        &::before {
+          opacity: 1;
+        }
+      }
+    }
+
+    groupbox moz-input-search {
+      background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+      border-radius: 19px;
+    }
+
+    .privacy-detailedoption {
+      &.selected {
+        border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent) !important;
+      }
+
+      .content-blocking-warning {
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent) !important;
+      }
+    }
+
+    .pane-container a {
+      color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 70%, black), var(--natsumi-primary-color)) !important;
+    }
+  }
+}

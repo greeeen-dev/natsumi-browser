@@ -86,3 +86,8 @@ SOFTWARE.
   --natsumi-tabs-blade-size-offset: 4px;
   --natsumi-tabs-blade-position-offset: 2px;
 }
+
+/* Set preload status */
+body {
+  --natsumi-preload-complete: 1;
+}

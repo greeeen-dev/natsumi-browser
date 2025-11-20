@@ -44,5 +44,23 @@ SOFTWARE.
         display: none;
       }
     }
+
+    #natsumi-hide-floorp-warnings {
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      width: fit-content;
+      border-radius: 6px;
+      background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+
+      &:hover {
+        background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
+      }
+    }
+
+    @media -moz-pref("natsumi.theme.floorp-hide-preferences-warnings") {
+      #natsumi-hide-floorp-warnings, #floorp-hub-warning, #floorp-start-warning {
+        display: none !important;
+      }
+    }
   }
 }

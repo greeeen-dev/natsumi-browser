@@ -42,7 +42,7 @@ SOFTWARE.
       }
     }
 
-    &[selected], &[visuallyselected] {
+    &[selected], &[visuallyselected], &[natsumi-glimpse-selected] {
       & > .tab-stack > .tab-background {
         background-color: color-mix(in srgb, var(--natsumi-primary-color), light-dark(white, black)) !important;
         border: 1px solid light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2)) !important;
