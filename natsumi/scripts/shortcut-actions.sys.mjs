@@ -56,12 +56,15 @@ export class NatsumiShortcutActions {
     }
 
     static toggleCompactMode() {
+        if (!document.body.natsumiCompactModeManager) {
+            // Compact mode manager isn't initialized yet (or is broken)
+            return;
+        }
+
         if (document.body.attributes["natsumi-compact-mode"]) {
-            document.body.removeAttribute("natsumi-compact-mode");
-            document.body.removeAttribute("natsumi-compact-sidebar-extend");
-            document.body.removeAttribute("natsumi-compact-navbar-extend");
+            document.body.natsumiCompactModeManager.disableCompactMode(true);
         } else {
-            document.body.setAttribute("natsumi-compact-mode", "");
+            document.body.natsumiCompactModeManager.enableCompactMode(true);
         }
     }
 

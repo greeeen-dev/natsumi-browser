@@ -468,7 +468,7 @@ SOFTWARE.
     #closed-caption {
       background-image: url("../../../icons/fluent/captions.svg") !important;
 
-      @media not -moz-pref("natsumi.theme.enable-sdl2") {
+      @media -moz-pref("natsumi.theme.disable-sdl2") {
         &[disabled="true"] {
           fill: light-dark(#999, #777) !important;
         }

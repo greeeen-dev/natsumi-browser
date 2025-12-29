@@ -114,7 +114,7 @@ SOFTWARE.
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
           }
 
-          @media not -moz-pref("natsumi.theme.enable-sdl2") {
+          @media -moz-pref("natsumi.theme.disable-sdl2") {
             width: 36px !important;
             height: 36px !important;
 
@@ -132,7 +132,7 @@ SOFTWARE.
             }
           }
 
-          @media -moz-pref("natsumi.theme.enable-sdl2") {
+          @media not -moz-pref("natsumi.theme.disable-sdl2") {
             width: 40px !important;
             height: 40px !important;
 
@@ -157,7 +157,7 @@ SOFTWARE.
       }
 
       #toolbarViewerLeft, #toolbarViewerMiddle, #toolbarViewerRight {
-        @media not -moz-pref("natsumi.theme.enable-sdl2") {
+        @media -moz-pref("natsumi.theme.disable-sdl2") {
           border-radius: 18px;
           border: 2px solid transparent;
 
@@ -199,7 +199,7 @@ SOFTWARE.
           }
         }
 
-        @media -moz-pref("natsumi.theme.enable-sdl2") {
+        @media not -moz-pref("natsumi.theme.disable-sdl2") {
           padding: 2px !important;
           box-sizing: border-box !important;
 
@@ -271,7 +271,7 @@ SOFTWARE.
         }
       }
 
-      @media -moz-pref("natsumi.theme.enable-sdl2") {
+      @media not -moz-pref("natsumi.theme.disable-sdl2") {
         #toolbarViewerLeft, #toolbarViewerMiddle {
           & > .toolbarHorizontalGroup {
             gap: 1px !important;
@@ -336,14 +336,14 @@ SOFTWARE.
         border-radius: 6px !important;
         transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
-        @media -moz-pref("natsumi.theme.enable-sdl2") {
+        @media not -moz-pref("natsumi.theme.disable-sdl2") {
           background-color: var(--natsumi-sdl2-haze-button-idle-color) !important;
         }
 
         &:hover {
           background-color: var(--natsumi-button-hover-color) !important;
 
-          @media -moz-pref("natsumi.theme.enable-sdl2") {
+          @media not -moz-pref("natsumi.theme.disable-sdl2") {
             background-color: var(--natsumi-sdl2-haze-button-hover-color) !important;
           }
         }
@@ -352,7 +352,7 @@ SOFTWARE.
           background-color: var(--natsumi-button-active-color) !important;
           box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 
-          @media -moz-pref("natsumi.theme.enable-sdl2") {
+          @media not -moz-pref("natsumi.theme.disable-sdl2") {
             background-color: var(--natsumi-sdl2-haze-button-active-color) !important;
           }
         }
@@ -369,7 +369,7 @@ SOFTWARE.
         }
       }
 
-      @media -moz-pref("natsumi.theme.enable-sdl2") {
+      @media not -moz-pref("natsumi.theme.disable-sdl2") {
         #secondaryToolbarButtonContainer .toolbarButton {
           --natsumi-sdl2-haze-button-idle-color: transparent;
         }

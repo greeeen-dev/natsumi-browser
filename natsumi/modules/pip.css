@@ -120,17 +120,17 @@ SOFTWARE.
         background-size: 16px !important;
         border: var(--natsumi-material-border) !important;
 
-        @media not -moz-pref("natsumi.theme.enable-sdl2") {
-        &:hover {
-          background-color: color-mix(in srgb, var(--natsumi-material-background) 70%, white) !important;
+        @media -moz-pref("natsumi.theme.disable-sdl2") {
+          &:hover {
+            background-color: color-mix(in srgb, var(--natsumi-material-background) 70%, white) !important;
+          }
+
+          &:active {
+            background-color: var(--natsumi-button-active-color) !important;
+          }
         }
 
-        &:active {
-          background-color: var(--natsumi-button-active-color) !important;
-        }
-      }
-
-        @media -moz-pref("natsumi.theme.enable-sdl2") {
+        @media not -moz-pref("natsumi.theme.disable-sdl2") {
           min-width: 40px !important;
           height: 40px !important;
           padding: 2px !important;
@@ -189,7 +189,7 @@ SOFTWARE.
           gap: 0 !important;
           box-shadow: var(--natsumi-material-shadow) !important;
 
-          @media -moz-pref("natsumi.theme.enable-sdl2") {
+          @media not -moz-pref("natsumi.theme.disable-sdl2") {
             padding: 2px !important;
             border-radius: 20px !important;
             gap: 4px !important;
@@ -202,19 +202,19 @@ SOFTWARE.
           padding-inline: 12px !important;
         }
 
-        @media not -moz-pref("natsumi.theme.enable-sdl2") {
-        #seekBackward, #audio {
-          border-radius: 16px 4px 4px 16px !important;
-        }
+        @media -moz-pref("natsumi.theme.disable-sdl2") {
+          #seekBackward, #audio {
+            border-radius: 16px 4px 4px 16px !important;
+          }
 
-        #playpause, #closed-caption {
-          border-radius: 4px !important;
-        }
+          #playpause, #closed-caption {
+            border-radius: 4px !important;
+          }
 
-        #seekForward, #fullscreen {
-          border-radius: 4px 16px 16px 4px !important;
+          #seekForward, #fullscreen {
+            border-radius: 4px 16px 16px 4px !important;
+          }
         }
-      }
 
         #playpause::after, #seekBackward::after, #seekForward::after, #audio::after, #closed-caption::after {
           left: 50% !important;
@@ -319,7 +319,7 @@ SOFTWARE.
             }
           }
 
-          @media not -moz-pref("natsumi.theme.enable-sdl2") {
+          @media -moz-pref("natsumi.theme.disable-sdl2") {
             &[disabled] {
               cursor: default !important;
               fill-opacity: 0.4 !important;
@@ -337,7 +337,7 @@ SOFTWARE.
             }
           }
 
-          @media -moz-pref("natsumi.theme.enable-sdl2") {
+          @media not -moz-pref("natsumi.theme.disable-sdl2") {
             border-radius: 50% !important;
             background-color: var(--natsumi-sdl2-haze-button-idle-color) !important;
             box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow);
@@ -393,7 +393,7 @@ SOFTWARE.
             border-radius: 0 !important;
           }
 
-          @media not -moz-pref("natsumi.theme.enable-sdl2") {
+          @media -moz-pref("natsumi.theme.disable-sdl2") {
             #seekBackward, #audio, #fullscreen {
               border-radius: 4px !important;
             }

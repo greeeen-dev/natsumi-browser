@@ -31,10 +31,13 @@ WARNING: DO NOT TOUCH THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING.
 Removing or modifying parts of this file may break some parts of Natsumi.
 */
 
+/* Setup (config and global modules) */
 @import "../natsumi-config.css";
 @import "content/preload.css";
 @import "global/colors.css";
 @import "global/starlight.css";
+
+/* Base modules */
 @import "content/pdfjs.css";
 @import "content/ff-home.css";
 @import "content/preferences.css";
@@ -43,6 +46,6 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "content/preferences-about.css";
 @import "content/global.css";
 @import "content/icons.css";
-@import "content/floorp/preferences.css";
 
-/* Do NOT enter any additional CSS below. */
+/* Floorp-specific modules */
+@import "content/floorp/preferences.css";

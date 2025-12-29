@@ -31,10 +31,13 @@ WARNING: DO NOT TOUCH THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING.
 Removing or modifying parts of this file may break some parts of Natsumi.
 */
 
+/* Setup (config and global modules) */
 @import "../natsumi-config.css";
 @import "modules/preload.css";
 @import "global/colors.css";
 @import "global/starlight.css";
+
+/* Base modules */
 @import "modules/themer.css";
 @import "modules/base.css";
 @import "modules/backdrop-blur.css";
@@ -50,16 +53,24 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/compact-mode.css";
 @import "modules/glimpse.css";
 @import "modules/welcome.css";
+@import "modules/customize.css";
 @import "modules/experiments.css";
 @import "modules/icons.css";
+
+/* Floorp-specific modules */
 @import "modules/floorp/patches.css";
 @import "modules/floorp/themer.css";
 @import "modules/floorp/base.css";
+@import "modules/floorp/status-bar.css";
 @import "modules/floorp/split-view.css";
 @import "modules/floorp/panel-sidebar.css";
 @import "modules/floorp/workspaces.css";
 @import "modules/floorp/miniplayer.css";
 @import "modules/floorp/right-sidebar.css";
+
+/* Waterfox-specific modules */
 @import "modules/waterfox/base.css";
 @import "modules/waterfox/miniplayer.css";
+
+/* Finish setup */
 @import "modules/postload.css";

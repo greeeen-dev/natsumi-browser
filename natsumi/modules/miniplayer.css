@@ -55,9 +55,11 @@ SOFTWARE.
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     gap: 10px;
+    padding: 4px !important;
+    margin: calc(var(--tab-block-margin) - 4px) calc(var(--tab-inner-inline-margin) - 4px) !important;
 
     &:not([hide-margin]) {
-      margin-top: calc(var(--tab-block-margin) + 5px) !important;
+      margin-top: calc(var(--tab-block-margin) + 1px) !important;
     }
   }
 }
@@ -77,7 +79,26 @@ SOFTWARE.
   @media -moz-pref("natsumi.miniplayer.scroll-view") {
     margin-top: auto !important;
     scroll-snap-align: center;
+  }
 
+  @media not -moz-pref("natsumi.miniplayer.disable-dynamic-accent") {
+    &[miniplayer-has-custom-color] {
+      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container {
+        --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
+      }
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
+        transition: background 0.5s ease, min-height 0.2s ease;
+        background: var(--natsumi-mat-th-background);
+      }
+
+      &:not([miniplayer-has-artwork]) {
+        --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
+        transition: background 0.5s ease, min-height 0.2s ease;
+        background: var(--natsumi-mat-th-background);
+      }
+    }
   }
 
   &:not([hidden=true]) {
@@ -386,6 +407,82 @@ SOFTWARE.
   &[muted="true"] {
     .natsumi-miniplayer-mute-button::before {
       background-image: url("../icons/lucide/volume-off.svg");
+    }
+  }
+
+  &:not([miniplayer-has-artwork]) {
+    &::before {
+      background-image: none !important;
+    }
+
+    .natsumi-miniplayer-site-container {
+      .natsumi-miniplayer-site-name {
+        color: light-dark(black, white);
+      }
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color);
+      }
+
+      &:active {
+        background-color: var(--natsumi-button-active-color);
+      }
+    }
+
+    .natsumi-miniplayer-title-container {
+      .natsumi-miniplayer-title {
+        color: light-dark(black, white);
+      }
+    }
+
+    .natsumi-miniplayer-author-container {
+      .natsumi-miniplayer-artist {
+        color: light-dark(black, white);
+      }
+    }
+
+    .natsumi-miniplayer-seekbar-container {
+      .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
+        color: light-dark(black, white);
+      }
+
+      .natsumi-miniplayer-seekbar {
+        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+
+        &::before {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
+
+        &::after {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
+      }
+    }
+
+    .natsumi-miniplayer-controls-container {
+      & > * {
+        &:hover {
+          background-color: var(--natsumi-button-hover-color);
+        }
+
+        &:active {
+          background-color: var(--natsumi-button-active-color);
+        }
+
+        &::before {
+          stroke: light-dark(black, white);
+        }
+      }
+
+      .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-nexttrack-button {
+        &::before {
+          stroke: light-dark(black, white);
+        }
+
+        &::after {
+          color: light-dark(black, white);
+        }
+      }
     }
   }
 }

@@ -36,6 +36,9 @@ class NatsumiCompactModeManager {
         this.sidebarHovered = 0;
         this.sidebarTimeout = null;
         this.navbarTimeout = null;
+        this.isPWA = document.documentElement.hasAttribute("taskbartab");
+        this.pwaFullscreenListener = null;
+        this.disableShortcutActions = false;
     }
 
     init() {
@@ -74,10 +77,42 @@ class NatsumiCompactModeManager {
         });
 
         // Enable compact mode if set to be enabled by default
-        if (ucApi.Prefs.get("natsumi.theme.compact-on-new-window").exists()) {
+        if (ucApi.Prefs.get("natsumi.theme.compact-on-new-window").exists() && !this.isPWA) {
             if (ucApi.Prefs.get("natsumi.theme.compact-on-new-window").value) {
-                document.body.setAttribute("natsumi-compact-mode", "");
+                this.enableCompactMode();
             }
+        }
+
+        if (ucApi.Prefs.get("natsumi.theme.compact-pwa-dynamic").exists() && this.isPWA) {
+            if (ucApi.Prefs.get("natsumi.theme.compact-pwa-dynamic").value) {
+
+            }
+        }
+
+        // Set PWA full screen listener
+        if (this.isPWA) {
+            this.pwaFullscreenListener = new MutationObserver(() => {
+                const isFullScreen = document.documentElement.hasAttribute("inFullscreen");
+                let pwaDynamicCompactMode = false;
+
+                if (ucApi.Prefs.get("natsumi.theme.compact-pwa-dynamic").exists() && this.isPWA) {
+                    if (ucApi.Prefs.get("natsumi.theme.compact-pwa-dynamic").value) {
+                        pwaDynamicCompactMode = true;
+                    }
+                }
+
+                if (pwaDynamicCompactMode) {
+                    if (isFullScreen) {
+                        this.enableCompactMode();
+                    } else {
+                        this.disableCompactMode();
+                    }
+                }
+            });
+            this.pwaFullscreenListener.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ["inFullscreen"]
+            });
         }
     }
 
@@ -89,6 +124,24 @@ class NatsumiCompactModeManager {
             statusbarNode.addEventListener("mouseenter", this.handleElementEnter.bind(this), true);
             statusbarNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
         }
+    }
+
+    enableCompactMode(isShortcut = false) {
+        if (isShortcut && this.disableShortcutActions) {
+            return;
+        }
+
+        document.body.setAttribute("natsumi-compact-mode", "");
+    }
+
+    disableCompactMode(isShortcut = false) {
+        if (isShortcut && this.disableShortcutActions) {
+            return;
+        }
+
+        document.body.removeAttribute("natsumi-compact-mode");
+        document.body.removeAttribute("natsumi-compact-sidebar-extend");
+        document.body.removeAttribute("natsumi-compact-navbar-extend");
     }
 
     handleElementEnter(event) {
@@ -108,7 +161,7 @@ class NatsumiCompactModeManager {
         // Check hidden elements
         let sidebarHidden = true;
         let toolbarHidden = true;
-        if (!isSingleToolbar) {
+        if (!isSingleToolbar && !this.isPWA) {
             if (ucApi.Prefs.get("natsumi.theme.compact-style").exists()) {
                 if (ucApi.Prefs.get("natsumi.theme.compact-style").value === "sidebar") {
                     toolbarHidden = false;
@@ -181,7 +234,7 @@ class NatsumiCompactModeManager {
         // Check hidden elements
         let sidebarHidden = true;
         let toolbarHidden = true;
-        if (!isSingleToolbar) {
+        if (!isSingleToolbar && !this.isPWA) {
             if (ucApi.Prefs.get("natsumi.theme.compact-style").exists()) {
                 if (ucApi.Prefs.get("natsumi.theme.compact-style").value === "sidebar") {
                     toolbarHidden = false;

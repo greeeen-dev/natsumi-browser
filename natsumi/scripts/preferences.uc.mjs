@@ -2527,10 +2527,11 @@ function addSDL2Pane() {
     );
 
     sdl2Group.registerOption("natsumiEnableSDL2", new CheckboxChoice(
-        "natsumi.theme.enable-sdl2",
+        "natsumi.theme.disable-sdl2",
         "natsumiEnableSDL2",
         "Enable Starlight Design 2 (SDL2)",
-        "Please note that this feature will be enabled by default in a future release."
+        "",
+        true
     ));
 
     let sdl2Node = sdl2Group.generateNode();
@@ -3252,6 +3253,14 @@ function addSidebarMiniplayerPane() {
         "natsumi.miniplayer.disable-artwork",
         "natsumiSidebarMiniplayerArtwork",
         "Show media thumbnail/artwork as Miniplayer background",
+        "",
+        true
+    ));
+
+    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerAccent", new CheckboxChoice(
+        "natsumi.miniplayer.disable-dynamic-accent",
+        "natsumiSidebarMiniplayerAccent",
+        "Use artwork to determine Miniplayer's accent color",
         "",
         true
     ));

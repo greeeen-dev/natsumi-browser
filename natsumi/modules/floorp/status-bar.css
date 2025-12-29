@@ -1,0 +1,142 @@
+/*
+
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Floorp Status Bar ==== */
+
+@media -moz-pref("natsumi.browser.type", "floorp") {
+  #nora-statusbar {
+    background: transparent !important;
+    border: none !important;
+
+    &:not(.hidden), &:not([style*="display:none"]), &:not([style*="display: none"]) {
+      min-height: 28px !important;
+    }
+
+    #workspaces-toolbar-button {
+      margin: 0 4px !important;
+    }
+  }
+
+  @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
+    #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"] {
+      display: flex !important;
+      justify-content: space-between !important;
+      flex-wrap: wrap;
+      position: absolute;
+      bottom: calc(var(--natsumi-browser-separation) + var(--space-small) + 40px);
+      width: calc(var(--natsumi-sidebar-width) - calc(var(--natsumi-browser-separation) * 2)) !important;
+      background: transparent !important;
+
+      @media -moz-pref("sidebar.position_start") {
+        left: var(--natsumi-browser-separation);
+      }
+
+      @media not -moz-pref("sidebar.position_start") {
+        right: var(--natsumi-browser-separation);
+      }
+
+      @media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+        bottom: var(--natsumi-browser-separation) !important;
+      }
+
+      #status-text {
+        display: none !important;
+      }
+    }
+
+    body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) {
+      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"] {
+        left: 7px;
+      }
+    }
+
+    @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+      &:has(#panel-sidebar-select-box) body:not([natsumi-panel-sidebar-on-right]) {
+        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"] {
+          left: calc(calc(var(--natsumi-browser-separation) * 3) + 36px);
+        }
+      }
+    }
+
+    &:has(#sidebar-main[hidden]) {
+      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display:none"] {
+        display: none !important;
+      }
+    }
+
+    &:has(sidebar-main:not([expanded])) {
+      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display:none"] {
+        flex-direction: column !important;
+        bottom: calc(var(--natsumi-sidebar-options-height) + var(--space-small) + var(--natsumi-browser-separation));
+        width: 36px !important;
+
+        toolbarbutton {
+          margin-block: 3px !important;
+        }
+
+        .toolbarbutton-text {
+          display: none !important;
+        }
+
+        @media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+          bottom: var(--natsumi-browser-separation) !important;
+        }
+
+        @media not -moz-pref("sidebar.verticalTabs") {
+          bottom: 48px !important;
+        }
+
+        @media -moz-pref("natsumi.sidebar.workspaces-as-icons") {
+          #workspaces-toolbar-button {
+            flex-direction: column !important;
+            flex: 1 !important;
+            max-height: unset !important;
+
+            .natsumi-workspace-icon {
+              min-height: 16px !important;
+
+              &::before {
+                bottom: 50% !important;
+                left: -6px !important;
+                translate: 0 50% !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &:has(#nora-statusbar.hidden), &:has(#nora-statusbar[style*="display:none"]), &:has(#nora-statusbar[style*="display: none"]) {
+      #vertical-tabs {
+        padding-bottom: calc(var(--natsumi-statusbar-height, 28px) + 3px + var(--natsumi-browser-separation)) !important;
+      }
+    }
+
+    #tabbrowser-tabs::after {
+      border-bottom: var(--tabstrip-inner-border) !important;
+    }
+  }
+}

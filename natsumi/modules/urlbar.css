@@ -819,7 +819,7 @@ SOFTWARE.
   }
 
   @media (not -moz-pref("natsumi.urlbar.always-expanded")) and (not -moz-pref("natsumi.theme.single-toolbar")) {
-    #navigator-toolbox:not(:hover) {
+    &:not([customizing]) #navigator-toolbox:not(:hover) {
       #urlbar:not([open], [focused]):not(:has(box[open], .urlbar-page-action[open])) {
         --natsumi-urlbar-hover-background-color: transparent;
         border-color: transparent !important;

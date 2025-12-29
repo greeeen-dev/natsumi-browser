@@ -65,7 +65,7 @@ SOFTWARE.
       overflow: hidden;
 
       .browserStack {
-        @media -moz-pref("natsumi.theme.enable-sdl2") {
+        @media not -moz-pref("natsumi.theme.disable-sdl2") {
           background-color: light-dark(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2));
         }
       }
@@ -559,4 +559,25 @@ SOFTWARE.
 .split-view-splitter {
   border: none !important;
   background-color: transparent !important;
+}
+
+#natsumi-static-tabs-container {
+  max-height: 40%;
+  --natsumi-overflow-top-gradient: linear-gradient(to bottom, light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 0, transparent 16px);
+  --natsumi-overflow-bottom-gradient: linear-gradient(to top, light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 0, transparent 16px);
+  --natsumi-overflow-both-gradient: linear-gradient(to bottom, light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 0, transparent 16px, transparent calc(100% - 16px), light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 100%);
+
+  &[orient="vertical"][overflowing] {
+    &:not([scrolledtostart]) {
+      background-image: var(--natsumi-overflow-top-gradient);
+    }
+
+    &:not([scrolledtoend]) {
+      background-image: var(--natsumi-overflow-bottom-gradient);
+    }
+
+    &:not([scrolledtostart]):not([scrolledtoend]) {
+      background-image: var(--natsumi-overflow-both-gradient) !important;
+    }
+  }
 }

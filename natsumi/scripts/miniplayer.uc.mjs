@@ -269,6 +269,11 @@ class NatsumiMiniplayer {
         this._node.style.setProperty("--natsumi-miniplayer-artwork", `url('${this.artwork}')`);
         this._node.style.setProperty("--natsumi-miniplayer-site-icon", `url('${this.siteIcon}')`);
 
+        if (!this.artwork.endsWith("defaultFavicon.svg")) {
+            // Only add has artwork attribute if the artwork is not the default favicon
+            this._node.setAttribute("miniplayer-has-artwork", "");
+        }
+
         // Set site data and media metadata
         this._node.querySelector(".natsumi-miniplayer-site-name").textContent = this.siteName || "Unknown site";
         this._node.querySelector(".natsumi-miniplayer-title").textContent = this.title || "Unknown";
@@ -329,7 +334,27 @@ class NatsumiMiniplayer {
             this.artwork = this.artwork[0].src;
 
             if (this._node) {
+                let usedArtwork;
                 this._node.style.setProperty("--natsumi-miniplayer-artwork", `url('${this.artwork}')`);
+
+                if (!this.artwork.endsWith("defaultFavicon.svg")) {
+                    // Only add has artwork attribute if the artwork is not the default favicon
+                    this._node.setAttribute("miniplayer-has-artwork", "");
+                    usedArtwork = this.artwork;
+                } else {
+                    this._node.removeAttribute("miniplayer-has-artwork");
+                    usedArtwork = this.siteIcon;
+                }
+
+                this.getAverageColor(usedArtwork).then((averageColor) => {
+                    if (averageColor) {
+                        this._node.style.setProperty("--natsumi-miniplayer-artwork-color", `rgb(${averageColor.r}, ${averageColor.g}, ${averageColor.b})`);
+                        this._node.setAttribute("miniplayer-has-custom-color", "");
+                    } else {
+                        this._node.style.removeProperty("--natsumi-miniplayer-artwork-color");
+                        this._node.removeAttribute("miniplayer-has-custom-color");
+                    }
+                });
             }
         }
 
@@ -404,6 +429,44 @@ class NatsumiMiniplayer {
         this._tab.linkedBrowser.browsingContext.mediaController.seekTo(seekPosition);
         this.position = seekPosition;
         this.updateSeekbar();
+    }
+
+    async getAverageColor(artworkUrl) {
+        // Create offscreen canvas
+        const temporaryCanvas = document.createElement("canvas");
+        const canvasContext = temporaryCanvas.getContext("2d");
+
+        // Create image element
+        const temporaryImage = new Image();
+        temporaryImage.src = artworkUrl;
+        await temporaryImage.decode();
+
+        // Draw image
+        canvasContext.drawImage(temporaryImage, 0, 0, 1, 1);
+
+        // Get pixel data
+        const pixelData = canvasContext.getImageData(0, 0, 1, 1).data;
+
+        // Remove canvas and image elements
+        temporaryCanvas.remove();
+        temporaryImage.remove();
+
+        if (!pixelData) {
+            // Could not get pixel data for some reason
+            return;
+        }
+
+        // Check that opacity is above 0
+        if (pixelData[3] === 0) {
+            return;
+        }
+
+        // Return color data
+        return {
+            r: pixelData[0],
+            g: pixelData[1],
+            b: pixelData[2]
+        };
     }
 
     // UI updates

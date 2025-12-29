@@ -457,7 +457,7 @@ SOFTWARE.
     #closed-caption {
       background-image: url("../../../icons/lucide/captions.svg") !important;
 
-      @media not -moz-pref("natsumi.theme.enable-sdl2") {
+      @media -moz-pref("natsumi.theme.disable-sdl2") {
         &[disabled="true"] {
           stroke: light-dark(#999, #777) !important;
         }

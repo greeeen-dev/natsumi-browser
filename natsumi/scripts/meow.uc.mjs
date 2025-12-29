@@ -57,6 +57,12 @@ function makeCatNoisesAndDoSomeVeryCuteInitialSetupBecauseIFeltVeryCuteWhenWriti
     // Apply customizations
     applyCustomTheme();
 
+    // Port 6.0.0 SDL2 setting to 6.1.0
+    if (ucApi.Prefs.get("natsumi.theme.enable-sdl2").exists()) {
+        ucApi.Prefs.set("natsumi.theme.disable-sdl2", !ucApi.Prefs.get("natsumi.theme.enable-sdl2").value);
+        ucApi.Prefs.get("natsumi.theme.enable-sdl2").reset();
+    }
+
     // communicate in the average transfemme communication language (i.e. make cat noises) >:3333
     const catNoises = [
         "meow",

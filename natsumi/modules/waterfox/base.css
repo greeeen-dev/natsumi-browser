@@ -58,7 +58,7 @@ SOFTWARE.
   }
 
   @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
-    &:not([customizing]) #status-bar[collapsed="true"] {
+    #status-bar[collapsed="true"] {
       display: flex !important;
       justify-content: space-between !important;
       flex-wrap: wrap;
@@ -88,11 +88,11 @@ SOFTWARE.
       display: none !important;
     }
 
-    &:not([customizing]) body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #status-bar[collapsed="true"] {
+    body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #status-bar[collapsed="true"] {
       left: 7px !important;
     }
 
-    &:not([customizing]):has(sidebar-main:not([expanded])) #status-bar[collapsed="true"] {
+    &:has(sidebar-main:not([expanded])) #status-bar[collapsed="true"] {
       flex-direction: column !important;
       bottom: calc(var(--natsumi-sidebar-options-height) + var(--space-small) + var(--natsumi-browser-separation));
       width: 36px !important;
