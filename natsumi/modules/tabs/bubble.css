@@ -28,7 +28,7 @@ SOFTWARE.
 /* Bubble is a tab design which adds the visuals of Natsumi SDL2 to tabs. */
 
 @media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "bubble") {
-  #tabbrowser-arrowscrollbox {
+  #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
     .tabbrowser-tab {
       min-height: 40px !important;
       padding: 0 !important;
@@ -179,7 +179,7 @@ SOFTWARE.
       --tab-height-with-margin-padding: calc(45px + (2 * var(--tab-block-margin)));
     }
 
-    #tabbrowser-arrowscrollbox {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab {
         & > .tab-stack > .tab-content {
           & > .tab-close-button {
@@ -221,7 +221,7 @@ SOFTWARE.
   }
 
   #tabbrowser-tabs[expanded] {
-    #tabbrowser-arrowscrollbox {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab {
         & > .tab-stack > .tab-content {
           padding-left: calc(var(--tab-inner-inline-margin) + 12px) !important;
@@ -232,7 +232,7 @@ SOFTWARE.
   }
 
   #tabbrowser-tabs[orient="horizontal"] {
-    #tabbrowser-arrowscrollbox {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab {
         min-width: 80px !important;
 
@@ -253,7 +253,7 @@ SOFTWARE.
     }
 
     &[closebuttons="activetab"] {
-      #tabbrowser-arrowscrollbox {
+      #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
         .tabbrowser-tab {
           &:hover:not([selected]) {
             & > .tab-stack > .tab-content::before {
@@ -266,7 +266,7 @@ SOFTWARE.
   }
 
   #tabbrowser-tabs:not([expanded]):not([orient="horizontal"]) {
-    #tabbrowser-arrowscrollbox {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab {
         & > .tab-stack > .tab-background {
           margin-block: 0 !important;
@@ -308,10 +308,12 @@ SOFTWARE.
       }
     }
 
-    #tabbrowser-arrowscrollbox .tabbrowser-tab {
-      & > .tab-stack > .tab-background {
-        &::after {
-          width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
+      .tabbrowser-tab {
+        & > .tab-stack > .tab-background {
+          &::after {
+            width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
+          }
         }
       }
     }
