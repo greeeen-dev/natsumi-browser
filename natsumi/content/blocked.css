@@ -1,0 +1,109 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Safe Browsing blocked page ==== */
+
+@-moz-document url-prefix(about:blocked) {
+  * {
+    --natsumi-primary-color: oklch(from #ff5555 0.825 0.1 h);
+  }
+
+  .container {
+    text-align: center;
+
+    .title {
+      padding-top: 0 !important;
+      background-image: none !important;
+
+      h2[data-l10n-id="about-httpsonly-title-alert"] {
+        display: none;
+      }
+
+      &::before {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 48px;
+        background-size: 48px;
+        margin-inline: auto;
+        -moz-context-properties: stroke, stroke-opacity !important;
+        stroke: white;
+        background-image: url("../icons/lucide/page-blocked.svg");
+      }
+
+      .title-text {
+        font-weight: bold;
+        font-size: x-large;
+        margin-block: 5px;
+      }
+    }
+
+    #errorShortDesc {
+      font-size: var(--font-size-root) !important;
+    }
+
+    #advisory_provider {
+      --link-color: var(--natsumi-primary-color);
+      --link-color-visited: var(--link-color);
+      --link-color-hover: color-mix(in srgb, var(--link-color) 85%, light-dark(white, black));
+      --link-color-active: color-mix(in srgb, var(--link-color) 70%, light-dark(white, black));
+    }
+
+    #errorLongDesc {
+      min-width: unset !important;
+      border-radius: 12px;
+      border: var(--natsumi-mat-th-border-thin) !important;
+      box-shadow: var(--natsumi-mat-th-shadow) !important;
+      background: var(--natsumi-mat-th-background) !important;
+      color: light-dark(black, white) !important;
+
+      @media only screen and (max-width: 959px) {
+        width: calc(100vw - 150px);
+      }
+
+      a {
+        color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 70%, white), var(--natsumi-primary-color)) !important;
+      }
+    }
+
+    .button-container {
+      justify-content: center !important;
+
+      button {
+        --button-background-color-primary: var(--natsumi-primary-color);
+        --button-background-color-primary-hover: color-mix(in srgb, var(--button-background-color-primary) 85%, light-dark(white, black));
+        --button-background-color-primary-active: color-mix(in srgb, var(--button-background-color-primary) 70%, light-dark(white, black));
+        font-weight: normal !important;
+        height: 36px !important;
+        border-radius: 18px !important;
+
+        &:not(.primary) {
+          color: white !important;
+        }
+      }
+    }
+  }
+}
