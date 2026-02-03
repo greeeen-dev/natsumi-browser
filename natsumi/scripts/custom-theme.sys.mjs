@@ -421,6 +421,8 @@ export async function applyCustomTheme() {
         body.style.removeProperty("--natsumi-theme-layer-0-background-dark");
         body.style.removeProperty("--natsumi-theme-layer-1-background");
         body.style.removeProperty("--natsumi-theme-layer-1-background-dark");
+        body.style.removeProperty("--natsumi-theme-text-color");
+        body.style.removeProperty("--natsumi-theme-text-color-dark");
 
         for (let index in toApplyData["light"]) {
             let layerData = toApplyData["light"][index];
@@ -431,6 +433,15 @@ export async function applyCustomTheme() {
                     body.style.removeProperty(`--natsumi-theme-layer-${index}-background`);
                 } else {
                     body.style.setProperty(`--natsumi-theme-layer-${index}-background`, backgroundValue);
+                }
+            }
+
+            if (layerData["textColor"]) {
+                const textColorValue = parseColor(layerData["textColor"]);
+                if (!textColorValue) {
+                    body.style.removeProperty(`--natsumi-theme-text-color`);
+                } else {
+                    body.style.setProperty(`--natsumi-theme-text-color`, textColorValue);
                 }
             }
         }
@@ -444,6 +455,15 @@ export async function applyCustomTheme() {
                     body.style.removeProperty(`--natsumi-theme-layer-${index}-background-dark`);
                 } else {
                     body.style.setProperty(`--natsumi-theme-layer-${index}-background-dark`, backgroundValue);
+                }
+            }
+
+            if (layerData["textColor"]) {
+                const textColorValue = parseColor(layerData["textColor"]);
+                if (!textColorValue) {
+                    body.style.removeProperty(`--natsumi-theme-text-color-dark`);
+                } else {
+                    body.style.setProperty(`--natsumi-theme-text-color-dark`, textColorValue);
                 }
             }
         }
