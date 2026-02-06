@@ -594,7 +594,7 @@ function copyAllWorkspaces() {
         return;
     }
 
-    const workspaceData = JSON.parse(ucApi.Prefs.get("floorp.workspaces.v4.store").value)
+    const workspaceData = JSON.parse(ucApi.Prefs.get("floorp.workspaces.v4.store").value);
     const currentWorkspaceData = getCurrentWorkspaceData();
 
     // Clear existing workspaces
@@ -775,6 +775,10 @@ if (isFloorp) {
         Services.prefs.addObserver("floorp.workspaces.v4.store", () => {
             copyWorkspaceName();
             copyAllWorkspaces();
+
+            if (document.body.natsumiWorkspaceIndicator) {
+                document.body.natsumiWorkspaceIndicator.refreshIndicator();
+            }
         });
 
         // Initialize workspaces wrapper
