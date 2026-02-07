@@ -92,44 +92,23 @@ class NatsumiGlimpse {
                 }
 
                 if (glimpseParentTab) {
-                    requestAnimationFrame(() => {
-                        if (glimpseParentTab) {
-                            glimpseParentTab.linkedBrowser.browsingContext.isActive = true;
-                            glimpseParentTab.linkedBrowser.renderLayers = true;
-                        }
-                    })
+                    this.ensureGlimpseParentRender();
                 }
             }
         });
     }
 
-    setGlimpseInterval() {
-        this.glimpseInterval = setInterval(() => {
-            if (this.currentGlimpseTab && this.currentGlimpseTab.linkedBrowser) {
-                if (!this.currentGlimpseTab.linkedBrowser.renderLayers) {
-                    requestAnimationFrame(() => {
-                        this.currentGlimpseTab.linkedBrowser.browsingContext.isActive = true;
-                        this.currentGlimpseTab.linkedBrowser.renderLayers = true;
-                    });
-                }
-            }
-        }, 50);
-    }
-
-    removeGlimpseInterval() {
-        if (this.glimpseInterval) {
-            clearInterval(this.glimpseInterval);
-            this.glimpseInterval = null;
+    ensureGlimpseParentRender() {
+        if (!this.currentGlimpseTab || !this.currentGlimpseTab.linkedBrowser) {
+            return;
         }
-    }
 
-    onMouseMove() {
-        if (this.currentGlimpseTab && this.currentGlimpseTab.linkedBrowser) {
-            requestAnimationFrame(() => {
-                this.currentGlimpseTab.linkedBrowser.browsingContext.isActive = true;
-                this.currentGlimpseTab.linkedBrowser.renderLayers = true;
-            });
-        }
+        this.currentGlimpseTab.linkedBrowser.browsingContext.isActive = true;
+        this.currentGlimpseTab.linkedBrowser.renderLayers = true;
+
+        requestAnimationFrame(() => {
+            this.ensureGlimpseParentRender();
+        })
     }
 
     onTabClose(event) {
@@ -387,7 +366,7 @@ class NatsumiGlimpse {
             requestAnimationFrame(() => {
                 tabSelected.linkedBrowser.renderLayers = true;
             });
-            this.setGlimpseInterval();
+            this.ensureGlimpseParentRender();
         }
     }
 
