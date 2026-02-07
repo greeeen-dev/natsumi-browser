@@ -363,9 +363,6 @@ class NatsumiGlimpse {
             tabSelected.setAttribute("natsumi-glimpse-selected", "");
             this.currentGlimpseTab = tabSelected;
             gBrowser.selectedTab = currentGlimpseTab;
-            requestAnimationFrame(() => {
-                tabSelected.linkedBrowser.renderLayers = true;
-            });
             this.ensureGlimpseParentRender();
         }
     }
