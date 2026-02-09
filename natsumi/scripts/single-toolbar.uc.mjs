@@ -139,10 +139,7 @@ class NatsumiSingleToolbarManager {
         }
 
         this.hoveredElements++;
-
-        if (!document.body.hasAttribute("natsumi-compact-sidebar-hover") && !document.body.hasAttribute("natsumi-compact-sidebar-extend")) {
-            document.body.setAttribute("natsumi-bookmarks-hover", "");
-        }
+        document.body.setAttribute("natsumi-bookmarks-hover", "");
     }
 
     removeHover(isWindowButton = false) {

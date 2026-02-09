@@ -2221,7 +2221,7 @@ function addLayoutPane() {
                 You need to enable Vertical Tabs to customize these settings.
             </div>
         </div>
-    `)
+    `);
     let layoutSelector = layoutNode.querySelector(".natsumi-mc-chooser");
     layoutSelector.parentNode.insertBefore(verticalTabsDisabledNotice, layoutSelector);
 
@@ -3055,7 +3055,7 @@ function addCompactStylesPane() {
         "natsumiCompactStyle",
         "natsumi.theme.compact-style",
         "Style",
-        "Choose what you want to hide when Compact Mode is active."
+        "Customize how Compact Mode should look."
     );
 
     for (let style in compactStyles) {
@@ -3077,6 +3077,17 @@ function addCompactStylesPane() {
     ));
 
     let styleNode = styleSelection.generateNode();
+
+    let compactSingleToolbarNotice = convertToXUL(`
+        <div id="natsumiCompactSingleToolbarWarning" class="natsumi-settings-info warning">
+            <div class="natsumi-settings-info-icon"></div>
+            <div class="natsumi-settings-info-text">
+                You need to use Multiple Toolbars layout to change which elements Compact Mode hides.
+            </div>
+        </div>
+    `);
+    let styleSelector = styleNode.querySelector(".natsumi-mc-chooser");
+    styleSelector.parentNode.insertBefore(compactSingleToolbarNotice, styleSelector);
 
     // Set listeners for each button
     let styleButtons = styleNode.querySelectorAll(".natsumi-mc-choice");
@@ -3127,6 +3138,11 @@ function addCompactBehaviorPane() {
         "natsumiCompactNewWindow",
         "Enable Compact Mode by default",
         "If enabled, new windows will open with Compact Mode active."
+    ));
+    compactBehaviorGroup.registerOption("natsumiCompactLongVisibility", new CheckboxChoice(
+        "natsumi.theme.compact-long-visibility",
+        "natsumiCompactLongVisibility",
+        "Display sidebar/toolbar for longer on hover"
     ));
 
     let compactBehaviorNode = compactBehaviorGroup.generateNode();
@@ -3689,14 +3705,6 @@ function addPreferencesPanes() {
         <hbox id="natsumiCompactModeCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
             <html:h1>Compact Mode</html:h1>
         </hbox>
-        <groupbox id="natsumiCompactSingleToolbar" data-category="paneNatsumiSettings" hidden="true">
-            <div class="natsumi-settings-info warning">
-                <div class="natsumi-settings-info-icon"></div>
-                <div class="natsumi-settings-info-text">
-                    You need to use Multiple Toolbars layout to change Compact Mode styles.
-                </div>
-            </div>
-        </groupbox>
     `);
     let glimpseNode = convertToXUL(`
         <hbox id="natsumiGlimpseCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
