@@ -74,6 +74,10 @@ class NatsumiNotificationsParent {
 
         let notificationTimeout = notificationNode.getAttribute("natsumi-notification-time");
 
+        notificationNode.addEventListener("click", () => {
+            this.removeNotification(notificationNode);
+        })
+
         setTimeout(() => {
             this.removeNotification(notificationNode);
         }, parseInt(notificationTimeout, 10) || 5000);
@@ -82,6 +86,11 @@ class NatsumiNotificationsParent {
     removeNotification(notificationNode) {
         if (notificationNode) {
             try {
+                if (notificationNode.hasAttribute("natsumi-notification-disappear")) {
+                    // Removal is already being handled
+                    return;
+                }
+
                 notificationNode.setAttribute("natsumi-notification-disappear", "");
             } catch (e) {
                 console.warn("Failed to remove notification:", e);
