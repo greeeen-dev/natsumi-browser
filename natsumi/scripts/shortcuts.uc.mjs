@@ -219,7 +219,16 @@ class NatsumiKBSManager {
             "natsumiNewTab": new NatsumiKeyboardShortcut(false, true, false, false, "t", 3, true),
             "natsumiClearUnpinnedTabs": new NatsumiKeyboardShortcut(false, true, true, false, "w", 0, true),
             "natsumiSplitTabs": new NatsumiKeyboardShortcut(false, true, true, false, "g", 0, true),
-            "natsumiUnsplitTabs": new NatsumiKeyboardShortcut(false, true, true, false, "u", 0, true)
+            "natsumiUnsplitTabs": new NatsumiKeyboardShortcut(false, true, true, false, "u", 0, true),
+            "natsumiSelectTab1": new NatsumiKeyboardShortcut(false, true, false, false, "1", 3, true),
+            "natsumiSelectTab2": new NatsumiKeyboardShortcut(false, true, false, false, "2", 3, true),
+            "natsumiSelectTab3": new NatsumiKeyboardShortcut(false, true, false, false, "3", 3, true),
+            "natsumiSelectTab4": new NatsumiKeyboardShortcut(false, true, false, false, "4", 3, true),
+            "natsumiSelectTab5": new NatsumiKeyboardShortcut(false, true, false, false, "5", 3, true),
+            "natsumiSelectTab6": new NatsumiKeyboardShortcut(false, true, false, false, "6", 3, true),
+            "natsumiSelectTab7": new NatsumiKeyboardShortcut(false, true, false, false, "7", 3, true),
+            "natsumiSelectTab8": new NatsumiKeyboardShortcut(false, true, false, false, "8", 3, true),
+            "natsumiSelectTabLast": new NatsumiKeyboardShortcut(false, true, false, false, "9", 3, true)
         };
         this.shortcutActions = {
             "copyCurrentUrl": NatsumiShortcutActions.copyCurrentUrl,
@@ -238,7 +247,16 @@ class NatsumiKBSManager {
             "natsumiNewTab": NatsumiShortcutActions.openNewTab,
             "natsumiClearUnpinnedTabs": NatsumiShortcutActions.clearUnpinnedTabs,
             "natsumiSplitTabs": NatsumiShortcutActions.splitTabs,
-            "natsumiUnsplitTabs": NatsumiShortcutActions.unsplitTabs
+            "natsumiUnsplitTabs": NatsumiShortcutActions.unsplitTabs,
+            "natsumiSelectTab1": () => {NatsumiShortcutActions.selectTab(0)},
+            "natsumiSelectTab2": () => {NatsumiShortcutActions.selectTab(1)},
+            "natsumiSelectTab3": () => {NatsumiShortcutActions.selectTab(2)},
+            "natsumiSelectTab4": () => {NatsumiShortcutActions.selectTab(3)},
+            "natsumiSelectTab5": () => {NatsumiShortcutActions.selectTab(4)},
+            "natsumiSelectTab6": () => {NatsumiShortcutActions.selectTab(5)},
+            "natsumiSelectTab7": () => {NatsumiShortcutActions.selectTab(6)},
+            "natsumiSelectTab8": () => {NatsumiShortcutActions.selectTab(7)},
+            "natsumiSelectTabLast": () => {NatsumiShortcutActions.selectTab(8)}
         };
         this.shortcutsPending = {};
         this.shortcutCustomizationData = {};
@@ -295,7 +313,16 @@ class NatsumiKBSManager {
             }
         }
         this.interceptions = {
-            "key_newNavigatorTab": "natsumiNewTab"
+            "key_newNavigatorTab": "natsumiNewTab",
+            "key_selectTab1": "natsumiSelectTab1",
+            "key_selectTab2": "natsumiSelectTab2",
+            "key_selectTab3": "natsumiSelectTab3",
+            "key_selectTab4": "natsumiSelectTab4",
+            "key_selectTab5": "natsumiSelectTab5",
+            "key_selectTab6": "natsumiSelectTab6",
+            "key_selectTab7": "natsumiSelectTab7",
+            "key_selectTab8": "natsumiSelectTab8",
+            "key_selectLastTab": "natsumiSelectTabLast"
         }
 
         // Add browser-specific shortcuts
@@ -718,6 +745,7 @@ class NatsumiKBSManager {
 
     initialApplyCustomShortcuts() {
         this.getCustomizationData().then(() => {
+            this.applyInterceptions();
             this.updateAllShortcuts();
             this.applyCustomShortcuts();
         });
@@ -784,6 +812,15 @@ class NatsumiKBSManager {
                 this.updateShortcut(shortcutName, data, false);
             } catch (e) {
                 console.error(`Failed to update shortcut ${shortcutName}:`, e);
+            }
+        }
+    }
+
+    applyInterceptions() {
+        for (const nativeShortcutId in this.interceptions) {
+            let shortcutObject = this.shortcuts[nativeShortcutId];
+            if (shortcutObject) {
+                shortcutObject.interceptedBy = this.interceptions[nativeShortcutId];
             }
         }
     }

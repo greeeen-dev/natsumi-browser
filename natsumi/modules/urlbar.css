@@ -61,11 +61,12 @@ SOFTWARE.
     --natsumi-urlbar-search-engine-text: light-dark(black, white);
     transition: backdrop-filter 0.2s ease;
 
-    .urlbar-page-action {
+    .urlbar-page-action, .urlbar-revert-button {
       border-radius: 14px !important;
       width: 26px !important;
       height: 26px !important;
       padding: 5px !important;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
       &:hover {
         background-color: var(--natsumi-button-hover-color) !important;
@@ -75,6 +76,12 @@ SOFTWARE.
         background-color: var(--natsumi-button-active-color) !important;
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
       }
+    }
+
+    .urlbar-revert-button {
+      padding: 5px !important;
+      -moz-context-properties: stroke, fill, fill-opacity, stroke-opacity !important;
+      stroke: var(--toolbarbutton-icon-fill-attention);
     }
 
     #searchmode-switcher-icon, .searchmode-switcher-icon {
@@ -215,8 +222,34 @@ SOFTWARE.
         &[searchmode] {
           #urlbar-searchmode-switcher {
             padding-right: 4px !important;
-            border-start-end-radius: 0 !important;
-            border-end-end-radius: 0 !important;
+
+            &:has(.searchmode-switcher-title) {
+              padding-right: 0 !important;
+
+              .searchmode-switcher-icon {
+                background-color: transparent !important;
+              }
+
+              .searchmode-switcher-close {
+                width: 15px !important;
+                height: 15px !important;
+
+                .toolbarbutton-icon {
+                  background-color: transparent !important;
+                  box-shadow: none !important;
+                }
+
+                &:active {
+                  background-color: var(--natsumi-button-hover-color) !important;
+                  box-shadow: none !important;
+                }
+              }
+            }
+
+            &:not(:has(.searchmode-switcher-title)) {
+              border-start-end-radius: 0 !important;
+              border-end-end-radius: 0 !important;
+            }
           }
         }
 
@@ -634,6 +667,25 @@ SOFTWARE.
             width: 24px !important;
             padding: 4px 4px !important;
             border-radius: 12px 0 0 12px !important;
+
+            &:has(.searchmode-switcher-title) {
+              width: unset !important;
+              padding-inline: 0 !important;
+              border-radius: 12px !important;
+
+              .searchmode-switcher-icon {
+                background-color: transparent !important;
+              }
+
+              .searchmode-switcher-close {
+                padding: 0 !important;
+              }
+            }
+          }
+
+          #searchmode-switcher-title, .searchmode-switcher-title {
+            font-size: 12px !important;
+            color: var(--natsumi-urlbar-search-engine-text) !important;
           }
 
           #searchmode-switcher-chicklet, .searchmode-switcher-chicklet {
@@ -642,11 +694,6 @@ SOFTWARE.
             margin-bottom: auto !important;
             border-radius: 0 12px 12px 0 !important;
             background: var(--natsumi-urlbar-search-engine-color) !important;
-
-            #searchmode-switcher-title, .searchmode-switcher-title {
-              font-size: 12px !important;
-              color: var(--natsumi-urlbar-search-engine-text) !important;
-            }
           }
 
           &:has(#searchmode-switcher-icon[style*="chrome"], .searchmode-switcher-icon[style*="chrome"]) {
@@ -674,6 +721,11 @@ SOFTWARE.
 
             &:hover {
               background-color: var(--natsumi-button-hover-color) !important;
+            }
+
+            &:active {
+              background-color: var(--natsumi-button-hover-color) !important;
+              box-shadow: none !important;
             }
 
             .toolbarbutton-icon {
@@ -808,6 +860,21 @@ SOFTWARE.
                 margin: 0 4px !important;
               }
             }
+          }
+        }
+
+        .urlbar-go-button {
+          margin-block: auto !important;
+          margin-right: 4px !important;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color) !important;
+          }
+
+          &:active {
+            background-color: var(--natsumi-button-active-color) !important;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
           }
         }
       }

@@ -41,7 +41,7 @@ SOFTWARE.
     .sticky-container {
       background: transparent !important;
       position: absolute !important;
-      width: calc(100vw - var(--in-content-sidebar-width) - 60px) !important;
+      width: calc(100vw - var(--size-sidebar, var(--in-content-sidebar-width)) - 60px) !important;
 
       @media (max-width: 830px) {
         width: calc(100vw - 104px) !important;
@@ -80,7 +80,7 @@ SOFTWARE.
       backdrop-filter: var(--natsumi-mat-th-backdrop) !important;
       border: var(--natsumi-mat-th-border-thin);
       border-radius: 10px !important;
-      width: var(--in-content-sidebar-width);
+      width: var(--size-sidebar, var(--in-content-sidebar-width));
       box-shadow: var(--natsumi-mat-hz-shadow);
 
       @media (max-width: 830px) {

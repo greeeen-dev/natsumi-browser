@@ -31,7 +31,7 @@ SOFTWARE.
     #natsumi-settings, #natsumi-shortcuts, #natsumi-about {
       .category-icon {
         -moz-context-properties: fill, fill-opacity !important;
-        fill: var(--toolbarbutton-icon-fill);
+        fill: currentColor;
       }
     }
 

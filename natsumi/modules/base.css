@@ -158,6 +158,10 @@ SOFTWARE.
   }
 }
 
+#TabsToolbar {
+  margin-inline: var(--natsumi-browser-separation);
+}
+
 #nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {
   toolbarbutton {
     --toolbarbutton-outer-padding: 4px;

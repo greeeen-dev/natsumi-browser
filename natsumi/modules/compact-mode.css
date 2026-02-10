@@ -86,14 +86,15 @@ SOFTWARE.
     #sidebar-main {
       position: absolute;
       z-index: 998 !important;
-      transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease !important;
+      transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease, top 0.1s ease, height 0.1s ease !important;
       background-color: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
-      height: calc(100vh - 12px) !important;
+      height: calc(100vh - calc(var(--natsumi-browser-separation) * 2) - var(--natsumi-sidebar-height-offset)) !important;
       border-radius: 6px !important;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
       padding-top: 10px !important;
       opacity: 0;
-      bottom: 0 !important;
+      top: 0;
+      --natsumi-sidebar-height-offset: 0px;
       --natsumi-compact-offset: var(--natsumi-sidebar-width);
       overflow-x: visible !important;
 
@@ -141,18 +142,10 @@ SOFTWARE.
         }
       }
     }
-
-    &:has(#PersonalToolbar:not([collapsed])) #sidebar-main {
-      @media (
-        not -moz-pref("natsumi.theme.compact-style", "toolbar")
-      ) or -moz-pref("natsumi.theme.single-toolbar") {
-        margin-top: -62px !important;
-      }
-    }
   }
 
   &[natsumi-compact-sidebar-hover], [natsumi-compact-sidebar-extend] {
-    &:not(:has(#PersonalToolbar:hover)) #sidebar-main {
+    #sidebar-main {
       opacity: 1 !important;
 
       @media -moz-pref("sidebar.position_start") {
@@ -195,29 +188,27 @@ SOFTWARE.
     }
 
     &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend], &:has(#nora-statusbar.hidden toolbarbutton[open], #nora-statusbar[style*="display:none"] toolbarbutton[open], #status-bar[collapsed="true"] toolbarbutton[open]) {
-      &:not(:has(#PersonalToolbar:hover)) {
-        #sidebar-main {
-          opacity: 1 !important;
+      #sidebar-main {
+        opacity: 1 !important;
 
-          @media -moz-pref("sidebar.position_start") {
-            left: 0 !important;
-          }
-
-          @media not -moz-pref("sidebar.position_start") {
-            right: 0 !important;
-          }
+        @media -moz-pref("sidebar.position_start") {
+          left: 0 !important;
         }
 
-        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #status-bar[collapsed="true"] {
-          opacity: 1 !important;
+        @media not -moz-pref("sidebar.position_start") {
+          right: 0 !important;
+        }
+      }
 
-          @media -moz-pref("sidebar.position_start") {
-            left: var(--natsumi-browser-separation) !important;
-          }
+      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #status-bar[collapsed="true"] {
+        opacity: 1 !important;
 
-          @media not -moz-pref("sidebar.position_start") {
-            right: var(--natsumi-browser-separation) !important;
-          }
+        @media -moz-pref("sidebar.position_start") {
+          left: var(--natsumi-browser-separation) !important;
+        }
+
+        @media not -moz-pref("sidebar.position_start") {
+          right: var(--natsumi-browser-separation) !important;
         }
       }
     }
@@ -280,6 +271,20 @@ SOFTWARE.
           opacity: 1 !important;
         }
       }
+
+      &[natsumi-compact-navbar-hover], &[natsumi-compact-navbar-extend],
+      &:has(#navigator-toolbox.fullscreen-with-menubar),
+      &:has(toolbarbutton[open], #urlbar[focused]) {
+        #sidebar-main {
+          top: 40px !important;
+          --natsumi-sidebar-height-offset: 40px !important;
+        }
+
+        &:has(#PersonalToolbar:not([collapsed])) #sidebar-main {
+          top: 68px !important;
+          --natsumi-sidebar-height-offset: 68px !important;
+        }
+      }
     }
   }
 }
@@ -303,8 +308,9 @@ SOFTWARE.
     }
 
     #nav-bar {
-      transition: opacity 0.2s ease !important;
+      transition: opacity 0.2s ease, top 0.1s ease !important;
       opacity: 0 !important;
+      top: 0;
     }
 
     #PersonalToolbar {
@@ -328,6 +334,17 @@ SOFTWARE.
 
         @media not -moz-pref("sidebar.position_start") {
           right: 0 !important;
+        }
+      }
+
+      &[natsumi-bookmarks-hover] {
+        #sidebar-main {
+          top: 28px !important;
+          --natsumi-sidebar-height-offset: 28px !important;
+        }
+
+        #nav-bar {
+          top: 28px !important;
         }
       }
 

@@ -729,7 +729,7 @@ SOFTWARE.
     }
   }
 
-  #natsumiCompactSingleToolbar {
+  #natsumiCompactSingleToolbarWarning {
     @media not -moz-pref("natsumi.theme.single-toolbar") {
       display: none !important;
     }
@@ -737,7 +737,7 @@ SOFTWARE.
 
   #natsumiCompactStyleGroup {
     @media -moz-pref("natsumi.theme.single-toolbar") {
-      #natsumiCompactStyleSettings {
+      #natsumiCompactStyleSettings .natsumi-mc-choice {
         display: none !important;
       }
     }

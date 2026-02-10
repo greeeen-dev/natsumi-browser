@@ -151,3 +151,7 @@ tab-split-view-wrapper {
     }
   }
 }
+
+tab[natsumi-workspace-hidden] {
+  display: none !important;
+}
