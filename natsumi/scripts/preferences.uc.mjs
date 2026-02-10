@@ -35,15 +35,14 @@ import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import { NatsumiNotification } from "./notifications.sys.mjs";
 import {
     customThemeLoader,
-    customColorLoader,
+    // customColorLoader,
     colorPresetNames,
     colorPresetOffsets,
     colorPresetOrders,
     availablePresets,
-    gradientTypes,
     gradientTypeNames,
     getTheme,
-    applyCustomColor,
+    // applyCustomColor,
     applyCustomTheme
 } from "./custom-theme.sys.mjs";
 import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
