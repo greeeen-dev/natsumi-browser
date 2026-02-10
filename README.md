@@ -132,8 +132,11 @@ Every release of Natsumi from v5 comes with an installer binary. You can run it 
 Browser, Natsumi Browser Pages and Natsumi Append to your browser and profile of choice.
 
 > [!NOTE]
-> For macOS users, you will need to override the unsigned binary warning (also known as the "Apple could
-> not verify "App" is free of malware" warning) by going to System Preferences => Security & Privacy
+> For macOS and Linux users, you may need to give the installer execute permissions before you can run the
+> installer. You can run `chmod +x /path/to/installer` to give it the necessary permissions.
+> 
+> For macOS users, you may also need to override the unsigned binary warning (also known as the "Apple
+> could not verify "App" is free of malware" warning) by going to System Preferences => Security & Privacy
 > after trying to run the installer.
 
 > [!WARNING]
