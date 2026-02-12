@@ -131,7 +131,7 @@ SOFTWARE.
         border-radius: 4px;
         transition: border 0.3s ease, background-color 0.3s ease;
 
-        &[checked] {
+        &[checked]:not([checked="false"]) {
           border: none;
           background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
           -moz-context-properties: stroke;
