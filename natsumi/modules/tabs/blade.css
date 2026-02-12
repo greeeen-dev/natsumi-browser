@@ -315,7 +315,7 @@ SOFTWARE.
   }
 
   /* Ensure backdrop filters work */
-  #vertical-tabs {
+  #vertical-tabs, #TabsToolbar {
     will-change: unset !important;
   }
 }

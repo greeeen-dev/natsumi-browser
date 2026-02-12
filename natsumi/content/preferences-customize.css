@@ -178,6 +178,49 @@ SOFTWARE.
           background: radial-gradient(closest-side, light-dark(var(--natsumi-primary-color), var(--natsumi-colors-secondary)), light-dark(white, #222)) !important;
         }
 
+        &#frutiger-aero {
+          display: grid;
+          grid-template-columns: 1fr;
+          background-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary));
+
+          &::before, &::after {
+            grid-row-start: 1;
+            grid-column-start: 1;
+          }
+
+          &::before {
+            content: "";
+            width: 100% !important;
+            height: 100% !important;
+            opacity: 0.3;
+            border: none !important;
+            margin: 0 !important;
+            background: linear-gradient(60deg,
+            transparent 0%, #00000014 10%, #ffffff22 10%, #ffffff22 20%, #00000007 20%, transparent 25%,
+            transparent 25%, #00000014 30%, #ffffff22 30%, #ffffff22 32%, #00000007 35%,
+            #ffffff22 35%, #ffffff22 45%, #00000007 45%, transparent 50%,
+            transparent 45%, #00000014 55%, #ffffff22 55%, #ffffff22 70%, #00000007 70%, transparent 80%,
+            transparent 85%, #00000014 90%, #ffffff22 90%, #ffffff22 95%, #00000007 95%, transparent 100%
+            ) !important;
+          }
+
+          &::after {
+            z-index: 0;
+            content: "";
+            width: calc(100% - 10px);
+            height: calc(100% - 14px);
+            border-radius: 2px;
+            border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+            background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
+            margin: auto 4px 4px;
+
+            @media -moz-pref("sidebar.verticalTabs") {
+              width: calc(100% - 34px);
+              margin-left: auto;
+            }
+          }
+        }
+
         &#oled {
           background-color: light-dark(white, black);
         }
@@ -603,6 +646,22 @@ SOFTWARE.
     }
   }
 
+  #natsumiLayoutGroup {
+    #natsumiVerticalTabsDisabledWarning {
+      display: none !important;
+    }
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      #natsumiVerticalTabsDisabledWarning {
+        display: flex !important;
+      }
+
+      .natsumi-mc-chooser {
+        display: none;
+      }
+    }
+  }
+
   #natsumiSidebarPanelSidebarGroup {
     #natsumiPanelSidebarDisabledWarning {
       display: none;
@@ -670,7 +729,7 @@ SOFTWARE.
     }
   }
 
-  #natsumiCompactSingleToolbar {
+  #natsumiCompactSingleToolbarWarning {
     @media not -moz-pref("natsumi.theme.single-toolbar") {
       display: none !important;
     }
@@ -678,7 +737,7 @@ SOFTWARE.
 
   #natsumiCompactStyleGroup {
     @media -moz-pref("natsumi.theme.single-toolbar") {
-      #natsumiCompactStyleSettings {
+      #natsumiCompactStyleSettings .natsumi-mc-choice {
         display: none !important;
       }
     }

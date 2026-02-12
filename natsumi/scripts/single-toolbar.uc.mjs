@@ -72,6 +72,16 @@ class NatsumiSingleToolbarManager {
             }
         });
 
+        // Create observer for vertical tabs pref
+        Services.prefs.addObserver("sidebar.verticalTabs", () => {
+            let verticalTabsEnabled = ucApi.Prefs.get("sidebar.verticalTabs").value;
+
+            // Deactivate single toolbar for horizontal tabs
+            if (!verticalTabsEnabled) {
+                ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
+            }
+        });
+
         // Add event listeners for customization
         window.gNavToolbox.addEventListener("aftercustomization", () => {
             let singleToolbarEnabled = false;
@@ -129,10 +139,7 @@ class NatsumiSingleToolbarManager {
         }
 
         this.hoveredElements++;
-
-        if (!document.body.hasAttribute("natsumi-compact-sidebar-hover") && !document.body.hasAttribute("natsumi-compact-sidebar-extend")) {
-            document.body.setAttribute("natsumi-bookmarks-hover", "");
-        }
+        document.body.setAttribute("natsumi-bookmarks-hover", "");
     }
 
     removeHover(isWindowButton = false) {

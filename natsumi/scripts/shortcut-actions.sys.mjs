@@ -280,4 +280,41 @@ export class NatsumiShortcutActions {
             gBrowser.unsplitTabs(selectedTab.splitview);
         }
     }
+
+    static selectTab(index, useAbsolute = false) {
+        let pinnedTabsNode = document.getElementById("pinned-tabs-container");
+        let unpinnedTabsNode = document.getElementById("tabbrowser-arrowscrollbox");
+
+        // Set tab selector condition
+        const tabSelector = "tab:not([hidden]):not([natsumi-workspace-hidden]):not([natsumi-glimpse-tab])"
+
+        // Get tabs
+        const pinnedTabs = Array.from(pinnedTabsNode.querySelectorAll(tabSelector));
+        const unpinnedTabs = Array.from(unpinnedTabsNode.querySelectorAll(tabSelector));
+        let allTabs = pinnedTabs.concat(unpinnedTabs);
+
+        if (ucApi.Prefs.get("natsumi.tabs.tab-switcher-unpinned-only").exists()) {
+            if (ucApi.Prefs.get("natsumi.tabs.tab-switcher-unpinned-only").value) {
+                allTabs = unpinnedTabs;
+            }
+        }
+
+        console.log(allTabs);
+
+        // Sanity check index
+        if (index < 0) {
+            console.error("Index must be 1 or higher");
+        } else if (index >= 8 && !useAbsolute) {
+            // If index is 8, then usually we would select the last tab.
+            // This behavior can be overridden by using useAbsolute
+            index = allTabs.length - 1;
+        }
+
+        if (index >= allTabs.length) {
+            return;
+        }
+
+        // Select tab
+        gBrowser.selectedTab = allTabs[index];
+    }
 }

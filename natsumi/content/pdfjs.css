@@ -106,8 +106,8 @@ SOFTWARE.
 
           &::after {
             content: "";
-            width: 32px;
-            height: 32px;
+            width: 32px !important;
+            height: 32px !important;
             position: absolute;
             border-radius: 50%;
             z-index: 0;
@@ -137,13 +137,13 @@ SOFTWARE.
             height: 40px !important;
 
             &::after {
-              box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow);
-              background-color: var(--natsumi-sdl2-haze-button-idle-color);
+              box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow) !important;
+              background-color: var(--natsumi-sdl2-haze-button-idle-color) !important;
             }
 
             &:hover {
               &::after {
-                background-color: var(--natsumi-sdl2-haze-button-hover-color);
+                background-color: var(--natsumi-sdl2-haze-button-hover-color) !important;
               }
             }
 

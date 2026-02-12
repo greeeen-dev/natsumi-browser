@@ -217,7 +217,7 @@ class NatsumiWorkspacesWrapper {
         }
 
         // Show workspaces config modal
-        await this.modalManager.showWorkspacesModal(workspaceId);
+        await this.workspacesContext.manageWorkspaceFromDialog(workspaceId);
     }
 
     getWorkspaceIconUrl(icon) {
@@ -365,11 +365,22 @@ class NatsumiWorkspaceIndicator {
 class NatsumiWorkspacePinsManager {
     constructor() {
         this.workspacesWrapper = null;
+        this.pinnedTabsObserver = null;
     }
 
     init() {
         this.workspacesWrapper = document.body.natsumiWorkspacesWrapper;
         document.addEventListener("select", this.onSelectEvent.bind(this));
+
+        let pinnedTabsContainer = document.getElementById("pinned-tabs-container");
+        this.pinnedTabsObserver = new MutationObserver(() => {
+            if (pinnedTabsContainer.hasAttribute("dragActive")) {
+                this.updatePinnedTabs(true);
+            } else {
+                this.updatePinnedTabs(false);
+            }
+        });
+        this.pinnedTabsObserver.observe(pinnedTabsContainer, {attributes: true, attributeFilter: ["dragActive"]});
     }
 
     onSelectEvent(event) {
@@ -395,7 +406,7 @@ class NatsumiWorkspacePinsManager {
         }
     }
 
-    updatePinnedTabs() {
+    updatePinnedTabs(enablePinnedDrag = false) {
         // Check if workspace-specific pinned tabs are enabled
         let workspaceSpecificPinsEnabled = false;
         if (ucApi.Prefs.get("natsumi.tabs.workspace-specific-pins").exists()) {
@@ -409,6 +420,11 @@ class NatsumiWorkspacePinsManager {
         let pinnedTabsContainer = document.getElementById("pinned-tabs-container");
         let pinnedTabs = pinnedTabsContainer.querySelectorAll("tab");
 
+        if (pinnedTabsContainer.hasAttribute("dragActive")) {
+            // Clamp enablePinnedDrag to true to prevent drag issues
+            enablePinnedDrag = true;
+        }
+
         let defaultWorkspaceId = this.workspacesWrapper.getDefaultWorkspaceID();
         let currentWorkspaceId = this.workspacesWrapper.getCurrentWorkspaceID();
 
@@ -419,14 +435,26 @@ class NatsumiWorkspacePinsManager {
             let tabWorkspaceId = tab.getAttribute("floorpWorkspaceId") ?? defaultWorkspaceId;
 
             if (tabWorkspaceId === currentWorkspaceId) {
-                tab.removeAttribute("hidden");
                 tab.removeAttribute("natsumi-workspace-hidden");
                 gBrowser.moveTabTo(tab, {elementIndex: shownCount});
                 shownCount++;
+
+                if (tab.hasAttribute("natsumi-workspace-hidden-drag")) {
+                    tab.removeAttribute("natsumi-workspace-hidden-drag");
+                    tab.removeAttribute("hidden");
+                }
             } else {
-                tab.setAttribute("hidden", "true");
                 tab.setAttribute("natsumi-workspace-hidden", "");
                 hiddenCount++;
+
+                if (enablePinnedDrag) {
+                    tab.setAttribute("natsumi-workspace-hidden-drag", "true");
+                    tab.setAttribute("hidden", "true");
+                    console.log("Hiding pinned tab for drag:", tab);
+                } else {
+                    tab.removeAttribute("natsumi-workspace-hidden-drag");
+                    tab.removeAttribute("hidden");
+                }
             }
         }
 
@@ -438,7 +466,7 @@ class NatsumiWorkspacePinsManager {
         let pinnedTabsSplitter = document.getElementById("vertical-pinned-tabs-splitter");
 
         // Get visible pinned tabs
-        let visiblePinnedTabs = pinnedTabsContainer.querySelectorAll("tab:not([hidden='true'])");
+        let visiblePinnedTabs = pinnedTabsContainer.querySelectorAll("tab:not([natsumi-workspace-hidden])");
 
         if (visiblePinnedTabs.length === 0) {
             pinnedTabsContainer.setAttribute("hidden", "true");
@@ -464,7 +492,6 @@ class NatsumiWorkspacePinsManager {
         }
 
         for (let tab of hiddenPinnedTabs) {
-            tab.removeAttribute("hidden");
             tab.removeAttribute("natsumi-workspace-hidden");
         }
     }
@@ -567,7 +594,7 @@ function copyAllWorkspaces() {
         return;
     }
 
-    const workspaceData = JSON.parse(ucApi.Prefs.get("floorp.workspaces.v4.store").value)
+    const workspaceData = JSON.parse(ucApi.Prefs.get("floorp.workspaces.v4.store").value);
     const currentWorkspaceData = getCurrentWorkspaceData();
 
     // Clear existing workspaces
@@ -748,6 +775,10 @@ if (isFloorp) {
         Services.prefs.addObserver("floorp.workspaces.v4.store", () => {
             copyWorkspaceName();
             copyAllWorkspaces();
+
+            if (document.body.natsumiWorkspaceIndicator) {
+                document.body.natsumiWorkspaceIndicator.refreshIndicator();
+            }
         });
 
         // Initialize workspaces wrapper

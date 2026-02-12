@@ -366,19 +366,28 @@ SOFTWARE.
     }
 
     #tabbrowser-tabs:not([expanded]) #natsumi-workspace-indicator {
-      margin-inline: auto !important;
       width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
 
+      @media -moz-pref("sidebar.verticalTabs") {
+        margin-inline: auto !important;
+
+        #natsumi-workspace-indicator-name {
+          display: none !important;
+        }
+      }
+
       @media not -moz-pref("sidebar.verticalTabs") {
-        width: 36px !important;
+        margin-inline: 0 !important;
+        padding-inline: 8px !important;
+        width: fit-content !important;
+
+        #natsumi-workspace-indicator-name {
+          margin-left: 6px !important;
+        }
       }
 
       #natsumi-workspace-indicator-icon {
         margin-inline: auto !important;
-      }
-
-      #natsumi-workspace-indicator-name {
-        display: none !important;
       }
 
       #natsumi-workspace-indicator-clear {

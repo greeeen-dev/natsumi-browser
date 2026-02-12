@@ -40,8 +40,8 @@ class NatsumiPanelSidebarHandler {
     init() {
         let browser = document.getElementById("browser");
         if (browser) {
-            Services.prefs.addObserver("floorp.panelSidebar.enabled", this.getPanelSidebarPosition);
-            Services.prefs.addObserver("floorp.panelSidebar.config", this.getPanelSidebarPosition);
+            Services.prefs.addObserver("floorp.panelSidebar.enabled", this.getPanelSidebarPosition.bind(this));
+            Services.prefs.addObserver("floorp.panelSidebar.config", this.getPanelSidebarPosition.bind(this));
         }
 
         this.updateSidebarRemoved();

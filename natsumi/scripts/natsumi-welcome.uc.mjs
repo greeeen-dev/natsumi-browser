@@ -141,7 +141,7 @@ class NatsumiWelcome {
         welcomeNode.appendChild(this.drumRolls);
 
         // Create welcome audio
-        const drumrollAudioUrl = "https://github.com/MX-Linux/mx-sound-theme-borealis/raw/refs/heads/master/Borealis/stereo/K3b_success.ogg";
+        const drumrollAudioUrl = "chrome://natsumi/content/sounds/drumroll.ogg";
         this.drumrollAudio = new Audio(drumrollAudioUrl);
         this.drumrollAudio.load();
         this.drumrollAudio.volume = 0.2;
@@ -363,6 +363,7 @@ function createLayoutPane() {
             </div>
         </div>
     `
+    const enabledVerticalTabs = ucApi.Prefs.get("sidebar.verticalTabs").value;
 
     let layoutPane = new NatsumiWelcomePane(
         "natsumi-welcome-layout",
@@ -371,11 +372,32 @@ function createLayoutPane() {
             <div class="natsumi-welcome-paragraph">
                 You can choose between Multiple Toolbars for utility or Single Toolbar for simplicity.
             </div>
-            <div class="natsumi-welcome-selection-container">
+            <div id="natsumiSingleToolbarNotice" class="natsumi-welcome-info info" hidden="${enabledVerticalTabs}">
+                <div class="natsumi-welcome-info-icon"></div>
+                <div class="natsumi-welcome-info-text">
+                    Heads up: using Single Toolbar will enable vertical tabs.
+                </div>
+            </div>
+            <div class="natsumi-welcome-selection-container" horizontal="${!enabledVerticalTabs}">
                 ${layoutSelection}
             </div>
         `,
     );
+
+    if (!ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
+        ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
+    }
+
+    if (!enabledVerticalTabs) {
+        Services.prefs.addObserver("natsumi.theme.single-toolbar", () => {
+            const isSingleToolbar = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+            if (isSingleToolbar) {
+                ucApi.Prefs.set("sidebar.verticalTabs", true);
+            } else {
+                ucApi.Prefs.set("sidebar.verticalTabs", false);
+            }
+        });
+    }
 
     natsumiWelcomeObject.addPane(layoutPane);
 }
@@ -770,7 +792,7 @@ function createCompatibilityWarning() {
     }
 }
 
-const welcomeAudioUrl = "https://github.com/MX-Linux/mx-sound-theme-borealis/raw/refs/heads/master/Borealis/stereo/desktop-login.ogg";
+const welcomeAudioUrl = "chrome://natsumi/content/sounds/welcome.ogg";
 
 let welcomeViewed = false;
 let tabStyleReset = false;

@@ -82,7 +82,7 @@ SOFTWARE.
   }
 
   @media not -moz-pref("natsumi.miniplayer.disable-dynamic-accent") {
-    &[miniplayer-has-custom-color] {
+    &[miniplayer-has-custom-color][miniplayer-has-artwork] {
       .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container {
         --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
       }

@@ -144,13 +144,37 @@ if "%VER_CHOICE%"=="2" (
     echo [INFO] Selected Beta/Stable version (Branch: main^)
 )
 
+:: --- STEP 3.5: RISK ACKNOWLEDGEMENT ---
+echo.
+echo Natsumi will now be installed. Please read the following before proceeding:
+echo.
+echo Natsumi is provided "as-is" without any warranties. By installing and using Natsumi, you agree
+echo to the GPLv3 software license found in the LICENSE file in the repository. You are responsible for
+echo any damages or issues that may arise from using Natsumi and you agree not to hold the developers
+echo liable for any such damages or issues.
+echo.
+echo Additionally, Natsumi uses fx-autoconfig to apply JS scripts to your browser. If your system is
+echo infected with malware, installing Natsumi may put your browser data at higher risk of being accessed
+echo maliciously. Please ensure your system is secure before proceeding with installation.
+echo.
+echo If you have read the above and agree to the terms, type 'y' to continue.
+echo.
+set /p "VER_CHOICE=Confirm (y): "
+
+if "%VER_CHOICE%"=="y" (
+    echo [INFO] Proceeding with installation...
+) else (
+    pause
+    exit /b
+)
+
 :: --- STEP 4: CLONE ---
 echo.
 echo [STEP 4] Downloading files...
 cd /d "%TEMP_DIR%" || exit /b
 
 echo Cloning Natsumi Browser (%NATSUMI_BRANCH%)...
-git clone -b %NATSUMI_BRANCH% https://github.com/greeeen-dev/natsumi-browser.git natsumi
+git clone -b %NATSUMI_BRANCH% --depth 1 --single-branch https://github.com/greeeen-dev/natsumi-browser.git natsumi
 if %errorlevel% neq 0 ( 
     echo [ERROR] Git Clone failed. Check if branch '%NATSUMI_BRANCH%' exists and you've installed Git.
     pause 

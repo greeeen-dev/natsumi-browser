@@ -56,6 +56,10 @@ SOFTWARE.
       display: flex !important;
     }
   }
+
+  .tab-loading-burst {
+    --tab-loading-fill: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+  }
 }
 
 @media -moz-pref("sidebar.verticalTabs") {
@@ -142,10 +146,16 @@ tab-split-view-wrapper {
 
 #tabbrowser-tabs:not([expanded]) {
   tab-split-view-wrapper {
-    --natsumi-split-view-margin-left: calc(50% - 22px);
-    --natsumi-split-view-margin-right: calc(50% - 22px);
-    margin-left: var(--natsumi-split-view-margin-left) !important;
-    margin-right: var(--natsumi-split-view-margin-right) !important;
-    padding-inline: 2px !important;
+    @media -moz-pref("sidebar.verticalTabs") {
+      --natsumi-split-view-margin-left: calc(50% - 22px);
+      --natsumi-split-view-margin-right: calc(50% - 22px);
+      margin-left: var(--natsumi-split-view-margin-left) !important;
+      margin-right: var(--natsumi-split-view-margin-right) !important;
+      padding-inline: 2px !important;
+    }
   }
+}
+
+tab[natsumi-workspace-hidden] {
+  display: none !important;
 }

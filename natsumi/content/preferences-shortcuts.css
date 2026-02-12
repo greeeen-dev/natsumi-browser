@@ -293,8 +293,8 @@ SOFTWARE.
 
     &[editing] {
       .natsumi-shortcut-keybind {
-        border-color: #03b1fc;
-        background-color: #03b1fc55;
+        border-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 70%, black), var(--natsumi-primary-color));
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 33%, transparent);
       }
     }
   }

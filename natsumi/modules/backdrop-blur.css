@@ -43,3 +43,16 @@ SOFTWARE.
 .deck-selected:has(findbar:not([hidden])) browser, .browserSidebarContainer[split]:has(findbar:not([hidden="true"])) browser {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
+
+@media -moz-pref("natsumi.theme.compact-blur") {
+  body[natsumi-compact-sidebar-hover], body[natsumi-compact-navbar-hover],
+  body[natsumi-compact-sidebar-extend], body[natsumi-compact-navbar-extend] {
+    .deck-selected browser, .browserSidebarContainer[split] browser {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    #tabbrowser-tabpanels[splitview] {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+  }
+}

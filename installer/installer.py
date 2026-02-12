@@ -23,7 +23,6 @@ SOFTWARE.
 """
 
 import os
-import ctypes
 import sys
 import shutil
 import json
@@ -324,6 +323,22 @@ def main():
 
     fx_autoconfig_downloaded = False
     sine_support = False
+
+    print("Natsumi will now be installed. Please read the following before proceeding:")
+    print(
+        "Natsumi is provided \"as-is\" without any warranties. By installing and using Natsumi, you agree\n\
+        to the GPLv3 software license found in the LICENSE file in the repository. You are responsible for\n\
+        any damages or issues that may arise from using Natsumi and you agree not to hold the developers\n\
+        liable for any such damages or issues.\n\n\
+        Additionally, Natsumi uses fx-autoconfig to apply JS scripts to your browser. If your system is\n\
+        infected with malware, installing Natsumi may put your browser data at higher risk of being accessed\n\
+        maliciously. Please ensure your system is secure before proceeding with installation."
+    )
+    print("If you have read the above and agree to the terms, type 'y' to continue.")
+    confirm = input().lower() == "y"
+
+    if not confirm:
+        sys.exit(1)
 
     if not fx_autoconfig_installed:
         if needs_sudo and not get_admin():

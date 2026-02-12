@@ -182,6 +182,11 @@ SOFTWARE.
 * {
   --natsumi-toolbox-color: var(--lwt-accent-color, var(--toolbox-bgcolor));
   --natsumi-toolbox-color-inactive: var(--lwt-accent-color, var(--toolbox-bgcolor-inactive));
+
+  @media (-moz-platform: windows) {
+    --natsumi-toolbox-color: var(--lwt-accent-color, light-dark(#ebebeb, #171717));
+    --natsumi-toolbox-color-inactive: var(--lwt-accent-color, light-dark(#ebebeb, #171717));
+  }
 }
 
 #navigator-toolbox {

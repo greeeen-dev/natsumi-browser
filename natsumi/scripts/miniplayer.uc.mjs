@@ -432,6 +432,8 @@ class NatsumiMiniplayer {
     }
 
     async getAverageColor(artworkUrl) {
+        const sampleSize = 3;
+
         // Create offscreen canvas
         const temporaryCanvas = document.createElement("canvas");
         const canvasContext = temporaryCanvas.getContext("2d");
@@ -442,30 +444,51 @@ class NatsumiMiniplayer {
         await temporaryImage.decode();
 
         // Draw image
-        canvasContext.drawImage(temporaryImage, 0, 0, 1, 1);
+        canvasContext.drawImage(temporaryImage, 0, 0, sampleSize, sampleSize);
 
         // Get pixel data
-        const pixelData = canvasContext.getImageData(0, 0, 1, 1).data;
+        let rArray = [];
+        let gArray = [];
+        let bArray = [];
+
+        for (let x = 0; x < sampleSize; x++) {
+            for (let y = 0; y < sampleSize; y++) {
+                const pixelData = canvasContext.getImageData(x, y, 1, 1).data;
+
+                if (!pixelData) {
+                    // Could not get pixel data for some reason
+                    temporaryCanvas.remove();
+                    temporaryImage.remove();
+                    return;
+                }
+
+                // Check that opacity is above 0
+                if (pixelData[3] === 0) {
+                    continue;
+                }
+
+                rArray.push(pixelData[0]);
+                gArray.push(pixelData[1]);
+                bArray.push(pixelData[2]);
+            }
+        }
 
         // Remove canvas and image elements
         temporaryCanvas.remove();
         temporaryImage.remove();
 
-        if (!pixelData) {
-            // Could not get pixel data for some reason
-            return;
-        }
-
-        // Check that opacity is above 0
-        if (pixelData[3] === 0) {
-            return;
-        }
+        // Calculate average color
+        const averageColors = [
+            Math.round(rArray.reduce((a, b) => a + b, 0) / rArray.length),
+            Math.round(gArray.reduce((a, b) => a + b, 0) / gArray.length),
+            Math.round(bArray.reduce((a, b) => a + b, 0) / bArray.length)
+        ]
 
         // Return color data
         return {
-            r: pixelData[0],
-            g: pixelData[1],
-            b: pixelData[2]
+            r: averageColors[0],
+            g: averageColors[1],
+            b: averageColors[2]
         };
     }
 

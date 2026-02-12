@@ -64,6 +64,10 @@ SOFTWARE.
       margin: 0 !important;
       overflow: hidden;
 
+      .browserContainer {
+        background-color: transparent !important;
+      }
+
       .browserStack {
         @media not -moz-pref("natsumi.theme.disable-sdl2") {
           background-color: light-dark(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2));
@@ -152,6 +156,10 @@ SOFTWARE.
   &[collapsed="false"] {
     visibility: visible;
   }
+}
+
+#TabsToolbar {
+  margin-inline: var(--natsumi-browser-separation);
 }
 
 #nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {

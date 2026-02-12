@@ -25,5 +25,28 @@ SOFTWARE.
 */
 
 /* ==== Theme: Frutiger Aero ==== */
-/* A Windows 7-like design for those who like going retro. Transitions WILL */
-/* BREAK due to the complexity of this theme. */
+/* A Windows 7-like design for those who like going retro. */
+
+@media -moz-pref("natsumi.theme.type", "frutiger-aero") {
+  :root[windowtype*="navigator:browser"] body {
+    #browser::before {
+      opacity: 0.3 !important;
+      background: linear-gradient(60deg,
+      transparent 0%, #00000014 10%, #ffffff22 10%, #ffffff22 20%, #00000007 20%, transparent 25%,
+      transparent 25%, #00000014 30%, #ffffff22 30%, #ffffff22 32%, #00000007 35%,
+      #ffffff22 35%, #ffffff22 45%, #00000007 45%, transparent 50%,
+      transparent 45%, #00000014 55%, #ffffff22 55%, #ffffff22 70%, #00000007 70%, transparent 80%,
+      transparent 85%, #00000014 90%, #ffffff22 90%, #ffffff22 95%, #00000007 95%, transparent 100%
+      ) !important;
+    }
+
+    &::after {
+      background-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary)) !important;
+    }
+  }
+
+  * {
+    --natsumi-toolbox-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary)) !important;
+    --natsumi-toolbox-color-inactive: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary)) !important;
+  }
+}

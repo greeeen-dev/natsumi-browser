@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="120" height="120" src="./images/icon-glass.png">
+  <img width="120" height="120" src="./images/icon-glass.webp">
   <br>
   Natsumi Browser
 </h1>
@@ -11,11 +11,14 @@
   <a href="https://natsumi.greeeen.dev">Website (under construction)</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a>
 </h5>
 
-![](./images/main-backgroundless.png)
+![](./images/main-backgroundless.webp)
 
-> [!IMPORTANT]
-> If you're from [this Twitter post](https://x.com/moonyandfriends/status/2001035508558811142) and want
-> to learn more about this project, go [here](#twitter-questions-and-answers)
+## ⚠️ IMPORTANT NOTICE
+Natsumi doesn't do crypto. Any crypto coins that may seem like it's affiliated with the project
+**is not affiliated with Natsumi whatsoever**.
+
+All funds go to some random third party and not me. If you do get scammed because of it I take zero
+responsibility for any financial losses.
 
 ## Meet Natsumi! 🦋
 Meet Natsumi Browser (or Natsumi, for short) - a browser mod that truly puts you in control.
@@ -37,7 +40,7 @@ Natsumi has lots of features to enhance your browser - so many that I can't list
 
 ### ✨ Reimagined design. Fully customizable.
 #### The classic Firefox design but with a modern yet customizable spin.
-![](./images/custom-themes.png)
+![](./images/custom-themes.webp)
 
 Natsumi keeps your browser's design familiar while adding a modern touch to it. Not only that, it's
 also **extremely customizable**, so you can make it truly yours. No "best practices" or authoritarian
@@ -48,7 +51,7 @@ have to mess around with advanced preferences.
 
 ### ⌨️ URL bar, made intuitive.
 #### Highlights the current URL and adapts to the scene.
-![](./images/urlbar.png)
+![](./images/urlbar.webp)
 
 Natsumi applies a fresh new coat of paint to your browser's URL bar, making the current URL stand out
 more and changing colors dynamically based on context.
@@ -56,14 +59,14 @@ more and changing colors dynamically based on context.
 ### 🖥️ Reimagined Picture-in-picture.
 #### Modern and streamlined.
 
-![](./images/pip-movement.png)
+![](./images/pip-movement.webp)
 
 Natsumi's Picture-in-picture adds a more modern look to Firefox's PiP to make it more consistent with
 the rest of the browser. You can even scroll to reposition the PiP window, too!
 
 ### 🎛️ Meet your Miniplayer.
 #### Keep your media in control.
-![](./images/miniplayer.png)
+![](./images/miniplayer.webp)
 
 Natsumi lets you control your media through the Miniplayer located on the sidebar. And with support
 for multiple websites at a time, you don't have to make your tabs fight for a spot.
@@ -71,7 +74,7 @@ for multiple websites at a time, you don't have to make your tabs fight for a sp
 ### 📄 PDF viewer, modernized.
 #### View your documents in the 21st century.
 
-![](./images/pdf-viewer.png)
+![](./images/pdf-viewer.webp)
 
 Give Firefox's PDF viewer a fresh coat of paint! Natsumi includes tweaks for the default PDF viewer,
 giving it the modern look it really deserves. And with compact view, you can focus on the file at
@@ -79,7 +82,7 @@ hand when you don't need the extra tools.
 
 ### 🧘 Featuring Single Toolbar.
 #### Go minimal or go utility-first, it's your choice.
-![](./images/single-toolbar.png)
+![](./images/single-toolbar.webp)
 
 Not a fan of multiple toolbars? Craving more horizontal space? Natsumi adds it to your browser of
 choice.
@@ -88,7 +91,7 @@ And of course, you can always use the Multiple Toolbars layout. Natsumi doesn't 
 
 ### ⌨️ Customize your shortcuts.
 #### Featuring keyboard shortcut conflict controls.
-![](./images/shortcuts.png)
+![](./images/shortcuts.webp)
 
 Take full control of your browser's keyboard shortcuts! Natsumi lets you customize your shortcuts
 to your likings and even lets you choose how it should handle shortcut conflicts between the browser
@@ -96,7 +99,7 @@ and websites. No more being forced to show mercy to websites when shortcuts conf
 
 ### 🍰 Additional browser-specific goodies.
 #### Get extra features custom-made for specific browsers.
-![](./images/floorp-features.png)
+![](./images/floorp-features.webp)
 
 Does your browser have Workspaces? Or another toolbar that can be used in the sidebar? Natsumi adds
 extra features to your browser for a more complete experience.
@@ -129,8 +132,11 @@ Every release of Natsumi from v5 comes with an installer binary. You can run it 
 Browser, Natsumi Browser Pages and Natsumi Append to your browser and profile of choice.
 
 > [!NOTE]
-> For macOS users, you will need to override the unsigned binary warning (also known as the "Apple could
-> not verify "App" is free of malware" warning) by going to System Preferences => Security & Privacy
+> For macOS and Linux users, you may need to give the installer execute permissions before you can run the
+> installer. You can run `chmod +x /path/to/installer` to give it the necessary permissions.
+> 
+> For macOS users, you may also need to override the unsigned binary warning (also known as the "Apple
+> could not verify "App" is free of malware" warning) by going to System Preferences => Security & Privacy
 > after trying to run the installer.
 
 > [!WARNING]
@@ -208,7 +214,17 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
 
 ### 🎨 Theming/General
 - `natsumi.theme.type` (string): Sets the browser theme type.
-  - Enter a theme ID from the themes list in the [Features](#features) section.
+  - **Default** (default) - No changes, just the default look.
+  - **Gradient** (`gradient`) - A light gradient of your accent color.
+  - **Complementary Gradient** (`gradient-complementary`) - A gradient of the accent color and its opposite color.
+  - **Colorful Solid** (`colorful`) - A solid color with a tint of the accent color.
+  - **Playful Solid** (`playful`) - A higher contrast version of Colorful Solid.
+  - **Lucid** (`lucid`) - A recreation of the Zen Dream and Zen Galaxy themes.
+  - **Frutiger Aero** (`frutiger-aero`) - A Windows Vista/7-like design.
+  - **OLED** (`oled`) - A completely black and white theme for the minimalists.
+  - **🏳️‍🌈 LGBTQ+** (`lgntq`) - Browsing with pride!
+  - **🏳️‍⚧️ Transgender** (`transgender`) - Trans rights are human rights!
+  - **Custom** (`custom`) - Create your own theme (in the preferences page)!
 - `natsumi.theme.accent-color` (string): Sets the browser theme color from a given accent color.
   - $${\color{#a0d490}■}$$ **Light green** (default) - #a0d490
   - $${\color{#aac7ff}■}$$ **Sky blue** (`sky-blue`) - #aac7ff
@@ -496,56 +512,6 @@ There may be userchromes that you're using alongside Natsumi Browser that breaks
 these then try again.
 
 If the issue still persists, open an issue or report the bug to the developer through Discord.
-
-## Twitter Questions and Answers
-because a specific twitter post about natsumi BLEW UP HOLY SH-
-
-This is basically my answers to some of the comments I found interesting that was on the Twitter post in
-question. I had a blast writing these.
-
-### "I'm not using a browser called Floorp!"
-Natsumi is browser-independent. Feel free to use it with anything other than Firefox and Floorp as long
-as it's listed as compatible on the compatibility table!
-
-(but why do you take problems with the fact that it's called Floorp to begin with...)
-
-### "This is just a clone of Zen Browser!"
-Although both Natsumi and Zen share similar UIs, it's not really a "clone" of Zen. Natsumi aims to be
-polished AND as customizable as possible, while Zen gives maximum polish out of the box without much
-customization freedom. It's two different design philosophies for two different target audiences, those
-that want full control and those that just want "something that works".
-
-Also, if Natsumi is a clone of Zen, then might as well call Zen a clone of Arc because the same case
-applies here :wink:
-
-### "This is just Discord if they tried to make a browser. I hate it."
-Don't use it then.
-
-Natsumi just applies a fresh coat of paint on top of your browser and adds a lot of customization
-features as well as its own features. Pretty sure this is not really what Discord would do if they
-wanted to make a browser.
-
-### "Why not make something that's casual user centered?"
-This is not really what Natsumi's built for. It's made to empower user customization and freedom, not
-be a "works out of the box" thing like Zen or Arc is.
-
-### "What's the benefits to using Natsumi?"
-Natsumi lets you tweak a lot more things than a normal browser would. You can change your layours, pick
-your tab design, and a lot more!
-
-It also adds its own productivity features such as Glimpse, so feel free to try that out as well.
-
-### "Is it open source?"
-...yeah?
-
-### "Is there something similar for a Chromium-based browser?"
-Maybe for Vivaldi, but for other Chromium-based browsers I don't think so. Mods like Natsumi are only
-possible on Firefox-based browsers and Vivaldi because of their open architecture to CSS and JS modding.
-
-Please note that Natsumi is not compatible with any Chromium-based browsers including Vivaldi.
-
-### "NOBODY is using this."
-510 stars as of writing this says otherwise :3
 
 ## Acknowledgements
 Thank you to:

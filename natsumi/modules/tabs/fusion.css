@@ -30,7 +30,7 @@ SOFTWARE.
 @media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "fusion") {
   /* Add border to web content */
   @media -moz-pref("sidebar.verticalTabs") {
-    :root:not([inDOMFullscreen="true"]):not([drawtitle]) body:not([natsumi-compact-mode]) {
+    :root:not([inDOMFullscreen="true"]):not([drawtitle]):not([taskbartab]) body:not([natsumi-compact-mode]) {
       #tabbrowser-tabbox {
         padding-top: var(--natsumi-browser-separation);
 

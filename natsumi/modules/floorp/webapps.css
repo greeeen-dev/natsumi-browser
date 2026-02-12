@@ -1,0 +1,88 @@
+/*
+
+Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Floorp webapps ==== */
+
+@media -moz-pref("natsumi.browser.type", "floorp") {
+  :root[taskbartab] {
+    body {
+      &::after, #browser::before, #browser::after {
+        display: none;
+      }
+    }
+
+    &:not([inDOMFullscreen="true"]):not([drawtitle]) body:not([natsumi-compact-mode]) {
+      #navigator-toolbox {
+        --natsumi-browser-border-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+        transition: none !important;
+        border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color) !important;
+        border-bottom: none !important;
+        margin: var(--natsumi-browser-separation);
+        margin-bottom: 0;
+        background-color: transparent !important;
+        border-radius: var(--natsumi-browser-border-radius) var(--natsumi-browser-border-radius) 0 0;
+        transform: none !important;
+        overflow: hidden;
+
+        #nav-bar {
+          background-color: light-dark(#ffffffaa, #333333aa) !important;
+        }
+      }
+
+      #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+        .browserSidebarContainer {
+          border-top-left-radius: 0 !important;
+          border-top-right-radius: 0 !important;
+          border-top: none !important;
+        }
+      }
+    }
+
+    body:not([natsumi-compact-mode]) {
+      #tabbrowser-tabbox {
+        border-top-left-radius: 0 !important;
+      }
+
+      #tabbrowser-tabpanels {
+        border-top-left-radius: 0 !important;
+      }
+    }
+
+    /* Marginless compact mode */
+    &:not([inDOMFullscreen="true"]) body[natsumi-compact-mode] {
+      #tabbrowser-tabbox {
+        &:not(:has(#tabbrowser-tabpanels[split-view="true"])) {
+          --natsumi-browser-separation: 0 !important;
+
+          .browserSidebarContainer {
+            border: none !important;
+            border-radius: 0 !important;
+          }
+        }
+      }
+    }
+  }
+}

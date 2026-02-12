@@ -445,6 +445,18 @@ SOFTWARE.
           height: 70px !important;
         }
       }
+
+      .natsumi-welcome-selection-container[horizontal="true"] {
+        #natsumi-welcome-multiple-toolbars::before {
+          width: 130px;
+        }
+      }
+
+      @media not -moz-pref("natsumi.theme.single-toolbar") {
+        #natsumiSingleToolbarNotice {
+          display: none !important;
+        }
+      }
     }
 
     /* Colors pane */
@@ -536,16 +548,8 @@ SOFTWARE.
 
         &#natsumi-welcome-theme-cgradient {
           --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
-          background-color: var(--color-left);
-
-          &::before {
-            content: "";
-            width: 100%;
-            height: 100%;
-            border-radius: 3px;
-            background: linear-gradient(135deg, transparent, var(--color-left));
-            filter: invert(1);
-          }
+          --color-right: hsl(from var(--color-left) calc(h + 180) s l);
+          background: linear-gradient(135deg, var(--color-left), var(--color-right));
         }
 
         &#natsumi-welcome-theme-colorful {
@@ -1158,6 +1162,58 @@ body:not([natsumi-welcome]) {
       &:hover {
         background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
       }
+    }
+  }
+}
+
+.natsumi-welcome-info {
+  --natsumi-info-color: #00aaff;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid var(--natsumi-info-color);
+  background-color: color-mix(in srgb, var(--natsumi-info-color) 10%, transparent);
+  margin-bottom: 10px;
+
+  &[hidden="true"] {
+    display: none !important;
+  }
+
+  .natsumi-welcome-info-icon {
+    min-width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    -moz-context-properties: stroke, stroke-opacity;
+    stroke: var(--natsumi-info-color);
+    background-size: 24px;
+    background-image: url("../icons/lucide/note.svg");
+  }
+
+  .natsumi-welcome-info-text {
+    display: block;
+    margin: auto 0;
+    color: var(--natsumi-info-color);
+    font-size: small;
+
+    a {
+      display: inline;
+      color: var(--natsumi-info-color) !important;
+      font-weight: bold;
+    }
+  }
+
+  &.warning {
+    --natsumi-info-color: #dd8800;
+
+    .natsumi-welcome-info-icon {
+      background-image: url("../icons/lucide/warning.svg");
+    }
+  }
+
+  &.caution {
+    --natsumi-info-color: #ff0000;
+
+    .natsumi-welcome-info-icon {
+      background-image: url("../icons/lucide/caution.svg");
     }
   }
 }
