@@ -97,7 +97,7 @@ SOFTWARE.
       --natsumi-compact-offset: var(--natsumi-sidebar-width);
       overflow-x: visible !important;
 
-      @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+      @media (not -moz-pref("natsumi.theme.compact-sidebar-accent")) and -moz-pref("natsumi.theme.type", "custom") {
         --natsumi-compact-backing: light-dark(#ebebeb, #171717);
         background: var(--natsumi-theme-layer-1-background, none), var(--natsumi-theme-layer-0-background, none), var(--natsumi-compact-backing) !important;
         background-size: 100vw 100vh !important;
@@ -115,11 +115,11 @@ SOFTWARE.
         }
       }
 
-      @media -moz-pref("natsumi.theme.compact-sidebar-accent") {
-        background-color: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
+      @media -moz-pref("natsumi.theme.compact-sidebar-accent") or (not -moz-pref("natsumi.theme.type", "custom")) {
+        background: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
 
         @media -moz-pref("natsumi.theme.compact-blur") {
-          background-color: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
+          background: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
           backdrop-filter: blur(10px);
         }
       }
@@ -253,7 +253,7 @@ SOFTWARE.
         top: calc(var(--natsumi-compact-offset) * -1) !important;
         opacity: 0 !important;
 
-        @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+        @media (not -moz-pref("natsumi.theme.compact-sidebar-accent")) and -moz-pref("natsumi.theme.type", "custom") {
           --natsumi-compact-backing: light-dark(#ebebeb, #171717);
           background: var(--natsumi-theme-layer-1-background, none), var(--natsumi-theme-layer-0-background, none), var(--natsumi-compact-backing) !important;
           background-size: 100vw 100vh !important;
@@ -270,11 +270,11 @@ SOFTWARE.
           }
         }
 
-        @media -moz-pref("natsumi.theme.compact-sidebar-accent") {
-          background-color: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
+        @media -moz-pref("natsumi.theme.compact-sidebar-accent") or (not -moz-pref("natsumi.theme.type", "custom")) {
+          background: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
 
           @media -moz-pref("natsumi.theme.compact-blur") {
-            background-color: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
+            background: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
             backdrop-filter: blur(10px);
           }
         }
