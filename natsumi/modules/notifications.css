@@ -90,6 +90,36 @@ SOFTWARE.
     max-width: 70vw;
     word-break: break-word;
 
+    .natsumi-notification-body {
+      transition: opacity 0.2s ease;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      left: 50%;
+      top: 50%;
+      translate: -50% -50% !important;
+      transition: opacity 0.2s ease;
+      opacity: 0;
+      z-index: 1;
+      -moz-context-properties: stroke, stroke-opacity;
+      stroke: light-dark(black, white);
+      background-image: url("../icons/lucide/close.svg");
+    }
+
+    &:hover {
+      .natsumi-notification-body {
+        opacity: 0.1;
+      }
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
     &[natsumi-notification-type="warning"] {
       --natsumi-primary-color: #ffaa00;
     }

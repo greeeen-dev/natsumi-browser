@@ -141,7 +141,7 @@ class NatsumiWelcome {
         welcomeNode.appendChild(this.drumRolls);
 
         // Create welcome audio
-        const drumrollAudioUrl = "https://github.com/MX-Linux/mx-sound-theme-borealis/raw/refs/heads/master/Borealis/stereo/K3b_success.ogg";
+        const drumrollAudioUrl = "chrome://natsumi/content/sounds/drumroll.ogg";
         this.drumrollAudio = new Audio(drumrollAudioUrl);
         this.drumrollAudio.load();
         this.drumrollAudio.volume = 0.2;
@@ -792,7 +792,7 @@ function createCompatibilityWarning() {
     }
 }
 
-const welcomeAudioUrl = "https://github.com/MX-Linux/mx-sound-theme-borealis/raw/refs/heads/master/Borealis/stereo/desktop-login.ogg";
+const welcomeAudioUrl = "chrome://natsumi/content/sounds/welcome.ogg";
 
 let welcomeViewed = false;
 let tabStyleReset = false;

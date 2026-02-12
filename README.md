@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="120" height="120" src="./images/icon-glass.png">
+  <img width="120" height="120" src="./images/icon-glass.webp">
   <br>
   Natsumi Browser
 </h1>
@@ -11,7 +11,7 @@
   <a href="https://natsumi.greeeen.dev">Website (under construction)</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a>
 </h5>
 
-![](./images/main-backgroundless.png)
+![](./images/main-backgroundless.webp)
 
 ## ⚠️ IMPORTANT NOTICE
 Natsumi doesn't do crypto. Any crypto coins that may seem like it's affiliated with the project
@@ -40,7 +40,7 @@ Natsumi has lots of features to enhance your browser - so many that I can't list
 
 ### ✨ Reimagined design. Fully customizable.
 #### The classic Firefox design but with a modern yet customizable spin.
-![](./images/custom-themes.png)
+![](./images/custom-themes.webp)
 
 Natsumi keeps your browser's design familiar while adding a modern touch to it. Not only that, it's
 also **extremely customizable**, so you can make it truly yours. No "best practices" or authoritarian
@@ -51,7 +51,7 @@ have to mess around with advanced preferences.
 
 ### ⌨️ URL bar, made intuitive.
 #### Highlights the current URL and adapts to the scene.
-![](./images/urlbar.png)
+![](./images/urlbar.webp)
 
 Natsumi applies a fresh new coat of paint to your browser's URL bar, making the current URL stand out
 more and changing colors dynamically based on context.
@@ -59,14 +59,14 @@ more and changing colors dynamically based on context.
 ### 🖥️ Reimagined Picture-in-picture.
 #### Modern and streamlined.
 
-![](./images/pip-movement.png)
+![](./images/pip-movement.webp)
 
 Natsumi's Picture-in-picture adds a more modern look to Firefox's PiP to make it more consistent with
 the rest of the browser. You can even scroll to reposition the PiP window, too!
 
 ### 🎛️ Meet your Miniplayer.
 #### Keep your media in control.
-![](./images/miniplayer.png)
+![](./images/miniplayer.webp)
 
 Natsumi lets you control your media through the Miniplayer located on the sidebar. And with support
 for multiple websites at a time, you don't have to make your tabs fight for a spot.
@@ -74,7 +74,7 @@ for multiple websites at a time, you don't have to make your tabs fight for a sp
 ### 📄 PDF viewer, modernized.
 #### View your documents in the 21st century.
 
-![](./images/pdf-viewer.png)
+![](./images/pdf-viewer.webp)
 
 Give Firefox's PDF viewer a fresh coat of paint! Natsumi includes tweaks for the default PDF viewer,
 giving it the modern look it really deserves. And with compact view, you can focus on the file at
@@ -82,7 +82,7 @@ hand when you don't need the extra tools.
 
 ### 🧘 Featuring Single Toolbar.
 #### Go minimal or go utility-first, it's your choice.
-![](./images/single-toolbar.png)
+![](./images/single-toolbar.webp)
 
 Not a fan of multiple toolbars? Craving more horizontal space? Natsumi adds it to your browser of
 choice.
@@ -91,7 +91,7 @@ And of course, you can always use the Multiple Toolbars layout. Natsumi doesn't 
 
 ### ⌨️ Customize your shortcuts.
 #### Featuring keyboard shortcut conflict controls.
-![](./images/shortcuts.png)
+![](./images/shortcuts.webp)
 
 Take full control of your browser's keyboard shortcuts! Natsumi lets you customize your shortcuts
 to your likings and even lets you choose how it should handle shortcut conflicts between the browser
@@ -99,7 +99,7 @@ and websites. No more being forced to show mercy to websites when shortcuts conf
 
 ### 🍰 Additional browser-specific goodies.
 #### Get extra features custom-made for specific browsers.
-![](./images/floorp-features.png)
+![](./images/floorp-features.webp)
 
 Does your browser have Workspaces? Or another toolbar that can be used in the sidebar? Natsumi adds
 extra features to your browser for a more complete experience.
@@ -132,8 +132,11 @@ Every release of Natsumi from v5 comes with an installer binary. You can run it 
 Browser, Natsumi Browser Pages and Natsumi Append to your browser and profile of choice.
 
 > [!NOTE]
-> For macOS users, you will need to override the unsigned binary warning (also known as the "Apple could
-> not verify "App" is free of malware" warning) by going to System Preferences => Security & Privacy
+> For macOS and Linux users, you may need to give the installer execute permissions before you can run the
+> installer. You can run `chmod +x /path/to/installer` to give it the necessary permissions.
+> 
+> For macOS users, you may also need to override the unsigned binary warning (also known as the "Apple
+> could not verify "App" is free of malware" warning) by going to System Preferences => Security & Privacy
 > after trying to run the installer.
 
 > [!WARNING]

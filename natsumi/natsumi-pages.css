@@ -44,6 +44,11 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "content/preferences-customize.css";
 @import "content/preferences-shortcuts.css";
 @import "content/preferences-about.css";
+@import "content/neterror.css";
+@import "content/certerror.css";
+@import "content/unsecureerror.css";
+@import "content/tabcrashed.css";
+@import "content/blocked.css";
 @import "content/global.css";
 @import "content/icons.css";
 
