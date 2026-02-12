@@ -2139,6 +2139,60 @@ function addToSidebar() {
     });
 }
 
+function addOptionStyles() {
+    let styleNode = document.createElement("style");;
+    styleNode.id = "natsumi-options-style";
+    styleNode.textContent = `
+        moz-checkbox::part(label) {
+            --natsumi-checkbox-appearance: none;
+            --natsumi-checkbox-border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));;
+            --natsumi-checkbox-border-radius: 4px;
+            --natsumi-checkbox-transition: border 0.3s ease, background-color 0.3s ease;
+        }
+
+        moz-checkbox[checked]::part(label) {
+            --natsumi-checkbox-border: none !important;
+            --natsumi-checkbox-background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+            --natsumi-checkbox-background-image: url("chrome://natsumi/content/icons/lucide/check.svg");
+        }
+        
+        moz-checkbox[disabled]::part(label) {
+            --natsumi-checkbox-filter: grayscale(1);
+            --natsumi-checkbox-opacity: 0.4;
+        }
+        
+        moz-radio::part(label) {
+            --natsumi-radio-appearance: none;
+            --natsumi-radio-width: var(--input-height);
+            --natsumi-radio-height: var(--input-height);
+            --natsumi-radio-border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+            --natsumi-radio-border-radius: 50%;
+            --natsumi-radio-background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+            --natsumi-radio-transition: border 0.3s ease, outline 0.3s ease, background-color 0.3s ease;
+            --natsumi-radio-before-content: "";
+            --natsumi-radio-before-display: flex;
+            --natsumi-radio-before-width: 10px;
+            --natsumi-radio-before-height: 10px;
+            --natsumi-radio-before-margin: calc(calc(var(--input-height) - 12px) / 2);
+            --natsumi-radio-before-background: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+            --natsumi-radio-before-opacity: 0;
+            --natsumi-radio-before-transition: opacity 0.3s ease;
+        }
+
+        moz-radio[checked]::part(label) {
+            --natsumi-radio-border: 1px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+            --natsumi-radio-background-color: transparent;
+            --natsumi-radio-before-opacity: 1;
+        }
+        
+        moz-radio[disabled]::part(label) {
+            --natsumi-radio-filter: grayscale(1);
+            --natsumi-radio-opacity: 0.4;
+        }
+    `
+    document.head.appendChild(styleNode);
+}
+
 function addLayoutPane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
@@ -3831,6 +3885,7 @@ function addHideFloorpWarnings() {
 }
 
 console.log("Loading prefs panes...");
+addOptionStyles();
 addToSidebar();
 addPreferencesPanes();
 addHideFloorpWarnings();
