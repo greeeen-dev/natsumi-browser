@@ -87,7 +87,6 @@ SOFTWARE.
       position: absolute;
       z-index: 998 !important;
       transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease, top 0.1s ease, height 0.1s ease !important;
-      background-color: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
       height: calc(100vh - calc(var(--natsumi-browser-separation) * 2) - var(--natsumi-sidebar-height-offset)) !important;
       border-radius: 6px !important;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
@@ -98,9 +97,31 @@ SOFTWARE.
       --natsumi-compact-offset: var(--natsumi-sidebar-width);
       overflow-x: visible !important;
 
-      @media -moz-pref("natsumi.theme.compact-blur") {
-        background-color: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
-        backdrop-filter: blur(10px);
+      @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+        --natsumi-compact-backing: light-dark(#ebebeb, #171717);
+        background: var(--natsumi-theme-layer-1-background, none), var(--natsumi-theme-layer-0-background, none), var(--natsumi-compact-backing) !important;
+        background-size: 100vw 100vh !important;
+        background-position: calc(var(--natsumi-browser-separation) * -1) calc(var(--natsumi-browser-separation) * -1) !important;
+
+        @media (prefers-color-scheme: dark) {
+          background: var(--natsumi-theme-layer-1-background-dark, var(--natsumi-theme-layer-1-background, none)),
+          var(--natsumi-theme-layer-0-background-dark, var(--natsumi-theme-layer-0-background, none)),
+          var(--natsumi-compact-backing) !important;
+        }
+
+        @media -moz-pref("natsumi.theme.compact-blur") {
+          --natsumi-compact-backing: transparent !important;
+          backdrop-filter: blur(10px);
+        }
+      }
+
+      @media -moz-pref("natsumi.theme.compact-sidebar-accent") {
+        background-color: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
+
+        @media -moz-pref("natsumi.theme.compact-blur") {
+          background-color: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
+          backdrop-filter: blur(10px);
+        }
       }
 
       @media (-moz-mac-tahoe-theme) {
@@ -223,19 +244,39 @@ SOFTWARE.
         min-width: 100vw !important;
         max-width: 100vw !important;
         transition: background 0s linear, opacity 0.1s ease, top 0.1s ease !important;
-        background-color: var(--natsumi-toolbox-color) !important;
         z-index: 999 !important;
         border-radius: 0 0 6px 6px !important;
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
         --natsumi-compact-bookmarks-height: 0px;
         --natsumi-compact-tabs-height: 0px;
         --natsumi-compact-offset: calc(40px + var(--natsumi-compact-bookmarks-height) + var(--natsumi-compact-tabs-height) - var(--natsumi-compact-hoverable));
         top: calc(var(--natsumi-compact-offset) * -1) !important;
         opacity: 0 !important;
 
-        @media -moz-pref("natsumi.theme.compact-blur") {
-          background-color: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
-          backdrop-filter: blur(10px);
+        @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+          --natsumi-compact-backing: light-dark(#ebebeb, #171717);
+          background: var(--natsumi-theme-layer-1-background, none), var(--natsumi-theme-layer-0-background, none), var(--natsumi-compact-backing) !important;
+          background-size: 100vw 100vh !important;
+
+          @media (prefers-color-scheme: dark) {
+            background: var(--natsumi-theme-layer-1-background-dark, var(--natsumi-theme-layer-1-background, none)),
+            var(--natsumi-theme-layer-0-background-dark, var(--natsumi-theme-layer-0-background, none)),
+            var(--natsumi-compact-backing) !important;
+          }
+
+          @media -moz-pref("natsumi.theme.compact-blur") {
+            --natsumi-compact-backing: transparent !important;
+            backdrop-filter: blur(10px);
+          }
+        }
+
+        @media -moz-pref("natsumi.theme.compact-sidebar-accent") {
+          background-color: var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) !important;
+
+          @media -moz-pref("natsumi.theme.compact-blur") {
+            background-color: color-mix(in srgb, var(--natsumi-sidebar-color, var(--natsumi-toolbox-color)) 70%, transparent) !important;
+            backdrop-filter: blur(10px);
+          }
         }
 
         #nav-bar {

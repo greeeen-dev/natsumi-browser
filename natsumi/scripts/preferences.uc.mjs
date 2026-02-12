@@ -3122,6 +3122,13 @@ function addCompactStylesPane() {
         "This adds a blur effect to the sidebar and toolbar when in Compact Mode."
     ));
 
+    styleSelection.registerExtras("natsumiCompactAccent", new CheckboxChoice(
+        "natsumi.theme.compact-sidebar-accent",
+        "natsumiCompactAccent",
+        "Use accent color for sidebar and toolbar",
+        "This will revert the sidebar and toolbar background to the old accent color instead of the background gradient."
+    ));
+
     styleSelection.registerExtras("natsumiCompactMarginless", new CheckboxChoice(
         "natsumi.theme.compact-marginless",
         "natsumiCompactMarginless",
