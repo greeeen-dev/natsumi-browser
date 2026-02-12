@@ -143,6 +143,11 @@ SOFTWARE.
         margin-top: -34px !important;
       }
 
+      @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {
+        height: 70vh !important;
+        top: 15vh;
+      }
+
       &:not([sidebar-launcher-expanded]) {
         --natsumi-compact-offset: calc(50px - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation));
       }
@@ -198,6 +203,10 @@ SOFTWARE.
         @media not -moz-pref("sidebar.position_start") {
           right: calc(var(--natsumi-compact-offset) * -1) !important;
           left: unset !important;
+        }
+
+        @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {
+          bottom: calc(15vh - var(--natsumi-browser-separation)) !important;
         }
       }
 
@@ -316,14 +325,16 @@ SOFTWARE.
       &[natsumi-compact-navbar-hover], &[natsumi-compact-navbar-extend],
       &:has(#navigator-toolbox.fullscreen-with-menubar),
       &:has(toolbarbutton[open], #urlbar[focused]) {
-        #sidebar-main {
-          top: 40px !important;
-          --natsumi-sidebar-height-offset: 40px !important;
-        }
+        @media not -moz-pref("natsumi.theme.compact-smaller-sidebar") {
+          #sidebar-main {
+            top: 40px !important;
+            --natsumi-sidebar-height-offset: 40px !important;
+          }
 
-        &:has(#PersonalToolbar:not([collapsed])) #sidebar-main {
-          top: 68px !important;
-          --natsumi-sidebar-height-offset: 68px !important;
+          &:has(#PersonalToolbar:not([collapsed])) #sidebar-main {
+            top: 68px !important;
+            --natsumi-sidebar-height-offset: 68px !important;
+          }
         }
       }
     }
@@ -352,6 +363,10 @@ SOFTWARE.
       transition: opacity 0.2s ease, top 0.1s ease !important;
       opacity: 0 !important;
       top: 0;
+
+      @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {
+        top: 15vh !important;
+      }
     }
 
     #PersonalToolbar {

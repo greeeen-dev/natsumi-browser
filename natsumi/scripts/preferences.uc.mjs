@@ -3136,6 +3136,13 @@ function addCompactStylesPane() {
         "Removes the borders around the website content when in Compact Mode."
     ));
 
+    styleSelection.registerExtras("natsumiCompactMiniSidebar", new CheckboxChoice(
+        "natsumi.theme.compact-smaller-sidebar",
+        "natsumiCompactMiniSidebar",
+        "Smaller compact sidebar",
+        "Reduces the height of the sidebar when in compact mode."
+    ));
+
     let styleNode = styleSelection.generateNode();
 
     let compactSingleToolbarNotice = convertToXUL(`
