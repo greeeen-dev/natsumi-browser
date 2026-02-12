@@ -35,15 +35,14 @@ import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import { NatsumiNotification } from "./notifications.sys.mjs";
 import {
     customThemeLoader,
-    customColorLoader,
+    // customColorLoader,
     colorPresetNames,
     colorPresetOffsets,
     colorPresetOrders,
     availablePresets,
-    gradientTypes,
     gradientTypeNames,
     getTheme,
-    applyCustomColor,
+    // applyCustomColor,
     applyCustomTheme
 } from "./custom-theme.sys.mjs";
 import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
@@ -2140,6 +2139,60 @@ function addToSidebar() {
     });
 }
 
+function addOptionStyles() {
+    let styleNode = document.createElement("style");;
+    styleNode.id = "natsumi-options-style";
+    styleNode.textContent = `
+        moz-checkbox::part(label) {
+            --natsumi-checkbox-appearance: none;
+            --natsumi-checkbox-border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));;
+            --natsumi-checkbox-border-radius: 4px;
+            --natsumi-checkbox-transition: border 0.3s ease, background-color 0.3s ease;
+        }
+
+        moz-checkbox[checked]::part(label) {
+            --natsumi-checkbox-border: none !important;
+            --natsumi-checkbox-background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+            --natsumi-checkbox-background-image: url("chrome://natsumi/content/icons/lucide/check.svg");
+        }
+        
+        moz-checkbox[disabled]::part(label) {
+            --natsumi-checkbox-filter: grayscale(1);
+            --natsumi-checkbox-opacity: 0.4;
+        }
+        
+        moz-radio::part(label) {
+            --natsumi-radio-appearance: none;
+            --natsumi-radio-width: var(--input-height);
+            --natsumi-radio-height: var(--input-height);
+            --natsumi-radio-border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+            --natsumi-radio-border-radius: 50%;
+            --natsumi-radio-background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+            --natsumi-radio-transition: border 0.3s ease, outline 0.3s ease, background-color 0.3s ease;
+            --natsumi-radio-before-content: "";
+            --natsumi-radio-before-display: flex;
+            --natsumi-radio-before-width: 10px;
+            --natsumi-radio-before-height: 10px;
+            --natsumi-radio-before-margin: calc(calc(var(--input-height) - 12px) / 2);
+            --natsumi-radio-before-background: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+            --natsumi-radio-before-opacity: 0;
+            --natsumi-radio-before-transition: opacity 0.3s ease;
+        }
+
+        moz-radio[checked]::part(label) {
+            --natsumi-radio-border: 1px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+            --natsumi-radio-background-color: transparent;
+            --natsumi-radio-before-opacity: 1;
+        }
+        
+        moz-radio[disabled]::part(label) {
+            --natsumi-radio-filter: grayscale(1);
+            --natsumi-radio-opacity: 0.4;
+        }
+    `
+    document.head.appendChild(styleNode);
+}
+
 function addLayoutPane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
@@ -2221,7 +2274,7 @@ function addLayoutPane() {
                 You need to enable Vertical Tabs to customize these settings.
             </div>
         </div>
-    `)
+    `);
     let layoutSelector = layoutNode.querySelector(".natsumi-mc-chooser");
     layoutSelector.parentNode.insertBefore(verticalTabsDisabledNotice, layoutSelector);
 
@@ -3055,7 +3108,7 @@ function addCompactStylesPane() {
         "natsumiCompactStyle",
         "natsumi.theme.compact-style",
         "Style",
-        "Choose what you want to hide when Compact Mode is active."
+        "Customize how Compact Mode should look."
     );
 
     for (let style in compactStyles) {
@@ -3069,6 +3122,13 @@ function addCompactStylesPane() {
         "This adds a blur effect to the sidebar and toolbar when in Compact Mode."
     ));
 
+    styleSelection.registerExtras("natsumiCompactAccent", new CheckboxChoice(
+        "natsumi.theme.compact-sidebar-accent",
+        "natsumiCompactAccent",
+        "Use accent color for sidebar and toolbar",
+        "This will revert the sidebar and toolbar background to the old accent color instead of the background gradient."
+    ));
+
     styleSelection.registerExtras("natsumiCompactMarginless", new CheckboxChoice(
         "natsumi.theme.compact-marginless",
         "natsumiCompactMarginless",
@@ -3076,7 +3136,25 @@ function addCompactStylesPane() {
         "Removes the borders around the website content when in Compact Mode."
     ));
 
+    styleSelection.registerExtras("natsumiCompactMiniSidebar", new CheckboxChoice(
+        "natsumi.theme.compact-smaller-sidebar",
+        "natsumiCompactMiniSidebar",
+        "Smaller compact sidebar",
+        "Reduces the height of the sidebar when in compact mode."
+    ));
+
     let styleNode = styleSelection.generateNode();
+
+    let compactSingleToolbarNotice = convertToXUL(`
+        <div id="natsumiCompactSingleToolbarWarning" class="natsumi-settings-info warning">
+            <div class="natsumi-settings-info-icon"></div>
+            <div class="natsumi-settings-info-text">
+                You need to use Multiple Toolbars layout to change which elements Compact Mode hides.
+            </div>
+        </div>
+    `);
+    let styleSelector = styleNode.querySelector(".natsumi-mc-chooser");
+    styleSelector.parentNode.insertBefore(compactSingleToolbarNotice, styleSelector);
 
     // Set listeners for each button
     let styleButtons = styleNode.querySelectorAll(".natsumi-mc-choice");
@@ -3127,6 +3205,11 @@ function addCompactBehaviorPane() {
         "natsumiCompactNewWindow",
         "Enable Compact Mode by default",
         "If enabled, new windows will open with Compact Mode active."
+    ));
+    compactBehaviorGroup.registerOption("natsumiCompactLongVisibility", new CheckboxChoice(
+        "natsumi.theme.compact-long-visibility",
+        "natsumiCompactLongVisibility",
+        "Display sidebar/toolbar for longer on hover"
     ));
 
     let compactBehaviorNode = compactBehaviorGroup.generateNode();
@@ -3689,14 +3772,6 @@ function addPreferencesPanes() {
         <hbox id="natsumiCompactModeCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
             <html:h1>Compact Mode</html:h1>
         </hbox>
-        <groupbox id="natsumiCompactSingleToolbar" data-category="paneNatsumiSettings" hidden="true">
-            <div class="natsumi-settings-info warning">
-                <div class="natsumi-settings-info-icon"></div>
-                <div class="natsumi-settings-info-text">
-                    You need to use Multiple Toolbars layout to change Compact Mode styles.
-                </div>
-            </div>
-        </groupbox>
     `);
     let glimpseNode = convertToXUL(`
         <hbox id="natsumiGlimpseCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
@@ -3824,6 +3899,7 @@ function addHideFloorpWarnings() {
 }
 
 console.log("Loading prefs panes...");
+addOptionStyles();
 addToSidebar();
 addPreferencesPanes();
 addHideFloorpWarnings();

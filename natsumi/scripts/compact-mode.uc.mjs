@@ -39,6 +39,7 @@ class NatsumiCompactModeManager {
         this.isPWA = document.documentElement.hasAttribute("taskbartab");
         this.pwaFullscreenListener = null;
         this.disableShortcutActions = false;
+        this.visibleDuration = 300;
     }
 
     init() {
@@ -83,11 +84,19 @@ class NatsumiCompactModeManager {
             }
         }
 
-        if (ucApi.Prefs.get("natsumi.theme.compact-pwa-dynamic").exists() && this.isPWA) {
-            if (ucApi.Prefs.get("natsumi.theme.compact-pwa-dynamic").value) {
-
+        if (ucApi.Prefs.get("natsumi.theme.compact-long-visibility").exists() && this.isPWA) {
+            if (ucApi.Prefs.get("natsumi.theme.compact-long-visibility").value) {
+                this.visibleDuration = 1000;
             }
         }
+
+        Services.prefs.addObserver("natsumi.theme.compact-long-visibility", () => {
+            if (ucApi.Prefs.get("natsumi.theme.compact-long-visibility").value) {
+                this.visibleDuration = 1000;
+            } else {
+                this.visibleDuration = 300;
+            }
+        });
 
         // Set PWA full screen listener
         if (this.isPWA) {
@@ -150,6 +159,10 @@ class NatsumiCompactModeManager {
             return;
         }
 
+        if (this.sidebarHovered < 0) {
+            this.sidebarHovered = 0;
+        }
+
         // Check single toolbar
         let isSingleToolbar = false;
         if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
@@ -198,7 +211,7 @@ class NatsumiCompactModeManager {
                 }
             }
 
-            document.body.setAttribute("natsumi-compact-navbar-hover", "")
+            document.body.setAttribute("natsumi-compact-navbar-hover", "");
         } else if ((
             event.target.id === "nora-statusbar" || event.target.id === "status-bar"
         ) && sidebarHidden) {
@@ -213,7 +226,7 @@ class NatsumiCompactModeManager {
         }
 
         if (this.sidebarHovered > 0) {
-            document.body.setAttribute("natsumi-compact-sidebar-hover", "")
+            document.body.setAttribute("natsumi-compact-sidebar-hover", "");
         }
     }
 
@@ -231,6 +244,8 @@ class NatsumiCompactModeManager {
             }
         }
 
+        let sidebarInteracted = false;
+
         // Check hidden elements
         let sidebarHidden = true;
         let toolbarHidden = true;
@@ -246,33 +261,36 @@ class NatsumiCompactModeManager {
 
         if (event.target.id === "sidebar-main" && sidebarHidden) {
             this.sidebarHovered--;
+            sidebarInteracted = true;
         } else if ((
             event.target.id === "nav-bar" && isSingleToolbar ||
             event.target.id === "navigator-toolbox" && !isSingleToolbar
         ) && toolbarHidden) {
             if (isSingleToolbar) {
                 this.sidebarHovered--;
+                sidebarInteracted = true;
             }
 
             if (document.body.hasAttribute("natsumi-compact-navbar-hover")) {
                 this.navbarTimeout = setTimeout(() => {
                     document.body.removeAttribute("natsumi-compact-navbar-hover");
                     this.navbarTimeout = null;
-                }, 1000);
+                }, this.visibleDuration);
             }
         } else if ((
             event.target.id === "nora-statusbar" || event.target.id === "status-bar"
         ) && sidebarHidden) {
             if (event.target.classList.contains("hidden") || event.target.getAttribute("collapsed") === "true" || event.target.style.display === "none") {
+                sidebarInteracted = true;
                 this.sidebarHovered--;
             }
         }
 
-        if (this.sidebarHovered <= 0) {
+        if (this.sidebarHovered <= 0 && sidebarInteracted) {
             this.sidebarTimeout = setTimeout(() => {
                 document.body.removeAttribute("natsumi-compact-sidebar-hover");
                 this.sidebarTimeout = null;
-            }, 1000);
+            }, this.visibleDuration);
             this.sidebarHovered = 0;
         }
     }
