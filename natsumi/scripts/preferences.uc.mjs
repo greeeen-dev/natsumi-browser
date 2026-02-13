@@ -73,6 +73,7 @@ class CustomThemePicker {
         this.gradientType = "linear";
         this.angle = 0;
         this.colors = [];
+        this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.grain = 0;
         this.newColorAllowed = true;
         this.lastSelected = null;
@@ -227,8 +228,10 @@ class CustomThemePicker {
         let gradientTypeButton = this.node.querySelector(".natsumi-gradient-button");
         let resetButton = this.node.querySelector(".natsumi-reset-button");
         let hexInput = this.node.querySelector(".natsumi-hex-input");
-        let hexButton = this.node.querySelector(".natsumi-hex-button");
-        let grainButton = this.node.querySelector(".natsumi-grain-button");
+        let toolsButton = this.node.querySelector(".natsumi-tools-button");
+        let hexButton = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-button");
+        let grainButton = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-button");
+        let textColorButton = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-button");
 
         if (!this.singleColor) {
             presetButton.addEventListener("click", () => {
@@ -245,7 +248,7 @@ class CustomThemePicker {
         });
 
         hexButton.addEventListener("click", () => {
-            let hexInputContainer = this.node.querySelector(".natsumi-custom-theme-hex-input");
+            let hexInputContainer = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-container");
             if (hexInputContainer.attributes["hidden"]) {
                 hexInputContainer.removeAttribute("hidden");
             } else {
@@ -255,7 +258,16 @@ class CustomThemePicker {
         });
 
         grainButton.addEventListener("click", () => {
-            let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-grain");
+            let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-container");
+            if (grainSliderContainer.attributes["hidden"]) {
+                grainSliderContainer.removeAttribute("hidden");
+            } else {
+                grainSliderContainer.setAttribute("hidden", "");
+            }
+        })
+
+        textColorButton.addEventListener("click", () => {
+            let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-container");
             if (grainSliderContainer.attributes["hidden"]) {
                 grainSliderContainer.removeAttribute("hidden");
             } else {
@@ -504,6 +516,7 @@ class CustomThemePicker {
         this.gradientType = "linear";
         this.angle = 0;
         this.colors = [];
+        this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.preset = null;
         this.lastSelected = null;
 
@@ -543,6 +556,10 @@ class CustomThemePicker {
             this.grain = this.data[this.theme]["grain"];
         } else {
             this.grain = 0;
+        }
+
+        if (this.data[this.theme]["textColor"]) {
+            this.textColor = this.data[this.theme]["textColor"];
         }
 
         this.renderGrid();
@@ -659,21 +676,55 @@ class CustomThemePicker {
                         <div class="natsumi-custom-theme-controls-button natsumi-reset-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
                         </div>
-                        <div class="natsumi-custom-theme-controls-button natsumi-hex-button">
-                            <div class="natsumi-custom-theme-controls-icon"></div>
-                        </div>
-                        <div class="natsumi-custom-theme-controls-button natsumi-grain-button">
+                        <div class="natsumi-custom-theme-controls-button natsumi-tools-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
                         </div>
                     </div>
-                    <div class="natsumi-custom-theme-hex-input" hidden="">
-                        <html:input class="natsumi-hex-input" type="text" placeholder="HEX code (e.g. #ff0000)" maxlength="8"/>
-                        <div class="natsumi-hex-submit"></div>
-                    </div>
-                    <div class="natsumi-custom-theme-grain" hidden="">
-                        <div class="natsumi-custom-theme-slider natsumi-color-slider-grain">
-                            <div class="natsumi-custom-theme-slider-icon-1"></div>
-                            <div class="natsumi-custom-theme-slider-icon-0"></div>
+                    <div class="natsumi-custom-theme-tools-container" hidden="">
+                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-hex-input">
+                            <div class="natsumi-custom-theme-tool-button">
+                                <div class="natsumi-custom-theme-tool-icon"></div>
+                                <div class="natsumi-custom-theme-tool-label">
+                                    HEX code input
+                                </div>
+                            </div>
+                            <div class="natsumi-custom-theme-tool-container" hidden="">
+                                <html:input class="natsumi-hex-input" type="text" placeholder="HEX code (e.g. #ff0000)" maxlength="8"/>
+                                <div class="natsumi-hex-submit"></div>
+                            </div>
+                        </div>
+                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-grain">
+                            <div class="natsumi-custom-theme-tool-button">
+                                <div class="natsumi-custom-theme-tool-icon"></div>
+                                <div class="natsumi-custom-theme-tool-label">
+                                    Grain
+                                </div>
+                            </div>
+                            <div class="natsumi-custom-theme-tool-container" hidden="">
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-grain">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                    <div class="natsumi-custom-theme-slider-icon-0"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-text-color">
+                            <div class="natsumi-custom-theme-tool-button">
+                                <div class="natsumi-custom-theme-tool-icon"></div>
+                                <div class="natsumi-custom-theme-tool-label">
+                                    Text and icon color
+                                </div>
+                            </div>
+                            <div class="natsumi-custom-theme-tool-container" hidden="">
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-text-color-hue">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                </div>
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-text-color-saturation">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                </div>
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-text-color-value">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="natsumi-custom-theme-bottom-controls">
@@ -1182,7 +1233,11 @@ class CustomThemePicker {
         let luminositySliderNode = this.node.querySelector(".natsumi-color-slider-luminosity");
         let opacitySliderNode = this.node.querySelector(".natsumi-color-slider-opacity");
         let grainSliderNode = this.node.querySelector(".natsumi-color-slider-grain");
+        let textColorHueSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-hue");
+        let textColorSaturationSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-saturation");
+        let textColorValueSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-value");
 
+        // Render background color sliders
         let colorData = null;
         if (this.lastSelected !== null && this.lastSelected in this.colors) {
             colorData = this.colors[this.lastSelected];
@@ -1202,9 +1257,20 @@ class CustomThemePicker {
             opacitySliderNode.style.setProperty("--natsumi-slider-position", "0px");
         }
 
+        // Render grain slider
         const grainSliderWidth = Math.max(grainSliderNode.getBoundingClientRect().width, 380);
         const grainPosition = grainSliderWidth * this.grain;
         grainSliderNode.style.setProperty("--natsumi-slider-position", `${grainPosition}px`);
+
+        // Render text color sliders
+        if (this.textColor) {
+            const textColorHuePosition = textColorHueSliderNode.getBoundingClientRect().width * (1 - (this.textColor["hue"] / 360));
+            const textColorSaturationPosition = textColorSaturationSliderNode.getBoundingClientRect().width * (1 - this.textColor["saturation"]);
+            const textColorValuePosition = textColorValueSliderNode.getBoundingClientRect().width * (1 - this.textColor["value"]);
+            textColorHueSliderNode.style.setProperty("--natsumi-slider-position", `${textColorHuePosition}px`);
+            textColorSaturationSliderNode.style.setProperty("--natsumi-slider-position", `${textColorSaturationPosition}px`);
+            textColorValueSliderNode.style.setProperty("--natsumi-slider-position", `${textColorValuePosition}px`);
+        }
     }
 
     renderButtons() {
@@ -1306,6 +1372,7 @@ class CustomThemePicker {
 
     removeAllColors() {
         this.colors = [];
+        this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.grain = 0;
         this.preset = null;
         this.angle = 0;
