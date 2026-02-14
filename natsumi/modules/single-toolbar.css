@@ -126,7 +126,17 @@ SOFTWARE.
     }
 
     #vertical-tabs {
-      padding-top: 82px !important;
+      #tabbrowser-tabs {
+        padding-top: 82px !important;
+      }
+
+      &:has(#pinned-tabs-container[dragActive]) {
+        padding-top: 82px !important;
+
+        #tabbrowser-tabs {
+          padding-top: 0 !important;
+        }
+      }
     }
 
     #unified-extensions-button {
