@@ -805,6 +805,25 @@ SOFTWARE.
           box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
         }
       }
+
+      #natsumi-welcome-tabs-clicky {
+        .natsumi-welcome-tab {
+          background: light-dark(
+            linear-gradient(
+              0deg,
+              rgb(255, 255, 255) 50%,
+                            color-mix(rgb(255, 255, 255), transparent 40%)
+            ),
+            linear-gradient(
+              0deg,
+              rgba(106, 106, 120, 0.7) 50%,
+                            color-mix(rgba(106, 106, 120, 0.7), transparent 40%)
+            )
+          );
+          box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1);
+          border-radius: 3px;
+        }
+      }
     }
 
     /* Icons pane */

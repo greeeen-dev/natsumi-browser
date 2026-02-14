@@ -653,6 +653,17 @@ function createTabsPane() {
                 Classic
             </div>
         </div>
+        <div class="natsumi-welcome-selection" pref="natsumi.tabs.type" type="string" value="clicky">
+            <div id="natsumi-welcome-tabs-clicky" class="natsumi-welcome-selection-preview">
+                <div class='natsumi-welcome-tab'>
+                    <div class='natsumi-welcome-tab-icon'></div>
+                    <div class='natsumi-welcome-tab-text'></div>
+                </div>
+            </div>
+            <div class="natsumi-welcome-selection-label">
+                Clicky
+            </div>
+        </div>
     `
 
     let themesPane = new NatsumiWelcomePane(

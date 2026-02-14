@@ -1911,6 +1911,19 @@ const tabDesigns = {
             </div>
         `
     ),
+    "clicky": new MCChoice(
+        "clicky",
+        "Clicky",
+        "Click that tab",
+        `
+            <div id='tab-clicky' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+            </div>
+        </div>
+        `,
+    ),
 }
 
 const urlbarLayouts = {
