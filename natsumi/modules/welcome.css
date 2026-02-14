@@ -27,1193 +27,1485 @@ SOFTWARE.
 /* ==== Welcome pane ==== */
 
 @keyframes icon-fadein {
-  0% {
-    opacity: 0;
-    width: 60vh;
-    height: 60vh;
-    filter: blur(100px);
-  }
+    0% {
+        opacity: 0;
+        width: 60vh;
+        height: 60vh;
+        filter: blur(100px);
+    }
 
-  15% {
-    opacity: 1;
-    width: 48vh;
-    height: 48vh;
-    filter: blur(0);
-  }
+    15% {
+        opacity: 1;
+        width: 48vh;
+        height: 48vh;
+        filter: blur(0);
+    }
 
-  85% {
-    opacity: 1;
-    width: 40vh;
-    height: 40vh;
-    filter: blur(0);
-  }
+    85% {
+        opacity: 1;
+        width: 40vh;
+        height: 40vh;
+        filter: blur(0);
+    }
 
-  100% {
-    opacity: 0;
-    width: 28vh;
-    height: 28vh;
-    filter: blur(100px);
-  }
+    100% {
+        opacity: 0;
+        width: 28vh;
+        height: 28vh;
+        filter: blur(100px);
+    }
 }
 
 @keyframes icon-fadein-background {
-  0% {
-    background-color: transparent;
-  }
+    0% {
+        background-color: transparent;
+    }
 
-  5% {
-    background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
-  }
+    5% {
+        background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+    }
 
-  45% {
-    background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
-  }
+    45% {
+        background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+    }
 
-  65% {
-    background-color: transparent;
-  }
+    65% {
+        background-color: transparent;
+    }
 
-  100% {
-    background-color: transparent;
-  }
+    100% {
+        background-color: transparent;
+    }
 }
 
 @keyframes button-fadein {
-  from {
-    opacity: 0;
-  }
+    from {
+        opacity: 0;
+    }
 
-  to {
-    opacity: 1;
-  }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes text-appear {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-  70% {
-    opacity: 1;
-    transform: translateY(-10px);
-  }
+    70% {
+        opacity: 1;
+        transform: translateY(-10px);
+    }
 
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes panel-fadein {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
 
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 @keyframes basic-fadein {
-  from {
-    opacity: 0;
-  }
+    from {
+        opacity: 0;
+    }
 
-  to {
-    opacity: 1;
-  }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes basic-fadeout {
-  from {
-    opacity: 1;
-  }
+    from {
+        opacity: 1;
+    }
 
-  to {
-    opacity: 0;
-  }
+    to {
+        opacity: 0;
+    }
 }
 
 @keyframes drumroll-progress {
-  0% {
-    opacity: 1;
-    scale: 1;
-  }
+    0% {
+        opacity: 1;
+        scale: 1;
+    }
 
-  75% {
-    opacity: 1;
-    scale: 1;
-  }
+    75% {
+        opacity: 1;
+        scale: 1;
+    }
 
-  100% {
-    opacity: 0;
-    scale: 0.7;
-  }
+    100% {
+        opacity: 0;
+        scale: 0.7;
+    }
 }
 
 @keyframes drumroll-complete {
-  0% {
-    scale: 1;
-  }
+    0% {
+        scale: 1;
+    }
 
-  50% {
-    scale: 1.2;
-  }
+    50% {
+        scale: 1.2;
+    }
 
-  100% {
-    scale: 1;
-  }
+    100% {
+        scale: 1;
+    }
 }
 
 #natsumi-welcome {
-  position: absolute;
-  display: grid;
-  width: 100vw;
-  height: 100vh;
-  z-index: 998 !important;
-
-  &:not(:has(#natsumi-welcome-content:hover)) {
-    -moz-window-dragging: drag;
-  }
-
-  #natsumi-icon {
-    width: 40vh;
-    height: 40vh;
-    opacity: 0;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    list-style-image: url("../icons/natsumi-glass.png");
-  }
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    z-index: 998 !important;
 
-  .natsumi-welcome-button {
-    opacity: 0;
-  }
-
-  #natsumi-slogan-1, #natsumi-slogan-2 {
-    opacity: 0;
-    margin: 0 auto !important;
-    margin-bottom: 10px !important;
-    font-size: 50px;
-
-    span {
-      margin-right: 10px !important;
+    &:not(:has(#natsumi-welcome-content:hover)) {
+        -moz-window-dragging: drag;
     }
-  }
-
-  .natsumi-welcome-pane-body {
-    margin-top: 10px !important;
-  }
-
-  #natsumi-welcome-content {
-    grid-row-start: 1;
-    grid-column-start: 1;
-    width: 60%;
-    height: 60%;
-    border-radius: 15px;
-    margin: auto !important;
-
-    #natsumi-welcome-content-container {
-      flex-direction: column;
-      flex: 1;
-      padding: 10% 6% !important;
-    }
-
-    #natsumi-welcome-content-preview {
-      flex: 1;
-    }
-
-    .natsumi-welcome-pane {
-      flex-direction: column;
-
-      &#natsumi-welcome-initial {
-        justify-content: center;
-      }
-    }
-  }
-
-  #natsumi-corner-icon {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-
-    @media (-moz-platform: macos) {
-      left: unset;
-      right: 20px;
-    }
-
-    #natsumi-corner-icon-image {
-      width: 50px;
-      height: 50px;
-      list-style-image: url("../icons/natsumi-glass.png");
-      margin-right: 5px !important;
-    }
-
-    #natsumi-corner-icon-label {
-      margin: auto 0 !important;
-      font-size: 20px;
-      font-weight: bold;
-    }
-  }
-
-  #natsumi-welcome-button-next {
-    min-width: 66px !important;
-    min-height: 40px !important;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 4px;
-    background-color: var(--natsumi-primary-color) !important;
-    background-image: url("../icons/lucide/move-right.svg");
-    background-size: 20px;
-    background-repeat: no-repeat;
-    background-position: center;
-    -moz-context-properties: stroke, stroke-opacity !important;
-    stroke: black;
-    margin: 0 auto !important;
-    transition: background 0.2s ease;
-
-    &:hover {
-      background-color: color-mix(in srgb, var(--natsumi-primary-color) 90%, black) !important;
-    }
-  }
-
-  #natsumi-welcome-title {
-    font-weight: bold;
-    font-size: 28px;
-    margin-bottom: 10px !important;
-  }
-
-  .natsumi-welcome-paragraph {
-    font-size: medium;
-  }
-
-  &.natsumi-welcome-initial-animation {
-    animation: icon-fadein-background 10s ease;
 
     #natsumi-icon {
-      animation: icon-fadein 3.5s linear;
-      animation-fill-mode: forwards;
-    }
-
-    #natsumi-welcome-button-next {
-      animation: button-fadein 0.2s ease;
-      animation-delay: 4.5s;
-      animation-fill-mode: forwards;
-    }
-
-    #natsumi-corner-icon {
-      transition-delay: 4.5s;
-      opacity: 1;
-    }
-
-    #natsumi-slogan-1, #natsumi-slogan-2 {
-      animation: text-appear 0.5s ease;
-      animation-fill-mode: forwards;
-      font-weight: bold;
-    }
-
-    #natsumi-slogan-1 {
-      animation-delay: 3.5s;
-    }
-
-    #natsumi-slogan-2 {
-      animation-delay: 4s;
-
-      span {
-        background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
-        background-clip: text;
-        color: transparent;
-        background-size: calc(100% + 20px);
-
-        @media (prefers-color-scheme: light) {
-          filter: saturate(3);
-          color: rgba(0, 0, 0, 0.2);
-        }
-      }
-    }
-
-    #natsumi-welcome-content {
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
-      transition-delay: 4.5s;
-      background-color: light-dark(white, #222);
-      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
-    }
-
-    #natsumi-welcome-content-body {
-      margin: auto !important;
-    }
-  }
-
-  #natsumi-welcome-content-body {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    height: calc(100% - 48px) !important;
-  }
-
-  &.natsumi-welcome-ready {
-    #natsumi-icon {
-      display: none !important;
-    }
-
-    #natsumi-welcome-content {
-      background-color: light-dark(white, #222);
-      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
-    }
-
-    #natsumi-corner-icon {
-      opacity: 0;
+        width: 40vh;
+        height: 40vh;
+        opacity: 0;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        list-style-image: url("../icons/natsumi-glass.png");
     }
 
     .natsumi-welcome-button {
-      opacity: 1;
+        opacity: 0;
     }
 
-    #natsumi-welcome-button-next {
-      margin-top: auto !important;
-    }
+    #natsumi-slogan-1,
+    #natsumi-slogan-2 {
+        opacity: 0;
+        margin: 0 auto !important;
+        margin-bottom: 10px !important;
+        font-size: 50px;
 
-    .natsumi-welcome-pane {
-      animation: panel-fadein 0.2s ease;
-      animation-fill-mode: forwards;
+        span {
+            margin-right: 10px !important;
+        }
     }
 
     .natsumi-welcome-pane-body {
-      flex-direction: column;
+        margin-top: 10px !important;
+    }
+
+    #natsumi-welcome-content {
+        grid-row-start: 1;
+        grid-column-start: 1;
+        width: 60%;
+        height: 60%;
+        border-radius: 15px;
+        margin: auto !important;
+
+        #natsumi-welcome-content-container {
+            flex-direction: column;
+            flex: 1;
+            padding: 10% 6% !important;
+        }
+
+        #natsumi-welcome-content-preview {
+            flex: 1;
+        }
+
+        .natsumi-welcome-pane {
+            flex-direction: column;
+
+            &#natsumi-welcome-initial {
+                justify-content: center;
+            }
+        }
+    }
+
+    #natsumi-corner-icon {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        @media (-moz-platform: macos) {
+            left: unset;
+            right: 20px;
+        }
+
+        #natsumi-corner-icon-image {
+            width: 50px;
+            height: 50px;
+            list-style-image: url("../icons/natsumi-glass.png");
+            margin-right: 5px !important;
+        }
+
+        #natsumi-corner-icon-label {
+            margin: auto 0 !important;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    }
+
+    #natsumi-welcome-button-next {
+        min-width: 66px !important;
+        min-height: 40px !important;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 4px;
+        background-color: var(--natsumi-primary-color) !important;
+        background-image: url("../icons/lucide/move-right.svg");
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+        -moz-context-properties: stroke, stroke-opacity !important;
+        stroke: black;
+        margin: 0 auto !important;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background-color: color-mix(
+                in srgb,
+                var(--natsumi-primary-color) 90%,
+                black
+            ) !important;
+        }
+    }
+
+    #natsumi-welcome-title {
+        font-weight: bold;
+        font-size: 28px;
+        margin-bottom: 10px !important;
     }
 
     .natsumi-welcome-paragraph {
-      margin-bottom: 10px !important;
-      flex-direction: column;
+        font-size: medium;
     }
 
-    .natsumi-welcome-selection-container {
-      flex-wrap: wrap;
-      gap: 10px;
-      overflow-y: scroll;
-    }
+    &.natsumi-welcome-initial-animation {
+        animation: icon-fadein-background 10s ease;
 
-    .natsumi-welcome-selection {
-      border-radius: 5px;
-      flex-direction: column;
-      border: 2px solid light-dark(#ccc, #777) !important;
-      padding: 10px !important;
-
-      &:hover {
-        background-color: var(--natsumi-button-hover-color);
-      }
-
-      &.selected {
-        border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
-        background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
-      }
-
-      .natsumi-welcome-selection-label {
-        font-size: 12px !important;
-      }
-
-      .natsumi-welcome-selection-preview {
-        margin-bottom: 10px !important;
-      }
-    }
-
-    /* Layout pane */
-    #natsumi-welcome-layout {
-      .natsumi-welcome-selection-preview {
-        width: 140px;
-        height: 80px;
-        border-radius: 4px;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
-
-        &::before {
-          content: "";
-          width: 102px;
-          height: 60px;
-          margin: auto 4px 4px auto !important;
-          border-radius: 2px !important;
-          background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
-          border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
-          box-sizing: border-box !important;
+        #natsumi-icon {
+            animation: icon-fadein 3.5s linear;
+            animation-fill-mode: forwards;
         }
 
-        &#natsumi-welcome-single-toolbar::before {
-          height: 70px !important;
-        }
-      }
-
-      .natsumi-welcome-selection-container[horizontal="true"] {
-        #natsumi-welcome-multiple-toolbars::before {
-          width: 130px;
-        }
-      }
-
-      @media not -moz-pref("natsumi.theme.single-toolbar") {
-        #natsumiSingleToolbarNotice {
-          display: none !important;
-        }
-      }
-    }
-
-    /* Colors pane */
-    #natsumi-welcome-colors {
-      .natsumi-welcome-selection {
-        border-radius: 50%;
-        padding: 5px !important;
-      }
-
-      .natsumi-welcome-selection-preview {
-        width: 30px;
-        height: 30px;
-        margin-bottom: 0 !important;
-        border-radius: 50%;
-
-        &#natsumi-welcome-light-green {
-          background-color: #a0d490;
+        #natsumi-welcome-button-next {
+            animation: button-fadein 0.2s ease;
+            animation-delay: 4.5s;
+            animation-fill-mode: forwards;
         }
 
-        &#natsumi-welcome-sky-blue {
-          background-color: #aac7ff;
+        #natsumi-corner-icon {
+            transition-delay: 4.5s;
+            opacity: 1;
         }
 
-        &#natsumi-welcome-turquoise {
-          background-color: #74d7cb;
+        #natsumi-slogan-1,
+        #natsumi-slogan-2 {
+            animation: text-appear 0.5s ease;
+            animation-fill-mode: forwards;
+            font-weight: bold;
         }
 
-        &#natsumi-welcome-yellow {
-          background-color: #dec663;
+        #natsumi-slogan-1 {
+            animation-delay: 3.5s;
         }
 
-        &#natsumi-welcome-peach-orange {
-          background-color: #ffb787;
-        }
+        #natsumi-slogan-2 {
+            animation-delay: 4s;
 
-        &#natsumi-welcome-warmer-pink {
-          background-color: #ff9eb3;
-        }
+            span {
+                background: linear-gradient(
+                    135deg,
+                    #ff9393,
+                    #ffb78b,
+                    #ffe88c,
+                    #5ce4a2,
+                    #97a6ff,
+                    #be9dff
+                );
+                background-clip: text;
+                color: transparent;
+                background-size: calc(100% + 20px);
 
-        &#natsumi-welcome-beige {
-          background-color: #dec1b1;
-        }
-
-        &#natsumi-welcome-light-red {
-          background-color: #ffb1c0;
-        }
-
-        &#natsumi-welcome-muted-pink {
-          background-color: #ddbcf3;
-        }
-
-        &#natsumi-welcome-pink {
-          background-color: #f6b0ea;
-        }
-
-        &#natsumi-welcome-lavender-purple {
-          background-color: #d4bbff;
-        }
-
-        &#natsumi-welcome-system-accent {
-          background-color: AccentColor;
-        }
-      }
-    }
-
-    /* Themes pane */
-    #natsumi-welcome-themes {
-      .natsumi-welcome-selection {
-        border-radius: 10px;
-        padding: 5px !important;
-      }
-
-      .natsumi-welcome-selection-preview {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 0 !important;
-        border-radius: 4px;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
-
-        &#natsumi-welcome-theme-default {
-          background-color: light-dark(#ebebeb, #171717);
-        }
-
-        &#natsumi-welcome-theme-gradient {
-          --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
-          --color-right: light-dark(var(--natsumi-colors-secondary), color-mix(in srgb, var(--natsumi-primary-color) 50%, black));
-          background: linear-gradient(135deg, var(--color-left), var(--color-right));
-        }
-
-        &#natsumi-welcome-theme-cgradient {
-          --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
-          --color-right: hsl(from var(--color-left) calc(h + 180) s l);
-          background: linear-gradient(135deg, var(--color-left), var(--color-right));
-        }
-
-        &#natsumi-welcome-theme-colorful {
-          background-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary));
-        }
-
-        &#natsumi-welcome-theme-playful {
-          background-color: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-primary-color) 70%, black)) !important;
-          filter: saturate(2);
-        }
-
-        &#natsumi-welcome-theme-lucid {
-          background: radial-gradient(closest-side, light-dark(var(--natsumi-primary-color), var(--natsumi-colors-secondary)), light-dark(white, #222));
-        }
-
-        &#natsumi-welcome-theme-oled {
-          background-color: light-dark(white, black);
-        }
-
-        &#natsumi-welcome-theme-lgbtq {
-          background: linear-gradient(180deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
-
-          @media (prefers-color-scheme: dark) {
-            background: linear-gradient(180deg, #994444, #895f46, #8d804b, #3e8663, #3e456d, #625084);
-          }
-        }
-
-        &#natsumi-welcome-theme-transgender {
-          background: linear-gradient(180deg, #5bcefa, #f5a9b8, white, #f5a9b8, #5bcefa);
-
-          @media (prefers-color-scheme: dark) {
-            background: linear-gradient(180deg, #316a80, #745259, #aaa, #745259, #316a80);
-          }
-        }
-      }
-    }
-
-    /* Tabs pane */
-    #natsumi-welcome-tabs {
-      .natsumi-welcome-selection-preview {
-        display: grid;
-        grid-template-columns: 1fr;
-        overflow: hidden;
-        width: 140px;
-        height: 80px;
-        border-radius: 4px;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
-        background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
-
-        @media (prefers-color-scheme: dark) {
-          background: linear-gradient(135deg, #994444, #895f46, #8d804b, #3e8663, #3e456d, #625084) !important;
-        }
-
-        &::before {
-          content: "";
-          grid-row-start: 1;
-          grid-column-start: 1;
-          margin-left: auto;
-          margin-top: auto;
-          margin-right: 0;
-          margin-bottom: 0;
-          height: calc(100% - 10px);
-          width: 10px;
-          border-radius: 5px 0 0 0;
-          border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-          background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
-          border-right: none;
-          border-bottom: none;
-        }
-
-        .natsumi-welcome-tab {
-          width: calc(100% - 18px);
-          margin-left: 4px;
-          margin-top: 16px;
-          height: 16px;
-          grid-row-start: 1;
-          grid-column-start: 1;
-
-          .natsumi-welcome-tab-icon {
-            background-color: light-dark(black, white);
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            margin: auto 6px;
-          }
-
-          .natsumi-welcome-tab-text {
-            background-color: light-dark(black, white);
-            width: 50%;
-            height: 4px;
-            border-radius: 2px;
-            margin: auto 0;
-          }
-        }
-      }
-
-      #natsumi-welcome-tabs-blade {
-        .natsumi-welcome-tab {
-          background: var(--natsumi-mat-hz-background);
-          backdrop-filter: var(--natsumi-mat-hz-backdrop);
-          border-radius: 5px;
-          box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
-
-          &::after {
-            --natsumi-tab-highlight-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary));
-            content: "";
-            position: absolute;
-            z-index: -1;
-            background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
-            border: 2px solid var(--natsumi-tab-highlight-color) !important;
-            width: calc(100% - 4px);
-            height: calc(100% - 4px);
-            border-radius: 5px;
-            mask-image: linear-gradient(to right, black, transparent 30%);
-          }
-        }
-      }
-
-      #natsumi-welcome-tabs-origin {
-        .natsumi-welcome-tab {
-          background-color: light-dark(white, rgba(255, 255, 255, 0.17));
-          border-top: 1px solid light-dark(#8888882d, #ffffff2d);
-          border-bottom: 1px solid #0000002d;
-          border-radius: 5px;
-        }
-      }
-
-      #natsumi-welcome-tabs-curve {
-        .natsumi-welcome-tab {
-          background-color: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.12));
-          backdrop-filter: saturate(1); /* Just so we don't lose our pseudoelements */
-          border-radius: 5px;
-          box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
-          overflow: hidden;
-
-          &::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.1));
-          }
-
-          &::after {
-            --natsumi-tab-highlight-color: var(--natsumi-primary-color);
-            content: "";
-            position: absolute;
-            z-index: -1;
-            background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
-            width: 50%;
-            height: 100%;
-            border-radius: 5px;
-            mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
-          }
-        }
-      }
-
-      #natsumi-welcome-tabs-fusion {
-        &::before {
-          outline: 2px solid light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
-        }
-
-        .natsumi-welcome-tab {
-          background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
-          width: calc(100% - 17px);
-          border-radius: 2px 0 0 2px;
-        }
-      }
-
-      #natsumi-welcome-tabs-material {
-        .natsumi-welcome-tab {
-          background-color: color-mix(in srgb, var(--natsumi-primary-color), light-dark(white, black)) !important;
-          border: 1px solid light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2)) !important;
-          border-radius: 3px;
-          box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
-        }
-      }
-
-      #natsumi-welcome-tabs-hexagonal {
-        .natsumi-welcome-tab {
-          --natsumi-tab-height: 16px;
-          --horizontal-dist: calc(calc(var(--natsumi-tab-height) / 2) * tan(30deg));
-          --hexagon-side-length: calc(calc(var(--natsumi-tab-height) / 2) / sin(60deg));
-          --icon-container-width: calc(var(--horizontal-dist) * 2 + var(--hexagon-side-length));
-          background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
-          clip-path: polygon(
-                  0 50%,
-                  var(--horizontal-dist) 0,
-                  calc(100% - var(--horizontal-dist)) 0,
-                  100% 50%,
-                  calc(100% - var(--horizontal-dist)) 100%,
-                  var(--horizontal-dist) 100%
-          );
-
-          .natsumi-welcome-tab-icon {
-            display: grid;
-            grid-template-columns: 1fr;
-
-            &::before {
-              --natsumi-tab-highlight-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary));
-              content: "";
-              grid-row-start: 1;
-              grid-column-start: 1;
-              z-index: -1;
-              background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
-              min-width: var(--icon-container-width);
-              height: 16px;
-              margin-top: -5px;
-              margin-left: -6px;
-              clip-path: polygon(
-                      0 50%,
-                      var(--horizontal-dist) 0,
-                      calc(100% - var(--horizontal-dist)) 0,
-                      100% 50%,
-                      calc(100% - var(--horizontal-dist)) 100%,
-                      var(--horizontal-dist) 100%
-              );
+                @media (prefers-color-scheme: light) {
+                    filter: saturate(3);
+                    color: rgba(0, 0, 0, 0.2);
+                }
             }
-          }
-
-          .natsumi-welcome-tab-text {
-            margin-left: 2px;
-          }
         }
-      }
 
-      #natsumi-welcome-tabs-bubble {
-        .natsumi-welcome-tab {
-          background-color: var(--natsumi-mat-hz-background);
-          border: var(--natsumi-mat-hz-border-thin);
-          backdrop-filter: var(--natsumi-mat-hz-backdrop);
-          border-radius: 8px;
-          box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
-
-          &::before {
-            content: "";
-            position: absolute;
-            width: calc(100% - 4px);
-            height: calc(100% - 4px);
-            margin: 2px;
-            border-radius: 6px;
-            background-color: var(--natsumi-sdl2-haze-button-idle-color);
-            box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow);
-            z-index: -1;
-          }
+        #natsumi-welcome-content {
+            transition:
+                background-color 0.2s ease,
+                box-shadow 0.2s ease;
+            transition-delay: 4.5s;
+            background-color: light-dark(white, #222);
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
         }
-      }
 
-      #natsumi-welcome-tabs-classic {
-        .natsumi-welcome-tab {
-          background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
-          border-radius: 3px;
-          box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+        #natsumi-welcome-content-body {
+            margin: auto !important;
         }
-      }
     }
 
-    /* Icons pane */
-    #natsumi-welcome-icons {
-      .natsumi-welcome-selection-preview {
-        display: grid !important;
-        grid-template-columns: 1fr;
-        width: 140px;
-        height: 80px;
-        border-radius: 4px;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+    #natsumi-welcome-content-body {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        height: calc(100% - 48px) !important;
+    }
 
-        &::before {
-          content: "";
-          width: 118px;
-          height: 58px;
-          margin-left: 21px;
-          margin-top: 21px;
-          border-radius: 2px !important;
-          background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
-          border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
-          box-sizing: border-box !important;
-          grid-row-start: 1;
-          grid-column-start: 1;
+    &.natsumi-welcome-ready {
+        #natsumi-icon {
+            display: none !important;
         }
 
-        .natsumi-welcome-selection-icon {
-          grid-row-start: 1;
-          grid-column-start: 1;
-          width: 12px;
-          height: 12px;
-          margin: 4px !important;
-          background-size: 12px;
-          -moz-context-properties: fill, stroke;
-
-          &.icon-bookmarks {
-            margin-left: 28px !important;
-          }
-
-          &.icon-back {
-            margin-left: 52px !important;
-          }
-
-          &.icon-reload {
-            margin-left: 76px !important;
-          }
+        #natsumi-welcome-content {
+            background-color: light-dark(white, #222);
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
         }
 
-        &#natsumi-welcome-icons-default {
-          .natsumi-welcome-selection-icon {
-            fill: light-dark(black, white);
-          }
-
-          .icon-sidebar {
-            background-image: url("chrome://browser/skin/sidebar-collapsed.svg");
-          }
-
-          .icon-bookmarks {
-            background-image: url("chrome://browser/skin/synced-tabs.svg");
-          }
-
-          .icon-back {
-            background-image: url("chrome://browser/skin/back.svg");
-          }
-
-          .icon-reload {
-            background-image: url("chrome://global/skin/icons/reload.svg");
-          }
+        #natsumi-corner-icon {
+            opacity: 0;
         }
 
-        &#natsumi-welcome-icons-lucide {
-          .natsumi-welcome-selection-icon {
+        .natsumi-welcome-button {
+            opacity: 1;
+        }
+
+        #natsumi-welcome-button-next {
+            margin-top: auto !important;
+        }
+
+        .natsumi-welcome-pane {
+            animation: panel-fadein 0.2s ease;
+            animation-fill-mode: forwards;
+        }
+
+        .natsumi-welcome-pane-body {
+            flex-direction: column;
+        }
+
+        .natsumi-welcome-paragraph {
+            margin-bottom: 10px !important;
+            flex-direction: column;
+        }
+
+        .natsumi-welcome-selection-container {
+            flex-wrap: wrap;
+            gap: 10px;
+            overflow-y: scroll;
+        }
+
+        .natsumi-welcome-selection {
+            border-radius: 5px;
+            flex-direction: column;
+            border: 2px solid light-dark(#ccc, #777) !important;
+            padding: 10px !important;
+
+            &:hover {
+                background-color: var(--natsumi-button-hover-color);
+            }
+
+            &.selected {
+                border-color: light-dark(
+                    var(--natsumi-colors-primary),
+                    var(--natsumi-primary-color)
+                ) !important;
+                background-color: color-mix(
+                    in srgb,
+                    var(--natsumi-primary-color) 30%,
+                    transparent
+                );
+            }
+
+            .natsumi-welcome-selection-label {
+                font-size: 12px !important;
+            }
+
+            .natsumi-welcome-selection-preview {
+                margin-bottom: 10px !important;
+            }
+        }
+
+        /* Layout pane */
+        #natsumi-welcome-layout {
+            .natsumi-welcome-selection-preview {
+                width: 140px;
+                height: 80px;
+                border-radius: 4px;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+
+                &::before {
+                    content: "";
+                    width: 102px;
+                    height: 60px;
+                    margin: auto 4px 4px auto !important;
+                    border-radius: 2px !important;
+                    background: light-dark(
+                        var(--natsumi-colors-secondary),
+                        var(--natsumi-colors-primary)
+                    );
+                    border: 1px solid
+                        light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+                    box-sizing: border-box !important;
+                }
+
+                &#natsumi-welcome-single-toolbar::before {
+                    height: 70px !important;
+                }
+            }
+
+            .natsumi-welcome-selection-container[horizontal="true"] {
+                #natsumi-welcome-multiple-toolbars::before {
+                    width: 130px;
+                }
+            }
+
+            @media not -moz-pref("natsumi.theme.single-toolbar") {
+                #natsumiSingleToolbarNotice {
+                    display: none !important;
+                }
+            }
+        }
+
+        /* Colors pane */
+        #natsumi-welcome-colors {
+            .natsumi-welcome-selection {
+                border-radius: 50%;
+                padding: 5px !important;
+            }
+
+            .natsumi-welcome-selection-preview {
+                width: 30px;
+                height: 30px;
+                margin-bottom: 0 !important;
+                border-radius: 50%;
+
+                &#natsumi-welcome-light-green {
+                    background-color: #a0d490;
+                }
+
+                &#natsumi-welcome-sky-blue {
+                    background-color: #aac7ff;
+                }
+
+                &#natsumi-welcome-turquoise {
+                    background-color: #74d7cb;
+                }
+
+                &#natsumi-welcome-yellow {
+                    background-color: #dec663;
+                }
+
+                &#natsumi-welcome-peach-orange {
+                    background-color: #ffb787;
+                }
+
+                &#natsumi-welcome-warmer-pink {
+                    background-color: #ff9eb3;
+                }
+
+                &#natsumi-welcome-beige {
+                    background-color: #dec1b1;
+                }
+
+                &#natsumi-welcome-light-red {
+                    background-color: #ffb1c0;
+                }
+
+                &#natsumi-welcome-muted-pink {
+                    background-color: #ddbcf3;
+                }
+
+                &#natsumi-welcome-pink {
+                    background-color: #f6b0ea;
+                }
+
+                &#natsumi-welcome-lavender-purple {
+                    background-color: #d4bbff;
+                }
+
+                &#natsumi-welcome-system-accent {
+                    background-color: AccentColor;
+                }
+            }
+        }
+
+        /* Themes pane */
+        #natsumi-welcome-themes {
+            .natsumi-welcome-selection {
+                border-radius: 10px;
+                padding: 5px !important;
+            }
+
+            .natsumi-welcome-selection-preview {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 0 !important;
+                border-radius: 4px;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+
+                &#natsumi-welcome-theme-default {
+                    background-color: light-dark(#ebebeb, #171717);
+                }
+
+                &#natsumi-welcome-theme-gradient {
+                    --color-left: light-dark(
+                        var(--natsumi-primary-color),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-colors-primary) 95%,
+                            white
+                        )
+                    );
+                    --color-right: light-dark(
+                        var(--natsumi-colors-secondary),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-primary-color) 50%,
+                            black
+                        )
+                    );
+                    background: linear-gradient(
+                        135deg,
+                        var(--color-left),
+                        var(--color-right)
+                    );
+                }
+
+                &#natsumi-welcome-theme-cgradient {
+                    --color-left: light-dark(
+                        var(--natsumi-primary-color),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-colors-primary) 95%,
+                            white
+                        )
+                    );
+                    --color-right: hsl(
+                        from var(--color-left) calc(h + 180) s l
+                    );
+                    background: linear-gradient(
+                        135deg,
+                        var(--color-left),
+                        var(--color-right)
+                    );
+                }
+
+                &#natsumi-welcome-theme-colorful {
+                    background-color: light-dark(
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-primary-color) 50%,
+                            white
+                        ),
+                        var(--natsumi-colors-primary)
+                    );
+                }
+
+                &#natsumi-welcome-theme-playful {
+                    background-color: light-dark(
+                        var(--natsumi-primary-color),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-primary-color) 70%,
+                            black
+                        )
+                    ) !important;
+                    filter: saturate(2);
+                }
+
+                &#natsumi-welcome-theme-lucid {
+                    background: radial-gradient(
+                        closest-side,
+                        light-dark(
+                            var(--natsumi-primary-color),
+                            var(--natsumi-colors-secondary)
+                        ),
+                        light-dark(white, #222)
+                    );
+                }
+
+                &#natsumi-welcome-theme-oled {
+                    background-color: light-dark(white, black);
+                }
+
+                &#natsumi-welcome-theme-lgbtq {
+                    background: linear-gradient(
+                        180deg,
+                        #ff9393,
+                        #ffb78b,
+                        #ffe88c,
+                        #5ce4a2,
+                        #97a6ff,
+                        #be9dff
+                    );
+
+                    @media (prefers-color-scheme: dark) {
+                        background: linear-gradient(
+                            180deg,
+                            #994444,
+                            #895f46,
+                            #8d804b,
+                            #3e8663,
+                            #3e456d,
+                            #625084
+                        );
+                    }
+                }
+
+                &#natsumi-welcome-theme-transgender {
+                    background: linear-gradient(
+                        180deg,
+                        #5bcefa,
+                        #f5a9b8,
+                        white,
+                        #f5a9b8,
+                        #5bcefa
+                    );
+
+                    @media (prefers-color-scheme: dark) {
+                        background: linear-gradient(
+                            180deg,
+                            #316a80,
+                            #745259,
+                            #aaa,
+                            #745259,
+                            #316a80
+                        );
+                    }
+                }
+            }
+        }
+
+        /* Tabs pane */
+        #natsumi-welcome-tabs {
+            .natsumi-welcome-selection-preview {
+                display: grid;
+                grid-template-columns: 1fr;
+                overflow: hidden;
+                width: 140px;
+                height: 80px;
+                border-radius: 4px;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+                background: linear-gradient(
+                    135deg,
+                    #ff9393,
+                    #ffb78b,
+                    #ffe88c,
+                    #5ce4a2,
+                    #97a6ff,
+                    #be9dff
+                );
+
+                @media (prefers-color-scheme: dark) {
+                    background: linear-gradient(
+                        135deg,
+                        #994444,
+                        #895f46,
+                        #8d804b,
+                        #3e8663,
+                        #3e456d,
+                        #625084
+                    ) !important;
+                }
+
+                &::before {
+                    content: "";
+                    grid-row-start: 1;
+                    grid-column-start: 1;
+                    margin-left: auto;
+                    margin-top: auto;
+                    margin-right: 0;
+                    margin-bottom: 0;
+                    height: calc(100% - 10px);
+                    width: 10px;
+                    border-radius: 5px 0 0 0;
+                    border: 1px solid
+                        light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+                    background: light-dark(
+                        var(--natsumi-colors-secondary),
+                        var(--natsumi-colors-primary)
+                    );
+                    border-right: none;
+                    border-bottom: none;
+                }
+
+                .natsumi-welcome-tab {
+                    width: calc(100% - 18px);
+                    margin-left: 4px;
+                    margin-top: 16px;
+                    height: 16px;
+                    grid-row-start: 1;
+                    grid-column-start: 1;
+
+                    .natsumi-welcome-tab-icon {
+                        background-color: light-dark(black, white);
+                        width: 6px;
+                        height: 6px;
+                        border-radius: 50%;
+                        margin: auto 6px;
+                    }
+
+                    .natsumi-welcome-tab-text {
+                        background-color: light-dark(black, white);
+                        width: 50%;
+                        height: 4px;
+                        border-radius: 2px;
+                        margin: auto 0;
+                    }
+                }
+            }
+
+            #natsumi-welcome-tabs-blade {
+                .natsumi-welcome-tab {
+                    background: var(--natsumi-mat-hz-background);
+                    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                    border-radius: 5px;
+                    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+
+                    &::after {
+                        --natsumi-tab-highlight-color: light-dark(
+                            var(--natsumi-primary-color),
+                            var(--natsumi-colors-primary)
+                        );
+                        content: "";
+                        position: absolute;
+                        z-index: -1;
+                        background: color-mix(
+                            in srgb,
+                            var(--natsumi-tab-highlight-color) 40%,
+                            transparent
+                        );
+                        border: 2px solid var(--natsumi-tab-highlight-color) !important;
+                        width: calc(100% - 4px);
+                        height: calc(100% - 4px);
+                        border-radius: 5px;
+                        mask-image: linear-gradient(
+                            to right,
+                            black,
+                            transparent 30%
+                        );
+                    }
+                }
+            }
+
+            #natsumi-welcome-tabs-origin {
+                .natsumi-welcome-tab {
+                    background-color: light-dark(
+                        white,
+                        rgba(255, 255, 255, 0.17)
+                    );
+                    border-top: 1px solid light-dark(#8888882d, #ffffff2d);
+                    border-bottom: 1px solid #0000002d;
+                    border-radius: 5px;
+                }
+            }
+
+            #natsumi-welcome-tabs-curve {
+                .natsumi-welcome-tab {
+                    background-color: light-dark(
+                        rgba(255, 255, 255, 0.8),
+                        rgba(255, 255, 255, 0.12)
+                    );
+                    backdrop-filter: saturate(
+                        1
+                    ); /* Just so we don't lose our pseudoelements */
+                    border-radius: 5px;
+                    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+                    overflow: hidden;
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(
+                            180deg,
+                            transparent,
+                            rgba(0, 0, 0, 0.1)
+                        );
+                    }
+
+                    &::after {
+                        --natsumi-tab-highlight-color: var(
+                            --natsumi-primary-color
+                        );
+                        content: "";
+                        position: absolute;
+                        z-index: -1;
+                        background: color-mix(
+                            in srgb,
+                            var(--natsumi-tab-highlight-color) 40%,
+                            transparent
+                        );
+                        width: 50%;
+                        height: 100%;
+                        border-radius: 5px;
+                        mask-image: linear-gradient(
+                            to right,
+                            rgba(0, 0, 0, 0.5),
+                            transparent
+                        );
+                    }
+                }
+            }
+
+            #natsumi-welcome-tabs-fusion {
+                &::before {
+                    outline: 2px solid
+                        light-dark(
+                            rgba(255, 255, 255, 0.5),
+                            rgba(255, 255, 255, 0.3)
+                        );
+                }
+
+                .natsumi-welcome-tab {
+                    background-color: light-dark(
+                        rgba(255, 255, 255, 0.5),
+                        rgba(255, 255, 255, 0.3)
+                    );
+                    width: calc(100% - 17px);
+                    border-radius: 2px 0 0 2px;
+                }
+            }
+
+            #natsumi-welcome-tabs-material {
+                .natsumi-welcome-tab {
+                    background-color: color-mix(
+                        in srgb,
+                        var(--natsumi-primary-color),
+                        light-dark(white, black)
+                    ) !important;
+                    border: 1px solid
+                        light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2)) !important;
+                    border-radius: 3px;
+                    box-shadow:
+                        rgba(0, 0, 0, 0.2) 0px 0px 1px 0px,
+                        rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+                }
+            }
+
+            #natsumi-welcome-tabs-hexagonal {
+                .natsumi-welcome-tab {
+                    --natsumi-tab-height: 16px;
+                    --horizontal-dist: calc(
+                        calc(var(--natsumi-tab-height) / 2) * tan(30deg)
+                    );
+                    --hexagon-side-length: calc(
+                        calc(var(--natsumi-tab-height) / 2) / sin(60deg)
+                    );
+                    --icon-container-width: calc(
+                        var(--horizontal-dist) * 2 + var(--hexagon-side-length)
+                    );
+                    background-color: light-dark(
+                        rgb(255, 255, 255),
+                        rgba(106, 106, 120, 0.7)
+                    );
+                    clip-path: polygon(
+                        0 50%,
+                        var(--horizontal-dist) 0,
+                        calc(100% - var(--horizontal-dist)) 0,
+                        100% 50%,
+                        calc(100% - var(--horizontal-dist)) 100%,
+                        var(--horizontal-dist) 100%
+                    );
+
+                    .natsumi-welcome-tab-icon {
+                        display: grid;
+                        grid-template-columns: 1fr;
+
+                        &::before {
+                            --natsumi-tab-highlight-color: light-dark(
+                                var(--natsumi-primary-color),
+                                var(--natsumi-colors-primary)
+                            );
+                            content: "";
+                            grid-row-start: 1;
+                            grid-column-start: 1;
+                            z-index: -1;
+                            background: color-mix(
+                                in srgb,
+                                var(--natsumi-tab-highlight-color) 40%,
+                                transparent
+                            );
+                            min-width: var(--icon-container-width);
+                            height: 16px;
+                            margin-top: -5px;
+                            margin-left: -6px;
+                            clip-path: polygon(
+                                0 50%,
+                                var(--horizontal-dist) 0,
+                                calc(100% - var(--horizontal-dist)) 0,
+                                100% 50%,
+                                calc(100% - var(--horizontal-dist)) 100%,
+                                var(--horizontal-dist) 100%
+                            );
+                        }
+                    }
+
+                    .natsumi-welcome-tab-text {
+                        margin-left: 2px;
+                    }
+                }
+            }
+
+            #natsumi-welcome-tabs-bubble {
+                .natsumi-welcome-tab {
+                    background-color: var(--natsumi-mat-hz-background);
+                    border: var(--natsumi-mat-hz-border-thin);
+                    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                    border-radius: 8px;
+                    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        width: calc(100% - 4px);
+                        height: calc(100% - 4px);
+                        margin: 2px;
+                        border-radius: 6px;
+                        background-color: var(
+                            --natsumi-sdl2-haze-button-idle-color
+                        );
+                        box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow);
+                        z-index: -1;
+                    }
+                }
+            }
+
+            #natsumi-welcome-tabs-classic {
+                .natsumi-welcome-tab {
+                    background-color: light-dark(
+                        rgb(255, 255, 255),
+                        rgba(106, 106, 120, 0.7)
+                    );
+                    border-radius: 3px;
+                    box-shadow:
+                        rgba(0, 0, 0, 0.2) 0px 0px 1px 0px,
+                        rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+                }
+            }
+
+            #natsumi-welcome-tabs-clicky {
+                .natsumi-welcome-tab {
+                    background: light-dark(
+                        linear-gradient(
+                            0deg,
+                            rgb(255, 255, 255) 50%,
+                            color-mix(rgb(255, 255, 255), transparent 40%)
+                        ),
+                        linear-gradient(
+                            0deg,
+                            rgba(106, 106, 120, 0.7) 50%,
+                            color-mix(rgba(106, 106, 120, 0.7), transparent 40%)
+                        )
+                    );
+                    box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1);
+                    border-radius: 3px;
+                }
+            }
+        }
+
+        /* Icons pane */
+        #natsumi-welcome-icons {
+            .natsumi-welcome-selection-preview {
+                display: grid !important;
+                grid-template-columns: 1fr;
+                width: 140px;
+                height: 80px;
+                border-radius: 4px;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+
+                &::before {
+                    content: "";
+                    width: 118px;
+                    height: 58px;
+                    margin-left: 21px;
+                    margin-top: 21px;
+                    border-radius: 2px !important;
+                    background: light-dark(
+                        var(--natsumi-colors-secondary),
+                        var(--natsumi-colors-primary)
+                    );
+                    border: 1px solid
+                        light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+                    box-sizing: border-box !important;
+                    grid-row-start: 1;
+                    grid-column-start: 1;
+                }
+
+                .natsumi-welcome-selection-icon {
+                    grid-row-start: 1;
+                    grid-column-start: 1;
+                    width: 12px;
+                    height: 12px;
+                    margin: 4px !important;
+                    background-size: 12px;
+                    -moz-context-properties: fill, stroke;
+
+                    &.icon-bookmarks {
+                        margin-left: 28px !important;
+                    }
+
+                    &.icon-back {
+                        margin-left: 52px !important;
+                    }
+
+                    &.icon-reload {
+                        margin-left: 76px !important;
+                    }
+                }
+
+                &#natsumi-welcome-icons-default {
+                    .natsumi-welcome-selection-icon {
+                        fill: light-dark(black, white);
+                    }
+
+                    .icon-sidebar {
+                        background-image: url("chrome://browser/skin/sidebar-collapsed.svg");
+                    }
+
+                    .icon-bookmarks {
+                        background-image: url("chrome://browser/skin/synced-tabs.svg");
+                    }
+
+                    .icon-back {
+                        background-image: url("chrome://browser/skin/back.svg");
+                    }
+
+                    .icon-reload {
+                        background-image: url("chrome://global/skin/icons/reload.svg");
+                    }
+                }
+
+                &#natsumi-welcome-icons-lucide {
+                    .natsumi-welcome-selection-icon {
+                        stroke: light-dark(black, white);
+                    }
+
+                    .icon-sidebar {
+                        background-image: url("../icons/lucide/sidebar.svg");
+                    }
+
+                    .icon-bookmarks {
+                        background-image: url("../icons/lucide/devices.svg");
+                    }
+
+                    .icon-back {
+                        background-image: url("../icons/lucide/arrow-left.svg");
+                    }
+
+                    .icon-reload {
+                        background-image: url("../icons/lucide/rotate-right.svg");
+                    }
+                }
+
+                &#natsumi-welcome-icons-fluent {
+                    .natsumi-welcome-selection-icon {
+                        fill: light-dark(black, white);
+                    }
+
+                    .icon-sidebar {
+                        background-image: url("../icons/fluent/sidebar.svg");
+                    }
+
+                    .icon-bookmarks {
+                        background-image: url("../icons/fluent/devices.svg");
+                    }
+
+                    .icon-back {
+                        background-image: url("../icons/fluent/arrow-left.svg");
+                    }
+
+                    .icon-reload {
+                        background-image: url("../icons/fluent/rotate-right.svg");
+                    }
+                }
+            }
+        }
+
+        /* URLbar pane */
+        #natsumi-welcome-urlbar {
+            .natsumi-welcome-selection-preview {
+                display: grid;
+                grid-template-columns: 1fr;
+                width: 140px;
+                height: 80px;
+                border-radius: 4px;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+
+                &::before {
+                    content: "";
+                    grid-row-start: 1;
+                    grid-column-start: 1;
+                    width: 102px;
+                    height: 60px;
+                    margin: auto 4px 4px auto !important;
+                    border-radius: 2px !important;
+                    background: light-dark(
+                        var(--natsumi-colors-secondary),
+                        var(--natsumi-colors-primary)
+                    );
+                    border: 1px solid
+                        light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
+                    box-sizing: border-box !important;
+                }
+
+                &::after {
+                    content: "";
+                    display: block;
+                    width: 75px;
+                    height: 45px;
+                    margin-top: -58px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    border: 1px solid
+                        light-dark(
+                            rgba(20, 20, 20, 0.1),
+                            rgba(235, 235, 235, 0.1)
+                        );
+                    background-color: var(--natsumi-mat-th-background);
+                    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+                    border-radius: 3px;
+                }
+
+                &#natsumi-welcome-urlbar-classic {
+                    &::after {
+                        margin-top: -70px;
+                        width: 60px;
+                        height: 40px;
+                        background-color: light-dark(white, #777);
+                        border: 1px solid
+                            light-dark(
+                                rgba(20, 20, 20, 0.3),
+                                rgba(235, 235, 235, 0.3)
+                            );
+                        backdrop-filter: none;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Drumrolls */
+    .natsumi-welcome-drumroll {
+        display: none;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        margin: auto !important;
+
+        .natsumi-welcome-drumroll-icon {
+            width: 36px;
+            height: 36px;
+            background-size: 36px;
+            -moz-context-properties: stroke, stroke-opacity !important;
             stroke: light-dark(black, white);
-          }
-
-          .icon-sidebar {
-            background-image: url("../icons/lucide/sidebar.svg");
-          }
-
-          .icon-bookmarks {
-            background-image: url("../icons/lucide/devices.svg");
-          }
-
-          .icon-back {
-            background-image: url("../icons/lucide/arrow-left.svg");
-          }
-
-          .icon-reload {
-            background-image: url("../icons/lucide/rotate-right.svg");
-          }
+            margin-inline: auto !important;
         }
 
-        &#natsumi-welcome-icons-fluent {
-          .natsumi-welcome-selection-icon {
-            fill: light-dark(black, white);
-          }
-
-          .icon-sidebar {
-            background-image: url("../icons/fluent/sidebar.svg");
-          }
-
-          .icon-bookmarks {
-            background-image: url("../icons/fluent/devices.svg");
-          }
-
-          .icon-back {
-            background-image: url("../icons/fluent/arrow-left.svg");
-          }
-
-          .icon-reload {
-            background-image: url("../icons/fluent/rotate-right.svg");
-          }
+        .natsumi-welcome-drumroll-text {
+            font-size: x-large;
+            font-weight: bold;
         }
-      }
     }
 
-    /* URLbar pane */
-    #natsumi-welcome-urlbar {
-      .natsumi-welcome-selection-preview {
-        display: grid;
-        grid-template-columns: 1fr;
-        width: 140px;
-        height: 80px;
-        border-radius: 4px;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
-
-        &::before {
-          content: "";
-          grid-row-start: 1;
-          grid-column-start: 1;
-          width: 102px;
-          height: 60px;
-          margin: auto 4px 4px auto !important;
-          border-radius: 2px !important;
-          background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
-          border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3)) !important;
-          box-sizing: border-box !important;
+    #natsumi-welcome-drumroll-progress {
+        .natsumi-welcome-drumroll-icon {
+            background-image: var(--natsumi-welcome-drumroll-icon);
         }
+    }
 
-        &::after {
-          content: "";
-          display: block;
-          width: 75px;
-          height: 45px;
-          margin-top: -58px;
-          margin-left: auto;
-          margin-right: auto;
-          border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
-          background-color: var(--natsumi-mat-th-background);
-          backdrop-filter: var(--natsumi-mat-hz-backdrop);
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-          border-radius: 3px;
+    #natsumi-welcome-drumroll-complete {
+        .natsumi-welcome-drumroll-icon {
+            background-image: url("../icons/lucide/party.svg");
         }
-
-        &#natsumi-welcome-urlbar-classic {
-          &::after {
-            margin-top: -70px;
-            width: 60px;
-            height: 40px;
-            background-color: light-dark(white, #777);
-            border: 1px solid light-dark(rgba(20, 20, 20, 0.3), rgba(235, 235, 235, 0.3));
-            backdrop-filter: none;
-          }
-        }
-      }
     }
-  }
-
-  /* Drumrolls */
-  .natsumi-welcome-drumroll {
-    display: none;
-    grid-row-start: 1;
-    grid-column-start: 1;
-    margin: auto !important;
-
-    .natsumi-welcome-drumroll-icon {
-      width: 36px;
-      height: 36px;
-      background-size: 36px;
-      -moz-context-properties: stroke, stroke-opacity !important;
-      stroke: light-dark(black, white);
-      margin-inline: auto !important;
-    }
-
-    .natsumi-welcome-drumroll-text {
-      font-size: x-large;
-      font-weight: bold;
-    }
-  }
-
-  #natsumi-welcome-drumroll-progress {
-    .natsumi-welcome-drumroll-icon {
-      background-image: var(--natsumi-welcome-drumroll-icon);
-    }
-  }
-
-  #natsumi-welcome-drumroll-complete {
-    .natsumi-welcome-drumroll-icon {
-      background-image: url("../icons/lucide/party.svg");
-    }
-  }
 }
 
 body[natsumi-welcome-complete] {
-  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
-    opacity: 0;
-    transition: opacity 0.3s ease !important;
-    pointer-events: none !important;
-  }
+    #PersonalToolbar,
+    #nav-bar-customization-target,
+    #PanelUI-button,
+    #tabbrowser-tabpanels,
+    #nora-statusbar,
+    #status-bar,
+    #urlbar,
+    #panel-sidebar-select-box,
+    #notifications-toolbar {
+        opacity: 0;
+        transition: opacity 0.3s ease !important;
+        pointer-events: none !important;
+    }
 
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
-    opacity: 0;
-    transition: opacity 0.3s ease !important;
-    pointer-events: none !important;
-  }
+    #sidebar-main,
+    #TabsToolbar-customization-target,
+    #nav-bar-overflow-button {
+        opacity: 0;
+        transition: opacity 0.3s ease !important;
+        pointer-events: none !important;
+    }
 
-  #natsumi-welcome-content-body, #natsumi-welcome-button-next {
-    display: none;
-  }
+    #natsumi-welcome-content-body,
+    #natsumi-welcome-button-next {
+        display: none;
+    }
 
-  #natsumi-welcome-drumroll-progress {
-    display: block;
-    animation: drumroll-progress 1.5s linear;
-    animation-fill-mode: forwards;
-  }
+    #natsumi-welcome-drumroll-progress {
+        display: block;
+        animation: drumroll-progress 1.5s linear;
+        animation-fill-mode: forwards;
+    }
 
-  #natsumi-welcome-content {
-    transition: opacity 0.3s ease !important;
-    opacity: 0 !important;
-  }
+    #natsumi-welcome-content {
+        transition: opacity 0.3s ease !important;
+        opacity: 0 !important;
+    }
 }
 
 body[natsumi-welcome-drumroll-complete] {
-  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
-    opacity: 0.5;
-  }
-
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
-    opacity: 0.5;
-  }
-
-  #natsumi-welcome-drumroll-progress {
-    display: none !important;
-  }
-
-  #natsumi-welcome-drumroll-complete {
-    display: block !important;
-
-    .natsumi-welcome-drumroll-icon {
-      animation: drumroll-complete 0.3s linear;
-      animation-fill-mode: forwards;
+    #PersonalToolbar,
+    #nav-bar-customization-target,
+    #PanelUI-button,
+    #tabbrowser-tabpanels,
+    #nora-statusbar,
+    #status-bar,
+    #urlbar,
+    #panel-sidebar-select-box,
+    #notifications-toolbar {
+        opacity: 0.5;
     }
-  }
+
+    #sidebar-main,
+    #TabsToolbar-customization-target,
+    #nav-bar-overflow-button {
+        opacity: 0.5;
+    }
+
+    #natsumi-welcome-drumroll-progress {
+        display: none !important;
+    }
+
+    #natsumi-welcome-drumroll-complete {
+        display: block !important;
+
+        .natsumi-welcome-drumroll-icon {
+            animation: drumroll-complete 0.3s linear;
+            animation-fill-mode: forwards;
+        }
+    }
 }
 
 body[natsumi-welcome-complete-full] {
-  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
-    opacity: 1;
-  }
+    #PersonalToolbar,
+    #nav-bar-customization-target,
+    #PanelUI-button,
+    #tabbrowser-tabpanels,
+    #nora-statusbar,
+    #status-bar,
+    #urlbar,
+    #panel-sidebar-select-box,
+    #notifications-toolbar {
+        opacity: 1;
+    }
 
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
-    opacity: 1;
-  }
+    #sidebar-main,
+    #TabsToolbar-customization-target,
+    #nav-bar-overflow-button {
+        opacity: 1;
+    }
 
-  #natsumi-welcome-drumroll-complete {
-    transition: opacity 0.3s ease !important;
-    opacity: 0 !important;
-  }
+    #natsumi-welcome-drumroll-complete {
+        transition: opacity 0.3s ease !important;
+        opacity: 0 !important;
+    }
 }
 
 body[natsumi-welcome] {
-  &:not([natsumi-welcome-complete]) {
-    #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
-      display: none !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
+    &:not([natsumi-welcome-complete]) {
+        #PersonalToolbar,
+        #nav-bar-customization-target,
+        #PanelUI-button,
+        #tabbrowser-tabpanels,
+        #nora-statusbar,
+        #status-bar,
+        #urlbar,
+        #panel-sidebar-select-box,
+        #notifications-toolbar {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
     }
-  }
 
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
-    opacity: 0;
-    pointer-events: none !important;
-  }
-
-  #nav-bar {
-    min-height: 40px !important;
-  }
-
-  @media not (-moz-platform: macos) {
-    .titlebar-buttonbox-container {
-      margin-left: auto !important;
+    #sidebar-main,
+    #TabsToolbar-customization-target,
+    #nav-bar-overflow-button {
+        opacity: 0;
+        pointer-events: none !important;
     }
-  }
 
-  @media not (-moz-pref("sidebar.verticalTabs")) {
-    #navigator-toolbox {
-      z-index: 999 !important;
+    #nav-bar {
+        min-height: 40px !important;
     }
-  }
+
+    @media not (-moz-platform: macos) {
+        .titlebar-buttonbox-container {
+            margin-left: auto !important;
+        }
+    }
+
+    @media not (-moz-pref("sidebar.verticalTabs")) {
+        #navigator-toolbox {
+            z-index: 999 !important;
+        }
+    }
 }
 
-:root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) body[natsumi-welcome] {
-  @media not (-moz-platform: macos) {
-    #navigator-toolbox {
-      z-index: 999 !important;
+:root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded])
+    body[natsumi-welcome] {
+    @media not (-moz-platform: macos) {
+        #navigator-toolbox {
+            z-index: 999 !important;
+        }
     }
-  }
 }
 
 body:not([natsumi-welcome]) {
-  #natsumi-welcome {
-    display: none !important;
-  }
+    #natsumi-welcome {
+        display: none !important;
+    }
 }
 
 #natsumi-compat-warning {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  z-index: 998 !important;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 998 !important;
 
-  #natsumi-compat-warning-content {
-    flex-direction: column;
-    margin: auto !important;
-    padding: 100px !important;
-    text-align: center;
-    align-items: center;
+    #natsumi-compat-warning-content {
+        flex-direction: column;
+        margin: auto !important;
+        padding: 100px !important;
+        text-align: center;
+        align-items: center;
 
-    #natsumi-compat-warning-icon {
-      width: 48px;
-      height: 48px;
-      background-size: 48px;
-      -moz-context-properties: stroke, stroke-opacity !important;
-      stroke: light-dark(black, white);
-      background-image: url("../icons/lucide/caution.svg");
+        #natsumi-compat-warning-icon {
+            width: 48px;
+            height: 48px;
+            background-size: 48px;
+            -moz-context-properties: stroke, stroke-opacity !important;
+            stroke: light-dark(black, white);
+            background-image: url("../icons/lucide/caution.svg");
+        }
+
+        #natsumi-compat-warning-header {
+            font-weight: bold;
+            font-size: x-large;
+            margin-block: 5px;
+        }
+
+        #natsumi-compat-warning-body-1,
+        #natsumi-compat-warning-body-2 {
+            font-size: small;
+        }
+
+        #natsumi-compat-warning-restart {
+            margin-top: 10px;
+            font-size: small;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: light-dark(
+                rgba(0, 0, 0, 0.1),
+                rgba(255, 255, 255, 0.1)
+            );
+
+            &:hover {
+                background-color: light-dark(
+                    rgba(0, 0, 0, 0.2),
+                    rgba(255, 255, 255, 0.2)
+                );
+            }
+        }
     }
-
-    #natsumi-compat-warning-header {
-      font-weight: bold;
-      font-size: x-large;
-      margin-block: 5px;
-    }
-
-    #natsumi-compat-warning-body-1, #natsumi-compat-warning-body-2 {
-      font-size: small;
-    }
-
-    #natsumi-compat-warning-restart {
-      margin-top: 10px;
-      font-size: small;
-      padding: 5px;
-      border-radius: 5px;
-      background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
-
-      &:hover {
-        background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
-      }
-    }
-  }
 }
 
 .natsumi-welcome-info {
-  --natsumi-info-color: #00aaff;
-  padding: 10px;
-  border-radius: 8px;
-  border: 2px solid var(--natsumi-info-color);
-  background-color: color-mix(in srgb, var(--natsumi-info-color) 10%, transparent);
-  margin-bottom: 10px;
+    --natsumi-info-color: #00aaff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid var(--natsumi-info-color);
+    background-color: color-mix(
+        in srgb,
+        var(--natsumi-info-color) 10%,
+        transparent
+    );
+    margin-bottom: 10px;
 
-  &[hidden="true"] {
-    display: none !important;
-  }
-
-  .natsumi-welcome-info-icon {
-    min-width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    -moz-context-properties: stroke, stroke-opacity;
-    stroke: var(--natsumi-info-color);
-    background-size: 24px;
-    background-image: url("../icons/lucide/note.svg");
-  }
-
-  .natsumi-welcome-info-text {
-    display: block;
-    margin: auto 0;
-    color: var(--natsumi-info-color);
-    font-size: small;
-
-    a {
-      display: inline;
-      color: var(--natsumi-info-color) !important;
-      font-weight: bold;
+    &[hidden="true"] {
+        display: none !important;
     }
-  }
-
-  &.warning {
-    --natsumi-info-color: #dd8800;
 
     .natsumi-welcome-info-icon {
-      background-image: url("../icons/lucide/warning.svg");
+        min-width: 24px;
+        height: 24px;
+        margin-right: 10px;
+        -moz-context-properties: stroke, stroke-opacity;
+        stroke: var(--natsumi-info-color);
+        background-size: 24px;
+        background-image: url("../icons/lucide/note.svg");
     }
-  }
 
-  &.caution {
-    --natsumi-info-color: #ff0000;
+    .natsumi-welcome-info-text {
+        display: block;
+        margin: auto 0;
+        color: var(--natsumi-info-color);
+        font-size: small;
 
-    .natsumi-welcome-info-icon {
-      background-image: url("../icons/lucide/caution.svg");
+        a {
+            display: inline;
+            color: var(--natsumi-info-color) !important;
+            font-weight: bold;
+        }
     }
-  }
+
+    &.warning {
+        --natsumi-info-color: #dd8800;
+
+        .natsumi-welcome-info-icon {
+            background-image: url("../icons/lucide/warning.svg");
+        }
+    }
+
+    &.caution {
+        --natsumi-info-color: #ff0000;
+
+        .natsumi-welcome-info-icon {
+            background-image: url("../icons/lucide/caution.svg");
+        }
+    }
 }

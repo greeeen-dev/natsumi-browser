@@ -27,1464 +27,1794 @@ SOFTWARE.
 /* ==== Preferences ==== */
 
 @-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
-  #natsumi-settings .category-icon {
-    list-style-image: url("../icons/lucide/paintbrush.svg");
-    -moz-context-properties: stroke, stroke-opacity !important;
-    stroke: currentColor;
-  }
-
-  #natsumi-shortcuts .category-icon {
-    list-style-image: url("../icons/lucide/meta.svg");
-    -moz-context-properties: stroke, stroke-opacity !important;
-    stroke: currentColor;
-  }
-
-  .natsumi-mc-chooser {
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: var(--space-medium) 0;
-  }
-
-  .natsumi-mc-choice {
-    border: 2px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-    border-radius: 12px;
-    width: 200px;
-    height: 140px;
-    display: flex;
-    flex-direction: column;
-
-    &:hover {
-      background-color: var(--natsumi-button-hover-color);
+    #natsumi-settings .category-icon {
+        list-style-image: url("../icons/lucide/paintbrush.svg");
+        -moz-context-properties: stroke, stroke-opacity !important;
+        stroke: currentColor;
     }
 
-    &.selected {
-      border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-      background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+    #natsumi-shortcuts .category-icon {
+        list-style-image: url("../icons/lucide/meta.svg");
+        -moz-context-properties: stroke, stroke-opacity !important;
+        stroke: currentColor;
     }
 
-    .natsumi-mc-choice-image-container {
-      flex: 1;
-
-      .natsumi-mc-choice-image-browser {
-        &::before {
-          content: "";
-          width: calc(100% - 10px);
-          height: calc(100% - 14px);
-          border-radius: 2px;
-          border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-          background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
-          margin: auto 4px 4px;
-
-          @media -moz-pref("sidebar.verticalTabs") {
-            width: calc(100% - 34px);
-            margin-left: auto;
-          }
-        }
-      }
-
-      .natsumi-mc-choice-image-browser {
-        width: 100%;
-        margin: 10px 35px;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-        border-radius: 5px;
-        overflow: hidden;
-
-        .natsumi-mc-choice-image-browser-additional {
-          width: 100%;
-        }
-
-        &:has(.natsumi-mc-choice-image-browser-additional) {
-          &::before {
-            display: none;
-          }
-        }
-
-        &#multiple-toolbars {
-          flex-direction: column !important;
-
-          &::before {
-            height: calc(100% - 14px) !important;
-            width: calc(100% - 34px) !important;
-            margin-left: auto;
-          }
-
-          &::after {
-            border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-            content: "";
-            width: 50px;
-            height: 2px;
-            background-color: var(--natsumi-button-hover-color);
-            margin-top: 2px !important;
-            order: -1 !important;
-            border-radius: 2px;
-            margin-left: auto;
-            margin-right: auto;
-          }
-        }
-
-        &#single-toolbar {
-          flex-direction: row !important;
-
-          &::before {
-            height: calc(100% - 10px) !important;
-            width: calc(100% - 34px) !important;
-            margin-left: auto;
-          }
-
-          &::after {
-            border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-            content: "";
-            width: 22px;
-            height: 2px;
-            background-color: var(--natsumi-button-hover-color);
-            margin-top: 10px !important;
-            order: -1 !important;
-            border-radius: 2px;
-            margin-left: auto;
-            margin-right: auto;
-          }
-        }
-
-        &#default {
-          background-color: light-dark(#ebebeb, #171717);
-        }
-
-        &#gradient {
-          --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
-          --color-right: light-dark(var(--natsumi-colors-secondary), color-mix(in srgb, var(--natsumi-primary-color) 50%, black));
-          background: linear-gradient(135deg, var(--color-left), var(--color-right));
-        }
-
-        &#gradient-complementary {
-          --color-left: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-colors-primary) 95%, white));
-          --color-right: hsl(from var(--color-left) calc(h + 180) s l) !important;
-          background: linear-gradient(135deg, var(--color-left), var(--color-right));
-        }
-
-        &#colorful {
-          background-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary)) !important;
-        }
-
-        &#playful {
-          background-color: light-dark(var(--natsumi-primary-color), color-mix(in srgb, var(--natsumi-primary-color) 70%, black)) !important;
-          filter: saturate(2);
-
-          &::before {
-            filter: saturate(0.5);
-          }
-        }
-
-        &#lucid {
-          background: radial-gradient(closest-side, light-dark(var(--natsumi-primary-color), var(--natsumi-colors-secondary)), light-dark(white, #222)) !important;
-        }
-
-        &#frutiger-aero {
-          display: grid;
-          grid-template-columns: 1fr;
-          background-color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 50%, white), var(--natsumi-colors-primary));
-
-          &::before, &::after {
-            grid-row-start: 1;
-            grid-column-start: 1;
-          }
-
-          &::before {
-            content: "";
-            width: 100% !important;
-            height: 100% !important;
-            opacity: 0.3;
-            border: none !important;
-            margin: 0 !important;
-            background: linear-gradient(60deg,
-            transparent 0%, #00000014 10%, #ffffff22 10%, #ffffff22 20%, #00000007 20%, transparent 25%,
-            transparent 25%, #00000014 30%, #ffffff22 30%, #ffffff22 32%, #00000007 35%,
-            #ffffff22 35%, #ffffff22 45%, #00000007 45%, transparent 50%,
-            transparent 45%, #00000014 55%, #ffffff22 55%, #ffffff22 70%, #00000007 70%, transparent 80%,
-            transparent 85%, #00000014 90%, #ffffff22 90%, #ffffff22 95%, #00000007 95%, transparent 100%
-            ) !important;
-          }
-
-          &::after {
-            z-index: 0;
-            content: "";
-            width: calc(100% - 10px);
-            height: calc(100% - 14px);
-            border-radius: 2px;
-            border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-            background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
-            margin: auto 4px 4px;
-
-            @media -moz-pref("sidebar.verticalTabs") {
-              width: calc(100% - 34px);
-              margin-left: auto;
-            }
-          }
-        }
-
-        &#oled {
-          background-color: light-dark(white, black);
-        }
-
-        &#lgbtq {
-          background: linear-gradient(180deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
-
-          @media (prefers-color-scheme: dark) {
-            background: linear-gradient(180deg, #994444, #895f46, #8d804b, #3e8663, #3e456d, #625084);
-          }
-        }
-
-        &#transgender {
-          background: linear-gradient(180deg, #5bcefa, #f5a9b8, white, #f5a9b8, #5bcefa);
-
-          @media (prefers-color-scheme: dark) {
-            background: linear-gradient(180deg, #316a80, #745259, #aaa, #745259, #316a80);
-          }
-        }
-
-        &#custom {
-          display: grid;
-          grid-template-columns: 1fr;
-
-          &::before {
-            opacity: 0.5;
-            grid-row-start: 1;
-            grid-column-start: 1;
-            z-index: -1;
-          }
-
-          &::after {
-            content: "";
-            width: 32px;
-            height: 32px;
-            margin: auto;
-            grid-row-start: 1;
-            grid-column-start: 1;
-            -moz-context-properties: stroke, stroke-opacity !important;
-            stroke: light-dark(black, white);
-            background-image: url("../icons/lucide/palette.svg");
-            background-size: 32px;
-          }
-        }
-      }
+    .natsumi-mc-chooser {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: var(--space-medium) 0;
     }
 
-    .natsumi-mc-choice-label {
-      padding: 10px;
-    }
-  }
-
-  #natsumiColorsGroup {
     .natsumi-mc-choice {
-      width: 102px;
-      height: 104px;
+        border: 2px solid
+            light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        border-radius: 12px;
+        width: 200px;
+        height: 140px;
+        display: flex;
+        flex-direction: column;
 
-      .natsumi-mc-choice-image-container {
-        width: 80px;
-        height: 80px;
-        margin: 10px;
-        border-radius: 40px;
-        background-color: var(--natsumi-primary-color);
-        overflow: hidden;
-
-        &::before {
-          content: "";
-          margin-top: 40px;
-          width: 40px;
-          height: 40px;
-          background-color: var(--natsumi-colors-primary);
+        &:hover {
+            background-color: var(--natsumi-button-hover-color);
         }
 
-        &::after {
-          content: "";
-          margin-top: 40px;
-          width: 40px;
-          height: 40px;
-          background-color: var(--natsumi-colors-secondary);
+        &.selected {
+            border-color: light-dark(
+                var(--natsumi-colors-primary),
+                var(--natsumi-primary-color)
+            );
+            background-color: color-mix(
+                in srgb,
+                var(--natsumi-primary-color) 30%,
+                transparent
+            );
         }
-      }
+
+        .natsumi-mc-choice-image-container {
+            flex: 1;
+
+            .natsumi-mc-choice-image-browser {
+                &::before {
+                    content: "";
+                    width: calc(100% - 10px);
+                    height: calc(100% - 14px);
+                    border-radius: 2px;
+                    border: 1px solid
+                        light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+                    background: light-dark(
+                        var(--natsumi-colors-secondary),
+                        var(--natsumi-colors-primary)
+                    );
+                    margin: auto 4px 4px;
+
+                    @media -moz-pref("sidebar.verticalTabs") {
+                        width: calc(100% - 34px);
+                        margin-left: auto;
+                    }
+                }
+            }
+
+            .natsumi-mc-choice-image-browser {
+                width: 100%;
+                margin: 10px 35px;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+                border-radius: 5px;
+                overflow: hidden;
+
+                .natsumi-mc-choice-image-browser-additional {
+                    width: 100%;
+                }
+
+                &:has(.natsumi-mc-choice-image-browser-additional) {
+                    &::before {
+                        display: none;
+                    }
+                }
+
+                &#multiple-toolbars {
+                    flex-direction: column !important;
+
+                    &::before {
+                        height: calc(100% - 14px) !important;
+                        width: calc(100% - 34px) !important;
+                        margin-left: auto;
+                    }
+
+                    &::after {
+                        border: 1px solid
+                            light-dark(
+                                rgba(0, 0, 0, 0.3),
+                                rgba(255, 255, 255, 0.3)
+                            );
+                        content: "";
+                        width: 50px;
+                        height: 2px;
+                        background-color: var(--natsumi-button-hover-color);
+                        margin-top: 2px !important;
+                        order: -1 !important;
+                        border-radius: 2px;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+
+                &#single-toolbar {
+                    flex-direction: row !important;
+
+                    &::before {
+                        height: calc(100% - 10px) !important;
+                        width: calc(100% - 34px) !important;
+                        margin-left: auto;
+                    }
+
+                    &::after {
+                        border: 1px solid
+                            light-dark(
+                                rgba(0, 0, 0, 0.3),
+                                rgba(255, 255, 255, 0.3)
+                            );
+                        content: "";
+                        width: 22px;
+                        height: 2px;
+                        background-color: var(--natsumi-button-hover-color);
+                        margin-top: 10px !important;
+                        order: -1 !important;
+                        border-radius: 2px;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+
+                &#default {
+                    background-color: light-dark(#ebebeb, #171717);
+                }
+
+                &#gradient {
+                    --color-left: light-dark(
+                        var(--natsumi-primary-color),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-colors-primary) 95%,
+                            white
+                        )
+                    );
+                    --color-right: light-dark(
+                        var(--natsumi-colors-secondary),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-primary-color) 50%,
+                            black
+                        )
+                    );
+                    background: linear-gradient(
+                        135deg,
+                        var(--color-left),
+                        var(--color-right)
+                    );
+                }
+
+                &#gradient-complementary {
+                    --color-left: light-dark(
+                        var(--natsumi-primary-color),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-colors-primary) 95%,
+                            white
+                        )
+                    );
+                    --color-right: hsl(
+                        from var(--color-left) calc(h + 180) s l
+                    ) !important;
+                    background: linear-gradient(
+                        135deg,
+                        var(--color-left),
+                        var(--color-right)
+                    );
+                }
+
+                &#colorful {
+                    background-color: light-dark(
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-primary-color) 50%,
+                            white
+                        ),
+                        var(--natsumi-colors-primary)
+                    ) !important;
+                }
+
+                &#playful {
+                    background-color: light-dark(
+                        var(--natsumi-primary-color),
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-primary-color) 70%,
+                            black
+                        )
+                    ) !important;
+                    filter: saturate(2);
+
+                    &::before {
+                        filter: saturate(0.5);
+                    }
+                }
+
+                &#lucid {
+                    background: radial-gradient(
+                        closest-side,
+                        light-dark(
+                            var(--natsumi-primary-color),
+                            var(--natsumi-colors-secondary)
+                        ),
+                        light-dark(white, #222)
+                    ) !important;
+                }
+
+                &#frutiger-aero {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    background-color: light-dark(
+                        color-mix(
+                            in srgb,
+                            var(--natsumi-primary-color) 50%,
+                            white
+                        ),
+                        var(--natsumi-colors-primary)
+                    );
+
+                    &::before,
+                    &::after {
+                        grid-row-start: 1;
+                        grid-column-start: 1;
+                    }
+
+                    &::before {
+                        content: "";
+                        width: 100% !important;
+                        height: 100% !important;
+                        opacity: 0.3;
+                        border: none !important;
+                        margin: 0 !important;
+                        background: linear-gradient(
+                            60deg,
+                            transparent 0%,
+                            #00000014 10%,
+                            #ffffff22 10%,
+                            #ffffff22 20%,
+                            #00000007 20%,
+                            transparent 25%,
+                            transparent 25%,
+                            #00000014 30%,
+                            #ffffff22 30%,
+                            #ffffff22 32%,
+                            #00000007 35%,
+                            #ffffff22 35%,
+                            #ffffff22 45%,
+                            #00000007 45%,
+                            transparent 50%,
+                            transparent 45%,
+                            #00000014 55%,
+                            #ffffff22 55%,
+                            #ffffff22 70%,
+                            #00000007 70%,
+                            transparent 80%,
+                            transparent 85%,
+                            #00000014 90%,
+                            #ffffff22 90%,
+                            #ffffff22 95%,
+                            #00000007 95%,
+                            transparent 100%
+                        ) !important;
+                    }
+
+                    &::after {
+                        z-index: 0;
+                        content: "";
+                        width: calc(100% - 10px);
+                        height: calc(100% - 14px);
+                        border-radius: 2px;
+                        border: 1px solid
+                            light-dark(
+                                rgba(0, 0, 0, 0.3),
+                                rgba(255, 255, 255, 0.3)
+                            );
+                        background: light-dark(
+                            var(--natsumi-colors-secondary),
+                            var(--natsumi-colors-primary)
+                        );
+                        margin: auto 4px 4px;
+
+                        @media -moz-pref("sidebar.verticalTabs") {
+                            width: calc(100% - 34px);
+                            margin-left: auto;
+                        }
+                    }
+                }
+
+                &#oled {
+                    background-color: light-dark(white, black);
+                }
+
+                &#lgbtq {
+                    background: linear-gradient(
+                        180deg,
+                        #ff9393,
+                        #ffb78b,
+                        #ffe88c,
+                        #5ce4a2,
+                        #97a6ff,
+                        #be9dff
+                    );
+
+                    @media (prefers-color-scheme: dark) {
+                        background: linear-gradient(
+                            180deg,
+                            #994444,
+                            #895f46,
+                            #8d804b,
+                            #3e8663,
+                            #3e456d,
+                            #625084
+                        );
+                    }
+                }
+
+                &#transgender {
+                    background: linear-gradient(
+                        180deg,
+                        #5bcefa,
+                        #f5a9b8,
+                        white,
+                        #f5a9b8,
+                        #5bcefa
+                    );
+
+                    @media (prefers-color-scheme: dark) {
+                        background: linear-gradient(
+                            180deg,
+                            #316a80,
+                            #745259,
+                            #aaa,
+                            #745259,
+                            #316a80
+                        );
+                    }
+                }
+
+                &#custom {
+                    display: grid;
+                    grid-template-columns: 1fr;
+
+                    &::before {
+                        opacity: 0.5;
+                        grid-row-start: 1;
+                        grid-column-start: 1;
+                        z-index: -1;
+                    }
+
+                    &::after {
+                        content: "";
+                        width: 32px;
+                        height: 32px;
+                        margin: auto;
+                        grid-row-start: 1;
+                        grid-column-start: 1;
+                        -moz-context-properties:
+                            stroke, stroke-opacity !important;
+                        stroke: light-dark(black, white);
+                        background-image: url("../icons/lucide/palette.svg");
+                        background-size: 32px;
+                    }
+                }
+            }
+        }
+
+        .natsumi-mc-choice-label {
+            padding: 10px;
+        }
     }
 
-    .natsumi-mc-choice-label {
-      display: none;
-    }
-  }
+    #natsumiColorsGroup {
+        .natsumi-mc-choice {
+            width: 102px;
+            height: 104px;
 
-  #natsumiIconsGroup {
-    .natsumi-mc-choice-image-browser {
-      display: grid !important;
-      grid-template-columns: 1fr;
+            .natsumi-mc-choice-image-container {
+                width: 80px;
+                height: 80px;
+                margin: 10px;
+                border-radius: 40px;
+                background-color: var(--natsumi-primary-color);
+                overflow: hidden;
 
-      &::before {
-        grid-row-start: 1;
-        grid-column-start: 1;
-        margin-left: auto;
-        margin-right: 0;
-        margin-bottom: 0;
-        height: calc(100% - 20px);
-        width: calc(100% - 20px);
-        border-right: none;
-        border-bottom: none;
-        border-radius: 5px 0 0 0;
-      }
+                &::before {
+                    content: "";
+                    margin-top: 40px;
+                    width: 40px;
+                    height: 40px;
+                    background-color: var(--natsumi-colors-primary);
+                }
 
-      .natsumi-mc-choice-icon {
-        grid-row-start: 1;
-        grid-column-start: 1;
-        width: 12px;
-        height: 12px;
-        margin: 4px !important;
-        background-size: 12px;
-        -moz-context-properties: fill, stroke;
-
-        &.icon-bookmarks {
-          margin-left: 28px !important;
+                &::after {
+                    content: "";
+                    margin-top: 40px;
+                    width: 40px;
+                    height: 40px;
+                    background-color: var(--natsumi-colors-secondary);
+                }
+            }
         }
 
-        &.icon-back {
-          margin-left: 52px !important;
+        .natsumi-mc-choice-label {
+            display: none;
         }
-
-        &.icon-reload {
-          margin-left: 76px !important;
-        }
-      }
-
-      &#icons-default {
-        .natsumi-mc-choice-icon {
-          fill: currentColor;
-        }
-
-        .icon-sidebar {
-          background-image: url("chrome://browser/skin/sidebar-collapsed.svg");
-        }
-
-        .icon-bookmarks {
-          background-image: url("chrome://browser/skin/synced-tabs.svg");
-        }
-
-        .icon-back {
-          background-image: url("chrome://browser/skin/back.svg");
-        }
-
-        .icon-reload {
-          background-image: url("chrome://global/skin/icons/reload.svg");
-        }
-      }
-
-      &#icons-lucide {
-        .natsumi-mc-choice-icon {
-          stroke: currentColor;
-        }
-
-        .icon-sidebar {
-          background-image: url("../icons/lucide/sidebar.svg");
-        }
-
-        .icon-bookmarks {
-          background-image: url("../icons/lucide/devices.svg");
-        }
-
-        .icon-back {
-          background-image: url("../icons/lucide/arrow-left.svg");
-        }
-
-        .icon-reload {
-          background-image: url("../icons/lucide/rotate-right.svg");
-        }
-      }
-
-      &#icons-fluent {
-        .natsumi-mc-choice-icon {
-          fill: currentColor;
-        }
-
-        .icon-sidebar {
-          background-image: url("../icons/fluent/sidebar.svg");
-        }
-
-        .icon-bookmarks {
-          background-image: url("../icons/fluent/devices.svg");
-        }
-
-        .icon-back {
-          background-image: url("../icons/fluent/arrow-left.svg");
-        }
-
-        .icon-reload {
-          background-image: url("../icons/fluent/rotate-right.svg");
-        }
-      }
-    }
-  }
-
-  #natsumiTabDesignSettings {
-    .natsumi-mc-choice-image-browser {
-      display: grid;
-      grid-template-columns: 1fr;
-      overflow: hidden;
-      background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
-
-      @media (prefers-color-scheme: dark) {
-        background: linear-gradient(135deg, #994444, #895f46, #8d804b, #3e8663, #3e456d, #625084) !important;
-      }
-
-      &::before {
-        grid-row-start: 1;
-        grid-column-start: 1;
-        margin-left: auto;
-        margin-right: 0;
-        margin-bottom: 0;
-        height: calc(100% - 10px);
-        width: 10px;
-        border-right: none;
-        border-bottom: none;
-        border-radius: 5px 0 0 0;
-      }
-
-      .natsumi-mc-tab {
-        width: calc(100% - 18px);
-        margin-left: 4px;
-        margin-top: 16px;
-        height: 16px;
-        grid-row-start: 1;
-        grid-column-start: 1;
-
-        .natsumi-mc-tab-icon {
-          background-color: light-dark(black, white);
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          margin: auto 6px;
-        }
-
-        .natsumi-mc-tab-text {
-          background-color: light-dark(black, white);
-          width: 50%;
-          height: 4px;
-          border-radius: 2px;
-          margin: auto 0;
-        }
-      }
     }
 
-    #tab-blade {
-      .natsumi-mc-tab {
-        background: var(--natsumi-mat-hz-background);
-        backdrop-filter: var(--natsumi-mat-hz-backdrop);
-        border-radius: 5px;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+    #natsumiIconsGroup {
+        .natsumi-mc-choice-image-browser {
+            display: grid !important;
+            grid-template-columns: 1fr;
 
-        &::after {
-          --natsumi-tab-highlight-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary));
-          content: "";
-          position: absolute;
-          z-index: -1;
-          background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
-          border: 2px solid var(--natsumi-tab-highlight-color) !important;
-          width: calc(100% - 4px);
-          height: calc(100% - 4px);
-          border-radius: 5px;
-          mask-image: linear-gradient(to right, black, transparent 30%);
+            &::before {
+                grid-row-start: 1;
+                grid-column-start: 1;
+                margin-left: auto;
+                margin-right: 0;
+                margin-bottom: 0;
+                height: calc(100% - 20px);
+                width: calc(100% - 20px);
+                border-right: none;
+                border-bottom: none;
+                border-radius: 5px 0 0 0;
+            }
+
+            .natsumi-mc-choice-icon {
+                grid-row-start: 1;
+                grid-column-start: 1;
+                width: 12px;
+                height: 12px;
+                margin: 4px !important;
+                background-size: 12px;
+                -moz-context-properties: fill, stroke;
+
+                &.icon-bookmarks {
+                    margin-left: 28px !important;
+                }
+
+                &.icon-back {
+                    margin-left: 52px !important;
+                }
+
+                &.icon-reload {
+                    margin-left: 76px !important;
+                }
+            }
+
+            &#icons-default {
+                .natsumi-mc-choice-icon {
+                    fill: currentColor;
+                }
+
+                .icon-sidebar {
+                    background-image: url("chrome://browser/skin/sidebar-collapsed.svg");
+                }
+
+                .icon-bookmarks {
+                    background-image: url("chrome://browser/skin/synced-tabs.svg");
+                }
+
+                .icon-back {
+                    background-image: url("chrome://browser/skin/back.svg");
+                }
+
+                .icon-reload {
+                    background-image: url("chrome://global/skin/icons/reload.svg");
+                }
+            }
+
+            &#icons-lucide {
+                .natsumi-mc-choice-icon {
+                    stroke: currentColor;
+                }
+
+                .icon-sidebar {
+                    background-image: url("../icons/lucide/sidebar.svg");
+                }
+
+                .icon-bookmarks {
+                    background-image: url("../icons/lucide/devices.svg");
+                }
+
+                .icon-back {
+                    background-image: url("../icons/lucide/arrow-left.svg");
+                }
+
+                .icon-reload {
+                    background-image: url("../icons/lucide/rotate-right.svg");
+                }
+            }
+
+            &#icons-fluent {
+                .natsumi-mc-choice-icon {
+                    fill: currentColor;
+                }
+
+                .icon-sidebar {
+                    background-image: url("../icons/fluent/sidebar.svg");
+                }
+
+                .icon-bookmarks {
+                    background-image: url("../icons/fluent/devices.svg");
+                }
+
+                .icon-back {
+                    background-image: url("../icons/fluent/arrow-left.svg");
+                }
+
+                .icon-reload {
+                    background-image: url("../icons/fluent/rotate-right.svg");
+                }
+            }
         }
-      }
     }
 
-    #tab-origin {
-      .natsumi-mc-tab {
-        background-color: light-dark(white, rgba(255, 255, 255, 0.17));
-        border-top: 1px solid light-dark(#8888882d, #ffffff2d);
-        border-bottom: 1px solid #0000002d;
-        border-radius: 5px;
-      }
-    }
+    #natsumiTabDesignSettings {
+        .natsumi-mc-choice-image-browser {
+            display: grid;
+            grid-template-columns: 1fr;
+            overflow: hidden;
+            background: linear-gradient(
+                135deg,
+                #ff9393,
+                #ffb78b,
+                #ffe88c,
+                #5ce4a2,
+                #97a6ff,
+                #be9dff
+            );
 
-    #tab-curve {
-      .natsumi-mc-tab {
-        background-color: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.12));
-        backdrop-filter: saturate(1); /* Just so we don't lose our pseudoelements */
-        border-radius: 5px;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
-        overflow: hidden;
+            @media (prefers-color-scheme: dark) {
+                background: linear-gradient(
+                    135deg,
+                    #994444,
+                    #895f46,
+                    #8d804b,
+                    #3e8663,
+                    #3e456d,
+                    #625084
+                ) !important;
+            }
 
-        &::before {
-          content: "";
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.1));
+            &::before {
+                grid-row-start: 1;
+                grid-column-start: 1;
+                margin-left: auto;
+                margin-right: 0;
+                margin-bottom: 0;
+                height: calc(100% - 10px);
+                width: 10px;
+                border-right: none;
+                border-bottom: none;
+                border-radius: 5px 0 0 0;
+            }
+
+            .natsumi-mc-tab {
+                width: calc(100% - 18px);
+                margin-left: 4px;
+                margin-top: 16px;
+                height: 16px;
+                grid-row-start: 1;
+                grid-column-start: 1;
+
+                .natsumi-mc-tab-icon {
+                    background-color: light-dark(black, white);
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    margin: auto 6px;
+                }
+
+                .natsumi-mc-tab-text {
+                    background-color: light-dark(black, white);
+                    width: 50%;
+                    height: 4px;
+                    border-radius: 2px;
+                    margin: auto 0;
+                }
+            }
         }
 
-        &::after {
-          --natsumi-tab-highlight-color: var(--natsumi-primary-color);
-          content: "";
-          position: absolute;
-          z-index: -1;
-          background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
-          width: 50%;
-          height: 100%;
-          border-radius: 5px;
-          mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
+        #tab-blade {
+            .natsumi-mc-tab {
+                background: var(--natsumi-mat-hz-background);
+                backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                border-radius: 5px;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+
+                &::after {
+                    --natsumi-tab-highlight-color: light-dark(
+                        var(--natsumi-primary-color),
+                        var(--natsumi-colors-primary)
+                    );
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    background: color-mix(
+                        in srgb,
+                        var(--natsumi-tab-highlight-color) 40%,
+                        transparent
+                    );
+                    border: 2px solid var(--natsumi-tab-highlight-color) !important;
+                    width: calc(100% - 4px);
+                    height: calc(100% - 4px);
+                    border-radius: 5px;
+                    mask-image: linear-gradient(
+                        to right,
+                        black,
+                        transparent 30%
+                    );
+                }
+            }
         }
-      }
-    }
 
-    #tab-fusion {
-      &::before {
-        outline: 2px solid light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
-      }
+        #tab-origin {
+            .natsumi-mc-tab {
+                background-color: light-dark(white, rgba(255, 255, 255, 0.17));
+                border-top: 1px solid light-dark(#8888882d, #ffffff2d);
+                border-bottom: 1px solid #0000002d;
+                border-radius: 5px;
+            }
+        }
 
-      .natsumi-mc-tab {
-        background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
-        width: calc(100% - 17px);
-        border-radius: 2px 0 0 2px;
-      }
-    }
+        #tab-curve {
+            .natsumi-mc-tab {
+                background-color: light-dark(
+                    rgba(255, 255, 255, 0.8),
+                    rgba(255, 255, 255, 0.12)
+                );
+                backdrop-filter: saturate(
+                    1
+                ); /* Just so we don't lose our pseudoelements */
+                border-radius: 5px;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+                overflow: hidden;
 
-    #tab-material {
-      .natsumi-mc-tab {
-        background-color: color-mix(in srgb, var(--natsumi-primary-color), light-dark(white, black)) !important;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2)) !important;
-        border-radius: 3px;
-        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
-      }
-    }
+                &::before {
+                    content: "";
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(
+                        180deg,
+                        transparent,
+                        rgba(0, 0, 0, 0.1)
+                    );
+                }
 
-    #tab-hexagonal {
-      .natsumi-mc-tab {
-        --natsumi-tab-height: 16px;
-        --horizontal-dist: calc(calc(var(--natsumi-tab-height) / 2) * tan(30deg));
-        --hexagon-side-length: calc(calc(var(--natsumi-tab-height) / 2) / sin(60deg));
-        --icon-container-width: calc(var(--horizontal-dist) * 2 + var(--hexagon-side-length));
-        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
-        clip-path: polygon(
-                0 50%,
-                var(--horizontal-dist) 0,
-                calc(100% - var(--horizontal-dist)) 0,
-                100% 50%,
-                calc(100% - var(--horizontal-dist)) 100%,
-                var(--horizontal-dist) 100%
-        );
+                &::after {
+                    --natsumi-tab-highlight-color: var(--natsumi-primary-color);
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    background: color-mix(
+                        in srgb,
+                        var(--natsumi-tab-highlight-color) 40%,
+                        transparent
+                    );
+                    width: 50%;
+                    height: 100%;
+                    border-radius: 5px;
+                    mask-image: linear-gradient(
+                        to right,
+                        rgba(0, 0, 0, 0.5),
+                        transparent
+                    );
+                }
+            }
+        }
 
-        .natsumi-mc-tab-icon {
-          display: grid;
-          grid-template-columns: 1fr;
+        #tab-fusion {
+            &::before {
+                outline: 2px solid
+                    light-dark(
+                        rgba(255, 255, 255, 0.5),
+                        rgba(255, 255, 255, 0.3)
+                    );
+            }
 
-          &::before {
-            --natsumi-tab-highlight-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary));
-            content: "";
-            grid-row-start: 1;
-            grid-column-start: 1;
-            z-index: -1;
-            background: color-mix(in srgb, var(--natsumi-tab-highlight-color) 40%, transparent);
-            min-width: var(--icon-container-width);
-            height: 16px;
-            margin-top: -5px;
-            margin-left: -6px;
-            clip-path: polygon(
+            .natsumi-mc-tab {
+                background-color: light-dark(
+                    rgba(255, 255, 255, 0.5),
+                    rgba(255, 255, 255, 0.3)
+                );
+                width: calc(100% - 17px);
+                border-radius: 2px 0 0 2px;
+            }
+        }
+
+        #tab-material {
+            .natsumi-mc-tab {
+                background-color: color-mix(
+                    in srgb,
+                    var(--natsumi-primary-color),
+                    light-dark(white, black)
+                ) !important;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2)) !important;
+                border-radius: 3px;
+                box-shadow:
+                    rgba(0, 0, 0, 0.2) 0px 0px 1px 0px,
+                    rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+            }
+        }
+
+        #tab-hexagonal {
+            .natsumi-mc-tab {
+                --natsumi-tab-height: 16px;
+                --horizontal-dist: calc(
+                    calc(var(--natsumi-tab-height) / 2) * tan(30deg)
+                );
+                --hexagon-side-length: calc(
+                    calc(var(--natsumi-tab-height) / 2) / sin(60deg)
+                );
+                --icon-container-width: calc(
+                    var(--horizontal-dist) * 2 + var(--hexagon-side-length)
+                );
+                background-color: light-dark(
+                    rgb(255, 255, 255),
+                    rgba(106, 106, 120, 0.7)
+                );
+                clip-path: polygon(
                     0 50%,
                     var(--horizontal-dist) 0,
                     calc(100% - var(--horizontal-dist)) 0,
                     100% 50%,
                     calc(100% - var(--horizontal-dist)) 100%,
                     var(--horizontal-dist) 100%
-            );
-          }
+                );
+
+                .natsumi-mc-tab-icon {
+                    display: grid;
+                    grid-template-columns: 1fr;
+
+                    &::before {
+                        --natsumi-tab-highlight-color: light-dark(
+                            var(--natsumi-primary-color),
+                            var(--natsumi-colors-primary)
+                        );
+                        content: "";
+                        grid-row-start: 1;
+                        grid-column-start: 1;
+                        z-index: -1;
+                        background: color-mix(
+                            in srgb,
+                            var(--natsumi-tab-highlight-color) 40%,
+                            transparent
+                        );
+                        min-width: var(--icon-container-width);
+                        height: 16px;
+                        margin-top: -5px;
+                        margin-left: -6px;
+                        clip-path: polygon(
+                            0 50%,
+                            var(--horizontal-dist) 0,
+                            calc(100% - var(--horizontal-dist)) 0,
+                            100% 50%,
+                            calc(100% - var(--horizontal-dist)) 100%,
+                            var(--horizontal-dist) 100%
+                        );
+                    }
+                }
+
+                .natsumi-mc-tab-text {
+                    margin-left: 2px;
+                }
+            }
         }
 
-        .natsumi-mc-tab-text {
-          margin-left: 2px;
-        }
-      }
-    }
+        #tab-bubble {
+            .natsumi-mc-tab {
+                background-color: var(--natsumi-mat-hz-background);
+                border: var(--natsumi-mat-hz-border-thin);
+                backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                border-radius: 8px;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
 
-    #tab-bubble {
-      .natsumi-mc-tab {
-        background-color: var(--natsumi-mat-hz-background);
-        border: var(--natsumi-mat-hz-border-thin);
-        backdrop-filter: var(--natsumi-mat-hz-backdrop);
-        border-radius: 8px;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
-
-        &::before {
-          content: "";
-          position: absolute;
-          width: calc(100% - 4px);
-          height: calc(100% - 4px);
-          margin: 2px;
-          border-radius: 6px;
-          background-color: var(--natsumi-sdl2-haze-button-idle-color);
-          box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow);
-          z-index: -1;
-        }
-      }
-    }
-
-    #tab-classic {
-      .natsumi-mc-tab {
-        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
-        border-radius: 3px;
-        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
-      }
-    }
-  }
-
-  @media -moz-pref("natsumi.tabs.use-custom-type") {
-    #natsumiTabBladeLegacyColor {
-      display: none !important;
-    }
-  }
-
-  @media (not -moz-pref("natsumi.tabs.use-custom-type")) or (not -moz-pref("natsumi.tabs.type", "fusion")) {
-    #natsumiTabFusionHighlight {
-      display: none !important;
-    }
-  }
-
-  @media (not -moz-pref("natsumi.tabs.use-custom-type")) or (not -moz-pref("natsumi.tabs.type", "material")) {
-    #natsumiTabMaterialAlternate {
-      display: none !important;
-    }
-  }
-
-  #natsumiLayoutGroup {
-    #natsumiVerticalTabsDisabledWarning {
-      display: none !important;
-    }
-
-    @media not -moz-pref("sidebar.verticalTabs") {
-      #natsumiVerticalTabsDisabledWarning {
-        display: flex !important;
-      }
-
-      .natsumi-mc-chooser {
-        display: none;
-      }
-    }
-  }
-
-  #natsumiSidebarPanelSidebarGroup {
-    #natsumiPanelSidebarDisabledWarning {
-      display: none;
-    }
-
-    @media not -moz-pref("floorp.panelSidebar.enabled") {
-      #natsumiPanelSidebarDisabledWarning {
-        display: flex;
-      }
-
-      checkbox, description.indent {
-        display: none;
-      }
-    }
-  }
-
-  #natsumiPipMaterialGroup, #natsumiPDFMaterialGroup, #natsumiURLbarLayoutGroup {
-    .natsumi-mc-choice {
-      .natsumi-mc-choice-image-browser {
-        display: block;
-        background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
-        gap: 0;
-      }
-    }
-  }
-
-  #natsumiPipMaterialGroup {
-    .natsumi-mc-choice-image-browser {
-      &::before {
-        display: block;
-        margin: 50px auto 5px;
-        width: 100px;
-        height: 2px;
-        border-radius: 3px;
-        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
-        background-color: var(--natsumi-mat-hz-background);
-        backdrop-filter: var(--natsumi-mat-hz-backdrop);
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
-      }
-
-      &::after {
-        display: block;
-        content: "";
-        width: 30px;
-        height: 8px;
-        border-radius: 5px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 4px;
-        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
-        background-color: var(--natsumi-mat-hz-background);
-        backdrop-filter: var(--natsumi-mat-hz-backdrop);
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
-      }
-
-      &#mat-hz-tinted {
-        &::before {
-          background-color: var(--natsumi-mat-th-background);
+                &::before {
+                    content: "";
+                    position: absolute;
+                    width: calc(100% - 4px);
+                    height: calc(100% - 4px);
+                    margin: 2px;
+                    border-radius: 6px;
+                    background-color: var(
+                        --natsumi-sdl2-haze-button-idle-color
+                    );
+                    box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow);
+                    z-index: -1;
+                }
+            }
         }
 
-        &::after {
-          background-color: var(--natsumi-mat-th-background);
-        }
-      }
-    }
-  }
-
-  #natsumiCompactSingleToolbarWarning {
-    @media not -moz-pref("natsumi.theme.single-toolbar") {
-      display: none !important;
-    }
-  }
-
-  #natsumiCompactStyleGroup {
-    @media -moz-pref("natsumi.theme.single-toolbar") {
-      #natsumiCompactStyleSettings .natsumi-mc-choice {
-        display: none !important;
-      }
-    }
-
-    .natsumi-mc-choice-image-browser {
-      &#compact-both::before {
-        margin: 4px !important;
-        width: calc(100% - 10px) !important;
-        height: calc(100% - 10px) !important;
-      }
-
-      &#compact-toolbar::before {
-        margin-top: 4px !important;
-        height: calc(100% - 10px) !important;
-      }
-
-      &#compact-sidebar::before {
-        margin-left: 4px !important;
-        width: calc(100% - 10px) !important;
-      }
-    }
-  }
-
-  #natsumiMiniplayerLayoutGroup {
-    .natsumi-mc-choice-image-browser {
-      &::before, &::after {
-        content: "";
-        min-width: 60% !important;
-        max-width: 60% !important;
-        height: 14px !important;
-        border-radius: 6px;
-        border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-        background: light-dark(var(--natsumi-colors-secondary), var(--natsumi-colors-primary));
-        margin: 2px auto !important;
-      }
-
-      &#miniplayer-stacked {
-        flex-direction: column;
-
-        &::before {
-          margin-top: auto !important;
+        #tab-classic {
+            .natsumi-mc-tab {
+                background-color: light-dark(
+                    rgb(255, 255, 255),
+                    rgba(106, 106, 120, 0.7)
+                );
+                border-radius: 3px;
+                box-shadow:
+                    rgba(0, 0, 0, 0.2) 0px 0px 1px 0px,
+                    rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+            }
         }
 
-        &::after {
-          margin-bottom: auto !important;
+        #tab-clicky {
+            .natsumi-mc-tab {
+                background: light-dark(
+                    linear-gradient(
+                        0deg,
+                        rgb(255, 255, 255) 50%,
+                        color-mix(rgb(255, 255, 255), transparent 40%)
+                    ),
+                    linear-gradient(
+                        0deg,
+                        rgba(106, 106, 120, 0.7) 50%,
+                        color-mix(rgba(106, 106, 120, 0.7), transparent 40%)
+                    )
+                );
+                box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1);
+                border-radius: 3px;
+            }
         }
-      }
-
-      &#miniplayer-side-by-side {
-        &::before, &::after {
-          margin: auto 3px !important;
-          translate: -50% 0;
-        }
-
-        &::before {
-          margin-left: 50% !important;
-        }
-      }
-    }
-  }
-
-  #natsumiPDFMaterialGroup {
-    .natsumi-mc-choice-image-browser {
-      &::before {
-        display: block;
-        margin: 5px auto;
-        width: 100px;
-        height: 5px;
-        border-radius: 4px;
-        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
-        background-color: var(--natsumi-mat-hz-background);
-        backdrop-filter: var(--natsumi-mat-hz-backdrop);
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
-      }
-
-      &::after {
-        display: block;
-        content: "";
-        width: 30px;
-        height: 53px;
-        border-radius: 4px;
-        margin-left: 4px;
-        margin-right: auto;
-        margin-top: 4px;
-        border: var(--natsumi-mat-hz-border-thin);
-        background-color: var(--natsumi-mat-hz-background);
-        backdrop-filter: var(--natsumi-mat-hz-backdrop);
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
-      }
-
-      &#mat-hz-tinted {
-        &::before {
-          background-color: var(--natsumi-mat-th-background);
-        }
-
-        &::after {
-          background-color: var(--natsumi-mat-th-background);
-        }
-      }
-
-      &#mat-ga {
-        &::before {
-          background-color: var(--natsumi-mat-ga-background);
-          backdrop-filter: blur(var(--natsumi-mat-ga-blur-radius));
-          box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
-        }
-
-        &::after {
-          background-color: var(--natsumi-mat-ga-background);
-          backdrop-filter: blur(var(--natsumi-mat-ga-blur-radius));
-          box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
-        }
-      }
-    }
-  }
-
-  #natsumiURLbarLayoutGroup {
-    .natsumi-mc-choice-image-browser {
-      background: light-dark(#ebebeb, #171717) !important;
-
-      &::before {
-        display: block;
-        margin-top: 8px;
-      }
-
-      &::after {
-        content: "";
-        display: block;
-        width: 75px;
-        height: 45px;
-        margin-top: -60px;
-        margin-left: auto;
-        margin-right: auto;
-        border: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
-        background-color: var(--natsumi-mat-th-background);
-        backdrop-filter: var(--natsumi-mat-hz-backdrop);
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        border-radius: 3px;
-      }
     }
 
-    #urlbar-classic {
-      &::after {
-        margin-top: -74px;
-        width: 60px;
-        height: 40px;
-        background-color: light-dark(white, #777);
-        border: 1px solid light-dark(rgba(20, 20, 20, 0.3), rgba(235, 235, 235, 0.3));
-        backdrop-filter: none;
-      }
+    @media -moz-pref("natsumi.tabs.use-custom-type") {
+        #natsumiTabBladeLegacyColor {
+            display: none !important;
+        }
     }
-  }
 
-  .natsumi-custom-theme-picker {
-    padding: 20px;
-    background-color: light-dark(white, #222);
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
-    border-radius: 20px !important;
-  }
-
-  #natsumiCustomThemePickerBox {
-    display: none;
-
-    @media -moz-pref("natsumi.theme.type", "custom") {
-      display: flex;
+    @media (not -moz-pref("natsumi.tabs.use-custom-type")) or (not -moz-pref("natsumi.tabs.type", "fusion")) {
+        #natsumiTabFusionHighlight {
+            display: none !important;
+        }
     }
-  }
 
-  .natsumi-custom-theme-container {
-    min-width: 400px !important;
+    @media (not -moz-pref("natsumi.tabs.use-custom-type")) or (not -moz-pref("natsumi.tabs.type", "material")) {
+        #natsumiTabMaterialAlternate {
+            display: none !important;
+        }
+    }
 
-    &[natsumi-single-color] {
-      .natsumi-custom-theme-top-controls, .natsumi-preset-button, .natsumi-gradient-button, .natsumi-custom-theme-angle, .natsumi-custom-theme-color-display::before {
-        display: none !important;
-      }
+    #natsumiLayoutGroup {
+        #natsumiVerticalTabsDisabledWarning {
+            display: none !important;
+        }
+
+        @media not -moz-pref("sidebar.verticalTabs") {
+            #natsumiVerticalTabsDisabledWarning {
+                display: flex !important;
+            }
+
+            .natsumi-mc-chooser {
+                display: none;
+            }
+        }
+    }
+
+    #natsumiSidebarPanelSidebarGroup {
+        #natsumiPanelSidebarDisabledWarning {
+            display: none;
+        }
+
+        @media not -moz-pref("floorp.panelSidebar.enabled") {
+            #natsumiPanelSidebarDisabledWarning {
+                display: flex;
+            }
+
+            checkbox,
+            description.indent {
+                display: none;
+            }
+        }
+    }
+
+    #natsumiPipMaterialGroup,
+    #natsumiPDFMaterialGroup,
+    #natsumiURLbarLayoutGroup {
+        .natsumi-mc-choice {
+            .natsumi-mc-choice-image-browser {
+                display: block;
+                background: linear-gradient(
+                    135deg,
+                    #ff9393,
+                    #ffb78b,
+                    #ffe88c,
+                    #5ce4a2,
+                    #97a6ff,
+                    #be9dff
+                );
+                gap: 0;
+            }
+        }
+    }
+
+    #natsumiPipMaterialGroup {
+        .natsumi-mc-choice-image-browser {
+            &::before {
+                display: block;
+                margin: 50px auto 5px;
+                width: 100px;
+                height: 2px;
+                border-radius: 3px;
+                border: 1px solid
+                    light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+                background-color: var(--natsumi-mat-hz-background);
+                backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            &::after {
+                display: block;
+                content: "";
+                width: 30px;
+                height: 8px;
+                border-radius: 5px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 4px;
+                border: 1px solid
+                    light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+                background-color: var(--natsumi-mat-hz-background);
+                backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            &#mat-hz-tinted {
+                &::before {
+                    background-color: var(--natsumi-mat-th-background);
+                }
+
+                &::after {
+                    background-color: var(--natsumi-mat-th-background);
+                }
+            }
+        }
+    }
+
+    #natsumiCompactSingleToolbarWarning {
+        @media not -moz-pref("natsumi.theme.single-toolbar") {
+            display: none !important;
+        }
+    }
+
+    #natsumiCompactStyleGroup {
+        @media -moz-pref("natsumi.theme.single-toolbar") {
+            #natsumiCompactStyleSettings .natsumi-mc-choice {
+                display: none !important;
+            }
+        }
+
+        .natsumi-mc-choice-image-browser {
+            &#compact-both::before {
+                margin: 4px !important;
+                width: calc(100% - 10px) !important;
+                height: calc(100% - 10px) !important;
+            }
+
+            &#compact-toolbar::before {
+                margin-top: 4px !important;
+                height: calc(100% - 10px) !important;
+            }
+
+            &#compact-sidebar::before {
+                margin-left: 4px !important;
+                width: calc(100% - 10px) !important;
+            }
+        }
+    }
+
+    #natsumiMiniplayerLayoutGroup {
+        .natsumi-mc-choice-image-browser {
+            &::before,
+            &::after {
+                content: "";
+                min-width: 60% !important;
+                max-width: 60% !important;
+                height: 14px !important;
+                border-radius: 6px;
+                border: 1px solid
+                    light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+                background: light-dark(
+                    var(--natsumi-colors-secondary),
+                    var(--natsumi-colors-primary)
+                );
+                margin: 2px auto !important;
+            }
+
+            &#miniplayer-stacked {
+                flex-direction: column;
+
+                &::before {
+                    margin-top: auto !important;
+                }
+
+                &::after {
+                    margin-bottom: auto !important;
+                }
+            }
+
+            &#miniplayer-side-by-side {
+                &::before,
+                &::after {
+                    margin: auto 3px !important;
+                    translate: -50% 0;
+                }
+
+                &::before {
+                    margin-left: 50% !important;
+                }
+            }
+        }
+    }
+
+    #natsumiPDFMaterialGroup {
+        .natsumi-mc-choice-image-browser {
+            &::before {
+                display: block;
+                margin: 5px auto;
+                width: 100px;
+                height: 5px;
+                border-radius: 4px;
+                border: 1px solid
+                    light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+                background-color: var(--natsumi-mat-hz-background);
+                backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            &::after {
+                display: block;
+                content: "";
+                width: 30px;
+                height: 53px;
+                border-radius: 4px;
+                margin-left: 4px;
+                margin-right: auto;
+                margin-top: 4px;
+                border: var(--natsumi-mat-hz-border-thin);
+                background-color: var(--natsumi-mat-hz-background);
+                backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            &#mat-hz-tinted {
+                &::before {
+                    background-color: var(--natsumi-mat-th-background);
+                }
+
+                &::after {
+                    background-color: var(--natsumi-mat-th-background);
+                }
+            }
+
+            &#mat-ga {
+                &::before {
+                    background-color: var(--natsumi-mat-ga-background);
+                    backdrop-filter: blur(var(--natsumi-mat-ga-blur-radius));
+                    box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
+                }
+
+                &::after {
+                    background-color: var(--natsumi-mat-ga-background);
+                    backdrop-filter: blur(var(--natsumi-mat-ga-blur-radius));
+                    box-shadow: 0 0 4px var(--natsumi-mat-ga-shadow-color) !important;
+                }
+            }
+        }
+    }
+
+    #natsumiURLbarLayoutGroup {
+        .natsumi-mc-choice-image-browser {
+            background: light-dark(#ebebeb, #171717) !important;
+
+            &::before {
+                display: block;
+                margin-top: 8px;
+            }
+
+            &::after {
+                content: "";
+                display: block;
+                width: 75px;
+                height: 45px;
+                margin-top: -60px;
+                margin-left: auto;
+                margin-right: auto;
+                border: 1px solid
+                    light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+                background-color: var(--natsumi-mat-th-background);
+                backdrop-filter: var(--natsumi-mat-hz-backdrop);
+                box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+                border-radius: 3px;
+            }
+        }
+
+        #urlbar-classic {
+            &::after {
+                margin-top: -74px;
+                width: 60px;
+                height: 40px;
+                background-color: light-dark(white, #777);
+                border: 1px solid
+                    light-dark(rgba(20, 20, 20, 0.3), rgba(235, 235, 235, 0.3));
+                backdrop-filter: none;
+            }
+        }
     }
 
     .natsumi-custom-theme-picker {
-      flex-direction: column;
+        padding: 20px;
+        background-color: light-dark(white, #222);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
+        border-radius: 20px !important;
     }
 
-    .natsumi-custom-theme-grid-container {
-      width: 380px !important;
-      height: 380px !important;
-      border-radius: 10px !important;
-      background: conic-gradient(from 0deg, red, #80FF00, #00FFFF, #8000FF, red);
-      display: grid;
+    #natsumiCustomThemePickerBox {
+        display: none;
 
-      .natsumi-custom-theme-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        margin: 20px;
-        width: calc(100% - 40px);
-        height: calc(100% - 40px);
-        border-radius: 10px;
-        background-color: rgba(255, 255, 255, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        grid-row-start: 1;
-        grid-column-start: 1;
+        @media -moz-pref("natsumi.theme.type", "custom") {
+            display: flex;
+        }
+    }
 
-        &::before {
-          content: "";
-          width: 100%;
-          height: 100%;
-          background: radial-gradient(closest-corner, white, rgba(255, 255, 255, 0.5), transparent, transparent);
-          grid-row-start: 1;
-          grid-column-start: 1;
+    .natsumi-custom-theme-container {
+        min-width: 400px !important;
+
+        &[natsumi-single-color] {
+            .natsumi-custom-theme-top-controls,
+            .natsumi-preset-button,
+            .natsumi-gradient-button,
+            .natsumi-custom-theme-angle,
+            .natsumi-custom-theme-color-display::before {
+                display: none !important;
+            }
         }
 
-        .natsumi-custom-theme-color {
-          position: relative !important;
-          width: 24px;
-          height: 24px;
-          margin: 8px !important;
-          border-radius: 50%;
-          border: 4px solid white;
-          background-color: white;
-          background-image: url("../icons/custom/transparent.png");
-          background-size: 15px;
-          grid-row-start: 1;
-          grid-column-start: 1;
-          overflow: hidden;
-          transition: scale 0.2s ease;
+        .natsumi-custom-theme-picker {
+            flex-direction: column;
+        }
 
-          &:hover {
-            scale: 1.1;
-          }
+        .natsumi-custom-theme-grid-container {
+            width: 380px !important;
+            height: 380px !important;
+            border-radius: 10px !important;
+            background: conic-gradient(
+                from 0deg,
+                red,
+                #80ff00,
+                #00ffff,
+                #8000ff,
+                red
+            );
+            display: grid;
 
-          .natsumi-custom-theme-color-display {
-            width: 100%;
-            height: 100%;
-            background: var(--natsumi-selected-color, black);
+            .natsumi-custom-theme-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                margin: 20px;
+                width: calc(100% - 40px);
+                height: calc(100% - 40px);
+                border-radius: 10px;
+                background-color: rgba(255, 255, 255, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                grid-row-start: 1;
+                grid-column-start: 1;
+
+                &::before {
+                    content: "";
+                    width: 100%;
+                    height: 100%;
+                    background: radial-gradient(
+                        closest-corner,
+                        white,
+                        rgba(255, 255, 255, 0.5),
+                        transparent,
+                        transparent
+                    );
+                    grid-row-start: 1;
+                    grid-column-start: 1;
+                }
+
+                .natsumi-custom-theme-color {
+                    position: relative !important;
+                    width: 24px;
+                    height: 24px;
+                    margin: 8px !important;
+                    border-radius: 50%;
+                    border: 4px solid white;
+                    background-color: white;
+                    background-image: url("../icons/custom/transparent.png");
+                    background-size: 15px;
+                    grid-row-start: 1;
+                    grid-column-start: 1;
+                    overflow: hidden;
+                    transition: scale 0.2s ease;
+
+                    &:hover {
+                        scale: 1.1;
+                    }
+
+                    .natsumi-custom-theme-color-display {
+                        width: 100%;
+                        height: 100%;
+                        background: var(--natsumi-selected-color, black);
+                        display: flex;
+
+                        &::before {
+                            display: block;
+                            content: var(--natsumi-color-index);
+                            margin: auto !important;
+                            color: var(--natsumi-color-index-color, black);
+                        }
+                    }
+
+                    &[selected] {
+                        border-color: color-mix(
+                            in srgb,
+                            var(--natsumi-selected-color, black) 60%,
+                            black 40%
+                        );
+
+                        .natsumi-custom-theme-color-display::before {
+                            font-weight: bold;
+                        }
+                    }
+
+                    &.natsumi-custom-theme-primary-color {
+                        width: 40px;
+                        height: 40px;
+                        margin: 0 !important;
+                        background-size: 20px;
+                    }
+                }
+            }
+
+            .natsumi-custom-theme-empty {
+                grid-row-start: 1;
+                grid-column-start: 1;
+                flex-direction: column;
+                text-align: center;
+                margin: auto;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+                user-select: none;
+                pointer-events: none;
+                color: black;
+            }
+
+            &[natsumi-is-empty] .natsumi-custom-theme-empty {
+                opacity: 1;
+            }
+        }
+
+        .natsumi-custom-theme-target-workspace {
+            margin-bottom: 10px;
+
+            .natsumi-custom-theme-workspace-selector {
+                margin: 0 !important;
+                width: 100% !important;
+            }
+        }
+
+        .natsumi-custom-theme-top-controls {
+            height: 36px;
+            width: fit-content;
+            margin: 0 auto 10px;
+            gap: 10px;
+
+            .natsumi-custom-theme-top-separator {
+                width: 1px;
+                height: 100%;
+                background-color: light-dark(black, white);
+            }
+
+            .natsumi-custom-theme-top-button {
+                width: 36px;
+                height: 36px;
+                border-radius: 5px;
+                transition:
+                    background-color 0.2s ease,
+                    box-shadow 0.2s ease;
+
+                &::before {
+                    content: "";
+                    display: flex;
+                    width: 24px;
+                    height: 24px;
+                    margin: auto;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 20px;
+                }
+
+                &:hover {
+                    background-color: var(--natsumi-button-hover-color);
+                }
+
+                &:active,
+                &[selected] {
+                    background-color: var(
+                        --natsumi-button-active-color
+                    ) !important;
+                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+                }
+
+                &.natsumi-custom-layer-1::before {
+                    content: "1";
+                }
+
+                &.natsumi-custom-layer-2::before {
+                    content: "2";
+                }
+
+                &.natsumi-custom-mode-light {
+                    background-image: url("../icons/lucide/luminosity-1.svg");
+                }
+
+                &.natsumi-custom-mode-dark {
+                    background-image: url("../icons/lucide/luminosity-0.svg");
+                }
+
+                &.natsumi-custom-import {
+                    background-image: url("../icons/lucide/download.svg");
+                }
+
+                &.natsumi-custom-export {
+                    background-image: url("../icons/lucide/upload.svg");
+                }
+
+                &.natsumi-custom-mode-light,
+                &.natsumi-custom-mode-dark,
+                &.natsumi-custom-import,
+                &.natsumi-custom-export {
+                    -moz-context-properties: stroke, stroke-opacity !important;
+                    stroke: light-dark(black, white);
+                    background-position: center;
+                    background-repeat: no-repeat;
+                }
+            }
+        }
+
+        .natsumi-custom-theme-controls {
+            width: min-content;
+            margin: 10px auto !important;
+            max-width: 380px;
+
+            .natsumi-custom-theme-controls-text {
+                margin: auto 0 !important;
+                font-weight: bold;
+                user-select: none;
+            }
+
+            .natsumi-custom-theme-controls-button {
+                margin: 0 4px;
+                padding: 2px;
+                min-height: 28px;
+                background-color: light-dark(#ddd, #777);
+                border-radius: 5px;
+                transition:
+                    background-color 0.2s ease,
+                    box-shadow 0.2s ease;
+
+                &:hover {
+                    background-color: light-dark(#ccc, #888);
+                }
+
+                &:active {
+                    background-color: var(
+                        --natsumi-button-active-color
+                    ) !important;
+                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+                }
+
+                .natsumi-custom-theme-controls-icon {
+                    width: 24px;
+                    height: 24px;
+                    background-size: 20px;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    -moz-context-properties: stroke, stroke-opacity !important;
+                    stroke: light-dark(black, white);
+                }
+
+                .natsumi-custom-theme-controls-label {
+                    margin: auto 0 !important;
+                    font-weight: bold;
+                    user-select: none;
+                }
+
+                &[disabled] {
+                    cursor: not-allowed;
+
+                    .natsumi-custom-theme-controls-icon {
+                        opacity: 0.3;
+                    }
+                }
+
+                &.natsumi-preset-button {
+                    margin-left: 0 !important;
+                }
+
+                &.natsumi-grain-button {
+                    margin-right: 0 !important;
+                }
+
+                &.natsumi-preset-button,
+                &.natsumi-gradient-button {
+                    padding: 2px 5px;
+                    text-wrap: nowrap;
+
+                    .natsumi-custom-theme-controls-icon {
+                        margin-right: 4px;
+                    }
+                }
+
+                &.natsumi-preset-button .natsumi-custom-theme-controls-icon {
+                    background-image: url("../icons/lucide/color-presets.svg");
+                }
+
+                &.natsumi-gradient-button .natsumi-custom-theme-controls-icon {
+                    background-image: url("../icons/lucide/gradient-type.svg");
+                }
+
+                &.natsumi-reset-button .natsumi-custom-theme-controls-icon {
+                    background-image: url("../icons/lucide/rotate-right.svg");
+                }
+
+                &.natsumi-hex-button .natsumi-custom-theme-controls-icon {
+                    background-image: url("../icons/lucide/type.svg");
+                }
+
+                &.natsumi-grain-button .natsumi-custom-theme-controls-icon {
+                    background-image: url("../icons/lucide/grain-0.svg");
+                }
+
+                &.natsumi-remove-color {
+                    .natsumi-custom-theme-controls-icon {
+                        background-image: url("../icons/lucide/minus.svg");
+                    }
+                }
+
+                &.natsumi-add-color {
+                    .natsumi-custom-theme-controls-icon {
+                        background-image: url("../icons/lucide/plus.svg");
+                    }
+                }
+            }
+        }
+
+        .natsumi-custom-theme-hex-input {
             display: flex;
+            padding: 10px 0;
+            gap: 10px;
+
+            &[hidden] {
+                display: none;
+            }
+
+            .natsumi-hex-input {
+                margin: 0 !important;
+                height: 36px;
+                flex: 1;
+            }
+
+            .natsumi-hex-submit {
+                width: 36px;
+                height: 36px;
+                border-radius: 5px;
+                transition:
+                    background-color 0.2s ease,
+                    box-shadow 0.2s ease;
+                background-position: center;
+                background-repeat: no-repeat;
+                -moz-context-properties: stroke, stroke-opacity !important;
+                stroke: light-dark(black, white);
+                background-image: url("../icons/lucide/plus.svg");
+
+                &::before {
+                    content: "";
+                    display: flex;
+                    width: 24px;
+                    height: 24px;
+                    margin: auto;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 20px;
+                }
+
+                &:hover {
+                    background-color: var(--natsumi-button-hover-color);
+                }
+
+                &:active,
+                &[selected] {
+                    background-color: var(
+                        --natsumi-button-active-color
+                    ) !important;
+                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+                }
+            }
+        }
+
+        .natsumi-custom-theme-grain {
+            margin-bottom: 10px;
+        }
+
+        .natsumi-custom-theme-bottom-controls {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .natsumi-custom-theme-sliders {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .natsumi-custom-theme-angle {
+            min-width: 90px;
+        }
+
+        .natsumi-custom-theme-luminosity,
+        .natsumi-custom-theme-opacity {
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        .natsumi-custom-theme-slider {
+            margin: 5px 0;
+            width: 100%;
+            height: 30px;
+            display: grid;
+            grid-template-columns: 1fr;
+            border-radius: 5px;
+
+            .natsumi-custom-theme-slider-icon-1,
+            .natsumi-custom-theme-slider-icon-0 {
+                grid-row-start: 1;
+                grid-column-start: 1;
+                width: 20px;
+                height: 20px;
+                background-size: 20px;
+                -moz-context-properties: stroke, stroke-opacity !important;
+                stroke: light-dark(black, white);
+            }
+
+            .natsumi-custom-theme-slider-icon-1 {
+                margin: auto 0 auto 10px;
+            }
+
+            .natsumi-custom-theme-slider-icon-0 {
+                margin: auto 10px auto auto;
+            }
 
             &::before {
-              display: block;
-              content: var(--natsumi-color-index);
-              margin: auto !important;
-              color: var(--natsumi-color-index-color, black);
+                content: "";
+                grid-row-start: 1;
+                grid-column-start: 1;
+                width: 100%;
+                height: 30px;
+                background: linear-gradient(
+                    90deg,
+                    var(--natsumi-last-selected-color, red),
+                    transparent
+                );
+                border-radius: 5px;
             }
-          }
 
-          &[selected] {
-            border-color: color-mix(in srgb, var(--natsumi-selected-color, black) 60%, black 40%);
-
-            .natsumi-custom-theme-color-display::before {
-              font-weight: bold;
+            &::after {
+                content: "";
+                width: 2px;
+                height: 100%;
+                border: 5px solid light-dark(white, #555);
+                border-radius: 6px;
+                background: light-dark(#ddd, #777);
+                grid-row-start: 1;
+                grid-column-start: 1;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+                margin-top: -5px;
+                margin-left: -5px;
+                translate: var(--natsumi-slider-position) 0;
+                transition: scale 0.2s ease;
             }
-          }
 
-          &.natsumi-custom-theme-primary-color {
-            width: 40px;
-            height: 40px;
-            margin: 0 !important;
-            background-size: 20px;
-          }
+            &:hover::after {
+                scale: 1.1;
+            }
+
+            &.natsumi-color-slider-luminosity {
+                background-color: black;
+
+                .natsumi-custom-theme-slider-icon-1 {
+                    stroke: var(--natsumi-slider-custom-stroke, white);
+                    background-image: url("../icons/lucide/luminosity-1.svg");
+                }
+
+                .natsumi-custom-theme-slider-icon-0 {
+                    stroke: white;
+                    background-image: url("../icons/lucide/luminosity-0.svg");
+                }
+            }
+
+            &.natsumi-color-slider-opacity {
+                background-image: url("../icons/custom/transparent.png");
+                background-size: 20px;
+                background-color: light-dark(
+                    rgba(255, 255, 255, 0.5),
+                    rgba(0, 0, 0, 0.5)
+                );
+                background-blend-mode: color;
+
+                .natsumi-custom-theme-slider-icon-1 {
+                    stroke: var(--natsumi-slider-custom-stroke, white);
+                    background-image: url("../icons/lucide/opacity-1.svg");
+                }
+
+                .natsumi-custom-theme-slider-icon-0 {
+                    stroke: light-dark(black, white);
+                    background-image: url("../icons/lucide/opacity-0.svg");
+                }
+            }
+
+            &.natsumi-color-slider-grain {
+                background: url("../icons/custom/grain.png");
+                background-color: var(--natsumi-last-selected-color, red);
+
+                .natsumi-custom-theme-slider-icon-1 {
+                    stroke: var(--natsumi-slider-custom-stroke, white);
+                    background-image: url("../icons/lucide/grain-1.svg");
+                }
+
+                .natsumi-custom-theme-slider-icon-0 {
+                    stroke: var(--natsumi-slider-custom-stroke, white);
+                    background-image: url("../icons/lucide/grain-0.svg");
+                }
+            }
         }
-      }
 
-      .natsumi-custom-theme-empty {
-        grid-row-start: 1;
-        grid-column-start: 1;
-        flex-direction: column;
-        text-align: center;
-        margin: auto;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        user-select: none;
-        pointer-events: none;
-        color: black;
-      }
+        .natsumi-custom-theme-luminosity {
+            margin-top: 0 !important;
+        }
 
-      &[natsumi-is-empty] .natsumi-custom-theme-empty {
-        opacity: 1;
-      }
+        .natsumi-gradient-angle {
+            margin: auto 0 auto auto;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            outline: 1px solid
+                light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
+            display: grid;
+            grid-template-columns: 1fr;
+
+            &[disabled] {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            &::before {
+                display: flex;
+                content: var(--natsumi-angle-string, "0°");
+                width: 50px;
+                height: 50px;
+                margin: auto;
+                border-radius: 50%;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(
+                    135deg,
+                    light-dark(#eee, #777),
+                    light-dark(#ddd, #555)
+                );
+                grid-row-start: 1;
+                grid-column-start: 1;
+            }
+
+            &::after {
+                content: "";
+                grid-row-start: 1;
+                grid-column-start: 1;
+                width: 8px;
+                height: 8px;
+                background-color: light-dark(black, white);
+                border-radius: 50%;
+                translate: var(--natsumi-angle-position);
+                margin-top: 25px;
+                margin-left: 25px;
+                transition:
+                    scale 0.2s ease,
+                    background-color 0.2s ease;
+            }
+
+            &:not([disabled]):hover::after {
+                background-color: light-dark(
+                    var(--natsumi-colors-primary),
+                    var(--natsumi-primary-color)
+                );
+                scale: 1.5;
+            }
+        }
     }
 
-    .natsumi-custom-theme-target-workspace {
-      margin-bottom: 10px;
-
-      .natsumi-custom-theme-workspace-selector {
-        margin: 0 !important;
-        width: 100% !important;
-      }
+    @media not -moz-pref("natsumi.theme.single-toolbar") {
+        #natsumiShowAddonsButtonBox,
+        #natsumiShowMenuButtonBox,
+        #natsumiShowToolbarButtonBox,
+        #natsumiForceToolbarButtonBox,
+        #natsumiShowBookmarksOnHoverBox,
+        #natsumiForceWinControlsToLeftBox {
+            display: none !important;
+        }
     }
 
-    .natsumi-custom-theme-top-controls {
-      height: 36px;
-      width: fit-content;
-      margin: 0 auto 10px;
-      gap: 10px;
+    .natsumi-settings-info {
+        --natsumi-info-color: #00aaff;
+        padding: 10px;
+        border-radius: 8px;
+        border: 2px solid var(--natsumi-info-color);
+        background-color: color-mix(
+            in srgb,
+            var(--natsumi-info-color) 10%,
+            transparent
+        );
 
-      .natsumi-custom-theme-top-separator {
-        width: 1px;
-        height: 100%;
-        background-color: light-dark(black, white);
-      }
-
-      .natsumi-custom-theme-top-button {
-        width: 36px;
-        height: 36px;
-        border-radius: 5px;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-
-        &::before {
-          content: "";
-          display: flex;
-          width: 24px;
-          height: 24px;
-          margin: auto;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 20px;
+        .natsumi-settings-info-icon {
+            min-width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            -moz-context-properties: stroke, stroke-opacity;
+            stroke: var(--natsumi-info-color);
+            background-size: 24px;
+            background-image: url("../icons/lucide/note.svg");
         }
 
-        &:hover {
-          background-color: var(--natsumi-button-hover-color);
+        .natsumi-settings-info-text {
+            display: block;
+            margin: auto 0;
+            color: var(--natsumi-info-color);
+
+            a {
+                display: inline;
+                color: var(--natsumi-info-color) !important;
+                font-weight: bold;
+            }
         }
 
-        &:active, &[selected] {
-          background-color: var(--natsumi-button-active-color) !important;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        &.warning {
+            --natsumi-info-color: #dd8800;
+
+            .natsumi-settings-info-icon {
+                background-image: url("../icons/lucide/warning.svg");
+            }
         }
 
-        &.natsumi-custom-layer-1::before {
-          content: "1";
-        }
+        &.caution {
+            --natsumi-info-color: #ff0000;
 
-        &.natsumi-custom-layer-2::before {
-          content: "2";
+            .natsumi-settings-info-icon {
+                background-image: url("../icons/lucide/caution.svg");
+            }
         }
-
-        &.natsumi-custom-mode-light {
-          background-image: url("../icons/lucide/luminosity-1.svg");
-        }
-
-        &.natsumi-custom-mode-dark {
-          background-image: url("../icons/lucide/luminosity-0.svg");
-        }
-
-        &.natsumi-custom-import {
-          background-image: url("../icons/lucide/download.svg");
-        }
-
-        &.natsumi-custom-export {
-          background-image: url("../icons/lucide/upload.svg");
-        }
-
-        &.natsumi-custom-mode-light, &.natsumi-custom-mode-dark, &.natsumi-custom-import, &.natsumi-custom-export {
-          -moz-context-properties: stroke, stroke-opacity !important;
-          stroke: light-dark(black, white);
-          background-position: center;
-          background-repeat: no-repeat;
-        }
-      }
     }
 
-    .natsumi-custom-theme-controls {
-      width: min-content;
-      margin: 10px auto !important;
-      max-width: 380px;
-
-      .natsumi-custom-theme-controls-text {
-        margin: auto 0 !important;
-        font-weight: bold;
-        user-select: none;
-      }
-
-      .natsumi-custom-theme-controls-button {
-        margin: 0 4px;
-        padding: 2px;
-        min-height: 28px;
-        background-color: light-dark(#ddd, #777);
-        border-radius: 5px;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-
-        &:hover {
-          background-color: light-dark(#ccc, #888);
+    /* Hide stuff not available on some platforms */
+    @media (-moz-platform: linux) {
+        #natsumiTranslucencyLegacyBox {
+            display: none !important;
         }
-
-        &:active {
-          background-color: var(--natsumi-button-active-color) !important;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .natsumi-custom-theme-controls-icon {
-          width: 24px;
-          height: 24px;
-          background-size: 20px;
-          background-position: center;
-          background-repeat: no-repeat;
-          -moz-context-properties: stroke, stroke-opacity !important;
-          stroke: light-dark(black, white);
-        }
-
-        .natsumi-custom-theme-controls-label {
-          margin: auto 0 !important;
-          font-weight: bold;
-          user-select: none;
-        }
-
-        &[disabled] {
-          cursor: not-allowed;
-
-          .natsumi-custom-theme-controls-icon {
-            opacity: 0.3;
-          }
-        }
-
-        &.natsumi-preset-button {
-          margin-left: 0 !important;
-        }
-
-        &.natsumi-grain-button {
-          margin-right: 0 !important;
-        }
-
-        &.natsumi-preset-button, &.natsumi-gradient-button {
-          padding: 2px 5px;
-          text-wrap: nowrap;
-
-          .natsumi-custom-theme-controls-icon {
-            margin-right: 4px;
-          }
-        }
-
-        &.natsumi-preset-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/color-presets.svg");
-        }
-
-        &.natsumi-gradient-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/gradient-type.svg");
-        }
-
-        &.natsumi-reset-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/rotate-right.svg");
-        }
-
-        &.natsumi-hex-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/type.svg");
-        }
-
-        &.natsumi-grain-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/grain-0.svg");
-        }
-
-        &.natsumi-remove-color {
-          .natsumi-custom-theme-controls-icon {
-            background-image: url("../icons/lucide/minus.svg");
-          }
-        }
-
-        &.natsumi-add-color {
-          .natsumi-custom-theme-controls-icon {
-            background-image: url("../icons/lucide/plus.svg");
-          }
-        }
-      }
     }
-
-    .natsumi-custom-theme-hex-input {
-      display: flex;
-      padding: 10px 0;
-      gap: 10px;
-
-      &[hidden] {
-        display: none;
-      }
-
-      .natsumi-hex-input {
-        margin: 0 !important;
-        height: 36px;
-        flex: 1;
-      }
-
-      .natsumi-hex-submit {
-        width: 36px;
-        height: 36px;
-        border-radius: 5px;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-        background-position: center;
-        background-repeat: no-repeat;
-        -moz-context-properties: stroke, stroke-opacity !important;
-        stroke: light-dark(black, white);
-        background-image: url("../icons/lucide/plus.svg");
-
-        &::before {
-          content: "";
-          display: flex;
-          width: 24px;
-          height: 24px;
-          margin: auto;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 20px;
-        }
-
-        &:hover {
-          background-color: var(--natsumi-button-hover-color);
-        }
-
-        &:active, &[selected] {
-          background-color: var(--natsumi-button-active-color) !important;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-      }
-    }
-
-    .natsumi-custom-theme-grain {
-      margin-bottom: 10px;
-    }
-
-    .natsumi-custom-theme-bottom-controls {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .natsumi-custom-theme-sliders {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .natsumi-custom-theme-angle {
-      min-width: 90px;
-    }
-
-    .natsumi-custom-theme-luminosity, .natsumi-custom-theme-opacity {
-      flex-direction: column;
-      margin-top: 10px;
-    }
-
-    .natsumi-custom-theme-slider {
-      margin: 5px 0;
-      width: 100%;
-      height: 30px;
-      display: grid;
-      grid-template-columns: 1fr;
-      border-radius: 5px;
-
-      .natsumi-custom-theme-slider-icon-1, .natsumi-custom-theme-slider-icon-0 {
-        grid-row-start: 1;
-        grid-column-start: 1;
-        width: 20px;
-        height: 20px;
-        background-size: 20px;
-        -moz-context-properties: stroke, stroke-opacity !important;
-        stroke: light-dark(black, white);
-      }
-
-      .natsumi-custom-theme-slider-icon-1 {
-        margin: auto 0 auto 10px;
-      }
-
-      .natsumi-custom-theme-slider-icon-0 {
-        margin: auto 10px auto auto;
-      }
-
-      &::before {
-        content: "";
-        grid-row-start: 1;
-        grid-column-start: 1;
-        width: 100%;
-        height: 30px;
-        background: linear-gradient(90deg, var(--natsumi-last-selected-color, red), transparent);
-        border-radius: 5px;
-      }
-
-      &::after {
-        content: "";
-        width: 2px;
-        height: 100%;
-        border: 5px solid light-dark(white, #555);
-        border-radius: 6px;
-        background: light-dark(#ddd, #777);
-        grid-row-start: 1;
-        grid-column-start: 1;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-        margin-top: -5px;
-        margin-left: -5px;
-        translate: var(--natsumi-slider-position) 0;
-        transition: scale 0.2s ease;
-      }
-
-      &:hover::after {
-        scale: 1.1;
-      }
-
-      &.natsumi-color-slider-luminosity {
-        background-color: black;
-
-        .natsumi-custom-theme-slider-icon-1 {
-          stroke: var(--natsumi-slider-custom-stroke, white);
-          background-image: url("../icons/lucide/luminosity-1.svg");
-        }
-
-        .natsumi-custom-theme-slider-icon-0 {
-          stroke: white;
-          background-image: url("../icons/lucide/luminosity-0.svg");
-        }
-      }
-
-      &.natsumi-color-slider-opacity {
-        background-image: url("../icons/custom/transparent.png");
-        background-size: 20px;
-        background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.5));
-        background-blend-mode: color;
-
-        .natsumi-custom-theme-slider-icon-1 {
-          stroke: var(--natsumi-slider-custom-stroke, white);
-          background-image: url("../icons/lucide/opacity-1.svg");
-        }
-
-        .natsumi-custom-theme-slider-icon-0 {
-          stroke: light-dark(black, white);
-          background-image: url("../icons/lucide/opacity-0.svg");
-        }
-      }
-
-      &.natsumi-color-slider-grain {
-        background: url("../icons/custom/grain.png");
-        background-color: var(--natsumi-last-selected-color, red);
-
-        .natsumi-custom-theme-slider-icon-1 {
-          stroke: var(--natsumi-slider-custom-stroke, white);
-          background-image: url("../icons/lucide/grain-1.svg");
-        }
-
-        .natsumi-custom-theme-slider-icon-0 {
-          stroke: var(--natsumi-slider-custom-stroke, white);
-          background-image: url("../icons/lucide/grain-0.svg");
-        }
-      }
-    }
-
-    .natsumi-custom-theme-luminosity {
-      margin-top: 0 !important;
-    }
-
-    .natsumi-gradient-angle {
-      margin: auto 0 auto auto;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      outline: 1px solid light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
-      display: grid;
-      grid-template-columns: 1fr;
-
-      &[disabled] {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      &::before {
-        display: flex;
-        content: var(--natsumi-angle-string, "0°");
-        width: 50px;
-        height: 50px;
-        margin: auto;
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, light-dark(#eee, #777), light-dark(#ddd, #555));
-        grid-row-start: 1;
-        grid-column-start: 1;
-      }
-
-      &::after {
-        content: "";
-        grid-row-start: 1;
-        grid-column-start: 1;
-        width: 8px;
-        height: 8px;
-        background-color: light-dark(black, white);
-        border-radius: 50%;
-        translate: var(--natsumi-angle-position);
-        margin-top: 25px;
-        margin-left: 25px;
-        transition: scale 0.2s ease, background-color 0.2s ease;
-      }
-
-      &:not([disabled]):hover::after {
-        background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-        scale: 1.5;
-      }
-    }
-  }
-
-  @media not -moz-pref("natsumi.theme.single-toolbar") {
-    #natsumiShowAddonsButtonBox, #natsumiShowMenuButtonBox, #natsumiShowToolbarButtonBox, #natsumiForceToolbarButtonBox,
-    #natsumiShowBookmarksOnHoverBox, #natsumiForceWinControlsToLeftBox {
-      display: none !important;
-    }
-  }
-
-  .natsumi-settings-info {
-    --natsumi-info-color: #00aaff;
-    padding: 10px;
-    border-radius: 8px;
-    border: 2px solid var(--natsumi-info-color);
-    background-color: color-mix(in srgb, var(--natsumi-info-color) 10%, transparent);
-
-    .natsumi-settings-info-icon {
-      min-width: 24px;
-      height: 24px;
-      margin-right: 10px;
-      -moz-context-properties: stroke, stroke-opacity;
-      stroke: var(--natsumi-info-color);
-      background-size: 24px;
-      background-image: url("../icons/lucide/note.svg");
-    }
-
-    .natsumi-settings-info-text {
-      display: block;
-      margin: auto 0;
-      color: var(--natsumi-info-color);
-
-      a {
-        display: inline;
-        color: var(--natsumi-info-color) !important;
-        font-weight: bold;
-      }
-    }
-
-    &.warning {
-      --natsumi-info-color: #dd8800;
-
-      .natsumi-settings-info-icon {
-        background-image: url("../icons/lucide/warning.svg");
-      }
-    }
-
-    &.caution {
-      --natsumi-info-color: #ff0000;
-
-      .natsumi-settings-info-icon {
-        background-image: url("../icons/lucide/caution.svg");
-      }
-    }
-  }
-
-  /* Hide stuff not available on some platforms */
-  @media (-moz-platform: linux) {
-    #natsumiTranslucencyLegacyBox {
-      display: none !important;
-    }
-  }
 }

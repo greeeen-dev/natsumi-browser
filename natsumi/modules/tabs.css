@@ -35,127 +35,140 @@ SOFTWARE.
 @import url("tabs/hexagonal.css");
 @import url("tabs/bubble.css");
 @import url("tabs/classic.css");
+@import url("tabs/clicky.css");
 
 /* Global tweaks for tabs */
 .tabbrowser-tab {
-  --attention-dot-color: transparent !important;
+    --attention-dot-color: transparent !important;
 
-  .tab-close-button {
-    padding: var(--natsumi-tab-close-button-padding, 6px) !important;
-    width: 24px !important;
-  }
+    .tab-close-button {
+        padding: var(--natsumi-tab-close-button-padding, 6px) !important;
+        width: 24px !important;
+    }
 }
 
 #tabbrowser-arrowscrollbox .tabbrowser-tab {
-  &[natsumi-glimpse-selected] {
-    .tab-label-container {
-      opacity: 1 !important;
+    &[natsumi-glimpse-selected] {
+        .tab-label-container {
+            opacity: 1 !important;
+        }
+
+        .tab-close-button {
+            display: flex !important;
+        }
     }
 
-    .tab-close-button {
-      display: flex !important;
+    .tab-loading-burst {
+        --tab-loading-fill: light-dark(
+            var(--natsumi-colors-primary),
+            var(--natsumi-primary-color)
+        ) !important;
     }
-  }
-
-  .tab-loading-burst {
-    --tab-loading-fill: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
-  }
 }
 
 @media -moz-pref("sidebar.verticalTabs") {
-  #tabbrowser-tabs:not([expanded]) #tabbrowser-arrowscrollbox .tabbrowser-tab {
-    .tab-close-button {
-      padding: 3.5px !important;
-      width: 15px !important;
+    #tabbrowser-tabs:not([expanded])
+        #tabbrowser-arrowscrollbox
+        .tabbrowser-tab {
+        .tab-close-button {
+            padding: 3.5px !important;
+            width: 15px !important;
+        }
     }
-  }
 }
 
 /* New tab button position */
 @media not -moz-pref("natsumi.tabs.hide-new-tab-button") {
-  @media -moz-pref("natsumi.tabs.new-tab-on-top") and -moz-pref("sidebar.verticalTabs")  {
-    #tabbrowser-arrowscrollbox:not([overflowing]) #tabbrowser-arrowscrollbox-periphery {
-      visibility: collapse !important;
-    }
+    @media -moz-pref("natsumi.tabs.new-tab-on-top") and -moz-pref("sidebar.verticalTabs") {
+        #tabbrowser-arrowscrollbox:not([overflowing])
+            #tabbrowser-arrowscrollbox-periphery {
+            visibility: collapse !important;
+        }
 
-    #vertical-tabs-newtab-button {
-      display: flex !important;
-      margin-top: 2px !important;
-      margin-bottom: -4px !important;
-    }
+        #vertical-tabs-newtab-button {
+            display: flex !important;
+            margin-top: 2px !important;
+            margin-bottom: -4px !important;
+        }
 
-    #tabbrowser-arrowscrollbox {
-      order: 1 !important;
-    }
+        #tabbrowser-arrowscrollbox {
+            order: 1 !important;
+        }
 
-    #tabbrowser-tabs::after {
-      order: 2 !important;
+        #tabbrowser-tabs::after {
+            order: 2 !important;
+        }
     }
-  }
 }
 
 /* Hide new tab button */
 @media -moz-pref("natsumi.tabs.hide-new-tab-button") {
-  #tabbrowser-arrowscrollbox:not([overflowing]) #tabbrowser-arrowscrollbox-periphery {
-    visibility: collapse !important;
-  }
+    #tabbrowser-arrowscrollbox:not([overflowing])
+        #tabbrowser-arrowscrollbox-periphery {
+        visibility: collapse !important;
+    }
 
-  #vertical-tabs-newtab-button {
-    display: none !important;
-  }
+    #vertical-tabs-newtab-button {
+        display: none !important;
+    }
 }
 
 /* Glimpse indicator */
 .tab-content[natsumi-glimpse-indicator] {
-  &::before {
-    content: var(--natsumi-glimpse-tabs);
-    font-size: small;
-    margin-left: 4px;
-    padding: 2px 4px 2px 24px;
-    border-radius: 6px;
-    height: 16px;
-    order: 1;
-    -moz-context-properties: stroke, fill;
-    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.2));
-    background-size: 16px;
-    background-repeat: no-repeat;
-    background-position: 4px center;
-    stroke: light-dark(black, white);
-    background-image: url("../icons/lucide/glimpse.svg");
-  }
+    &::before {
+        content: var(--natsumi-glimpse-tabs);
+        font-size: small;
+        margin-left: 4px;
+        padding: 2px 4px 2px 24px;
+        border-radius: 6px;
+        height: 16px;
+        order: 1;
+        -moz-context-properties: stroke, fill;
+        background-color: light-dark(
+            rgba(0, 0, 0, 0.1),
+            rgba(255, 255, 255, 0.2)
+        );
+        background-size: 16px;
+        background-repeat: no-repeat;
+        background-position: 4px center;
+        stroke: light-dark(black, white);
+        background-image: url("../icons/lucide/glimpse.svg");
+    }
 
-  .tab-close-button {
-    order: 2;
-  }
+    .tab-close-button {
+        order: 2;
+    }
 }
 
 /* Split view wrapper */
 tab-split-view-wrapper {
-  --natsumi-split-view-border-radius: calc(var(--natsumi-tab-border-radius) + 2px);
-  border-radius: var(--natsumi-split-view-border-radius) !important;
-  padding-block: 0 !important;
+    --natsumi-split-view-border-radius: calc(
+        var(--natsumi-tab-border-radius) + 2px
+    );
+    border-radius: var(--natsumi-split-view-border-radius) !important;
+    padding-block: 0 !important;
 
-  .tabbrowser-tab {
-    border: none !important;
+    .tabbrowser-tab {
+        border: none !important;
 
-    .tab-background {
-      margin-block: var(--tab-block-margin) !important;
+        .tab-background {
+            margin-block: var(--tab-block-margin) !important;
+        }
     }
-  }
 }
 
 #tabbrowser-tabs:not([expanded]) {
-  tab-split-view-wrapper {
-    @media -moz-pref("sidebar.verticalTabs") {
-      --natsumi-split-view-margin-left: calc(50% - 22px);
-      --natsumi-split-view-margin-right: calc(50% - 22px);
-      margin-left: var(--natsumi-split-view-margin-left) !important;
-      margin-right: var(--natsumi-split-view-margin-right) !important;
-      padding-inline: 2px !important;
+    tab-split-view-wrapper {
+        @media -moz-pref("sidebar.verticalTabs") {
+            --natsumi-split-view-margin-left: calc(50% - 22px);
+            --natsumi-split-view-margin-right: calc(50% - 22px);
+            margin-left: var(--natsumi-split-view-margin-left) !important;
+            margin-right: var(--natsumi-split-view-margin-right) !important;
+            padding-inline: 2px !important;
+        }
     }
-  }
 }
 
 tab[natsumi-workspace-hidden] {
-  display: none !important;
+    display: none !important;
 }
