@@ -4005,6 +4005,24 @@ function addHideFloorpWarnings() {
     });
 }
 
+if (window.addUnloadListener) {
+    window.addUnloadListener(() => {
+        // Unload settings tabs.
+        document.getElementById("natsumi-settings")?.remove();
+        document.getElementById("natsumi-shortcuts")?.remove();
+        document.getElementById("natsumi-about")?.remove();
+
+        // Unload settings panes.
+        document.querySelectorAll("[data-category='paneNatsumiSettings']").forEach((el) => el.remove());
+
+        // Unload pane handler.
+        gCategoryInits.delete("paneNatsumiSettings");
+
+        // Unload Floorp warnings.
+        document.getElementById("natsumi-hide-floorp-warnings")?.remove();
+    });
+}
+
 console.log("Loading prefs panes...");
 addOptionStyles();
 addToSidebar();
