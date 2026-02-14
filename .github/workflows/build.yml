@@ -1,4 +1,4 @@
-name: Build & release
+name: Build (no release)
 on: workflow_dispatch
 
 jobs:
@@ -83,37 +83,3 @@ jobs:
           name: natsumi-installer-windows
           path: installer/natsumi-installer.bat
           retention-days: 7
-  publish:
-    name: Release
-    runs-on: ubuntu-latest
-    needs: build-installer
-    permissions:
-      contents: write
-      id-token: write
-      pull-requests: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Get current version
-        run: python3 ./release-scripts/get_version.py
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-      - name: Create GitHub release
-        uses: ncipollo/release-action@v1.14.0
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          name: ${{ env.RAW_VERSION }}
-          tag: ${{ env.VERSION }}
-          commit: ${{ github.ref }}
-          draft: true
-          skipIfReleaseExists: true
-          artifactErrorsFailBuild: true
-          artifacts: 'natsumi-installer-macos-arm64/natsumi-installer-macos-arm64,
-            natsumi-installer-macos-x64/natsumi-installer-macos-intel,
-            natsumi-installer-linux/natsumi-installer-linux,
-            natsumi-installer-windows/natsumi-installer.bat'
