@@ -26,6 +26,15 @@ SOFTWARE.
 
 /* ==== Preferences ==== */
 
+@keyframes tool-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
   #natsumi-settings .category-icon {
     list-style-image: url("../icons/lucide/paintbrush.svg");
@@ -1089,13 +1098,120 @@ SOFTWARE.
     }
 
     .natsumi-custom-theme-tools-container {
-      & > * {
-        margin-top: -100%;
-        transition: margin-top 0.2s ease;
+      margin: 10px -10px;
+      padding: 10px 10px;
+      border-radius: 6px;
+      background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.05));
+      flex-direction: column;
+      gap: 8px;
+
+      &:not([hidden]) {
+        .natsumi-custom-theme-tool {
+          animation: tool-fadein 0.2s ease;
+        }
       }
 
-      &:not([hidden]) > * {
-        margin-top: 0;
+      .natsumi-custom-theme-tool {
+        display: flex;
+        flex-direction: column;
+
+        .natsumi-custom-theme-tool-button {
+          align-items: center;
+          height: 40px;
+          border-radius: 6px;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+          & > * {
+            pointer-events: none;
+            user-select: none;
+          }
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color);
+          }
+
+          &:active {
+            background-color: var(--natsumi-button-active-color);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          }
+
+          .natsumi-custom-theme-tool-icon {
+            margin: 12px;
+            width: 16px;
+            height: 16px;
+            background-size: 16px;
+            -moz-context-properties: stroke, stroke-opacity !important;
+            stroke: light-dark(black, white);
+          }
+        }
+
+        .natsumi-custom-theme-tool-container {
+          padding-block: 10px;
+          border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        }
+      }
+
+      .natsumi-custom-theme-hex-input {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/type.svg");
+        }
+
+        .natsumi-hex-input {
+          margin: 0 !important;
+          height: 36px;
+          flex: 1;
+        }
+
+        .natsumi-hex-submit {
+          width: 36px;
+          height: 36px;
+          margin-left: 10px !important;
+          border-radius: 5px;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+          background-position: center;
+          background-repeat: no-repeat;
+          -moz-context-properties: stroke, stroke-opacity !important;
+          stroke: light-dark(black, white);
+          background-image: url("../icons/lucide/plus.svg");
+
+          &::before {
+            content: "";
+            display: flex;
+            width: 24px;
+            height: 24px;
+            margin: auto;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+          }
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color);
+          }
+
+          &:active, &[selected] {
+            background-color: var(--natsumi-button-active-color) !important;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          }
+        }
+      }
+
+      .natsumi-custom-theme-grain {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/grain-0.svg");
+        }
+      }
+
+      .natsumi-custom-theme-text-color {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/text.svg");
+        }
+
+        .natsumi-custom-theme-tool-container {
+          flex-direction: column;
+          gap: 4px;
+        }
       }
     }
 
@@ -1256,14 +1372,6 @@ SOFTWARE.
           background-image: url("../icons/lucide/toolkit.svg");
         }
 
-        &.natsumi-hex-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/type.svg");
-        }
-
-        &.natsumi-grain-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/grain-0.svg");
-        }
-
         &.natsumi-remove-color {
           .natsumi-custom-theme-controls-icon {
             background-image: url("../icons/lucide/minus.svg");
@@ -1276,59 +1384,6 @@ SOFTWARE.
           }
         }
       }
-    }
-
-    .natsumi-custom-theme-hex-input {
-      display: flex;
-      padding: 10px 0;
-      gap: 10px;
-
-      &[hidden] {
-        display: none;
-      }
-
-      .natsumi-hex-input {
-        margin: 0 !important;
-        height: 36px;
-        flex: 1;
-      }
-
-      .natsumi-hex-submit {
-        width: 36px;
-        height: 36px;
-        border-radius: 5px;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-        background-position: center;
-        background-repeat: no-repeat;
-        -moz-context-properties: stroke, stroke-opacity !important;
-        stroke: light-dark(black, white);
-        background-image: url("../icons/lucide/plus.svg");
-
-        &::before {
-          content: "";
-          display: flex;
-          width: 24px;
-          height: 24px;
-          margin: auto;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 20px;
-        }
-
-        &:hover {
-          background-color: var(--natsumi-button-hover-color);
-        }
-
-        &:active, &[selected] {
-          background-color: var(--natsumi-button-active-color) !important;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-      }
-    }
-
-    .natsumi-custom-theme-grain {
-      margin-bottom: 10px;
     }
 
     .natsumi-custom-theme-bottom-controls {

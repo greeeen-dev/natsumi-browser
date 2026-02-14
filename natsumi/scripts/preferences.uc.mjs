@@ -93,7 +93,6 @@ class CustomThemePicker {
 
         // States
         this.shiftPressed = false;
-        this.toolsContainerTimeout = null;
     }
 
     getWorkspaces() {
@@ -272,25 +271,10 @@ class CustomThemePicker {
         toolsButton.addEventListener("click", () => {
             let toolsContainer = this.node.querySelector(".natsumi-custom-theme-tools-container");
 
-            if (this.toolsContainerTimeout) {
-                clearTimeout(this.toolsContainerTimeout);
-                this.toolsContainerTimeout = null;
-            }
-
-            if (toolsContainer.hasAttribute("hidden") || toolsContainer.hasAttribute("closing")) {
+            if (toolsContainer.hasAttribute("hidden")) {
                 toolsContainer.removeAttribute("hidden");
-                toolsContainer.removeAttribute("closing");
-                toolsContainer.setAttribute("opening", "");
-                this.toolsContainerTimeout = setTimeout(() => {
-                    toolsContainer.removeAttribute("opening");
-                }, 200);
             } else {
-                toolsContainer.removeAttribute("opening");
-                toolsContainer.setAttribute("closing", "");
-                this.toolsContainerTimeout = setTimeout(() => {
-                    toolsContainer.removeAttribute("closing");
-                    toolsContainer.setAttribute("hidden", "");
-                }, 200);
+                toolsContainer.setAttribute("hidden", "");
             }
         });
 
