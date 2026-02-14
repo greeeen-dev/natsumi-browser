@@ -28,26 +28,28 @@ SOFTWARE.
 /* Origin is a tab design inspired by Natsumi v1. */
 
 @media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "origin") {
-  #tabbrowser-arrowscrollbox .tabbrowser-tab {
-    & > .tab-stack > .tab-background {
-      transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
-      box-shadow: none !important;
-    }
-
-    .close-icon {
-      transition: background-color 0.1s ease-out;
-
-      &:hover {
-        background-color: rgba(255, 100, 100, 0.90) !important;
-        transition: background-color 0.1s ease-in;
-      }
-    }
-
-    &[selected], &[visuallyselected], &[natsumi-glimpse-selected], &[multiselected] {
+  #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
+    .tabbrowser-tab {
       & > .tab-stack > .tab-background {
-        background-color: light-dark(var(--tab-selected-bgcolor), rgba(255, 255, 255, 0.17)) !important;
-        border-top: 1px solid light-dark(#8888882d, #ffffff2d);
-        border-bottom: 1px solid #0000002d;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+        box-shadow: none !important;
+      }
+
+      .close-icon {
+        transition: background-color 0.1s ease-out;
+
+        &:hover {
+          background-color: rgba(255, 100, 100, 0.90) !important;
+          transition: background-color 0.1s ease-in;
+        }
+      }
+
+      &[selected], &[visuallyselected], &[natsumi-glimpse-selected], &[multiselected] {
+        & > .tab-stack > .tab-background {
+          background-color: light-dark(var(--tab-selected-bgcolor), rgba(255, 255, 255, 0.17)) !important;
+          border-top: 1px solid light-dark(#8888882d, #ffffff2d);
+          border-bottom: 1px solid #0000002d;
+        }
       }
     }
   }
