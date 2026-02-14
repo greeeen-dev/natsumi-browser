@@ -175,14 +175,15 @@ function parseColor(data) {
 
 function parseBackground(data) {
     // Example background data
-    // {"type": "linear", "angle": 135, "preset": null, "colors": [
-    //   {"code": "hsla(255, 100%, 50%, 1)", "angle": 255, "radius": 1, "value": 1, "opacity": 1, "order": 0},
-    //   {"code": "hsla(300, 100%, 50%, 1)", "angle": 300, "radius": 1, "value": 1, "opacity": 1, "order": 1}
+    // {"type": "linear", "angle": 135, "preset": null, "managedPos": true, "colors": [
+    //   {"code": "hsla(255, 100%, 50%, 1)", "angle": 255, "radius": 1, "value": 1, "opacity": 1, "order": 0, "position": 0},
+    //   {"code": "hsla(300, 100%, 50%, 1)", "angle": 300, "radius": 1, "value": 1, "opacity": 1, "order": 1, "position": 1}
     // ]}
 
     let gradientType = "linear-gradient";
     const angle = ((data["angle"] ?? 0) + 180) % 360;
     const angleString = `${angle}deg`;
+    const managedPosition = data["managedPos"] ?? true;
     let angleOverride = null;
     let colors = data["colors"] ?? [];
     let colorCodes = [];
@@ -213,7 +214,15 @@ function parseBackground(data) {
     });
 
     for (const color of colors) {
-        colorCodes.push(color.code);
+        let toPushCode = color.code;
+
+        if (!managedPosition) {
+            // If we aren't using managedPosition, then we can set the custom positions for each color
+            const positionValue = color.position * 100;
+            toPushCode = `${toPushCode} ${positionValue}%`
+        }
+
+        colorCodes.push(toPushCode);
     }
 
     if (data["type"] === "conic") {

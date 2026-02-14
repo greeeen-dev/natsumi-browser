@@ -91,8 +91,9 @@ class CustomThemePicker {
             this.data = {"color": {}};
         }
 
-        // Shift pressed
+        // States
         this.shiftPressed = false;
+        this.toolsContainerTimeout = null;
     }
 
     getWorkspaces() {
@@ -153,7 +154,6 @@ class CustomThemePicker {
 
         if (this.colors.length > 0) {
             this.setLastSelected("0");
-            this.renderButtons();
         }
 
         this.renderAngle();
@@ -232,6 +232,7 @@ class CustomThemePicker {
         let hexButton = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-button");
         let grainButton = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-button");
         let textColorButton = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-button");
+        const actionButtons = [presetButton, gradientTypeButton, resetButton, toolsButton];
 
         if (!this.singleColor) {
             presetButton.addEventListener("click", () => {
@@ -243,8 +244,54 @@ class CustomThemePicker {
             });
         }
 
+        for (let actionButton of actionButtons) {
+            const actionButtonCallback = () => {
+                if (Array.from(actionButton.classList).includes("natsumi-preset-button")) {
+                    this.displayAction("Preset", colorPresetNames[this.preset]);
+                } else if (Array.from(actionButton.classList).includes("natsumi-gradient-button")) {
+                    this.displayAction("Gradient", gradientTypeNames[this.gradientType]);
+                } else if (Array.from(actionButton.classList).includes("natsumi-reset-button")) {
+                    this.displayAction("Reset", "Reset theme layer");
+                } else if (Array.from(actionButton.classList).includes("natsumi-tools-button")) {
+                    this.displayAction("Tools", "Open tools");
+                } else {
+                    this.displayAction("Unknown", "Unknown action");
+                }
+            }
+            actionButton.addEventListener("mouseenter", () => {actionButtonCallback()});
+            actionButton.addEventListener("click", () => {actionButtonCallback()});
+            actionButton.addEventListener("mouseleave", () => {
+                this.hideAction();
+            });
+        }
+
         resetButton.addEventListener("click", () => {
             this.removeAllColors();
+        });
+
+        toolsButton.addEventListener("click", () => {
+            let toolsContainer = this.node.querySelector(".natsumi-custom-theme-tools-container");
+
+            if (this.toolsContainerTimeout) {
+                clearTimeout(this.toolsContainerTimeout);
+                this.toolsContainerTimeout = null;
+            }
+
+            if (toolsContainer.hasAttribute("hidden") || toolsContainer.hasAttribute("closing")) {
+                toolsContainer.removeAttribute("hidden");
+                toolsContainer.removeAttribute("closing");
+                toolsContainer.setAttribute("opening", "");
+                this.toolsContainerTimeout = setTimeout(() => {
+                    toolsContainer.removeAttribute("opening");
+                }, 200);
+            } else {
+                toolsContainer.removeAttribute("opening");
+                toolsContainer.setAttribute("closing", "");
+                this.toolsContainerTimeout = setTimeout(() => {
+                    toolsContainer.removeAttribute("closing");
+                    toolsContainer.setAttribute("hidden", "");
+                }, 200);
+            }
         });
 
         hexButton.addEventListener("click", () => {
@@ -564,7 +611,6 @@ class CustomThemePicker {
 
         this.renderGrid();
         this.renderSliders();
-        this.renderButtons();
         this.renderAngle();
     }
 
@@ -653,25 +699,28 @@ class CustomThemePicker {
                         <div class="natsumi-custom-theme-top-button natsumi-custom-import"></div>
                         <div class="natsumi-custom-theme-top-button natsumi-custom-export"></div>
                     </div>
-                    <div class="natsumi-custom-theme-grid-container">
-                        <div class="natsumi-custom-theme-grid"></div>
-                        <div class="natsumi-custom-theme-empty">
-                            Click anywhere on the grid to add a color.<br/>
-                            Right-click on a color to remove it.
+                    <div class="natsumi-custom-theme-colors-container">
+                        <div class="natsumi-custom-theme-position-container">
+                            
+                        </div>
+                        <div class="natsumi-custom-theme-grid-container">
+                            <div class="natsumi-custom-theme-grid"></div>
+                            <div class="natsumi-custom-theme-empty">
+                                Click anywhere on the grid to add a color.<br/>
+                                Right-click on a color to remove it.
+                            </div>
+                            <div class="natsumi-custom-theme-action-text">
+                                <div class="natsumi-custom-theme-action-type"></div>
+                                <div class="natsumi-custom-theme-action-value"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="natsumi-custom-theme-controls">
                         <div class="natsumi-custom-theme-controls-button natsumi-preset-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
-                            <div class="natsumi-custom-theme-controls-label">
-                                Floating
-                            </div>
                         </div>
                         <div class="natsumi-custom-theme-controls-button natsumi-gradient-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
-                            <div class="natsumi-custom-theme-controls-label">
-                                Linear
-                            </div>
                         </div>
                         <div class="natsumi-custom-theme-controls-button natsumi-reset-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
@@ -753,9 +802,25 @@ class CustomThemePicker {
         return convertToXUL(nodeString);
     }
 
+    displayAction(actionType, actionValue) {
+        let actionTypeNode = this.node.querySelector(".natsumi-custom-theme-action-type");
+        let actionValueNode = this.node.querySelector(".natsumi-custom-theme-action-value");
+        let gridContainerNode = this.node.querySelector(".natsumi-custom-theme-grid-container");
+
+        actionTypeNode.innerHTML = actionType;
+        actionValueNode.innerHTML = actionValue;
+
+        gridContainerNode.setAttribute("natsumi-action-displayed", "");
+    }
+
+    hideAction() {
+        let gridContainerNode = this.node.querySelector(".natsumi-custom-theme-grid-container");
+        gridContainerNode.removeAttribute("natsumi-action-displayed");
+    }
+
     calculateAngleRadiusGrid(relativeX, relativeY, radian = false) {
-        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
-        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 300);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
 
         return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
     }
@@ -790,8 +855,8 @@ class CustomThemePicker {
     }
 
     calculatePositionGrid(angle, radius, radian = false) {
-        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
-        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 300);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
 
         return this.calculatePosition(angle, radius, gridWidth, gridHeight, radian);
     }
@@ -1024,7 +1089,13 @@ class CustomThemePicker {
                     event.stopPropagation();
                     event.preventDefault();
 
-                    document.onmouseup = this.resetListeners;
+                    let gridContainerNode = this.node.querySelector(".natsumi-custom-theme-grid-container");
+                    gridContainerNode.setAttribute("natsumi-color-dragging", "");
+
+                    document.onmouseup = () => {
+                        gridContainerNode.removeAttribute("natsumi-color-dragging");
+                        this.resetListeners();
+                    }
                     document.onmousemove = (event => {
                         let observeColorIndex = colorIndex;
 
@@ -1090,7 +1161,6 @@ class CustomThemePicker {
 
         this.colors.push(colorData);
         this.setLastSelected(`${this.colors.length - 1}`);
-        this.renderButtons();
         this.saveLayer();
     }
 
@@ -1133,7 +1203,6 @@ class CustomThemePicker {
 
         this.colors.push(colorData);
         this.setLastSelected(`${this.colors.length - 1}`);
-        this.renderButtons();
         this.saveLayer();
     }
 
@@ -1273,14 +1342,6 @@ class CustomThemePicker {
         }
     }
 
-    renderButtons() {
-        let presetButtonNode = this.node.querySelector(".natsumi-preset-button .natsumi-custom-theme-controls-label");
-        let gradientTypeButtonNode = this.node.querySelector(".natsumi-gradient-button .natsumi-custom-theme-controls-label");
-
-        presetButtonNode.innerHTML = `${colorPresetNames[this.preset]}`;
-        gradientTypeButtonNode.innerHTML = `${gradientTypeNames[this.gradientType]}`;
-    }
-
     renderAngle() {
         let angleNode = this.node.querySelector(".natsumi-gradient-angle");
         const angleData = this.calculatePosition(this.angle, 1, 60, 60);
@@ -1366,7 +1427,6 @@ class CustomThemePicker {
             this.renderGrid();
             this.renderSliders();
         }
-        this.renderButtons();
         this.saveLayer();
     }
 
@@ -1380,7 +1440,6 @@ class CustomThemePicker {
         this.lastSelected = null;
         this.renderGrid();
         this.renderSliders();
-        this.renderButtons();
         this.renderAngle();
         this.saveLayer();
     }
@@ -1405,9 +1464,7 @@ class CustomThemePicker {
         }
 
         this.preset = nextPreset;
-
         this.setLastSelected("0");
-        this.renderButtons();
         this.saveLayer();
     }
 
@@ -1430,7 +1487,6 @@ class CustomThemePicker {
         this.gradientType = nextGradient;
         this.renderGrid();
         this.renderSliders();
-        this.renderButtons();
         this.renderAngle();
         this.saveLayer();
     }
