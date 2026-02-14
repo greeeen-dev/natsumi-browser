@@ -1,0 +1,113 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== TLS certificate issue page ==== */
+
+@-moz-document url-prefix(about:certerror) {
+  * {
+    --natsumi-primary-color: oklch(from light-dark(#ff7700, #ffaa00) 0.825 0.1 h);
+  }
+
+  html {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%) !important;
+    }
+  }
+
+  .container {
+    text-align: center;
+
+    .title {
+      padding-top: 0 !important;
+      background-image: none !important;
+
+      h2[data-l10n-id="about-httpsonly-title-alert"] {
+        display: none;
+      }
+
+      &::before {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 48px;
+        background-size: 48px;
+        margin-inline: auto;
+        -moz-context-properties: stroke, stroke-opacity !important;
+        stroke: light-dark(#ff7700, #ffaa00);
+        background-image: url("../icons/lucide/security-warning.svg");
+      }
+
+      .title-text {
+        font-weight: bold;
+        font-size: x-large;
+        margin-block: 5px;
+      }
+    }
+
+    #errorShortDesc {
+      font-size: var(--font-size-root) !important;
+    }
+
+    #errorWhatToDoTitle {
+      display: block !important;
+      margin: 4px !important;
+      margin-top: 18px !important;
+      font-size: large;
+    }
+
+    #errorWhatToDo {
+      color: light-dark(#777, #aaa);
+    }
+
+    #learnMoreLink, #errorCode, #viewCertificate {
+      --link-color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 70%, white), var(--natsumi-primary-color));
+      --link-color-visited: var(--link-color);
+      --link-color-hover: color-mix(in srgb, var(--link-color) 85%, light-dark(white, black));
+      --link-color-active: color-mix(in srgb, var(--link-color) 70%, light-dark(white, black));
+    }
+
+    .button-container {
+      justify-content: center !important;
+
+      button {
+        --button-background-color-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        --button-background-color-primary-hover: color-mix(in srgb, var(--button-background-color-primary) 85%, light-dark(white, black));
+        --button-background-color-primary-active: color-mix(in srgb, var(--button-background-color-primary) 70%, light-dark(white, black));
+        font-weight: normal !important;
+        height: 36px !important;
+        border-radius: 18px !important;
+      }
+    }
+  }
+
+  #badCertAdvancedPanel {
+    width: 90% !important;
+    border-radius: 12px;
+    border: var(--natsumi-mat-th-border-thin) !important;
+    box-shadow: var(--natsumi-mat-th-shadow) !important;
+    background: var(--natsumi-mat-th-background) !important;
+  }
+}

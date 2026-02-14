@@ -131,7 +131,7 @@ SOFTWARE.
         border-radius: 4px;
         transition: border 0.3s ease, background-color 0.3s ease;
 
-        &[checked="true"] {
+        &[checked]:not([checked="false"]) {
           border: none;
           background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
           -moz-context-properties: stroke;
@@ -203,6 +203,52 @@ SOFTWARE.
 
     .pane-container a {
       color: light-dark(color-mix(in srgb, var(--natsumi-primary-color) 70%, black), var(--natsumi-primary-color)) !important;
+    }
+
+    .label-wrapper {
+      input[type="checkbox"] {
+        appearance: var(--natsumi-checkbox-appearance, auto) !important;
+        border: var(--natsumi-checkbox-border, none) !important;
+        border-radius: var(--natsumi-checkbox-border-radius, 0) !important;
+        transition: var(--natsumi-checkbox-transition, none) !important;
+        filter: var(--natsumi-checkbox-filter, none) !important;
+        opacity: var(--natsumi-checkbox-opacity, 1) !important;
+        background-color: var(--natsumi-checkbox-background-color, transparent) !important;
+        background-image: var(--natsumi-checkbox-background-image, none) !important;
+        -moz-context-properties: stroke;
+        stroke: light-dark(white, black);
+        background-size: 14px;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      input[type="radio"] {
+        appearance: var(--natsumi-radio-appearance, auto) !important;
+        width: var(--natsumi-radio-width, unset) !important;
+        height: var(--natsumi-radio-height, unset) !important;
+        border: var(--natsumi-radio-border, none) !important;
+        border-radius: var(--natsumi-radio-border-radius, 0) !important;
+        transition: var(--natsumi-radio-transition, none) !important;
+        filter: var(--natsumi-radio-filter, none) !important;
+        opacity: var(--natsumi-radio-opacity, 1) !important;
+        background-color: var(--natsumi-radio-background-color, transparent) !important;
+
+        &::before {
+          content: var(--natsumi-radio-before-content, "");
+          display: var(--natsumi-radio-before-display, none);
+          width: var(--natsumi-radio-before-width, 0);
+          height: var(--natsumi-radio-before-height, 0);
+          margin: var(--natsumi-radio-before-margin, 0);
+          border-radius: var(--natsumi-radio-border-radius, 0);
+          background: var(--natsumi-radio-before-background, none);
+          opacity: var(--natsumi-radio-before-opacity, 0);
+          transition: var(--natsumi-radio-before-transition, none);
+        }
+      }
+    }
+
+    .picker-item[role="radio"][checked] {
+      border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
     }
   }
 }
