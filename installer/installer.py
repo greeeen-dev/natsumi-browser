@@ -347,7 +347,7 @@ def main():
 
         print('Installing fx-autoconfig...')
         try:
-            download_from_git('MrOtherGuy/fx-autoconfig', 'master', 'fx-autoconfig')
+            download_from_git('greeeen-dev/fx-autoconfig', 'master', 'fx-autoconfig')
         except:
             print('Failed to clone fx-autoconfig repository.')
             raise
@@ -355,14 +355,27 @@ def main():
         fx_autoconfig_downloaded = True
 
         print('Copying fx-autoconfig browser files...')
+
+        # Copy config.js
         shutil.copyfile('.natsumi-installer/fx-autoconfig/program/config.js', f'{install_path}/config.js')
-        shutil.copytree('.natsumi-installer/fx-autoconfig/program/defaults', f'{install_path}/defaults', dirs_exist_ok=True)
+
+        # Create default prefs directories if it doesn't exist
+        os.makedirs(f'{install_path}/defaults', exist_ok=True)
+        os.makedirs(f'{install_path}/defaults/pref', exist_ok=True)
+
+        # Copy fx-autoconfig files
+        if "librewolf.cfg" in os.listdir(install_path):
+            # Assume we're on LibreWolf
+            shutil.copyfile('.natsumi-installer/fx-autoconfig/program/config.js', f'{install_path}/librewolf.overrides.cfg')
+            shutil.copy('.natsumi-installer/fx-autoconfig/program/defaults/pref/config-prefs-librewolf.js', f'{install_path}/defaults/pref/config-prefs.js')
+        else:
+            shutil.copy('.natsumi-installer/fx-autoconfig/program/defaults/pref/config-prefs.js', f'{install_path}/defaults/pref/config-prefs.js')
     if not fx_autoconfig_profile_installed:
         if not fx_autoconfig_downloaded:
             print('Installing fx-autoconfig...')
 
             try:
-                download_from_git('MrOtherGuy/fx-autoconfig', 'master', 'fx-autoconfig')
+                download_from_git('greeeen-dev/fx-autoconfig', 'master', 'fx-autoconfig')
             except:
                 print('Failed to clone fx-autoconfig repository.')
                 raise

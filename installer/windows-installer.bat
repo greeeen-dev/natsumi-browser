@@ -182,7 +182,7 @@ if %errorlevel% neq 0 (
 )
 
 echo Cloning FX-AutoConfig...
-git clone https://github.com/MrOtherGuy/fx-autoconfig.git fx-autoconfig
+git clone https://github.com/greeeen-dev/fx-autoconfig.git fx-autoconfig
 if %errorlevel% neq 0 ( echo [ERROR] Git Clone failed. & pause & exit /b )
 
 :: --- STEP 5: PROFILE INSTALL ---
@@ -278,12 +278,25 @@ if %errorlevel% neq 0 (
     echo.
     pause
 )
+:: Rename config.js for LibreWolf
+if "%SELECTION%"=="4" (
+    rename-item  "%FINAL_INSTALL_PATH%\config.js" -newName "librewolf.overrides.cfg"
+)
 
 :: defaults folder
 echo.
 echo    [COPY] Attempting to copy defaults folder...
-:: Removed /Q (Quiet), Added /F (Full Path Display) to see what fails
-xcopy /E /I /Y /F "%TEMP_DIR%\fx-autoconfig\program\defaults" "%FINAL_INSTALL_PATH%\defaults"
+:: Create paths if they do not exist yet
+New-Item -Path "%FINAL_INSTALL_PATH%\defaults" -ItemType Directory -ErrorAction Ignore
+New-Item -Path "%FINAL_INSTALL_PATH%\defaults\pref" -ItemType Directory -ErrorAction Ignore
+:: Use LibreWolf-friendly prefs file if needed
+if "%SELECTION%"=="4" (
+    set "PREFS_FILE=config-prefs-librewolf.js"
+) else (
+    set "PREFS_FILE=config-prefs.js"
+)
+:: Copy prefs file
+copy /y "%TEMP_DIR%\fx-autoconfig\program\defaults\pref\%PREFS_FILE%" "%FINAL_INSTALL_PATH%\defaults\pref"
 if %errorlevel% neq 0 (
     echo.
     echo    [ERROR] Failed to copy 'defaults' folder contents!
