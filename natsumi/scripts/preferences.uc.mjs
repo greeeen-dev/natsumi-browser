@@ -1898,19 +1898,6 @@ const tabDesigns = {
             </div>
         `
     ),
-    "classic": new MCChoice(
-        "classic",
-        "Classic",
-        "Just the standard Firefox look.",
-        `
-            <div id='tab-classic' class='natsumi-mc-choice-image-browser'>
-                <div class='natsumi-mc-tab'>
-                    <div class='natsumi-mc-tab-icon'></div>
-                    <div class='natsumi-mc-tab-text'></div>
-                </div>
-            </div>
-        `
-    ),
     "clicky": new MCChoice(
         "clicky",
         "Clicky",
@@ -1923,6 +1910,19 @@ const tabDesigns = {
             </div>
         </div>
         `,
+    ),
+    "classic": new MCChoice(
+        "classic",
+        "Classic",
+        "Just the standard Firefox look.",
+        `
+            <div id='tab-classic' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+                </div>
+            </div>
+        `
     ),
 }
 
@@ -2168,12 +2168,12 @@ function addOptionStyles() {
             --natsumi-checkbox-background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
             --natsumi-checkbox-background-image: url("chrome://natsumi/content/icons/lucide/check.svg");
         }
-        
+
         moz-checkbox[disabled]::part(label) {
             --natsumi-checkbox-filter: grayscale(1);
             --natsumi-checkbox-opacity: 0.4;
         }
-        
+
         moz-radio::part(label) {
             --natsumi-radio-appearance: none;
             --natsumi-radio-width: var(--input-height);
@@ -2197,7 +2197,7 @@ function addOptionStyles() {
             --natsumi-radio-background-color: transparent;
             --natsumi-radio-before-opacity: 1;
         }
-        
+
         moz-radio[disabled]::part(label) {
             --natsumi-radio-filter: grayscale(1);
             --natsumi-radio-opacity: 0.4;
