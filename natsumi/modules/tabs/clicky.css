@@ -84,11 +84,22 @@
         }
     }
 
+
+
     @media not -moz-pref("sidebar.verticalTabs") {
         .tabbrowser-tab {
             --natsumi-shift-default: 1px;
             --natsumi-shift-selected: -1px;
         }
+
+        .tabbrowser-tab .tab-group-line {
+            transform: translateY(var(--natsumi-shift-selected));
+        }
+
+        .tabbrowser-tab[selected] .tab-group-line {
+            transform: translateY(1px) !important;
+        }
+
     }
 
     .tabbrowser-tab {
