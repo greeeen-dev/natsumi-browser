@@ -59,12 +59,12 @@ class NatsumiBrowserSeparationManager {
 
     updateSeparation(newSeparation) {
         if (typeof newSeparation !== "number") {
-            return;
+            newSeparation = 6;
         }
 
         this.marginStyleNode.innerHTML = `
             * {
-                --natsumi-browser-separation: ${newSeparation ?? 6}px;
+                --natsumi-browser-separation: ${newSeparation}px;
             }
         `
     }

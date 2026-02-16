@@ -1517,7 +1517,7 @@ class SliderChoice {
         let choiceButton = node.querySelector(".natsumi-slider-choice");
 
         choiceButton.addEventListener('input', () => {
-            ucApi.Prefs.set(this.affect, choiceButton.value);
+            ucApi.Prefs.set(this.affect, parseInt(choiceButton.value));
         });
 
         return node;
