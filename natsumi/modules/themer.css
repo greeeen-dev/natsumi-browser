@@ -142,6 +142,12 @@ SOFTWARE.
   }
 }
 
+@media -moz-pref("natsumi.theme.soft-glow") {
+    #tabbrowser-tabpanels .deck-selected {
+        box-shadow: 0px 0px 30px var(--tab-selected-bgcolor) !important;
+    }
+}
+
 /* Theme colors */
 :root[windowtype*="navigator:browser"] {
   /* Use theme color if possible */

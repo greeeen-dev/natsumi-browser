@@ -2345,6 +2345,12 @@ function addThemesPane() {
         true
     )
 
+    let softGlowCheckbox = new CheckboxChoice(
+        "natsumi.theme.soft-glow",
+        "natsumiSoftGlowToggle",
+        "Add a soft glow to your web page",
+    )
+
     let grayOutCheckbox = new CheckboxChoice(
         "natsumi.theme.gray-out-when-inactive",
         "natsumiGrayOutWhenInactive",
@@ -2355,6 +2361,7 @@ function addThemesPane() {
 
     themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
+    themeSelection.registerExtras("softGlowBox", softGlowCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
 
     for (let theme in themes) {
