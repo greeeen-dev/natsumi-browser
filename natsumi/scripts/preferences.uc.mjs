@@ -2375,12 +2375,12 @@ function addThemesPane() {
         "Gray out background when the browser window is inactive"
     )
 
-    let marginSlider = new SliderChoice(
+    let separationSlider = new SliderChoice(
             "6",
             "30",
             "6",
-            "Margin Slider",
-            "Change the margin of the web page",
+            "Browser Separation",
+            "Change the separation of the web page",
             "natsumi.theme.browser-separation",
         )
 
@@ -2389,7 +2389,7 @@ function addThemesPane() {
     themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
-    themeSelection.registerExtras("marginSlider", marginSlider);
+    themeSelection.registerExtras("separationSlider", separationSlider);
 
     for (let theme in themes) {
         themeSelection.registerOption(theme, themes[theme]);
