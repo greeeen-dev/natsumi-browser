@@ -27,7 +27,7 @@ SOFTWARE.
 /* ==== Preload ==== */
 /* You are advised NOT to touch this unless you know what you're doing. */
 
-:root {
+* {
   /* Colors */
   --natsumi-primary-color: var(--natsumi-custom-primary-color, var(--natsumi-accent-color, #a0d490));
   --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 50%, black 50%);
