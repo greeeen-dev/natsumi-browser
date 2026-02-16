@@ -2381,7 +2381,7 @@ function addThemesPane() {
             "6",
             "Margin Slider",
             "Change the margin of the web page",
-            "natsumi.theme.margin",
+            "natsumi.theme.browser-separation",
         )
 
     let customThemePickerUi = new CustomThemePicker("natsumiCustomThemePicker", customThemeLoader, applyCustomTheme, "natsumi.theme.custom-theme-data");
