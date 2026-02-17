@@ -48,6 +48,14 @@ chrome_manifest = [
     'content natsumi-icons ../natsumi/icons/'
 ]
 
+risk_string = "Natsumi is provided \"as-is\" without any warranties. By installing and using Natsumi, you agree\n\
+to the GPLv3 software license found in the LICENSE file in the repository. You are responsible for\n\
+any damages or issues that may arise from using Natsumi and you agree not to hold the developers\n\
+liable for any such damages or issues.\n\n\
+Additionally, Natsumi uses fx-autoconfig to apply JS scripts to your browser. If your system is\n\
+infected with malware, installing Natsumi may put your browser data at higher risk of being accessed\n\
+maliciously. Please ensure your system is secure before proceeding with installation."
+
 def get_admin():
     return os.geteuid() == 0
 
@@ -325,15 +333,7 @@ def main():
     sine_support = False
 
     print("Natsumi will now be installed. Please read the following before proceeding:")
-    print(
-        "Natsumi is provided \"as-is\" without any warranties. By installing and using Natsumi, you agree\n\
-        to the GPLv3 software license found in the LICENSE file in the repository. You are responsible for\n\
-        any damages or issues that may arise from using Natsumi and you agree not to hold the developers\n\
-        liable for any such damages or issues.\n\n\
-        Additionally, Natsumi uses fx-autoconfig to apply JS scripts to your browser. If your system is\n\
-        infected with malware, installing Natsumi may put your browser data at higher risk of being accessed\n\
-        maliciously. Please ensure your system is secure before proceeding with installation."
-    )
+    print(risk_string)
     print("If you have read the above and agree to the terms, type 'y' to continue.")
     confirm = input().lower() == "y"
 
@@ -347,7 +347,7 @@ def main():
 
         print('Installing fx-autoconfig...')
         try:
-            download_from_git('MrOtherGuy/fx-autoconfig', 'master', 'fx-autoconfig')
+            download_from_git('greeeen-dev/fx-autoconfig', 'master', 'fx-autoconfig')
         except:
             print('Failed to clone fx-autoconfig repository.')
             raise
@@ -355,14 +355,34 @@ def main():
         fx_autoconfig_downloaded = True
 
         print('Copying fx-autoconfig browser files...')
+
+        # Copy config.js
         shutil.copyfile('.natsumi-installer/fx-autoconfig/program/config.js', f'{install_path}/config.js')
-        shutil.copytree('.natsumi-installer/fx-autoconfig/program/defaults', f'{install_path}/defaults', dirs_exist_ok=True)
+
+        # Create default prefs directories if it doesn't exist
+        os.makedirs(f'{install_path}/defaults', exist_ok=True)
+        os.makedirs(f'{install_path}/defaults/pref', exist_ok=True)
+
+        # Copy fx-autoconfig files
+        if "librewolf.cfg" in os.listdir(install_path):
+            # Assume we're on LibreWolf
+            profile_root = f'{profile}/..'
+            if sys.platform == 'darwin':
+                # We need to copy this to ~/.librewolf for some odd reason?
+                home_directory = os.getenv("HOME")
+                os.makedirs(f'{home_directory}/.librewolf', exist_ok=True)
+                profile_root = f'{home_directory}/.librewolf'
+
+            shutil.copyfile('.natsumi-installer/fx-autoconfig/program/config.js', f'{profile_root}/librewolf.overrides.cfg')
+            shutil.copy('.natsumi-installer/fx-autoconfig/program/defaults/pref/config-prefs-librewolf.js', f'{install_path}/defaults/pref/config-prefs.js')
+        else:
+            shutil.copy('.natsumi-installer/fx-autoconfig/program/defaults/pref/config-prefs.js', f'{install_path}/defaults/pref/config-prefs.js')
     if not fx_autoconfig_profile_installed:
         if not fx_autoconfig_downloaded:
             print('Installing fx-autoconfig...')
 
             try:
-                download_from_git('MrOtherGuy/fx-autoconfig', 'master', 'fx-autoconfig')
+                download_from_git('greeeen-dev/fx-autoconfig', 'master', 'fx-autoconfig')
             except:
                 print('Failed to clone fx-autoconfig repository.')
                 raise
