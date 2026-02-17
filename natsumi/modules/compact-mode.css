@@ -90,12 +90,15 @@ SOFTWARE.
       height: calc(100vh - calc(var(--natsumi-browser-separation) * 2) - var(--natsumi-sidebar-height-offset)) !important;
       border-radius: 6px !important;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-      padding-top: 10px !important;
       opacity: 0;
       top: 0;
       --natsumi-sidebar-height-offset: 0px;
       --natsumi-compact-offset: var(--natsumi-sidebar-width);
       overflow-x: visible !important;
+
+      @media (not -moz-pref("natsumi.theme.single-toolbar")) {
+        padding-top: 10px !important;
+      }
 
       @media (not -moz-pref("natsumi.theme.compact-sidebar-accent")) and -moz-pref("natsumi.theme.type", "custom") {
         --natsumi-compact-backing: light-dark(#ebebeb, #171717);

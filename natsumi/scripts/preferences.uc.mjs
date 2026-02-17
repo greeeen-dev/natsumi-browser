@@ -1487,6 +1487,43 @@ class RadioChoice extends MCChoice {
     }
 }
 
+class SliderChoice {
+    constructor(valueMin, valueMax, value, label, description, affect) {
+        this.valueMin = valueMin;
+        this.valueMax = valueMax;
+        this.label = label;
+        this.description = description;
+        this.affect = affect;
+        this.value = value;
+    }
+
+    generateNode() {
+        const prefObj = ucApi.Prefs.get(this.affect);
+        if (prefObj && prefObj.exists()) {
+            this.value = prefObj.value;
+        }
+
+        let nodeString = `
+        <label class="natsumi-mc-choice-label">
+        ${this.label}
+        </label>
+        <html:input class="natsumi-slider-choice" type="range"
+        title="${this.description}"
+        min="${this.valueMin}" max="${this.valueMax}"
+        value="${this.value}" />
+        `;
+
+        let node = convertToXUL(nodeString);
+        let choiceButton = node.querySelector(".natsumi-slider-choice");
+
+        choiceButton.addEventListener('input', () => {
+            ucApi.Prefs.set(this.affect, parseInt(choiceButton.value));
+        });
+
+        return node;
+    }
+}
+
 const layouts = {
     "default": new MCChoice(
         false,
@@ -2357,12 +2394,22 @@ function addThemesPane() {
         "Gray out background when the browser window is inactive"
     )
 
+    let separationSlider = new SliderChoice(
+            "6",
+            "30",
+            "6",
+            "Browser Separation",
+            "Change the separation of the web page",
+            "natsumi.theme.browser-separation",
+        )
+
     let customThemePickerUi = new CustomThemePicker("natsumiCustomThemePicker", customThemeLoader, applyCustomTheme, "natsumi.theme.custom-theme-data");
 
     themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
     themeSelection.registerExtras("softGlowBox", softGlowCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
+    themeSelection.registerExtras("separationSlider", separationSlider);
 
     for (let theme in themes) {
         themeSelection.registerOption(theme, themes[theme]);

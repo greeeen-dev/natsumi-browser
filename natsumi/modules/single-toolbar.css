@@ -360,6 +360,14 @@ SOFTWARE.
         display: none !important;
       }
     }
+
+    #notifications-toolbar {
+      margin-top: 40px !important;
+    }
+
+    body[natsumi-compact-mode] #notifications-toolbar {
+      display: none;
+    }
   }
 }
 

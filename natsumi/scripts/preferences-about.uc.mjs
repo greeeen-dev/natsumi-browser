@@ -48,7 +48,7 @@ function addAboutPane() {
     const isStardust = branch === "alpha" || branch === "beta";
     let browserName = AppConstants.MOZ_APP_BASENAME;
     const forkedFox = browserName.toLowerCase() !== "firefox";
-    let browserVersion = Services.appinfo.version;
+    let browserVersion = Services.appinfo.platformVersion ?? Services.appinfo.version;
     let forkedVersion = AppConstants.MOZ_APP_VERSION_DISPLAY;
     let isTor = false;
 
