@@ -90,7 +90,7 @@ SOFTWARE.
         position: absolute;
         left: 46px !important;
 
-        #sidebarToggleButton {
+        #viewsManagerToggleButton, #sidebarToggleButton {
           appearance: none !important;
           position: absolute !important;
           border-radius: 50% !important;
@@ -404,7 +404,18 @@ SOFTWARE.
       }
 
       /* Sidebar */
+      #viewsManager {
+        left: -66px !important;
+        height: calc(100vh - 86px) !important;
+        transition: left 0.2s ease, opacity 0.2s ease !important;
+      }
+
       #sidebarContainer {
+        top: 56px !important;
+        bottom: 10px !important;
+      }
+
+      #viewsManager, #sidebarContainer {
         top: 56px !important;
         bottom: 10px !important;
         background: var(--natsumi-material-background) !important;
@@ -432,19 +443,6 @@ SOFTWARE.
         .thumbnail {
           margin-bottom: 22px !important;
           transition: border-color 0.2s ease;
-
-          &::after {
-            content: attr(data-page-number);
-            display: block;
-            color: black;
-            width: 100%;
-            margin-top: 8px;
-            text-align: center;
-
-            @media (prefers-color-scheme: dark) {
-              color: white;
-            }
-          }
         }
       }
 
@@ -454,11 +452,21 @@ SOFTWARE.
         pointer-events: none !important;
       }
 
+      #viewsManager[hidden] {
+        display: flex !important;
+        left: -76px !important;
+      }
+
       #outerContainer.sidebarOpen #sidebarContainer {
         opacity: 1 !important;
         animation: sidebar-appear 0.3s ease;
         animation-fill-mode: forwards;
         transition: opacity 0.3s ease !important;
+      }
+
+      #viewsManager:not([hidden]) {
+        opacity: 1 !important;
+        left: -46px !important;
       }
 
       /* Popups */
