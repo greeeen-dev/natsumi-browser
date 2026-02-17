@@ -42,7 +42,6 @@ class NatsumiGlimpse {
         this.glimpse = {};
         this.glimpseTabs = []; // Array to quickly check if a tab is a glimpse tab
         this.currentGlimpseTab = null;
-        this.glimpseInterval = null;
         this.multiGlimpse = false;
         this.chainingGlimpse = false;
     }
@@ -105,6 +104,8 @@ class NatsumiGlimpse {
 
         this.currentGlimpseTab.linkedBrowser.browsingContext.isActive = true;
         this.currentGlimpseTab.linkedBrowser.renderLayers = true;
+
+        // We can reuse the rendering function here
 
         requestAnimationFrame(() => {
             this.ensureGlimpseParentRender();
