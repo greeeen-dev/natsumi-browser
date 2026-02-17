@@ -153,6 +153,11 @@
           "chrome://browser/content/browser.xhtml"
         ]
       },
+      "browser-separation.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
       "custom-theme.sys.mjs": {},
       "workspaces.uc.mjs": {
         "loadOrder": 11,
