@@ -35,6 +35,7 @@ SOFTWARE.
 @import url("tabs/hexagonal.css");
 @import url("tabs/bubble.css");
 @import url("tabs/classic.css");
+@import url("tabs/clicky.css");
 
 /* Global tweaks for tabs */
 .tabbrowser-tab {
