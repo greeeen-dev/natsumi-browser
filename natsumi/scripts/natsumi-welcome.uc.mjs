@@ -110,7 +110,7 @@ class NatsumiWelcome {
             <div id="natsumi-welcome-drumroll-complete" class="natsumi-welcome-drumroll">
                 <div class="natsumi-welcome-drumroll-icon"></div>
                 <div class="natsumi-welcome-drumroll-text">
-                    Welcome to Natsumi                    
+                    Welcome to Natsumi
                 </div>
             </div>
         `)
@@ -640,6 +640,17 @@ function createTabsPane() {
             </div>
             <div class="natsumi-welcome-selection-label">
                 Bubble
+            </div>
+        </div>
+        <div class="natsumi-welcome-selection" pref="natsumi.tabs.type" type="string" value="clicky">
+            <div id="natsumi-welcome-tabs-clicky" class="natsumi-welcome-selection-preview">
+                <div class='natsumi-welcome-tab'>
+                    <div class='natsumi-welcome-tab-icon'></div>
+                    <div class='natsumi-welcome-tab-text'></div>
+                </div>
+            </div>
+            <div class="natsumi-welcome-selection-label">
+                Clicky
             </div>
         </div>
         <div class="natsumi-welcome-selection" pref="natsumi.tabs.type" type="string" value="classic">

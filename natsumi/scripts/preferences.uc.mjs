@@ -1935,6 +1935,19 @@ const tabDesigns = {
             </div>
         `
     ),
+    "clicky": new MCChoice(
+        "clicky",
+        "Clicky",
+        "Click that tab",
+        `
+            <div id='tab-clicky' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+            </div>
+        </div>
+        `,
+    ),
     "classic": new MCChoice(
         "classic",
         "Classic",
@@ -2369,6 +2382,12 @@ function addThemesPane() {
         true
     )
 
+    let softGlowCheckbox = new CheckboxChoice(
+        "natsumi.theme.soft-glow",
+        "natsumiSoftGlowToggle",
+        "Add a soft glow to your web page",
+    )
+
     let grayOutCheckbox = new CheckboxChoice(
         "natsumi.theme.gray-out-when-inactive",
         "natsumiGrayOutWhenInactive",
@@ -2388,6 +2407,7 @@ function addThemesPane() {
 
     themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
+    themeSelection.registerExtras("softGlowBox", softGlowCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
     themeSelection.registerExtras("separationSlider", separationSlider);
 
