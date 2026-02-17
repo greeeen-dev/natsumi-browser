@@ -267,7 +267,7 @@ echo.
 
 :: config.js
 echo    [COPY] Attempting to copy config.js...
-copy /y "%TEMP_DIR%\fx-autoconfig\program\config.js" "%FINAL_INSTALL_PATH%\"
+copy /y "%TEMP_DIR%\fx-autoconfig\program\config.js" "%PROFILE_ROOT_PATH%\"
 if %errorlevel% neq 0 (
     echo.
     echo    [ERROR] Failed to copy config.js!
@@ -280,7 +280,7 @@ if %errorlevel% neq 0 (
 )
 :: Rename config.js for LibreWolf
 if "%SELECTION%"=="4" (
-    rename-item  "%FINAL_INSTALL_PATH%\config.js" -newName "librewolf.overrides.cfg"
+    rename-item  "%PROFILE_ROOT_PATH%\config.js" -newName "librewolf.overrides.cfg"
 )
 
 :: defaults folder
