@@ -144,7 +144,7 @@ class NatsumiWelcome {
         const drumrollAudioUrl = "chrome://natsumi/content/sounds/drumroll.ogg";
         this.drumrollAudio = new Audio(drumrollAudioUrl);
         this.drumrollAudio.load();
-        this.drumrollAudio.volume = 0.2;
+        this.drumrollAudio.volume = 0.5;
     }
 
     start() {
@@ -849,7 +849,7 @@ if (!welcomeViewed && !blockOnboarding) {
     // Play welcome audio
     let audio = new Audio(welcomeAudioUrl);
     audio.load();
-    audio.volume = 0.2;
+    audio.volume = 0.5;
     audio.play().catch((error) => {
         console.warn("Failed to play audio:", error);
     });

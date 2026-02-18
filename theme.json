@@ -50,6 +50,11 @@
           "chrome://global/content/pictureinpicture/player.xhtml*"
         ]
       },
+      "toolbars.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
       "notifications.sys.mjs": {},
       "sidebar-actions.uc.mjs": {
         "loadOrder": 12,
