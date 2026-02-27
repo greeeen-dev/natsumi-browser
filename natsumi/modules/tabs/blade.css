@@ -120,6 +120,10 @@ SOFTWARE.
           mask-image: linear-gradient(to right, black, transparent 30%);
           transition: width 0.2s ease, opacity 0.2s ease, background-color 0.2s ease, border 0.2s ease;
 
+          @media -moz-pref("natsumi.theme.buggy-scaling") {
+            height: calc(100% - 3.5px);
+          }
+
           @media -moz-pref("natsumi.browser.type-firedragon") {
             height: 100%;
           }

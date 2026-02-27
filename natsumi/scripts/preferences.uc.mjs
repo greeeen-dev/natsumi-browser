@@ -2727,6 +2727,12 @@ function addSidebarTabsPane() {
         "natsumiTabBladeLegacyColor",
         "Use legacy Blade highlight color"
     ));
+    tabDesignSelection.registerExtras("natsumiTabBrokenScaling", new CheckboxChoice(
+        "natsumi.theme.buggy-scaling",
+        "natsumiTabBrokenScaling",
+        "My desktop environment can't scale properly",
+        "Applies a 0.5px offset to Blade highlight to account for scaling issues."
+    ));
 
     // Fusion options
     tabDesignSelection.registerExtras("natsumiTabFusionHighlight", new CheckboxChoice(

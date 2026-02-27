@@ -651,6 +651,9 @@ SOFTWARE.
     #natsumiTabBladeLegacyColor {
       display: none !important;
     }
+    #natsumiTabBrokenScaling {
+      display: none !important;
+    }
   }
 
   @media (not -moz-pref("natsumi.tabs.use-custom-type")) or (not -moz-pref("natsumi.tabs.type", "fusion")) {
