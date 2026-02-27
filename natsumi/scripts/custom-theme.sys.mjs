@@ -175,14 +175,15 @@ function parseColor(data) {
 
 function parseBackground(data) {
     // Example background data
-    // {"type": "linear", "angle": 135, "preset": null, "colors": [
-    //   {"code": "hsla(255, 100%, 50%, 1)", "angle": 255, "radius": 1, "value": 1, "opacity": 1, "order": 0},
-    //   {"code": "hsla(300, 100%, 50%, 1)", "angle": 300, "radius": 1, "value": 1, "opacity": 1, "order": 1}
+    // {"type": "linear", "angle": 135, "preset": null, "managedPos": true, "colors": [
+    //   {"code": "hsla(255, 100%, 50%, 1)", "angle": 255, "radius": 1, "value": 1, "opacity": 1, "order": 0, "position": 0},
+    //   {"code": "hsla(300, 100%, 50%, 1)", "angle": 300, "radius": 1, "value": 1, "opacity": 1, "order": 1, "position": 1}
     // ]}
 
     let gradientType = "linear-gradient";
     const angle = ((data["angle"] ?? 0) + 180) % 360;
     const angleString = `${angle}deg`;
+    const managedPosition = data["managedPos"] ?? true;
     let angleOverride = null;
     let colors = data["colors"] ?? [];
     let colorCodes = [];
@@ -213,7 +214,15 @@ function parseBackground(data) {
     });
 
     for (const color of colors) {
-        colorCodes.push(color.code);
+        let toPushCode = color.code;
+
+        if (!managedPosition) {
+            // If we aren't using managedPosition, then we can set the custom positions for each color
+            const positionValue = color.position * 100;
+            toPushCode = `${toPushCode} ${positionValue}%`
+        }
+
+        colorCodes.push(toPushCode);
     }
 
     if (data["type"] === "conic") {
@@ -421,6 +430,8 @@ export async function applyCustomTheme() {
         body.style.removeProperty("--natsumi-theme-layer-0-background-dark");
         body.style.removeProperty("--natsumi-theme-layer-1-background");
         body.style.removeProperty("--natsumi-theme-layer-1-background-dark");
+        body.style.removeProperty("--natsumi-theme-text-color");
+        body.style.removeProperty("--natsumi-theme-text-color-dark");
 
         for (let index in toApplyData["light"]) {
             let layerData = toApplyData["light"][index];
@@ -431,6 +442,15 @@ export async function applyCustomTheme() {
                     body.style.removeProperty(`--natsumi-theme-layer-${index}-background`);
                 } else {
                     body.style.setProperty(`--natsumi-theme-layer-${index}-background`, backgroundValue);
+                }
+            }
+
+            if (layerData["textColor"]) {
+                const textColorValue = parseColor(layerData["textColor"]);
+                if (!textColorValue) {
+                    body.style.removeProperty(`--natsumi-theme-text-color`);
+                } else {
+                    body.style.setProperty(`--natsumi-theme-text-color`, textColorValue);
                 }
             }
         }
@@ -444,6 +464,15 @@ export async function applyCustomTheme() {
                     body.style.removeProperty(`--natsumi-theme-layer-${index}-background-dark`);
                 } else {
                     body.style.setProperty(`--natsumi-theme-layer-${index}-background-dark`, backgroundValue);
+                }
+            }
+
+            if (layerData["textColor"]) {
+                const textColorValue = parseColor(layerData["textColor"]);
+                if (!textColorValue) {
+                    body.style.removeProperty(`--natsumi-theme-text-color-dark`);
+                } else {
+                    body.style.setProperty(`--natsumi-theme-text-color-dark`, textColorValue);
                 }
             }
         }
