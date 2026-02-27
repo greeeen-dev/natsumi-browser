@@ -39,7 +39,7 @@ SOFTWARE.
 
 /* Base Natsumi design (Blade) */
 @media not -moz-pref("natsumi.tabs.use-custom-type") {
-  #tabbrowser-arrowscrollbox {
+  #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
     /*noinspection CssInvalidFunction*/
     .tabbrowser-tab {
       --natsumi-tab-highlight-color: var(--natsumi-primary-color);
@@ -256,13 +256,15 @@ SOFTWARE.
     }
   }
 
-  #tabbrowser-tabs[expanded] #tabbrowser-arrowscrollbox {
-    .tabbrowser-tab .tab-close-button {
-      border-radius: 10px !important;
-      transition: background-color 0.2s ease !important;
+  #tabbrowser-tabs[expanded] {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
+      .tabbrowser-tab .tab-close-button {
+        border-radius: 10px !important;
+        transition: background-color 0.2s ease !important;
 
-      &:hover {
-        background-color: var(--natsumi-button-hover-color) !important;
+        &:hover {
+          background-color: var(--natsumi-button-hover-color) !important;
+        }
       }
     }
   }
@@ -277,10 +279,12 @@ SOFTWARE.
       }
     }
 
-    #tabbrowser-arrowscrollbox .tabbrowser-tab {
-      & > .tab-stack > .tab-background {
-        &::after {
-          width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
+      .tabbrowser-tab {
+        & > .tab-stack > .tab-background {
+          &::after {
+            width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
+          }
         }
       }
     }

@@ -177,6 +177,8 @@ class NatsumiGlimpse {
                 parentBrowser.removeAttribute("natsumi-has-glimpse");
 
                 if (shouldSwitchToParent) {
+                    // Ensure static tabs are accessible just to be safe
+                    document.body.natsumiStaticTabsManager.ensureStaticTabsAreAccessible();
                     gBrowser.selectedTab = parentTab;
                 } else {
                     // Check if parent is a pinned tab
@@ -238,6 +240,8 @@ class NatsumiGlimpse {
             // Unregister glimpse
             this.unregisterGlimpse(closedTabId);
         }
+
+        document.body.natsumiStaticTabsManager.ensureStaticTabsAreAccessible();
     }
 
     onSelect() {
@@ -365,6 +369,8 @@ class NatsumiGlimpse {
             gBrowser.selectedTab = currentGlimpseTab;
             this.ensureGlimpseParentRender();
         }
+
+        document.body.natsumiStaticTabsManager.ensureStaticTabsAreAccessible();
     }
 
     onKeyDown(event) {
@@ -695,6 +701,7 @@ class NatsumiGlimpse {
 
         // Close Glimpse tab
         gBrowser.removeTab(glimpseTab);
+        document.body.natsumiStaticTabsManager.ensureStaticTabsAreAccessible();
     }
 
     cycleGlimpseTabs(parentTabId, forward = true) {
@@ -845,6 +852,8 @@ class NatsumiGlimpse {
             // Remove graduated tab from glimpse data
             this.removeFromGlimpse(parentTabId, glimpseTabId);
         }
+
+        document.body.natsumiStaticTabsManager.ensureStaticTabsAreAccessible();
     }
 
     unregisterGlimpse(parentTabId) {
