@@ -59,6 +59,8 @@ SOFTWARE.
       --natsumi-colors-border: color-mix(in srgb, var(--natsumi-colors-secondary) 80%, black 20%);
 
       body {
+        overflow-x: hidden !important;
+
         @media (prefers-color-scheme: dark) {
           background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%) !important;
         }
@@ -416,8 +418,6 @@ SOFTWARE.
       }
 
       #viewsManager, #sidebarContainer {
-        top: 56px !important;
-        bottom: 10px !important;
         background: var(--natsumi-material-background) !important;
         backdrop-filter: var(--natsumi-material-backdrop);
         box-shadow: var(--natsumi-material-shadow) !important;
@@ -455,6 +455,7 @@ SOFTWARE.
       #viewsManager[hidden] {
         display: flex !important;
         left: -76px !important;
+        pointer-events: none !important;
       }
 
       #outerContainer.sidebarOpen #sidebarContainer {
