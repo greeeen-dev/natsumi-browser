@@ -153,12 +153,7 @@ You can get this file from the `Installers` folder in this repo.
 > To update Natsumi on Windows, run the `windows-installer.bat` again with your browser closed.
 
 #### Installing via Sine
-> [!WARNING]
-> Installing via Sine is supported but not recommended. The following features will not work:
-> - Any features included in Natsumi Append
-> - Icon packs aside from Firefox default
-
-You can install the CSS-only version of Natsumi through [Sine](https://github.com/CosmoCreeper/Sine).
+You can also install Natsumi (Browser, Browser Pages, and Append) through [Sine](https://github.com/CosmoCreeper/Sine). (Sine does provide auto-updating for Natsumi)
 
 ### Manual install
 Remember to take backups of your userChrome.css and userContent.css files before proceeding!
