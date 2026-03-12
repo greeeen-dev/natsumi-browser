@@ -589,3 +589,10 @@ SOFTWARE.
     }
   }
 }
+
+/* Add soft glow to web page */
+@media -moz-pref("natsumi.theme.soft-glow") {
+    #tabbrowser-tabpanels .deck-selected {
+        box-shadow: 0px 0px 30px var(--tab-selected-bgcolor) !important;
+    }
+}

@@ -56,9 +56,13 @@ SOFTWARE.
   --natsumi-theme-color-opacity: 0.5;
   --natsumi-theme-gradient-opacity: 0.5;
 
+  /* Set rounded corners on Linux (with 5px fallback) */
   @media (-moz-platform: linux) {
-    &::after, #browser::before {
-      border-radius: 5px !important;
+    :root:not([gtktiledwindow="true"]):not([sizemode="maximized"]) & {
+      &::after,
+      &::before {
+        border-radius: env(-moz-gtk-csd-titlebar-radius, 5px);
+      }
     }
   }
 

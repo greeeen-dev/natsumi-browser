@@ -73,6 +73,10 @@ SOFTWARE.
       border-radius: 18px !important;
     }
 
+    input[type="range"] {
+          accent-color: var(--natsumi-primary-color) !important;
+    }
+
     .navigation {
       margin: 20px 0 20px 20px !important;
       padding: 10px !important;

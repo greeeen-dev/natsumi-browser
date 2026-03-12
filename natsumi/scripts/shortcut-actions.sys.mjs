@@ -242,6 +242,11 @@ export class NatsumiShortcutActions {
         let secondTab;
         let insertBefore = gBrowser.selectedTab;
 
+        if (firstTab.hasAttribute("natsumi-glimpse-tab")) {
+            // We can't split this
+            return;
+        }
+
         if (selectedTabs.length === 1) {
             // Get tab index
             let tabIndex = unpinnedTabs.indexOf(firstTab);
@@ -251,7 +256,13 @@ export class NatsumiShortcutActions {
                 secondTab = unpinnedTabs[tabIndex - 1];
             } else {
                 // Split with next tab
-                secondTab = unpinnedTabs[tabIndex + 1];
+                while (tabIndex < unpinnedTabs.length) {
+                    // Ensure our tab isn't a Glimpse tab
+                    secondTab = unpinnedTabs[tabIndex + 1];
+                    if (!secondTab.hasAttribute("natsumi-glimpse-tab")) {
+                        break;
+                    }
+                }
             }
         } else {
             secondTab = selectedTabs[1];
