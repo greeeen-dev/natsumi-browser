@@ -539,8 +539,12 @@ SOFTWARE.
           font-size: 18px !important;
         }
 
-        #tracking-protection-icon-container, #identity-box, #page-action-buttons {
-          display: none;
+        #tracking-protection-icon-container, #identity-box, #page-action-buttons, #trust-icon-container {
+          display: none !important;
+        }
+
+        .urlbar-input-box {
+          margin-left: 0 !important;
         }
 
         .urlbar-input-container {

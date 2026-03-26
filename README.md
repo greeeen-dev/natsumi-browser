@@ -13,13 +13,6 @@
 
 ![](./images/main-backgroundless.webp)
 
-## ⚠️ IMPORTANT NOTICE
-Natsumi doesn't do crypto. Any crypto coins that may seem like it's affiliated with the project
-**is not affiliated with Natsumi whatsoever**.
-
-All funds go to some random third party and not me. If you do get scammed because of it I take zero
-responsibility for any financial losses.
-
 ## Meet Natsumi! 🦋
 Meet Natsumi Browser (or Natsumi, for short) - a browser mod that truly puts you in control.
 
