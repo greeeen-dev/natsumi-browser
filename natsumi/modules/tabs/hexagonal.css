@@ -28,7 +28,7 @@ SOFTWARE.
 /* Hexagonal is a tab design inspired by Floorp's hexagonal branding. */
 
 @media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "hexagonal") {
-  #tabbrowser-arrowscrollbox {
+  #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
     .tabbrowser-tab {
       --natsumi-tab-height: max(calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px), 32px);
       --natsumi-tab-highlight-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
@@ -120,7 +120,7 @@ SOFTWARE.
   }
 
   #tabbrowser-tabs[orient="horizontal"] {
-    #tabbrowser-arrowscrollbox {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab {
         min-width: 90px !important;
       }
