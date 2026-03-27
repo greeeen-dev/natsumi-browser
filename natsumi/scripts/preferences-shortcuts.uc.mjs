@@ -1123,6 +1123,16 @@ function addToSidebar() {
     });
 }
 
+if (window.addUnloadListener) {
+    window.addUnloadListener(() => {
+        // Unload settings panes.
+        document.querySelectorAll("[data-category='paneNatsumiShortcuts']").forEach((el) => el.remove());
+
+        // Unload pane handler.
+        gCategoryInits.delete("paneNatsumiShortcuts");
+    });
+}
+
 addToSidebar();
 let natsumiShortcutsPrefPane = new NatsumiShortcutsPrefPane();
 natsumiShortcutsPrefPane.init();

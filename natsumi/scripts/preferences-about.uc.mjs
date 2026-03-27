@@ -158,6 +158,16 @@ function addToSidebar() {
     });
 }
 
+if (window.addUnloadListener) {
+    window.addUnloadListener(() => {
+        // Unload settings panes.
+        document.querySelectorAll("[data-category='paneNatsumiAbout']").forEach((el) => el.remove());
+
+        // Unload pane handler.
+        gCategoryInits.delete("paneNatsumiAbout");
+    });
+}
+
 // Get Natsumi version
 let versionPath = "chrome://natsumi/content/version.json";
 fetch(versionPath).then(response => response.json()).then(data => {
