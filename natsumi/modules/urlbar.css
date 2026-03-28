@@ -604,6 +604,7 @@ SOFTWARE.
           height: 24px !important;
           margin-top: auto !important;
           margin-bottom: auto !important;
+          margin-right: var(--identity-box-margin-inline) !important;
           border-radius: 12px !important;
           padding-right: 0 !important;
           background: var(--natsumi-urlbar-search-engine-color) !important;
