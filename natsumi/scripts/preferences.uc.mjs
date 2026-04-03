@@ -1406,8 +1406,13 @@ class CheckboxChoice {
             `;
         }
 
+        let checkedAttribute = ""
+        if (selected) {
+            checkedAttribute = ` checked="true"`
+        }
+
         let nodeString = `
-            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}" checked="${selected}" label="${this.label}">
+            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}"${checkedAttribute} label="${this.label}">
                 <image class="checkbox-check" checked="${selected}"/>
                 <label class="checkbox-label-box" flex="1">
                     <image class="checkbox-icon"/>
@@ -2146,6 +2151,14 @@ class RadioPreference extends MultipleChoicePreference {
             form.appendChild(choiceNode);
         }
         return node;
+    }
+}
+
+function toggleDisabled(node, disabled) {
+    if (disabled) {
+        node.setAttribute("disabled", "true");
+    } else {
+        node.removeAttribute("disabled");
     }
 }
 
@@ -2891,7 +2904,7 @@ function addSidebarWorkspacesPane() {
     let checkboxes = sidebarWorkspacesNode.querySelectorAll("checkbox");
     let legacyIndicatorCheckbox = sidebarWorkspacesNode.getElementById("natsumiSidebarLegacyWorkspaceIndicator");
     if (ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").exists()) {
-        legacyIndicatorCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").value}`);
+        toggleDisabled(legacyIndicatorCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").value)
     }
 
     checkboxes.forEach(checkbox => {
@@ -2904,7 +2917,7 @@ function addSidebarWorkspacesPane() {
             }
 
             if (checkbox.id === "natsumiSidebarHideWorkspaceIndicator") {
-                legacyIndicatorCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(legacyIndicatorCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3089,15 +3102,15 @@ function addSidebarButtonsPane() {
     let newTabPositionCheckbox = sidebarButtonsNode.querySelector("#natsumiSidebarNewTabPosition");
 
     if (ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").exists()) {
-        keepSelectedCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
-        openNewTabCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+        toggleDisabled(keepSelectedCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
+        toggleDisabled(openNewTabCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
 
         if (mergeWithWorkspacesCheckbox) {
-            mergeWithWorkspacesCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+            toggleDisabled(mergeWithWorkspacesCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
         }
     }
     if (ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").exists()) {
-        newTabPositionCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").value}`);
+        toggleDisabled(newTabPositionCheckbox, ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").value);
     }
 
     // Set listeners for each checkbox
@@ -3112,14 +3125,14 @@ function addSidebarButtonsPane() {
             }
 
             if (checkbox.id === "natsumiSidebarHideClearTabs") {
-                keepSelectedCheckbox.setAttribute("disabled", `${isChecked}`);
-                openNewTabCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(keepSelectedCheckbox, isChecked);
+                toggleDisabled(openNewTabCheckbox, isChecked);
 
                 if (mergeWithWorkspacesCheckbox) {
-                    mergeWithWorkspacesCheckbox.setAttribute("disabled", `${isChecked}`);
+                    toggleDisabled(mergeWithWorkspacesCheckbox, isChecked);
                 }
             } else if (checkbox.id === "natsumiSidebarHideNewTab") {
-                newTabPositionCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(newTabPositionCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3677,7 +3690,7 @@ function addPDFCompactPane() {
     let dynamicCheckbox = compactNode.querySelector("#natsumiPDFDynamicCompact");
 
     if (ucApi.Prefs.get("natsumi.pdfjs.compact").exists()) {
-        dynamicCheckbox.setAttribute("disabled", `${!ucApi.Prefs.get("natsumi.pdfjs.compact").value}`);
+        toggleDisabled(dynamicCheckbox, !ucApi.Prefs.get("natsumi.pdfjs.compact").value);
     }
 
     // Set listeners for each checkbox
@@ -3692,7 +3705,7 @@ function addPDFCompactPane() {
             }
 
             if (checkbox.id === "natsumiPDFEnableCompact") {
-                dynamicCheckbox.setAttribute("disabled", `${!isChecked}`);
+                toggleDisabled(dynamicCheckbox, !isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
