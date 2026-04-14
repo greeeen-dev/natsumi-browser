@@ -59,7 +59,7 @@ SOFTWARE.
           position: absolute;
           width: 100%;
           height: 72px;
-          background: linear-gradient(180deg, black 40px, transparent 72px);
+          background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
         }
       }
     }
