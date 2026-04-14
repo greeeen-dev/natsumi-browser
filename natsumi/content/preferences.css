@@ -62,6 +62,26 @@ SOFTWARE.
           background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
         }
       }
+
+      @media -moz-pref("browser.settings-redesign.enabled") {
+        groupbox[data-category="paneNatsumiSettings"] {
+          border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+          border-radius: var(--card-border-radius);
+          background-color: light-dark(#fff, #23222b);
+          box-shadow: var(--card-box-shadow);
+          padding: var(--space-xlarge);
+
+          @media (prefers-color-scheme: dark) {
+            border-color: color-mix(in srgb, currentColor 6%, transparent);
+          }
+
+          h2 {
+            margin-top: -4px !important;
+            font-weight: var(--font-weight-heading);
+            font-size: var(--font-size-heading-large);
+          }
+        }
+      }
     }
 
     .page-nav-icon {
