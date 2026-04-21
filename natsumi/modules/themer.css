@@ -152,6 +152,17 @@ SOFTWARE.
   &[style*="--lwt"] body::after {
     background-color: var(--lwt-accent-color);
   }
+
+  /* Use theme images in solid color layer if possible */
+  &[lwtheme]:not([lwtheme-image-y-align]) body {
+    background-image: none !important;
+
+    &::after {
+      background-image: var(--lwt-additional-images);
+      background-repeat: var(--lwt-background-tiling);
+      background-position: var(--lwt-background-alignment);
+    }
+  }
 }
 
 /* Override accent color if theme color is set */
