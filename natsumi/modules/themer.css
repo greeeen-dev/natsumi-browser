@@ -149,12 +149,12 @@ SOFTWARE.
 /* Theme colors */
 :root[windowtype*="navigator:browser"] {
   /* Use theme color if possible */
-  &[style*="--lwt"] body::after {
+  &[style*="--lwt"] html:not([ai-window]) body::after {
     background-color: var(--lwt-accent-color);
   }
 
   /* Use theme images in solid color layer if possible */
-  &[lwtheme]:not([lwtheme-image-y-align]) body {
+  &[lwtheme]:not([lwtheme-image-y-align]) html:not([ai-window]) body {
     background-image: none !important;
 
     &::after {
@@ -167,7 +167,7 @@ SOFTWARE.
 
 /* Override accent color if theme color is set */
 @media not -moz-pref("natsumi.theme.force-natsumi-color") {
-  :root[style*="--lwt"] {
+  :root[style*="--lwt"] html:not([ai-window]) {
     * {
       --natsumi-primary-color: var(--lwt-accent-color) !important;
 
@@ -176,6 +176,12 @@ SOFTWARE.
           --natsumi-primary-color: var(--lwt-tab-line-color) !important;
         }
       }
+    }
+  }
+
+  html[ai-window] {
+    * {
+      --natsumi-primary-color: var(--color-violet-20) !important;
     }
   }
 }
