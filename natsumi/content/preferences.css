@@ -59,14 +59,9 @@ SOFTWARE.
           position: absolute;
           width: 100%;
           height: 72px;
-          background: linear-gradient(180deg, black 40px, transparent 72px);
+          background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
         }
       }
-    }
-
-    .page-nav-icon {
-      -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity !important;
-      stroke: currentColor;
     }
 
     .pane-container {
@@ -100,12 +95,18 @@ SOFTWARE.
     #input[type="search"] {
       background-color: transparent !important;
       border: none !important;
+      outline: none !important;
       height: 36px !important;
       border-radius: 18px !important;
     }
 
+    .content-wrapper:has(#input[type="search"]:focus-visible) {
+      border-radius: 18px !important;
+      outline: 2px solid var(--color-accent-primary);
+    }
+
     input[type="range"] {
-          accent-color: var(--natsumi-primary-color) !important;
+      accent-color: var(--natsumi-primary-color) !important;
     }
 
     .navigation {
@@ -285,5 +286,32 @@ SOFTWARE.
     .picker-item[role="radio"][checked] {
       border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
     }
+  }
+
+  body[natsumi-preferences-redesign] {
+    @media -moz-pref("browser.settings-redesign.enabled") {
+      groupbox[data-category="paneNatsumiSettings"] {
+        border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+        border-radius: var(--card-border-radius);
+        background-color: light-dark(#fff, #23222b);
+        box-shadow: var(--card-box-shadow);
+        padding: var(--space-xlarge);
+
+        @media (prefers-color-scheme: dark) {
+          border-color: color-mix(in srgb, currentColor 6%, transparent);
+        }
+
+        h2 {
+          margin-top: -4px !important;
+          font-weight: var(--font-weight-heading);
+          font-size: var(--font-size-heading-large);
+        }
+      }
+    }
+  }
+
+  .page-nav-icon {
+    -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity !important;
+    stroke: currentColor;
   }
 }
