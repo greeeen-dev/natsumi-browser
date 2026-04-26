@@ -604,6 +604,7 @@ SOFTWARE.
           height: 24px !important;
           margin-top: auto !important;
           margin-bottom: auto !important;
+          margin-right: var(--identity-box-margin-inline) !important;
           border-radius: 12px !important;
           padding-right: 0 !important;
           background: var(--natsumi-urlbar-search-engine-color) !important;
@@ -613,6 +614,14 @@ SOFTWARE.
             width: 12px !important;
             height: 12px !important;
             border-radius: 12px !important;
+          }
+        }
+
+        moz-button.searchmode-switcher {
+          margin-right: 4px !important;
+
+          .searchmode-switcher-close {
+            margin-inline: -4px !important;
           }
         }
 
@@ -628,37 +637,37 @@ SOFTWARE.
           /* Search engine colors */
           --natsumi-urlbar-search-engine-color: var(--natsumi-primary-color);
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Google"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Google"]) {
             --natsumi-urlbar-search-engine-color: #36aeff;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="DuckDuckGo"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="DuckDuckGo"]) {
             --natsumi-urlbar-search-engine-color: #ed8332;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Bing"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Bing"]) {
             --natsumi-urlbar-search-engine-color: #10e0eb;
             --natsumi-urlbar-search-engine-text: black;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Startpage"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Startpage"]) {
             --natsumi-urlbar-search-engine-color: #7a21ff;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="YouTube"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="YouTube"]) {
             --natsumi-urlbar-search-engine-color: #ff6e6e;
             --natsumi-urlbar-search-engine-text: black;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Ecosia"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Ecosia"]) {
             --natsumi-urlbar-search-engine-color: #09870e;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="GitHub"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="GitHub"]) {
             --natsumi-urlbar-search-engine-color: #878787;
             --natsumi-urlbar-search-engine-text: white;
           }

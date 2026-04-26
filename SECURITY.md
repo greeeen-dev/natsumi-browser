@@ -8,5 +8,5 @@ not be handled.
 
 | Version                        | Supported                    |
 | ------------------------------ | ---------------------------- |
-| 5.x (Serenity)                 | :white_check_mark: Supported |
-| < 4.x                          | :x: Unsupported              |
+| 6.x (Starlight)                | :white_check_mark: Supported |
+| ≤ 5.x                          | :x: Unsupported              |

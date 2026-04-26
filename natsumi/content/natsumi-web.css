@@ -24,34 +24,10 @@ SOFTWARE.
 
 */
 
-/* ==== Load config and Natsumi Browser Pages ==== */
+/* ==== Natsumi Browser website ==== */
 
-/*
-WARNING: DO NOT TOUCH THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING.
-Removing or modifying parts of this file may break some parts of Natsumi.
-*/
-
-/* Setup (config and global modules) */
-@import "../natsumi-config.css";
-@import "content/preload.css";
-@import "global/colors.css";
-@import "global/starlight.css";
-
-/* Base modules */
-@import "content/pdfjs.css";
-@import "content/ff-home.css";
-@import "content/preferences.css";
-@import "content/preferences-customize.css";
-@import "content/preferences-shortcuts.css";
-@import "content/preferences-about.css";
-@import "content/neterror.css";
-@import "content/certerror.css";
-@import "content/unsecureerror.css";
-@import "content/tabcrashed.css";
-@import "content/blocked.css";
-@import "content/natsumi-web.css";
-@import "content/global.css";
-@import "content/icons.css";
-
-/* Floorp-specific modules */
-@import "content/floorp/preferences.css";
+@-moz-document url-prefix(https://natsumi.greeeen.dev) {
+  #natsumi-install-test {
+    display: flex !important;
+  }
+}

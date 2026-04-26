@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="120" height="120" src="./images/icon-glass.webp">
+  <img width="420" src="./images/kawaii.webp">
   <br>
   Natsumi Browser
 </h1>

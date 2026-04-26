@@ -925,7 +925,7 @@ class NatsumiShortcutsPrefPane {
 
             // Update shortcut
             let neverSaved = true;
-            ucApi.Windows.forEach((browserDocument, browserWindow) => {
+            ucApi.Windows.forEach((browserDocument) => {
                 if (browserDocument.body.natsumiKBSManager) {
                     browserDocument.body.natsumiKBSManager.updateShortcut(this.selected.id, customizationData, true, neverSaved);
                 }

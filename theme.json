@@ -4,7 +4,7 @@
   "author": "greeeen-dev",
   "name": "Natsumi Browser",
   "description": "A skin for Firefox and its forks that makes things flow.",
-  "version": "6.3.2",
+  "version": "6.3.4",
   "createdAt": "2024-12-06T10:19:47Z",
   "readme": "https://raw.githubusercontent.com/greeeen-dev/natsumi-browser/main/README.md",
   "image": "https://github.com/greeeen-dev/natsumi-browser/raw/dev/images/main-backgroundless.png",
@@ -56,6 +56,11 @@
         ]
       },
       "notifications.sys.mjs": {},
+      "linux-border-radius.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
       "sidebar-actions.uc.mjs": {
         "loadOrder": 12,
         "include": [
@@ -97,6 +102,11 @@
       },
       "panel-sidebar.uc.mjs": {
         "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "browser-separation.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
         ]
@@ -158,7 +168,7 @@
           "chrome://browser/content/browser.xhtml"
         ]
       },
-      "browser-separation.uc.mjs": {
+      "web.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
         ]

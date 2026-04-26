@@ -33,7 +33,7 @@ import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
 // Create mutator listener
 
-class natsumiURLBarController {
+class NatsumiURLBarController {
     constructor() {
         this.urlBarNode = document.getElementById("urlbar");
         this.urlbarMutationObserver = null;
@@ -46,11 +46,60 @@ class natsumiURLBarController {
     }
 
     init() {
+        // Add inline styling for search engine switcher
+        let searchmodeSwitcher = document.querySelector(".searchmode-switcher");
+        let searchmodeSwitcherInline = document.createElement("style");
+        searchmodeSwitcherInline.textContent = `
+            @media not -moz-pref("natsumi.urlbar.disabled") {
+                #main-button {
+                    --natsumi-urlbar-button-end-radius: 6px;
+                    
+                    &:not([natsumi-open]) {
+                        .button-background {
+                            background-color: var(--natsumi-urlbar-button-accent-color) !important;
+                            border-start-start-radius: 13px !important;
+                            border-end-start-radius: 13px !important;
+                            border-start-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
+                            border-end-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
+                            border: none !important;
+                        }
+                    }
+
+                    &[natsumi-open] {
+                        @media not -moz-pref("natsumi.urlbar.do-not-float") {
+                            height: 24px !important;
+                            margin-block: 6px !important;
+
+                            .button-background {
+                                border-radius: 12px !important;
+                                padding-inline: 3px 4px !important;
+                                background: var(--natsumi-urlbar-search-engine-color) !important;
+                                border: none !important;
+                            }
+
+                            label[is="moz-label"] {
+                                margin-left: 2px;
+                            }
+                        }
+                    }
+                }
+            }
+        `;
+        searchmodeSwitcher.shadowRoot.appendChild(searchmodeSwitcherInline);
+
         this.urlbarMutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
+            mutations.forEach(() => {
                 // Check if open attribute exists
                 if (this.urlBarNode.hasAttribute("open") && !this.wasSelected && !this.wasOpened) {
                     this.selectUrlbarContents();
+                }
+
+                // Set open status to shadow root
+                let searchmodeSwitcherButton = searchmodeSwitcher.shadowRoot.querySelector("#main-button");
+                if (this.urlBarNode.hasAttribute("open")) {
+                    searchmodeSwitcherButton.setAttribute("natsumi-open", "true");
+                } else {
+                    searchmodeSwitcherButton.removeAttribute("natsumi-open");
                 }
 
                 let shouldReset = this.wasOpened;
@@ -110,7 +159,7 @@ class natsumiURLBarController {
         });
 
         // Set observer to account for sidebar changes
-        this.sidebarMutationObserver = new MutationObserver((mutations) => {
+        this.sidebarMutationObserver = new MutationObserver(() => {
             // Check if new tab button exists
             let verticalNewTabButton = document.getElementById("tabs-newtab-button");
 
@@ -160,5 +209,5 @@ class natsumiURLBarController {
     }
 }
 
-document.body.natsumiURLBarController = new natsumiURLBarController();
+document.body.natsumiURLBarController = new NatsumiURLBarController();
 document.body.natsumiURLBarController.init();

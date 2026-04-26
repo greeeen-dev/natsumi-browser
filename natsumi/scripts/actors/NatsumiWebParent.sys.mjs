@@ -24,34 +24,31 @@ SOFTWARE.
 
 */
 
-/* ==== Load config and Natsumi Browser Pages ==== */
+export class NatsumiWebParent extends JSWindowActorParent {
+    constructor() {
+        super();
+        this.natsumiMessageListeners = {}
 
-/*
-WARNING: DO NOT TOUCH THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING.
-Removing or modifying parts of this file may break some parts of Natsumi.
-*/
+        // Register listeners
+        this.registerMessageListener("Natsumi:ConsoleLog", (message) => {
+            console.log("[Web]", message.data["message"]);
+        })
+    }
 
-/* Setup (config and global modules) */
-@import "../natsumi-config.css";
-@import "content/preload.css";
-@import "global/colors.css";
-@import "global/starlight.css";
+    registerMessageListener(messageName, callback) {
+        if (this.natsumiMessageListeners[messageName]) {
+            throw new Error("Listener already registered for message");
+        }
 
-/* Base modules */
-@import "content/pdfjs.css";
-@import "content/ff-home.css";
-@import "content/preferences.css";
-@import "content/preferences-customize.css";
-@import "content/preferences-shortcuts.css";
-@import "content/preferences-about.css";
-@import "content/neterror.css";
-@import "content/certerror.css";
-@import "content/unsecureerror.css";
-@import "content/tabcrashed.css";
-@import "content/blocked.css";
-@import "content/natsumi-web.css";
-@import "content/global.css";
-@import "content/icons.css";
+        this.natsumiMessageListeners[messageName] = callback;
+    }
 
-/* Floorp-specific modules */
-@import "content/floorp/preferences.css";
+    async receiveMessage(message) {
+        if (!this.natsumiMessageListeners[message.name]) {
+            console.warn("Got unexpected message from Web child:", message.name);
+            return;
+        }
+
+        this.natsumiMessageListeners[message.name](message);
+    }
+}

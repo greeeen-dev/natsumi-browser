@@ -24,34 +24,32 @@ SOFTWARE.
 
 */
 
-/* ==== Load config and Natsumi Browser Pages ==== */
+export class NatsumiWebChild extends JSWindowActorChild {
+    constructor() {
+        super();
+    }
 
-/*
-WARNING: DO NOT TOUCH THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING.
-Removing or modifying parts of this file may break some parts of Natsumi.
-*/
+    consoleLog(message) {
+        this.sendAsyncMessage("Natsumi:ConsoleLog", {"message": message});
+    }
 
-/* Setup (config and global modules) */
-@import "../natsumi-config.css";
-@import "content/preload.css";
-@import "global/colors.css";
-@import "global/starlight.css";
+    handleEvent(event) {
+        switch (event.type) {
+            case "DOMContentLoaded": {
+                try {
+                    let document = this.contentWindow.document;
+                    let installTest = document.body.querySelector("#natsumi-install-test");
+                    let installTestText = installTest.querySelector(".natsumi-install-text");
+                    let installTestDescription = installTest.querySelector(".natsumi-install-description");
 
-/* Base modules */
-@import "content/pdfjs.css";
-@import "content/ff-home.css";
-@import "content/preferences.css";
-@import "content/preferences-customize.css";
-@import "content/preferences-shortcuts.css";
-@import "content/preferences-about.css";
-@import "content/neterror.css";
-@import "content/certerror.css";
-@import "content/unsecureerror.css";
-@import "content/tabcrashed.css";
-@import "content/blocked.css";
-@import "content/natsumi-web.css";
-@import "content/global.css";
-@import "content/icons.css";
-
-/* Floorp-specific modules */
-@import "content/floorp/preferences.css";
+                    // Set fully installed status
+                    installTest.classList.add("natsumi-full-install");
+                    installTestText.textContent = "Natsumi is installed";
+                    installTestDescription.textContent = "You're already using Natsumi. Nice work!";
+                } catch(e) {
+                    this.consoleLog(e);
+                }
+            }
+        }
+    }
+}
