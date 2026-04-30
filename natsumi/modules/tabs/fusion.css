@@ -164,7 +164,7 @@ SOFTWARE.
           }
         }
 
-        #tabbrowser-arrowscrollbox {
+        #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
           .tabbrowser-tab {
             &[selected], &[natsumi-glimpse-selected] {
               & > .tab-stack > .tab-background {
@@ -187,7 +187,7 @@ SOFTWARE.
     }
   }
 
-  #tabbrowser-arrowscrollbox {
+  #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
     .tabbrowser-tab {
       --natsumi-tab-highlight-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
 
@@ -303,7 +303,7 @@ SOFTWARE.
   }
 
   #sidebar-main:not([sidebar-launcher-expanded]) {
-    #tabbrowser-arrowscrollbox {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab > .tab-stack > .tab-background {
         width: calc(var(--tab-collapsed-background-width) + var(--tab-inner-inline-margin)) !important;
       }
@@ -332,7 +332,7 @@ SOFTWARE.
   }
 
   body:not([natsumi-compact-mode]) {
-    #tabbrowser-arrowscrollbox {
+    #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab {
         & > .tab-stack > .tab-background {
           @media -moz-pref("sidebar.verticalTabs") {
