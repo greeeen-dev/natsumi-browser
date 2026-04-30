@@ -383,9 +383,9 @@ All browsers must be based on Firefox 137 or above.
 | Browser     | Status                       | Versions | Notes                                                                                     |
 |-------------|------------------------------|----------|-------------------------------------------------------------------------------------------|
 | Floorp      | :star: Recommended           | 12.3.0+  | Natsumi works best on Floorp!                                                             |
-| Firefox     | :white_check_mark: Supported | 137+     |                                                                                           |
+| Firefox     | :white_check_mark: Supported | 140+     |                                                                                           |
 | Waterfox    | :white_check_mark: Supported | 6.6.0+   |                                                                                           |
-| Librewolf   | :white_check_mark: Supported | 137+     |                                                                                           |
+| Librewolf   | :white_check_mark: Supported | 140+     |                                                                                           |
 | Mullvad/Tor | :white_check_mark: Supported | 15.0+    | **Tor does not recommend installing plugins onto Tor Browser.** Proceed at your own risk. |
 | FireDragon  | :white_check_mark: Supported | 12+      | Default Sweet-Dark theme may cause contrast issues with Natsumi.                          |
 | Glide       | :white_check_mark: Supported | 0.1.54a+ |                                                                                           |

@@ -26,6 +26,15 @@ SOFTWARE.
 
 /* ==== Preferences ==== */
 
+@keyframes tool-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
   #natsumi-settings .category-icon {
     list-style-image: url("../icons/lucide/paintbrush.svg");
@@ -929,8 +938,6 @@ SOFTWARE.
   }
 
   .natsumi-custom-theme-container {
-    min-width: 400px !important;
-
     &[natsumi-single-color] {
       .natsumi-custom-theme-top-controls, .natsumi-preset-button, .natsumi-gradient-button, .natsumi-custom-theme-angle, .natsumi-custom-theme-color-display::before {
         display: none !important;
@@ -939,22 +946,33 @@ SOFTWARE.
 
     .natsumi-custom-theme-picker {
       flex-direction: column;
+      width: 420px !important;
+    }
+
+    .natsumi-custom-theme-colors-container {
+      display: grid;
+      grid-template-columns: 1fr;
     }
 
     .natsumi-custom-theme-grid-container {
-      width: 380px !important;
-      height: 380px !important;
-      border-radius: 10px !important;
+      width: 330px !important;
+      height: 330px !important;
+      margin: 25px !important;
+      border-radius: 50% !important;
       background: conic-gradient(from 0deg, red, #80FF00, #00FFFF, #8000FF, red);
       display: grid;
+      grid-template-columns: 1fr;
+      grid-row-start: 1;
+      grid-column-start: 1;
+      z-index: 0;
 
       .natsumi-custom-theme-grid {
         display: grid;
         grid-template-columns: 1fr;
-        margin: 20px;
-        width: calc(100% - 40px);
-        height: calc(100% - 40px);
-        border-radius: 10px;
+        margin: 15px;
+        width: calc(100% - 30px);
+        height: calc(100% - 30px);
+        border-radius: inherit;
         background-color: rgba(255, 255, 255, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.5);
         grid-row-start: 1;
@@ -967,6 +985,7 @@ SOFTWARE.
           background: radial-gradient(closest-corner, white, rgba(255, 255, 255, 0.5), transparent, transparent);
           grid-row-start: 1;
           grid-column-start: 1;
+          border-radius: 50%;
         }
 
         .natsumi-custom-theme-color {
@@ -982,7 +1001,7 @@ SOFTWARE.
           grid-row-start: 1;
           grid-column-start: 1;
           overflow: hidden;
-          transition: scale 0.2s ease;
+          transition: scale 0.2s ease, opacity 0.2s ease;
 
           &:hover {
             scale: 1.1;
@@ -1032,8 +1051,189 @@ SOFTWARE.
         color: black;
       }
 
+      .natsumi-custom-theme-action-text {
+        grid-row-start: 1;
+        grid-column-start: 1;
+        flex-direction: column;
+        text-align: center;
+        margin: auto;
+        opacity: 0;
+        user-select: none;
+        pointer-events: none;
+        color: black;
+        transition: opacity 0.2s ease;
+
+        & > * {
+          width: fit-content;
+          margin-inline: auto;
+        }
+
+        .natsumi-custom-theme-action-type {
+          font-size: small;
+        }
+
+        .natsumi-custom-theme-action-value {
+          font-size: large;
+          font-weight: bold;
+        }
+      }
+
       &[natsumi-is-empty] .natsumi-custom-theme-empty {
         opacity: 1;
+      }
+
+      &[natsumi-action-displayed]:not([natsumi-color-dragging]) {
+        pointer-events: none;
+
+        .natsumi-custom-theme-action-text {
+          opacity: 1;
+        }
+
+        .natsumi-custom-theme-color {
+          opacity: 0.2;
+        }
+
+        .natsumi-custom-theme-empty {
+          opacity: 0;
+        }
+      }
+    }
+
+    .natsumi-custom-theme-position-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-row-start: 1;
+      grid-column-start: 1;
+      border-radius: 50%;
+
+      &::before {
+        content: "";
+        grid-row-start: 1;
+        grid-column-start: 1;
+        margin: auto;
+        border-radius: 50%;
+        width: calc(100% - 30px);
+        height: calc(100% - 30px);
+        mask-image: conic-gradient(black 0deg, black 150deg, transparent 150deg, transparent 210deg, black 210deg);
+        border: 5px solid light-dark(#aaa, #ddd);
+      }
+    }
+
+    .natsumi-custom-theme-tools-container {
+      margin: 10px -10px;
+      padding: 10px 10px;
+      border-radius: 6px;
+      background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.05));
+      flex-direction: column;
+      gap: 8px;
+
+      &:not([hidden]) {
+        .natsumi-custom-theme-tool {
+          animation: tool-fadein 0.2s ease;
+        }
+      }
+
+      .natsumi-custom-theme-tool {
+        display: flex;
+        flex-direction: column;
+
+        .natsumi-custom-theme-tool-button {
+          align-items: center;
+          height: 40px;
+          border-radius: 6px;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+          & > * {
+            pointer-events: none;
+            user-select: none;
+          }
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color);
+          }
+
+          &:active {
+            background-color: var(--natsumi-button-active-color);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          }
+
+          .natsumi-custom-theme-tool-icon {
+            margin: 12px;
+            width: 16px;
+            height: 16px;
+            background-size: 16px;
+            -moz-context-properties: stroke, stroke-opacity !important;
+            stroke: light-dark(black, white);
+          }
+        }
+
+        .natsumi-custom-theme-tool-container {
+          padding-block: 10px;
+          border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        }
+      }
+
+      .natsumi-custom-theme-hex-input {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/type.svg");
+        }
+
+        .natsumi-hex-input {
+          margin: 0 !important;
+          height: 36px;
+          flex: 1;
+        }
+
+        .natsumi-hex-submit {
+          width: 36px;
+          height: 36px;
+          margin-left: 10px !important;
+          border-radius: 5px;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+          background-position: center;
+          background-repeat: no-repeat;
+          -moz-context-properties: stroke, stroke-opacity !important;
+          stroke: light-dark(black, white);
+          background-image: url("../icons/lucide/plus.svg");
+
+          &::before {
+            content: "";
+            display: flex;
+            width: 24px;
+            height: 24px;
+            margin: auto;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+          }
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color);
+          }
+
+          &:active, &[selected] {
+            background-color: var(--natsumi-button-active-color) !important;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          }
+        }
+      }
+
+      .natsumi-custom-theme-grain {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/grain-0.svg");
+        }
+      }
+
+      .natsumi-custom-theme-text-color {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/text.svg");
+        }
+
+        .natsumi-custom-theme-tool-container {
+          flex-direction: column;
+          gap: 4px;
+        }
       }
     }
 
@@ -1121,6 +1321,7 @@ SOFTWARE.
     .natsumi-custom-theme-controls {
       width: min-content;
       margin: 10px auto !important;
+      margin-top: -15px !important;
       max-width: 380px;
 
       .natsumi-custom-theme-controls-text {
@@ -1133,12 +1334,11 @@ SOFTWARE.
         margin: 0 4px;
         padding: 2px;
         min-height: 28px;
-        background-color: light-dark(#ddd, #777);
         border-radius: 5px;
         transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
         &:hover {
-          background-color: light-dark(#ccc, #888);
+          background-color: var(--natsumi-button-hover-color);
         }
 
         &:active {
@@ -1178,15 +1378,6 @@ SOFTWARE.
           margin-right: 0 !important;
         }
 
-        &.natsumi-preset-button, &.natsumi-gradient-button {
-          padding: 2px 5px;
-          text-wrap: nowrap;
-
-          .natsumi-custom-theme-controls-icon {
-            margin-right: 4px;
-          }
-        }
-
         &.natsumi-preset-button .natsumi-custom-theme-controls-icon {
           background-image: url("../icons/lucide/color-presets.svg");
         }
@@ -1199,12 +1390,8 @@ SOFTWARE.
           background-image: url("../icons/lucide/rotate-right.svg");
         }
 
-        &.natsumi-hex-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/type.svg");
-        }
-
-        &.natsumi-grain-button .natsumi-custom-theme-controls-icon {
-          background-image: url("../icons/lucide/grain-0.svg");
+        &.natsumi-tools-button .natsumi-custom-theme-controls-icon {
+          background-image: url("../icons/lucide/toolkit.svg");
         }
 
         &.natsumi-remove-color {
@@ -1219,59 +1406,6 @@ SOFTWARE.
           }
         }
       }
-    }
-
-    .natsumi-custom-theme-hex-input {
-      display: flex;
-      padding: 10px 0;
-      gap: 10px;
-
-      &[hidden] {
-        display: none;
-      }
-
-      .natsumi-hex-input {
-        margin: 0 !important;
-        height: 36px;
-        flex: 1;
-      }
-
-      .natsumi-hex-submit {
-        width: 36px;
-        height: 36px;
-        border-radius: 5px;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-        background-position: center;
-        background-repeat: no-repeat;
-        -moz-context-properties: stroke, stroke-opacity !important;
-        stroke: light-dark(black, white);
-        background-image: url("../icons/lucide/plus.svg");
-
-        &::before {
-          content: "";
-          display: flex;
-          width: 24px;
-          height: 24px;
-          margin: auto;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 20px;
-        }
-
-        &:hover {
-          background-color: var(--natsumi-button-hover-color);
-        }
-
-        &:active, &[selected] {
-          background-color: var(--natsumi-button-active-color) !important;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-      }
-    }
-
-    .natsumi-custom-theme-grain {
-      margin-bottom: 10px;
     }
 
     .natsumi-custom-theme-bottom-controls {
