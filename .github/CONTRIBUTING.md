@@ -51,10 +51,11 @@ contribute code, you may **fork the repository**, add changes to your fork, then
 
 ### 3.1. Using branches
 Natsumi has three main branches:
-- `main`: The stable branch reflecting the latest release for Natsumi.
+- `main`: The stable branch reflecting the latest release for Natsumi. **You should not push changes to this branch.**
 - `bugfix`: A dedicated branch for fast-tracking bug fixes onto the stable release ahead of the next major or minor
-  release.
-- `dev`: The main branch used for development of new features for the next major or minor release.
+  release. **Use this branch to submit fixes for issues that need immediate attention.**
+- `dev`: The main branch used for development of new features for the next major or minor release. **Use this for
+  everything else that doesn't need to be immediately released.**
 
 If you wish to contribute your code to the project, please **fork the repository**, add your changes to your fork, then
 open a Pull request.
