@@ -191,7 +191,7 @@ SOFTWARE.
     @media (
       not -moz-pref("natsumi.theme.compact-style", "toolbar")
     ) or -moz-pref("natsumi.theme.single-toolbar") {
-      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #status-bar[collapsed="true"] {
+      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
         z-index: 999 !important;
         margin: var(--natsumi-browser-separation) !important;
         transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease !important;
@@ -214,13 +214,13 @@ SOFTWARE.
       }
 
       &:has(#sidebar-main:not([sidebar-launcher-expanded])) {
-        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #status-bar[collapsed="true"] {
+        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
           --natsumi-compact-offset: calc(50px - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation)) !important;
         }
       }
     }
 
-    &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend], &:has(#nora-statusbar.hidden toolbarbutton[open], #nora-statusbar[style*="display:none"] toolbarbutton[open], #status-bar[collapsed="true"] toolbarbutton[open]) {
+    &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend], &:has(#nora-statusbar.hidden toolbarbutton[open], #nora-statusbar[style*="display:none"] toolbarbutton[open], #nora-statusbar[style*="display: none"] toolbarbutton[open], #status-bar[collapsed="true"] toolbarbutton[open]) {
       #sidebar-main {
         opacity: 1 !important;
 
@@ -233,7 +233,7 @@ SOFTWARE.
         }
       }
 
-      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #status-bar[collapsed="true"] {
+      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
         opacity: 1 !important;
 
         @media -moz-pref("sidebar.position_start") {
@@ -436,7 +436,7 @@ SOFTWARE.
       }
 
       @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
-        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #status-bar[collapsed="true"] {
+        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
           opacity: 1 !important;
 
           @media -moz-pref("sidebar.position_start") {

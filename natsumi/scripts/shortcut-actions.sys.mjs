@@ -230,8 +230,21 @@ export class NatsumiShortcutActions {
     }
 
     static splitTabs() {
-        // Firefox can't split more than 2 tabs yet
-        if (gBrowser.multiSelectedTabsCount > 2) {
+        // Check if we can use extended split view limit
+        let extendedSplitView = false;
+        if (document.getElementById("floorp-split-view-styles") != null) {
+            extendedSplitView = true;
+        }
+
+        // The split view limit for Firefox is 2
+        let splitViewLimit = 2;
+        if (extendedSplitView) {
+            // For Floorp, the split view limit is 4 tabs (for now)
+            splitViewLimit = 4;
+        }
+
+        // Enforce split view limit
+        if (gBrowser.multiSelectedTabsCount > splitViewLimit) {
             return;
         }
 
@@ -239,7 +252,7 @@ export class NatsumiShortcutActions {
         let unpinnedTabsNode = document.getElementById("tabbrowser-arrowscrollbox");
         let unpinnedTabs = Array.from(unpinnedTabsNode.querySelectorAll(".tabbrowser-tab:not([hidden])"));
         let firstTab = selectedTabs[0];
-        let secondTab;
+        let toSplitTabs = [firstTab];
         let insertBefore = gBrowser.selectedTab;
 
         if (firstTab.hasAttribute("natsumi-glimpse-tab")) {
@@ -248,6 +261,8 @@ export class NatsumiShortcutActions {
         }
 
         if (selectedTabs.length === 1) {
+            let secondTab;
+
             // Get tab index
             let tabIndex = unpinnedTabs.indexOf(firstTab);
 
@@ -264,12 +279,16 @@ export class NatsumiShortcutActions {
                     }
                 }
             }
+
+            toSplitTabs.push(secondTab)
         } else {
-            secondTab = selectedTabs[1];
+            for (let i = 0; i < selectedTabs.length - 1; i++) {
+                toSplitTabs.push(selectedTabs[i + 1]);
+            }
         }
 
         // Check that tabs are not pinned and not in split view
-        for (let tab of [firstTab, secondTab]) {
+        for (let tab of selectedTabs) {
             if (tab.pinned || tab.splitview) {
                 return;
             }
@@ -280,7 +299,7 @@ export class NatsumiShortcutActions {
             additionalData = {insertBefore};
         }
 
-        gBrowser.addTabSplitView([firstTab, secondTab], additionalData);
+        gBrowser.addTabSplitView(toSplitTabs, additionalData);
     }
 
     static unsplitTabs() {

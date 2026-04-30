@@ -47,6 +47,14 @@ import {
 } from "./custom-theme.sys.mjs";
 import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
 
+// Get redesign status
+let categoryNode = document.getElementById("categories")
+const hasRedesign = categoryNode.nodeName === "html:moz-page-nav"
+
+if (hasRedesign) {
+    document.body.setAttribute("natsumi-preferences-redesign", "");
+}
+
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
     return window.MozXULElement.parseXULToFragment(node);
@@ -1406,8 +1414,13 @@ class CheckboxChoice {
             `;
         }
 
+        let checkedAttribute = ""
+        if (selected) {
+            checkedAttribute = ` checked="true"`
+        }
+
         let nodeString = `
-            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}" checked="${selected}" label="${this.label}">
+            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}"${checkedAttribute} label="${this.label}">
                 <image class="checkbox-check" checked="${selected}"/>
                 <label class="checkbox-label-box" flex="1">
                     <image class="checkbox-icon"/>
@@ -2149,7 +2162,16 @@ class RadioPreference extends MultipleChoicePreference {
     }
 }
 
-function addToSidebar() {
+function toggleDisabled(node, disabled) {
+    if (disabled) {
+        node.setAttribute("disabled", "true");
+    } else {
+        node.removeAttribute("disabled");
+    }
+}
+
+function addToSidebarLegacy() {
+    // FF150 and below
     let customizeNodeString = `
         <richlistitem id="natsumi-settings" class="category" value="paneNatsumiSettings" data-l10n-id="category-natsumi-settings" data-l10n-attrs="tooltiptext" align="center" tooltiptext="Customize Natsumi">
             <image class="category-icon"/>
@@ -2181,6 +2203,54 @@ function addToSidebar() {
     sidebar.insertBefore(convertToXUL(customizeNodeString), generalPane.nextSibling);
     sidebar.insertBefore(convertToXUL(shortcutsNodeString), generalPane.nextSibling.nextSibling);
     sidebar.appendChild(convertToXUL(aboutNodeString));
+
+    // noinspection JSUnresolvedReference
+    gCategoryInits.set("paneNatsumiSettings", {
+        _initted: true,
+        init: () => {}
+    });
+}
+
+function addToSidebar() {
+    if (!hasRedesign) {
+        // Use legacy method
+        return addToSidebarLegacy();
+    }
+
+    // We'll clone the general settings button here instead of making our own
+    let generalNode = document.getElementById("category-general");
+
+    // Create Customize Natsumi button
+    let customizeNode = generalNode.cloneNode(true);
+    customizeNode.id = "natsumi-settings";
+    customizeNode.setAttribute("view", "paneNatsumiSettings");
+    customizeNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/paintbrush.svg");
+    customizeNode.setAttribute("data-l10n-id", "category-natsumi-settings");
+    customizeNode.innerHTML = "Customize Natsumi";
+
+    // Create Keyboard Shortcuts button
+    let shortcutsNode = generalNode.cloneNode(true);
+    shortcutsNode.id = "natsumi-shortcuts";
+    shortcutsNode.setAttribute("view", "paneNatsumiShortcuts");
+    shortcutsNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/meta.svg");
+    shortcutsNode.setAttribute("data-l10n-id", "category-natsumi-shortcuts");
+    shortcutsNode.innerHTML = "Keyboard Shortcuts";
+
+    // Create About Natsumi button
+    let aboutNode = generalNode.cloneNode(true);
+    aboutNode.id = "natsumi-about";
+    aboutNode.setAttribute("view", "paneNatsumiAbout");
+    aboutNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/info.svg");
+    aboutNode.setAttribute("data-l10n-id", "category-natsumi-about");
+    aboutNode.innerHTML = "About Natsumi";
+
+    let sidebar = document.getElementById("categories");
+    const generalPane = sidebar.querySelector("#category-general");
+
+    // Add entries to sidebar all in one go to ensure consistent ordering
+    sidebar.insertBefore(customizeNode, generalPane.nextSibling);
+    sidebar.insertBefore(shortcutsNode, generalPane.nextSibling.nextSibling);
+    sidebar.appendChild(aboutNode);
 
     // noinspection JSUnresolvedReference
     gCategoryInits.set("paneNatsumiSettings", {
@@ -2891,7 +2961,7 @@ function addSidebarWorkspacesPane() {
     let checkboxes = sidebarWorkspacesNode.querySelectorAll("checkbox");
     let legacyIndicatorCheckbox = sidebarWorkspacesNode.getElementById("natsumiSidebarLegacyWorkspaceIndicator");
     if (ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").exists()) {
-        legacyIndicatorCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").value}`);
+        toggleDisabled(legacyIndicatorCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").value)
     }
 
     checkboxes.forEach(checkbox => {
@@ -2904,7 +2974,7 @@ function addSidebarWorkspacesPane() {
             }
 
             if (checkbox.id === "natsumiSidebarHideWorkspaceIndicator") {
-                legacyIndicatorCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(legacyIndicatorCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3089,15 +3159,15 @@ function addSidebarButtonsPane() {
     let newTabPositionCheckbox = sidebarButtonsNode.querySelector("#natsumiSidebarNewTabPosition");
 
     if (ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").exists()) {
-        keepSelectedCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
-        openNewTabCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+        toggleDisabled(keepSelectedCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
+        toggleDisabled(openNewTabCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
 
         if (mergeWithWorkspacesCheckbox) {
-            mergeWithWorkspacesCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+            toggleDisabled(mergeWithWorkspacesCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
         }
     }
     if (ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").exists()) {
-        newTabPositionCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").value}`);
+        toggleDisabled(newTabPositionCheckbox, ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").value);
     }
 
     // Set listeners for each checkbox
@@ -3112,14 +3182,14 @@ function addSidebarButtonsPane() {
             }
 
             if (checkbox.id === "natsumiSidebarHideClearTabs") {
-                keepSelectedCheckbox.setAttribute("disabled", `${isChecked}`);
-                openNewTabCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(keepSelectedCheckbox, isChecked);
+                toggleDisabled(openNewTabCheckbox, isChecked);
 
                 if (mergeWithWorkspacesCheckbox) {
-                    mergeWithWorkspacesCheckbox.setAttribute("disabled", `${isChecked}`);
+                    toggleDisabled(mergeWithWorkspacesCheckbox, isChecked);
                 }
             } else if (checkbox.id === "natsumiSidebarHideNewTab") {
-                newTabPositionCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(newTabPositionCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3677,7 +3747,7 @@ function addPDFCompactPane() {
     let dynamicCheckbox = compactNode.querySelector("#natsumiPDFDynamicCompact");
 
     if (ucApi.Prefs.get("natsumi.pdfjs.compact").exists()) {
-        dynamicCheckbox.setAttribute("disabled", `${!ucApi.Prefs.get("natsumi.pdfjs.compact").value}`);
+        toggleDisabled(dynamicCheckbox, !ucApi.Prefs.get("natsumi.pdfjs.compact").value);
     }
 
     // Set listeners for each checkbox
@@ -3692,7 +3762,7 @@ function addPDFCompactPane() {
             }
 
             if (checkbox.id === "natsumiPDFEnableCompact") {
-                dynamicCheckbox.setAttribute("disabled", `${!isChecked}`);
+                toggleDisabled(dynamicCheckbox, !isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);

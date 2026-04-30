@@ -53,7 +53,7 @@ class NatsumiWorkspacesWrapper {
     }
 
     async init() {
-        let workspacesModulePath = "chrome://noraneko/content/assets/js/index26.js";
+        let workspacesModulePath = "chrome://noraneko/content/assets/js/index27.js";
 
         // Get Floorp version
         let floorpVersion = AppConstants.MOZ_APP_VERSION_DISPLAY.split("@")[0];
@@ -65,8 +65,11 @@ class NatsumiWorkspacesWrapper {
         // Get Firedragon status
         let isFiredragon = AppConstants.MOZ_APP_BASENAME.toLowerCase() === "firedragon";
 
-        if (minorVersion > 9 || minorVersion === 9 && patchVersion >= 2) {
-            // FLoorp 12.9.2+ (do nothing)
+        if (minorVersion >= 12) {
+            // Floorp 12.12.0+ (do nothing)
+        } else if (minorVersion > 9 || minorVersion === 9 && patchVersion >= 2) {
+            // Floorp 12.9.2+
+            workspacesModulePath = "chrome://noraneko/content/assets/js/index26.js";
         } else if (minorVersion === 9 && patchVersion < 2) {
             // Floorp 12.9.0 and 12.9.1
             workspacesModulePath = "chrome://noraneko/content/assets/js/index25.js";
