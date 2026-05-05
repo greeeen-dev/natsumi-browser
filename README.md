@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="420" src="./images/kawaii.webp">
+  <img width="420" src="./images/kawaii.png">
   <br>
   Natsumi Browser
 </h1>
@@ -147,9 +147,7 @@ You can get this file from the `Installers` folder in this repo.
 
 #### Installing via Sine
 > [!WARNING]
-> Installing via Sine is supported but not recommended. The following features will not work:
-> - Any features included in Natsumi Append
-> - Icon packs aside from Firefox default
+> Installing via Sine is supported but not recommended.
 
 You can install the CSS-only version of Natsumi through [Sine](https://github.com/CosmoCreeper/Sine).
 
