@@ -8,7 +8,7 @@ Quick links:
 -->
 - [ ] My code follows the repository's Code of Conduct.
 - [ ] My submission is in line with the Contributing Guidelines.
-- [ ] I have tested this code to make sure it works as intended. If not, then I've opened this pull request as a draft.
+- [ ] I have tested this code to make sure it works as intended (this may be left unchecked if the PR is opened as a draft).
 - [ ] I have declared any use of artificial intelligence (AI) tools.
 
 ## Details
