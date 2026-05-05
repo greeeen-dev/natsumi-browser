@@ -1,4 +1,4 @@
-**Checklist**
+## Checklist
 <!--
 Please make sure all of the following applies to your issue.
 
