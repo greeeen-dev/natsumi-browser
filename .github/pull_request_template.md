@@ -21,7 +21,7 @@ What did you change? What did you add? What did you fix? Tell us here!
 Attach any screenshots showcasing your changes here. This is optional.
 -->
 
-## Per-file description**
+## Per-file description
 <!--
 Describe the changes you've made on a per-file basis. Include descriptions of your code, how it works and what it does.
 
