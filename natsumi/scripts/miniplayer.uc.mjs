@@ -38,7 +38,7 @@ function convertToXUL(node) {
 
 class NatsumiMiniplayerCounter {
     constructor(miniplayerContainer) {
-        this._node = null;
+        this.node = null;
         this._initialized = false;
         this._miniplayerContainer = miniplayerContainer;
         this._visibleMiniplayers = 0;
@@ -50,12 +50,12 @@ class NatsumiMiniplayerCounter {
         }
 
         // Generate node
-        this._node = document.createElement("div");
-        this._node.id = "natsumi-miniplayer-counter-container";
+        this.node = document.createElement("div");
+        this.node.id = "natsumi-miniplayer-counter-container";
 
         // Append to container
         let tabsContainer = document.getElementById("vertical-tabs");
-        tabsContainer.appendChild(this._node);
+        tabsContainer.appendChild(this.node);
 
         // Get initial count
         this.updateCount();
@@ -73,14 +73,14 @@ class NatsumiMiniplayerCounter {
         const miniplayers = this._miniplayerContainer.querySelectorAll(".natsumi-miniplayer:not([hidden])");
         this._visibleMiniplayers = miniplayers.length;
 
-        while (this._visibleMiniplayers !== this._node.childElementCount) {
-            if (this._visibleMiniplayers > this._node.childElementCount) {
+        while (this._visibleMiniplayers !== this.node.childElementCount) {
+            if (this._visibleMiniplayers > this.node.childElementCount) {
                 let countNode = document.createElement("div");
                 countNode.className = "natsumi-miniplayer-counter-dot";
-                this._node.appendChild(countNode);
+                this.node.appendChild(countNode);
             } else {
-                if (this._node.lastChild) {
-                    this._node.removeChild(this._node.lastChild);
+                if (this.node.lastChild) {
+                    this.node.removeChild(this.node.lastChild);
                 }
             }
         }
@@ -108,7 +108,7 @@ class NatsumiMiniplayerCounter {
             currentPlayerIndex = this._visibleMiniplayers - 1;
         }
 
-        this._node.querySelectorAll(".natsumi-miniplayer-counter-dot").forEach((node, index) => {
+        this.node.querySelectorAll(".natsumi-miniplayer-counter-dot").forEach((node, index) => {
             if (index === currentPlayerIndex) {
                 node.setAttribute("active", "true");
             } else {
@@ -210,11 +210,6 @@ class NatsumiMiniplayer {
                     <div class="natsumi-miniplayer-author-container">
                         <div class="natsumi-miniplayer-artist"></div>
                     </div>
-                    <div class="natsumi-miniplayer-seekbar-container" hidden="${!seekAvailable}">
-                        <div class="natsumi-miniplayer-position">${positionMinutes}:${positionSeconds.toString().padStart(2, "0")}</div>
-                        <div class="natsumi-miniplayer-seekbar"></div>
-                        <div class="natsumi-miniplayer-duration">${durationMinutes}:${durationSeconds.toString().padStart(2, "0")}</div>
-                    </div>
                 </div>
                 <div class="natsumi-miniplayer-controls-container">
                     <div class="natsumi-miniplayer-pip-button" disabled="${!pipAvailable}"></div>
@@ -255,7 +250,7 @@ class NatsumiMiniplayer {
             }
         });
         this._node.querySelector(".natsumi-miniplayer-pip-button").addEventListener("click", (event) => {
-            let result = this._tab.linkedBrowser.browsingContext.currentWindowGlobal.getActor("PictureInPictureLauncher").sendAsyncMessage("PictureInPicture:KeyToggle");
+            this._tab.linkedBrowser.browsingContext.currentWindowGlobal.getActor("PictureInPictureLauncher").sendAsyncMessage("PictureInPicture:KeyToggle");
         });
 
         // Append to container
@@ -296,23 +291,23 @@ class NatsumiMiniplayer {
 
     registerEventHandlers() {
         if (!this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = (event) => {
-                this.onPositionUpdate(event);
+            this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = () => {
+                this.onPositionUpdate();
             };
         }
         if (!this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = (event) => {
-                this.onPlaybackUpdate(event);
+            this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = () => {
+                this.onPlaybackUpdate();
             };
         }
         if (!this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange = (event) => {
-                this.onMetadataUpdate(event);
+            this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange = () => {
+                this.onMetadataUpdate();
             };
         }
         if (!this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange = (event) => {
-                this.onSupportedKeysUpdate(event);
+            this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange = () => {
+                this.onSupportedKeysUpdate();
             };
         }
     }
@@ -416,21 +411,6 @@ class NatsumiMiniplayer {
         this._tab.linkedBrowser.browsingContext.mediaController.seekBackward(5);
     }
 
-    handleSeekbarClick(event) {
-        let seekbarNode = this._node.querySelector(".natsumi-miniplayer-seekbar");
-
-        if (!seekbarNode) {
-            return;
-        }
-
-        let seekbarWidth = seekbarNode.getBoundingClientRect().width;
-        const relativeX = event.clientX - seekbarNode.getBoundingClientRect().left;
-        const seekPosition = (relativeX / seekbarWidth) * this.duration;
-        this._tab.linkedBrowser.browsingContext.mediaController.seekTo(seekPosition);
-        this.position = seekPosition;
-        this.updateSeekbar();
-    }
-
     async getAverageColor(artworkUrl) {
         const sampleSize = 3;
 
@@ -532,8 +512,6 @@ class NatsumiMiniplayer {
         let nextTrackButton = this._node.querySelector(".natsumi-miniplayer-nexttrack-button");
         let prevTrackButton = this._node.querySelector(".natsumi-miniplayer-prevtrack-button");
         let pipButton = this._node.querySelector(".natsumi-miniplayer-pip-button");
-        let seekbarContainer = this._node.querySelector(".natsumi-miniplayer-seekbar-container");
-        let seekbarNode = this._node.querySelector(".natsumi-miniplayer-seekbar");
         let positionLabel = this._node.querySelector(".natsumi-miniplayer-position");
         let durationLabel = this._node.querySelector(".natsumi-miniplayer-duration");
 
@@ -557,75 +535,21 @@ class NatsumiMiniplayer {
         if (pipButton) {
             pipButton.setAttribute("disabled", !pipAvailable);
         }
-        if (seekbarContainer) {
-            seekbarContainer.hidden = !seekAvailable;
-        }
-
-        // Update seekbar
-        if (seekbarNode && seekAvailable) {
-            let positionMinutes = Math.floor(this.position / 60);
-            let positionSeconds = Math.floor(this.position % 60);
-            let durationMinutes = Math.floor(this.duration / 60);
-            let durationSeconds = Math.floor(this.duration % 60);
-            positionLabel.textContent = `${positionMinutes}:${positionSeconds.toString().padStart(2, "0")}`;
-            durationLabel.textContent = `${durationMinutes}:${durationSeconds.toString().padStart(2, "0")}`;
-            this.updateSeekbar();
-        }
-    }
-
-    async updateSeekbar() {
-        let seekbarNode = this._node.querySelector(".natsumi-miniplayer-seekbar");
-        let progress = (this.position / this.duration);
-        let seekbarWidth = seekbarNode.getBoundingClientRect().width;
-
-        let seekbarPosition = progress * seekbarWidth;
-        if (isNaN(seekbarPosition)) {
-            seekbarPosition = 0;
-        }
-
-        seekbarNode.style.setProperty("--natsumi-seekbar-position", `${seekbarPosition}px`);
-    }
-
-    updatePosition(duration, position, playbackRate) {
-        this.duration = duration;
-        this.position = position;
-        this.updateSeekbar();
-
-        if (this.isPlaying) {
-            if (this._positionIncrement) {
-                clearInterval(this._positionIncrement);
-                this._positionIncrement = null;
-            }
-
-            this._positionIncrement = setInterval(() => {
-                this.position += playbackRate;
-                if (this.position > this.duration) {
-                    this.position = this.duration;
-                    clearInterval(this._positionIncrement);
-                    this._positionIncrement = null;
-                }
-                this.updateUI();
-            }, 1000);
-        } else {
-            clearInterval(this._positionIncrement);
-            this._positionIncrement = null;
-        }
     }
 
     // Events
-    onPositionUpdate(event) {
-        this.updatePosition(event.duration, event.position, event.playbackRate);
+    onPositionUpdate() {
         this.getTabData();
         this.updateUI();
     }
 
-    onPlaybackUpdate(event) {
+    onPlaybackUpdate() {
         this.getPlaybackState();
         this.getTabData();
         this.updateUI();
     }
 
-    onMetadataUpdate(event) {
+    onMetadataUpdate() {
         this._mediaMetadata = this._tab.linkedBrowser.browsingContext.mediaController.getMetadata();
         this.getMediaMetadata();
         this.getPlaybackState();
@@ -704,14 +628,29 @@ async function registerMiniplayer(tab) {
 let miniplayerContainer = document.getElementById("natsumi-miniplayer-container");
 let miniplayerCounter = null;
 if (!miniplayerContainer) {
+    let isVerticalTabs = ucApi.Prefs.get("sidebar.verticalTabs").value;
     let tabsContainer = document.getElementById("vertical-tabs");
+    let navBarLastButton = document.getElementById("PanelUI-button");
 
     miniplayerContainer = document.createElement("div");
     miniplayerContainer.id = "natsumi-miniplayer-container";
-    tabsContainer.appendChild(miniplayerContainer);
+
+    if (isVerticalTabs) {
+        tabsContainer.appendChild(miniplayerContainer);
+    } else {
+        navBarLastButton.parentElement.insertBefore(miniplayerContainer, navBarLastButton);
+    }
 
     miniplayerCounter = new NatsumiMiniplayerCounter(miniplayerContainer);
     miniplayerCounter.init();
+
+    Services.prefs.addObserver("sidebar.verticalTabs", () => {
+        if (ucApi.Prefs.get("sidebar.verticalTabs").value) {
+            tabsContainer.insertBefore(miniplayerContainer, miniplayerCounter.node);
+        } else {
+            navBarLastButton.parentElement.insertBefore(miniplayerContainer, navBarLastButton);
+        }
+    });
 }
 
 // Register miniplayer when audio starts playing
