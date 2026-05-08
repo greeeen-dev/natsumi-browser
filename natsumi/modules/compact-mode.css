@@ -173,7 +173,7 @@ SOFTWARE.
     }
   }
 
-  &[natsumi-compact-sidebar-hover], [natsumi-compact-sidebar-extend] {
+  &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend] {
     #sidebar-main {
       opacity: 1 !important;
 

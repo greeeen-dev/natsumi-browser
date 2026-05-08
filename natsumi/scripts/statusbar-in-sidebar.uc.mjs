@@ -107,13 +107,13 @@ class NatsumiStatusBarHandler {
             return;
         }
 
-        let width = sidebar.style.width;
+        let width = sidebar.getBoundingClientRect().width;
 
         if (!width || width.length === 0) {
-            width = "242px";
+            width = "239.5";
         }
 
-        document.body.style.setProperty("--natsumi-sidebar-width", width);
+        document.body.style.setProperty("--natsumi-sidebar-width", `${width}px`);
     }
 
     copySidebarOptionsHeight() {
