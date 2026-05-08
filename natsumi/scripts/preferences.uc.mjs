@@ -3602,6 +3602,13 @@ function addCompactBehaviorPane() {
         "natsumiCompactLongVisibility",
         "Display sidebar/toolbar for longer on hover"
     ));
+    compactBehaviorGroup.registerOption("natsumiCompactInterceptZenMode", new CheckboxChoice(
+        "natsumi.theme.compact-keep-zen-mode",
+        "natsumiCompactInterceptZenMode",
+        "Use Floorp's Zen Mode as a toggle",
+        "Enabling Zen Mode will toggle Compact Mode instead.",
+        true
+    ));
 
     let compactBehaviorNode = compactBehaviorGroup.generateNode();
 

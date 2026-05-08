@@ -347,4 +347,12 @@ export class NatsumiShortcutActions {
         // Select tab
         gBrowser.selectedTab = allTabs[index];
     }
+
+    static showCommandPalette() {
+        if (!document.body.natsumiGesturesWrapper) {
+            return;
+        }
+
+        document.body.natsumiGesturesWrapper.executeAction("floorp-toggle-command-palette");
+    }
 }
