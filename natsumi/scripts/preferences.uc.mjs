@@ -47,6 +47,10 @@ import {
 } from "./custom-theme.sys.mjs";
 import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
 
+// Dev features - still heavy WIP
+const enablePositionFreeform = false;
+const enableTextColor = false;
+
 // Get redesign status
 let categoryNode = document.getElementById("categories");
 const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
@@ -252,9 +256,13 @@ class CustomThemePicker {
                 this.cycleGradientType();
             });
 
-            colorPositionButton.addEventListener("click", () => {
-                this.toggleManagedPosition();
-            });
+            if (enablePositionFreeform) {
+                colorPositionButton.addEventListener("click", () => {
+                    this.toggleManagedPosition();
+                });
+            } else {
+                colorPositionButton.style.display = "none";
+            }
         }
 
         for (let actionButton of actionButtons) {
@@ -770,7 +778,7 @@ class CustomThemePicker {
                                 </div>
                             </div>
                         </div>
-                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-text-color">
+                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-text-color" hidden="${!enableTextColor}">
                             <div class="natsumi-custom-theme-tool-button">
                                 <div class="natsumi-custom-theme-tool-icon"></div>
                                 <div class="natsumi-custom-theme-tool-label">
@@ -833,8 +841,8 @@ class CustomThemePicker {
     }
 
     calculateAngleRadiusGrid(relativeX, relativeY, radian = false) {
-        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 300);
-        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
 
         return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
     }
@@ -876,8 +884,8 @@ class CustomThemePicker {
     }
 
     calculatePositionGrid(angle, radius, radian = false) {
-        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 300);
-        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
 
         return this.calculatePosition(angle, radius, gridWidth, gridHeight, radian);
     }
@@ -1154,37 +1162,40 @@ class CustomThemePicker {
             }
 
             // Process color position entry
-            let colorPosNode;
+            if (enablePositionFreeform) {
+                let colorPosNode;
 
-            if (replaceColors) {
-                colorPosNode = document.createElement("div");
-                colorPosNode.classList.add("natsumi-custom-theme-position-color");
-            } else {
-                colorPosNode = currentColorPositions[colorIndex];
-            }
+                if (replaceColors) {
+                    colorPosNode = document.createElement("div");
+                    colorPosNode.classList.add("natsumi-custom-theme-position-color");
+                } else {
+                    colorPosNode = currentColorPositions[colorIndex];
+                }
 
-            colorPosNode.style.setProperty("--natsumi-selected-color", `${colorData.code}`);
+                colorPosNode.style.setProperty("--natsumi-selected-color", `${colorData.code}`);
 
-            if (replaceColors) {
-                let colorDisplayNode = document.createElement("div");
-                colorDisplayNode.classList.add("natsumi-custom-theme-position-color-display");
-                positionNode.appendChild(colorDisplayNode);
-            }
+                if (replaceColors) {
+                    let colorDisplayNode = document.createElement("div");
+                    colorDisplayNode.classList.add("natsumi-custom-theme-position-color-display");
+                    colorPosNode.appendChild(colorDisplayNode);
+                }
 
-            let colorPosNodePosition = this.calculatePositionPos(colorData.position);
-            colorPosNode.style.translate = `${colorPosNodePosition.x}px ${colorPosNodePosition.y}px`;
-            colorPosNode.style.setProperty("--natsumi-color-index", `"${colorData.order + 1}"`);
+                let colorPosNodePosition = this.calculatePositionPos(colorData.position);
+                colorPosNode.style.translate = `${colorPosNodePosition.x}px ${colorPosNodePosition.y}px`;
+                colorPosNode.style.setProperty("--natsumi-color-index", `"${colorData.order + 1}"`);
 
-            if ((45 <= colorData.angle && colorData.angle <= 205 && colorData.value >= 0.8 && colorData.opacity >= 0.6) || (colorData.radius <= 0.5 && colorData.value >= 0.8)) {
-                colorPosNode.style.setProperty("--natsumi-color-index-color", "black");
-            } else if (colorData.opacity < 0.6 && colorData.value >= 0.8) {
-                colorPosNode.style.setProperty("--natsumi-color-index-color", "light-dark(black, white)");
-            } else {
-                colorPosNode.style.setProperty("--natsumi-color-index-color", "white");
-            }
+                if ((45 <= colorData.angle && colorData.angle <= 205 && colorData.value >= 0.8 && colorData.opacity >= 0.6) || (colorData.radius <= 0.5 && colorData.value >= 0.8)) {
+                    colorPosNode.style.setProperty("--natsumi-color-index-color", "black");
+                } else if (colorData.opacity < 0.6 && colorData.value >= 0.8) {
+                    colorPosNode.style.setProperty("--natsumi-color-index-color", "light-dark(black, white)");
+                } else {
+                    colorPosNode.style.setProperty("--natsumi-color-index-color", "white");
+                }
 
-            if (replaceColors) {
-                positionNode.appendChild(colorPosNode);
+                if (replaceColors) {
+                    positionNode.appendChild(colorPosNode);
+                }
+
                 colorPosNode.addEventListener("mousedown", (event) => {
                     event.stopPropagation();
                     event.preventDefault();
@@ -3812,6 +3823,16 @@ function addSidebarMiniplayerPane() {
     ));
 
     let miniplayerLayoutNode = miniplayerLayoutSelection.generateNode();
+    let miniplayerVerticalNotice = convertToXUL(`
+        <div id="natsumiMiniplayerVerticalTabsWarning" class="natsumi-settings-info warning">
+            <div class="natsumi-settings-info-icon"></div>
+            <div class="natsumi-settings-info-text">
+                You need to enable Vertical Tabs to change the Miniplayer layout.
+            </div>
+        </div>
+    `);
+    let miniplayerLayoutSelector = miniplayerLayoutNode.querySelector(".natsumi-mc-chooser");
+    miniplayerLayoutSelector.parentNode.insertBefore(miniplayerVerticalNotice, miniplayerLayoutSelector);
 
     // Set listeners for each button
     let miniplayerLayoutButtons = miniplayerLayoutNode.querySelectorAll(".natsumi-mc-choice");

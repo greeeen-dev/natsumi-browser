@@ -793,6 +793,20 @@ SOFTWARE.
   }
 
   #natsumiMiniplayerLayoutGroup {
+    #natsumiMiniplayerVerticalTabsWarning {
+      display: none !important;
+    }
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      #natsumiMiniplayerVerticalTabsWarning {
+        display: flex !important;
+      }
+
+    .natsumi-mc-chooser {
+        display: none;
+      }
+    }
+
     .natsumi-mc-choice-image-browser {
       &::before, &::after {
         content: "";
@@ -1118,8 +1132,9 @@ SOFTWARE.
         border: 5px solid light-dark(#aaa, #ddd);
       }
 
-      .natsumi-custom-theme-pill {
-
+      .natsumi-custom-theme-position-color {
+        grid-row-start: 1;
+        grid-column-start: 1;
       }
     }
 
@@ -1140,6 +1155,10 @@ SOFTWARE.
       .natsumi-custom-theme-tool {
         display: flex;
         flex-direction: column;
+
+        &[hidden="true"] {
+          display: none !important;
+        }
 
         .natsumi-custom-theme-tool-button {
           align-items: center;
