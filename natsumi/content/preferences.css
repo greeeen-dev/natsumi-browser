@@ -60,6 +60,7 @@ SOFTWARE.
           width: 100%;
           height: 72px;
           background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
+          z-index: 999;
         }
       }
     }
@@ -313,5 +314,60 @@ SOFTWARE.
   .page-nav-icon {
     -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity !important;
     stroke: currentColor;
+  }
+
+  .natsumi-subcategory-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    margin-block: 4px;
+
+    &:not(:has(.natsumi-subcategory)) {
+      display: none !important;
+    }
+
+    @media -moz-pref("natsumi.theme.preferences-hide-subcategories") {
+      display: none !important;
+    }
+
+    .natsumi-subcategory {
+      display: flex;
+      align-items: center;
+      padding: 2px 8px;
+      min-height: 28px;
+      border-radius: 0 8px 8px 0;
+      transition: background-color 0.1s ease;
+      user-select: none;
+      overflow-wrap: anywhere;
+
+      &:hover {
+        background-color: var(--page-nav-button-background-color-hover);
+      }
+
+      &:active {
+        background-color: var(--page-nav-button-background-color-active);
+      }
+
+      &::before {
+        content: "";
+        min-width: 2px;
+        height: calc(100% + 4px);
+        margin-left: -10px;
+        margin-right: 8px;
+        background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+      }
+
+      &[highlight]::before {
+        background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+
+        @media -moz-pref("natsumi.theme.classic-preferences") {
+          background-color: var(--color-accent-primary);
+        }
+      }
+    }
+
+    @media (max-width: 950px) {
+      display: none !important;
+    }
   }
 }

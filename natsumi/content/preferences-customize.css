@@ -1117,6 +1117,10 @@ SOFTWARE.
         mask-image: conic-gradient(black 0deg, black 150deg, transparent 150deg, transparent 210deg, black 210deg);
         border: 5px solid light-dark(#aaa, #ddd);
       }
+
+      .natsumi-custom-theme-pill {
+
+      }
     }
 
     .natsumi-custom-theme-tools-container {
@@ -1384,6 +1388,10 @@ SOFTWARE.
 
         &.natsumi-gradient-button .natsumi-custom-theme-controls-icon {
           background-image: url("../icons/lucide/gradient-type.svg");
+        }
+
+        &.natsumi-position-button .natsumi-custom-theme-controls-icon {
+          background-image: url("../icons/lucide/color-position.svg");
         }
 
         &.natsumi-reset-button .natsumi-custom-theme-controls-icon {

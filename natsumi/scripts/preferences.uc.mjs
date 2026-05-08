@@ -48,8 +48,8 @@ import {
 import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
 
 // Get redesign status
-let categoryNode = document.getElementById("categories")
-const hasRedesign = categoryNode.nodeName === "html:moz-page-nav"
+let categoryNode = document.getElementById("categories");
+const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
 
 if (hasRedesign) {
     document.body.setAttribute("natsumi-preferences-redesign", "");
@@ -81,6 +81,7 @@ class CustomThemePicker {
         this.gradientType = "linear";
         this.angle = 0;
         this.colors = [];
+        this.managedPosition = false;
         this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.grain = 0;
         this.newColorAllowed = true;
@@ -233,13 +234,14 @@ class CustomThemePicker {
         // Add listeners for gradient controls
         let presetButton = this.node.querySelector(".natsumi-preset-button");
         let gradientTypeButton = this.node.querySelector(".natsumi-gradient-button");
+        let colorPositionButton = this.node.querySelector(".natsumi-position-button");
         let resetButton = this.node.querySelector(".natsumi-reset-button");
         let hexInput = this.node.querySelector(".natsumi-hex-input");
         let toolsButton = this.node.querySelector(".natsumi-tools-button");
         let hexButton = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-button");
         let grainButton = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-button");
         let textColorButton = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-button");
-        const actionButtons = [presetButton, gradientTypeButton, resetButton, toolsButton];
+        const actionButtons = [presetButton, gradientTypeButton, colorPositionButton, resetButton, toolsButton];
 
         if (!this.singleColor) {
             presetButton.addEventListener("click", () => {
@@ -249,6 +251,10 @@ class CustomThemePicker {
             gradientTypeButton.addEventListener("click", () => {
                 this.cycleGradientType();
             });
+
+            colorPositionButton.addEventListener("click", () => {
+                this.toggleManagedPosition();
+            });
         }
 
         for (let actionButton of actionButtons) {
@@ -257,6 +263,13 @@ class CustomThemePicker {
                     this.displayAction("Preset", colorPresetNames[this.preset]);
                 } else if (Array.from(actionButton.classList).includes("natsumi-gradient-button")) {
                     this.displayAction("Gradient", gradientTypeNames[this.gradientType]);
+                } else if (Array.from(actionButton.classList).includes("natsumi-position-button")) {
+                    let actionString = "Freeform";
+                    if (this.managedPosition) {
+                        actionString = "Managed";
+                    }
+
+                    this.displayAction("Color positions", actionString);
                 } else if (Array.from(actionButton.classList).includes("natsumi-reset-button")) {
                     this.displayAction("Reset", "Reset theme layer");
                 } else if (Array.from(actionButton.classList).includes("natsumi-tools-button")) {
@@ -558,6 +571,7 @@ class CustomThemePicker {
         this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.preset = null;
         this.lastSelected = null;
+        this.managedPosition = true;
 
         if (!this.data[this.theme]) {
             return;
@@ -595,6 +609,10 @@ class CustomThemePicker {
             this.grain = this.data[this.theme]["grain"];
         } else {
             this.grain = 0;
+        }
+
+        if (this.data[this.theme]["managedPosition"]) {
+            this.managedPosition = this.data[this.theme]["managedPosition"];
         }
 
         if (this.data[this.theme]["textColor"]) {
@@ -649,6 +667,7 @@ class CustomThemePicker {
 
         this.data["version"] = this.version;
         this.data[this.theme]["grain"] = this.grain;
+        this.data[this.theme]["managedPosition"] = this.managedPosition;
 
         let themeDirectoryPath = PathUtils.join(PathUtils.profileDir, "natsumi-themes");
         let themePath = PathUtils.join(themeDirectoryPath, "master.json");
@@ -712,6 +731,9 @@ class CustomThemePicker {
                             <div class="natsumi-custom-theme-controls-icon"></div>
                         </div>
                         <div class="natsumi-custom-theme-controls-button natsumi-gradient-button">
+                            <div class="natsumi-custom-theme-controls-icon"></div>
+                        </div>
+                        <div class="natsumi-custom-theme-controls-button natsumi-position-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
                         </div>
                         <div class="natsumi-custom-theme-controls-button natsumi-reset-button">
@@ -817,6 +839,13 @@ class CustomThemePicker {
         return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
     }
 
+    calculateAngleRadiusPos(relativeX, relativeY, radian = false) {
+        let gridWidth = 355;
+        let gridHeight = 355;
+
+        return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
+    }
+
     calculateAngleRadius(relativeX, relativeY, width, height, radian = false, lockRadius = false) {
         // Calculate the center of object
         let centerX = width / 2;
@@ -851,6 +880,14 @@ class CustomThemePicker {
         let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
 
         return this.calculatePosition(angle, radius, gridWidth, gridHeight, radian);
+    }
+
+    calculatePositionPos(position, radian = false) {
+        let gridWidth = 355;
+        let gridHeight = 355;
+        let angle = position * 300 - 150;
+
+        return this.calculatePosition(angle, 1, gridWidth, gridHeight, radian);
     }
 
     calculatePosition(angle, radius, width, height, radian = false) {
@@ -994,8 +1031,10 @@ class CustomThemePicker {
         }
 
         let gridNode = this.node.querySelector(".natsumi-custom-theme-grid");
+        let positionNode = this.node.querySelector(".natsumi-custom-theme-position-container");
         let newColors = this.colors.length;
         let currentColors = gridNode.querySelectorAll(".natsumi-custom-theme-color");
+        let currentColorPositions = gridNode.querySelectorAll(".natsumi-custom-theme-position-color");
         const replaceColors = (newColors !== currentColors.length);
 
         if (replaceColors) {
@@ -1036,6 +1075,8 @@ class CustomThemePicker {
 
         for (let colorIndex in this.colors) {
             let colorData = this.colors[colorIndex];
+
+            // Process color grid entry
             let colorNode;
 
             if (replaceColors) {
@@ -1111,6 +1152,57 @@ class CustomThemePicker {
                     this.setLastSelected(colorIndex);
                 });
             }
+
+            // Process color position entry
+            let colorPosNode;
+
+            if (replaceColors) {
+                colorPosNode = document.createElement("div");
+                colorPosNode.classList.add("natsumi-custom-theme-position-color");
+            } else {
+                colorPosNode = currentColorPositions[colorIndex];
+            }
+
+            colorPosNode.style.setProperty("--natsumi-selected-color", `${colorData.code}`);
+
+            if (replaceColors) {
+                let colorDisplayNode = document.createElement("div");
+                colorDisplayNode.classList.add("natsumi-custom-theme-position-color-display");
+                positionNode.appendChild(colorDisplayNode);
+            }
+
+            let colorPosNodePosition = this.calculatePositionPos(colorData.position);
+            colorPosNode.style.translate = `${colorPosNodePosition.x}px ${colorPosNodePosition.y}px`;
+            colorPosNode.style.setProperty("--natsumi-color-index", `"${colorData.order + 1}"`);
+
+            if ((45 <= colorData.angle && colorData.angle <= 205 && colorData.value >= 0.8 && colorData.opacity >= 0.6) || (colorData.radius <= 0.5 && colorData.value >= 0.8)) {
+                colorPosNode.style.setProperty("--natsumi-color-index-color", "black");
+            } else if (colorData.opacity < 0.6 && colorData.value >= 0.8) {
+                colorPosNode.style.setProperty("--natsumi-color-index-color", "light-dark(black, white)");
+            } else {
+                colorPosNode.style.setProperty("--natsumi-color-index-color", "white");
+            }
+
+            if (replaceColors) {
+                positionNode.appendChild(colorPosNode);
+                colorPosNode.addEventListener("mousedown", (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    let gridPositionNode = this.node.querySelector(".natsumi-custom-theme-position-container");
+                    gridPositionNode.setAttribute("natsumi-color-dragging", "");
+
+                    document.onmouseup = () => {
+                        gridPositionNode.removeAttribute("natsumi-color-dragging");
+                        this.resetListeners();
+                    }
+                    document.onmousemove = (event => {
+                        let relativeX = event.clientX - gridPositionNode.getBoundingClientRect().left;
+                        let relativeY = event.clientY - gridPositionNode.getBoundingClientRect().top;
+                        this.moveColor(colorIndex, relativeX, relativeY);
+                    });
+                });
+            }
         }
     }
 
@@ -1142,16 +1234,22 @@ class CustomThemePicker {
         const value = 1;
         const opacity = 1;
 
+        // Add new color
         const colorData = {
             "code": this.generateCssColorCode(hue, saturation, value, opacity),
             "angle": circlePosData["angle"],
             "radius": circlePosData["radius"],
             "value": value,
             "opacity": opacity,
-            "order": this.colors.length
+            "order": this.colors.length,
+            "position": 1
         }
-
         this.colors.push(colorData);
+
+        // Set managed position
+        this.managedPosition = true;
+        this.ensureManagedPosition();
+
         this.setLastSelected(`${this.colors.length - 1}`);
         this.saveLayer();
     }
@@ -1192,8 +1290,12 @@ class CustomThemePicker {
             "opacity": a,
             "order": this.colors.length
         }
-
         this.colors.push(colorData);
+
+        // Set managed position
+        this.managedPosition = true;
+        this.ensureManagedPosition();
+
         this.setLastSelected(`${this.colors.length - 1}`);
         this.saveLayer();
     }
@@ -1214,12 +1316,36 @@ class CustomThemePicker {
             }
         }
 
-        const circlePosData = this.calculateAngleRadiusGrid(relativeX, relativeY);
+        const circlePosData = this.calculateAngleRadiusPos(relativeX, relativeY);
         this.colors[index]["angle"] = circlePosData["angle"];
         this.colors[index]["radius"] = circlePosData["radius"];
         this.colors[index]["code"] = this.generateCssColorCodeFromData(this.colors[index]);
 
         this.setLastSelected(index);
+        this.saveLayer();
+    }
+
+    moveColorPosition(index, relativeX, relativeY) {
+        if (index < 0 || index >= this.colors.length) {
+            console.error("Invalid color index:", index);
+            return;
+        }
+
+        if (this.preset) {
+            if (!availablePresets[this.colors.length].includes(this.preset)) {
+                this.preset = null;
+            }
+
+            if (index !== "0") {
+                return;
+            }
+        }
+
+        const circlePosData = this.calculateAngleRadiusGrid(relativeX, relativeY);
+        this.colors[index]["angle"] = circlePosData["angle"];
+        this.colors[index]["radius"] = circlePosData["radius"];
+        this.colors[index]["code"] = this.generateCssColorCodeFromData(this.colors[index]);
+
         this.saveLayer();
     }
 
@@ -1481,6 +1607,21 @@ class CustomThemePicker {
         this.renderSliders();
         this.renderAngle();
         this.saveLayer();
+    }
+
+    toggleManagedPosition() {
+        this.managedPosition = !this.managedPosition;
+        this.saveLayer();
+    }
+
+    ensureManagedPosition() {
+        if (!this.managedPosition) {
+            return;
+        }
+
+        for (let i = 0; i < this.colors.length; i++) {
+            this.colors[i]["position"] = (1 / (this.colors.length - 1)) * i;
+        }
     }
 }
 
@@ -3981,6 +4122,12 @@ function addMiscPreferencesPane() {
         "natsumiMiscPreferencesRevert",
         "Revert to classic preferences look",
         "If you don't like Natsumi's custom preferences design, you can enable this to disable it."
+    ));
+
+    miscPreferencesGroup.registerOption("natsumiMiscPreferencesHideSubcategory", new CheckboxChoice(
+        "natsumi.theme.preferences-hide-subcategories",
+        "natsumiMiscPreferencesHideSubcategory",
+        "Hide subcategories list"
     ));
 
     let miscPreferencesNode = miscPreferencesGroup.generateNode();

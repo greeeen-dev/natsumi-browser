@@ -39,7 +39,7 @@ if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
 }
 
 export const colorPresetNames = {
-    null: "Floating",
+    null: "Freeform",
     "complementary": "Complementary",
     "split-complementary": "Split",
     "analogous": "Analogous",
