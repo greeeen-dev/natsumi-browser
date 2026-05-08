@@ -123,6 +123,37 @@ class NatsumiCompactModeManager {
                 attributeFilter: ["inFullscreen"]
             });
         }
+
+        // Listen for Floorp Zen Mode
+        let isFloorp = false;
+
+        if (ucApi.Prefs.get("natsumi.browser.type").exists) {
+            isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
+        }
+
+        if (isFloorp) {
+            Services.prefs.addObserver("floorp.zenmode.enabled", () => {
+                let canIntercept = true;
+
+                if (ucApi.Prefs.get("natsumi.theme.compact-keep-zen-mode").exists) {
+                    canIntercept = !ucApi.Prefs.get("natsumi.theme.compact-keep-zen-mode").value;
+                }
+
+                if (!canIntercept) {
+                    return;
+                }
+
+                if (ucApi.Prefs.get("floorp.zenmode.enabled").value) {
+                    ucApi.Prefs.set("floorp.zenmode.enabled", false);
+
+                    if (this.isCompactMode()) {
+                        this.disableCompactMode();
+                    } else {
+                        this.enableCompactMode();
+                    }
+                }
+            });
+        }
     }
 
     // initStatusbar can be deferred if the status bars tend to be lazy and take a while to load
@@ -293,6 +324,10 @@ class NatsumiCompactModeManager {
             }, this.visibleDuration);
             this.sidebarHovered = 0;
         }
+    }
+
+    isCompactMode() {
+        return document.body.hasAttribute("natsumi-compact-mode");
     }
 
     resetCompactMode() {

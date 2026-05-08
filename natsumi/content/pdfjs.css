@@ -91,6 +91,7 @@ SOFTWARE.
       #toolbarViewerLeft {
         position: absolute;
         left: 46px !important;
+        margin-left: 0 !important;
 
         #viewsManagerToggleButton, #sidebarToggleButton {
           appearance: none !important;
@@ -424,6 +425,10 @@ SOFTWARE.
         border: var(--natsumi-material-border) !important;
         border-radius: 10px !important;
         opacity: 0;
+
+        #viewsManagerHeader {
+          background-color: transparent !important;
+        }
 
         #toolbarSidebar, #sidebarContent {
           background: transparent !important;

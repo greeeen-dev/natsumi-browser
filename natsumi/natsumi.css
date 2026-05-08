@@ -68,6 +68,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/floorp/miniplayer.css";
 @import "modules/floorp/right-sidebar.css";
 @import "modules/floorp/webapps.css";
+@import "modules/floorp/command-palette.css";
 
 /* Waterfox-specific modules */
 @import "modules/waterfox/base.css";

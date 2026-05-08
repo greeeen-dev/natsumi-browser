@@ -362,8 +362,10 @@ class NatsumiKBSManager {
         if (browserType === "floorp") {
             this.shortcuts["cycleWorkspaces"] = new NatsumiKeyboardShortcut(false, true, true, false, "right", 3, false);
             this.shortcuts["cycleWorkspacesReverse"] = new NatsumiKeyboardShortcut(false, true, true, false, "left", 3, false);
+            this.shortcuts["showCommandPalette"] = new NatsumiKeyboardShortcut(false, true, true, true, "p", 3, true);
             this.shortcutActions["cycleWorkspaces"] = NatsumiShortcutActions.cycleWorkspaces;
             this.shortcutActions["cycleWorkspacesReverse"] = () => { NatsumiShortcutActions.cycleWorkspaces(true); };
+            this.shortcutActions["showCommandPalette"] = () => { NatsumiShortcutActions.showCommandPalette(); };
         }
 
         // Add native shortcuts
