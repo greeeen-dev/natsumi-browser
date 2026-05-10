@@ -1,7 +1,3 @@
-> [!WARNING]
-> These new guidelines are a heavy work in progress and do not apply yet. They will be revised with feedback from the
-> community to form the final text.
-
 # Natsumi Contributing Guidelines
 ## 1. Introduction
 Thank you for showing your interest in making Natsumi Browser better!
