@@ -300,6 +300,9 @@ let shortcutsMap = {
             },
             "key_screenshot": {
                 "name": "Take a Screenshot"
+            },
+            "showCommandPalette": {
+                "name": "Show Command Palette"
             }
         }
     },
