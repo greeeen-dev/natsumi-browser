@@ -84,24 +84,16 @@ we acknowledge the potential benefits of AI, we value genuine, high-quality cont
 to accept low-quality AI-generated submissions, even if they are made in good faith.
 
 Therefore, for every submission, we will enforce the following:
-- Any use of AI **must be declared** regardless of extent or intent
+- Any use of AI for writing code is **strictly prohibited** while any other use **must be declared** regardless of extent or
+  intent
 - All contributions will be subject to strict quality control by Maintainers to combat low quality submissions and forms of
   "vibe coding"
 - All contributions must have a description on a **per-file basis** describing the changes and the purpose of the changes in
   the Pull Request description
 - All contributions should not add features that focus on or incorporate AI, regardless of whether it uses on-device or
-  on-cloud models, with exemptions listed in 5.1
+  on-cloud models, unless the contributions are limited to styling (CSS) only
 
-### 5.1. Exemptions to this policy
-The following use of AI-related contributions are explicitly allowed:
-- Adding support for a browser with optional AI features, regardless of whether they are opt-in or out-out (such as Firefox
-  and Floorp)
-- Implementing CSS styling for built-in browser AI features (such as Firefox AI tabs and Floorp OS) without use of JS (unless
-  required to apply CSS styling - this may be the case if you need to style shadow DOM elements)
-
-Even with these exceptions, your contributions must follow the rest of the AI policy where possible.
-
-### 5.2. AI policy violations
+### 5.1. AI policy violations
 The Natsumi Project takes violations of this policy very seriously and will take action to enforce the policy to the greatest
 extent possible within the Project. If you are found to have intentionally violated this policy, your contributions will be
 removed or replaced and you will be permanently restricted from making any further contributions.
