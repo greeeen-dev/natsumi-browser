@@ -1,0 +1,124 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Natsumi Toolbars ==== */
+
+#natsumi-pinned-toolbar {
+  --natsumi-toolbar-margin: calc(var(--space-small) + var(--space-xsmall));
+  display: flex !important;
+  position: absolute;
+  width: calc(var(--natsumi-sidebar-width) - calc(2 * var(--natsumi-toolbar-margin)));
+  margin-inline: var(--natsumi-toolbar-margin);
+  top: calc(45px + var(--natsumi-pinned-tabs-height));
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 0 !important;
+
+  & > toolbarbutton, & > toolbaritem {
+    width: unset !important;
+    min-width: 36px;
+    max-width: calc(100%);
+    flex: 1 !important;
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
+  }
+
+  toolbarbutton {
+    background: color-mix(in srgb, currentColor 7%, transparent) !important;
+    border-radius: var(--natsumi-tab-border-radius) !important;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    padding-inline: 0 !important;
+
+    &:not([disabled="true"]) {
+      &:hover {
+        background: var(--tab-background-color-hover, var(--tab-hover-background-color)) !important;
+      }
+
+      &:active, &[open] {
+        background: var(--natsumi-button-active-color) !important;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .toolbarbutton-icon, .toolbarbutton-badge-stack {
+      background: transparent !important;
+    }
+  }
+
+  toolbaritem {
+    width: 100% !important;
+    max-width: 100%;
+    flex: 1 !important;
+  }
+}
+
+#vertical-pinned-tabs-splitter {
+  margin-top: calc(var(--natsumi-pinned-toolbar-height, -8px) + 8px);
+}
+
+&:has(#sidebar-main:not([sidebar-launcher-expanded])) {
+  #natsumi-pinned-toolbar {
+    flex-wrap: nowrap;
+    flex-direction: column;
+
+    & > toolbarbutton, & > toolbaritem {
+      min-width: unset !important;
+    }
+  }
+}
+
+&:has(#PersonalToolbar:not([collapsed])) {
+  #natsumi-pinned-toolbar {
+    @media not -moz-pref("natsumi.theme.single-toolbar") {
+      transition-delay: 0s !important;
+      top: calc(73px + var(--natsumi-pinned-tabs-height));
+    }
+  }
+}
+
+:root:not([customizing]) {
+  #natsumi-pinned-toolbar {
+    @media not -moz-pref("natsumi.theme.single-toolbar") {
+      transition: top 0.1s linear;
+      transition-delay: 0.04s;
+    }
+
+    @media -moz-pref("natsumi.theme.single-toolbar") {
+      top: calc(86px + var(--natsumi-pinned-tabs-height));
+    }
+  }
+}
+
+:root[customizing] {
+  #natsumi-pinned-toolbar {
+    min-height: 32px !important;
+    border: light-dark(black, white) 1px dashed !important;
+  }
+
+  #vertical-pinned-tabs-splitter {
+    margin-top: calc(var(--natsumi-pinned-toolbar-height, 32px) + 8px);
+  }
+}

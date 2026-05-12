@@ -54,7 +54,10 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/glimpse.css";
 @import "modules/welcome.css";
 @import "modules/customize.css";
+@import "modules/toolbars.css";
+@import "modules/lockscreen.css";
 @import "modules/experiments.css";
+@import "modules/nova-patches.css";
 @import "modules/icons.css";
 
 /* Floorp-specific modules */

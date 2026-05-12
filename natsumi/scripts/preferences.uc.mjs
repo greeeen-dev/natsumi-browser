@@ -884,8 +884,8 @@ class CustomThemePicker {
     }
 
     calculatePositionGrid(angle, radius, radian = false) {
-        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
-        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 300);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
 
         return this.calculatePosition(angle, radius, gridWidth, gridHeight, radian);
     }

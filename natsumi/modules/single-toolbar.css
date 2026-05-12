@@ -123,6 +123,12 @@ SOFTWARE.
       width: calc(var(--natsumi-sidebar-width) - calc(var(--space-medium) * 2)) !important;
       left: 0 !important;
       top: 40px !important;
+
+      #urlbar:not([open]) {
+        .searchmode-switcher {
+          display: none !important;
+        }
+      }
     }
 
     #vertical-tabs {

@@ -162,7 +162,39 @@ SOFTWARE.
   margin-inline: var(--natsumi-browser-separation);
 }
 
+#nav-bar-customization-target, #PanelUI-button {
+  & > toolbarbutton, & > toolbaritem {
+    &:not(#urlbar-container):not(#PanelUI-menu-button) {
+      padding-inline: 4px !important;
+
+      &:first-child {
+        padding-left: 8px !important;
+      }
+    }
+  }
+}
+
 #nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {
+  & > toolbarbutton, & > toolbaritem {
+    &:not(#urlbar-container):not(#PanelUI-menu-button) {
+      padding-inline: 4px !important;
+    }
+  }
+
+  #PanelUI-menu-button {
+    padding-inline: 4px 8px !important;
+  }
+
+  & > toolbaritem toolbarbutton {
+    padding-inline: 0 !important;
+  }
+
+  @media -moz-pref("natsumi.theme.single-toolbar") {
+    &#nav-bar-customization-target {
+      padding-left: 4px !important;
+    }
+  }
+
   toolbarbutton {
     --toolbarbutton-outer-padding: 4px;
     max-height: 40px !important;
