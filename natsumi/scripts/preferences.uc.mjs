@@ -3343,6 +3343,12 @@ function addSidebarButtonsPane() {
         }
     }
 
+    buttonsGroup.registerOption("natsumiSidebarPinnedToolbarTop", new CheckboxChoice(
+        "natsumi.theme.pinned-toolbar-on-top",
+        "natsumiSidebarPinnedToolbarTop",
+        "Display Pinned Toolbar above pinned tabs"
+    ));
+
     buttonsGroup.registerOption("natsumiSidebarHideClearTabs", new CheckboxChoice(
         "natsumi.sidebar.hide-clear-tabs",
         "natsumiSidebarHideClearTabs",

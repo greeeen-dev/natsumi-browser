@@ -90,7 +90,7 @@ SOFTWARE.
 }
 
 #tabbrowser-arrowscrollbox .tabbrowser-tab {
-  &[natsumi-animation] {
+  &[natsumi-animation]:not([pending="true"]) {
     animation: natsumi-tab-appear-blur 0.2s ease;
 
     .tab-stack {
