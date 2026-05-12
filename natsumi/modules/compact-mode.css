@@ -187,10 +187,31 @@ SOFTWARE.
     }
   }
 
-  @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
-    @media (
-      not -moz-pref("natsumi.theme.compact-style", "toolbar")
-    ) or -moz-pref("natsumi.theme.single-toolbar") {
+  #natsumi-pinned-toolbar {
+    transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease, top 0s !important;
+    --natsumi-toolbar-offset: -40px;
+  }
+
+  @media (
+    not -moz-pref("natsumi.theme.compact-style", "toolbar")
+  ) or -moz-pref("natsumi.theme.single-toolbar") {
+    #natsumi-pinned-toolbar {
+      z-index: 999 !important;
+      left: calc(var(--natsumi-sidebar-width) * -1) !important;
+      opacity: 0;
+      --natsumi-toolbar-offset: -25px;
+
+      @media -moz-pref("natsumi.theme.single-toolbar") {
+        --natsumi-toolbar-offset: 5px;
+      }
+
+      @media not -moz-pref("sidebar.position_start") {
+        right: calc(var(--natsumi-compact-offset) * -1) !important;
+        left: unset !important;
+      }
+    }
+
+    @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
       #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
         z-index: 999 !important;
         margin: var(--natsumi-browser-separation) !important;
@@ -230,6 +251,18 @@ SOFTWARE.
 
         @media not -moz-pref("sidebar.position_start") {
           right: 0 !important;
+        }
+      }
+
+      #natsumi-pinned-toolbar {
+        opacity: 1 !important;
+
+        @media -moz-pref("sidebar.position_start") {
+          left: var(--natsumi-browser-separation) !important;
+        }
+
+        @media not -moz-pref("sidebar.position_start") {
+          right: var(--natsumi-browser-separation) !important;
         }
       }
 
