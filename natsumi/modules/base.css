@@ -52,8 +52,8 @@ SOFTWARE.
 
 :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
   #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
-    margin-right: var(--natsumi-browser-separation) !important;
-    margin-bottom: var(--natsumi-browser-separation) !important;
+    margin-right: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
+    margin-bottom: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
     box-shadow: none !important;
     outline: none !important;
 
@@ -164,7 +164,7 @@ SOFTWARE.
 
 #nav-bar-customization-target, #PanelUI-button {
   & > toolbarbutton, & > toolbaritem {
-    &:not(#urlbar-container):not(#PanelUI-menu-button) {
+    &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
       padding-inline: 4px !important;
 
       &:first-child {
@@ -176,7 +176,7 @@ SOFTWARE.
 
 #nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {
   & > toolbarbutton, & > toolbaritem {
-    &:not(#urlbar-container):not(#PanelUI-menu-button) {
+    &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
       padding-inline: 4px !important;
     }
   }

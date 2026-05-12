@@ -367,7 +367,7 @@ SOFTWARE.
         }
 
         #urlbar-background, .urlbar-background {
-          background-color: light-dark(var(--toolbar-field-background-color), color-mix(in srgb, currentColor 7%, transparent)) !important;
+          background-color: color-mix(in srgb, currentColor 7%, transparent) !important;
           border-radius: var(--natsumi-tab-border-radius) !important;
           transition: background-color 0.2s ease;
         }

@@ -391,6 +391,9 @@ All browsers must be based on Firefox 137 or above.
 | Zen         | :x: Unsupported              | -        | Incompatible since Natsumi v4 (see FAQ)                                                   |
 
 ## FAQs
+### "Does Natsumi support the new Firefox Nova redesign?"
+Not as of now, but I'm working hard to get Natsumi working under the new design.
+
 ### "Can I use other userchromes with Natsumi?"
 Sure! Just paste it right below the Natsumi Browser loader (userChrome.css) and you can use your own
 userchrome alongside Natsumi Browser.

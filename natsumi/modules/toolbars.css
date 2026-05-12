@@ -107,6 +107,7 @@ SOFTWARE.
 
     & > toolbarbutton, & > toolbaritem {
       min-width: unset !important;
+      max-width: 32px !important;
     }
   }
 }

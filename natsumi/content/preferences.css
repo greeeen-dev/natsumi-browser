@@ -298,6 +298,10 @@ SOFTWARE.
         box-shadow: var(--card-box-shadow);
         padding: var(--space-xlarge);
 
+        @media -moz-pref("browser.nova.enabled") {
+          border: none !important;
+        }
+
         @media (prefers-color-scheme: dark) {
           border-color: color-mix(in srgb, currentColor 6%, transparent);
         }
