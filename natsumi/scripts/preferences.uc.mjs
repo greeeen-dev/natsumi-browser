@@ -2456,7 +2456,11 @@ function addToSidebarLegacy() {
         </richlistitem>
     `
     let sidebar = document.getElementById("categories");
-    const generalPane = sidebar.querySelector("#category-general");
+    let generalPane = sidebar.querySelector("#category-general");
+
+    if (hasRedesign) {
+        generalPane = sidebar.querySelector("#category-home");
+    }
 
     // Add entries to sidebar all in one go to ensure consistent ordering
     sidebar.insertBefore(convertToXUL(customizeNodeString), generalPane.nextSibling);
@@ -2476,11 +2480,11 @@ function addToSidebar() {
         return addToSidebarLegacy();
     }
 
-    // We'll clone the general settings button here instead of making our own
-    let generalNode = document.getElementById("category-general");
+    // We'll clone the home settings button here instead of making our own
+    let homeNode = document.getElementById("category-home");
 
     // Create Customize Natsumi button
-    let customizeNode = generalNode.cloneNode(true);
+    let customizeNode = homeNode.cloneNode(true);
     customizeNode.id = "natsumi-settings";
     customizeNode.setAttribute("view", "paneNatsumiSettings");
     customizeNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/paintbrush.svg");
@@ -2488,7 +2492,7 @@ function addToSidebar() {
     customizeNode.innerHTML = "Customize Natsumi";
 
     // Create Keyboard Shortcuts button
-    let shortcutsNode = generalNode.cloneNode(true);
+    let shortcutsNode = homeNode.cloneNode(true);
     shortcutsNode.id = "natsumi-shortcuts";
     shortcutsNode.setAttribute("view", "paneNatsumiShortcuts");
     shortcutsNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/meta.svg");
@@ -2496,7 +2500,7 @@ function addToSidebar() {
     shortcutsNode.innerHTML = "Keyboard Shortcuts";
 
     // Create About Natsumi button
-    let aboutNode = generalNode.cloneNode(true);
+    let aboutNode = homeNode.cloneNode(true);
     aboutNode.id = "natsumi-about";
     aboutNode.setAttribute("view", "paneNatsumiAbout");
     aboutNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/info.svg");
@@ -2504,7 +2508,11 @@ function addToSidebar() {
     aboutNode.innerHTML = "About Natsumi";
 
     let sidebar = document.getElementById("categories");
-    const generalPane = sidebar.querySelector("#category-general");
+    let generalPane = sidebar.querySelector("#category-general");
+
+    if (hasRedesign) {
+        generalPane = sidebar.querySelector("#category-home");
+    }
 
     // Add entries to sidebar all in one go to ensure consistent ordering
     sidebar.insertBefore(customizeNode, generalPane.nextSibling);

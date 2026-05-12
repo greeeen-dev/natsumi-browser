@@ -14,9 +14,19 @@ class NatsumiToolbarManager {
     }
 
     init() {
+        try {
+            this.initPinnedToolbar();
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    initPinnedToolbar() {
         let verticalTabsEnabled = ucApi.Prefs.get("sidebar.verticalTabs").value;
-        if (verticalTabsEnabled) {
-            this.createToolbar("natsumi-pinned-toolbar");
+        this.createToolbar("natsumi-pinned-toolbar");
+
+        if (!verticalTabsEnabled) {
+            this.removeToolbar("natsumi-pinned-toolbar");
         }
 
         // Disable pinned toolbar if vertical tabs is disabled
@@ -90,6 +100,7 @@ class NatsumiToolbarManager {
             toolbar.setAttribute("mode", "icons");
             toolbar.setAttribute("class", "browser-toolbar");
             toolbar.setAttribute("context", "toolbar-context-menu");
+            toolbar.setAttribute("overflowable", `${canOverflow}`);
 
             if (textMode) {
                 toolbar.setAttribute("mode", "text");
@@ -318,4 +329,40 @@ class NatsumiStatusBarHandler {
 if (!document.body.natsumiToolbarManager) {
     document.body.natsumiToolbarManager = new NatsumiToolbarManager();
     document.body.natsumiToolbarManager.init();
+}
+
+let sidebar = document.querySelector("#sidebar-main");
+let isFloorp = false;
+let isWaterfox = false;
+
+if (ucApi.Prefs.get("natsumi.browser.type").exists) {
+    isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
+    isWaterfox = ucApi.Prefs.get("natsumi.browser.type").value === "waterfox";
+}
+
+if (!document.body.natsumiStatusBarHandler) {
+    document.body.natsumiStatusBarHandler = new NatsumiStatusBarHandler();
+    document.body.natsumiStatusBarHandler.init();
+}
+
+if (!sidebar) {
+    console.warn("Sidebar not found, trying to find it...");
+    for (let i = 0; i < 10; i++) {
+        sidebar = document.querySelector("#sidebar-main");
+
+        // If the sidebar exists, we can stop searching
+        if (sidebar) {
+            break;
+        }
+
+        // Wait for 1s before trying again
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+}
+
+if (sidebar) {
+    // If the sidebar exists, copy its width
+    document.body.natsumiStatusBarHandler.copySidebarWidth();
+    document.body.natsumiStatusBarHandler.copySidebarOptionsHeight();
+    document.body.natsumiStatusBarHandler.copyWindowButtonsWidth();
 }

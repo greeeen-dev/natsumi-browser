@@ -35,6 +35,7 @@ import {NatsumiNotification} from "./notifications.sys.mjs";
 import {resetTabStyleIfNeeded} from "./reset-tab-style.sys.mjs";
 
 let natsumiWelcomeObject = null;
+const requiredFirefox = 140;
 
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
@@ -716,8 +717,22 @@ function createURLbarPane() {
     natsumiWelcomeObject.addPane(themesPane);
 }
 
+function isOutdated() {
+    let browserName = AppConstants.MOZ_APP_BASENAME;
+    let browserVersion = Services.appinfo.platformVersion ?? Services.appinfo.version;
+
+    if (browserName.toLowerCase() === "glide") {
+        browserVersion = AppConstants.GLIDE_FIREFOX_VERSION;
+    }
+
+    const majorVersion = parseInt(browserVersion.split(".")[0]);
+
+    return majorVersion < requiredFirefox;
+}
+
 function createCompatibilityWarning() {
-    // This function is only to be used if the browser is INTENTIONALLY made incompatible or has security issues
+    // This function is only to be used if the browser is INTENTIONALLY made incompatible, has security issues or
+    // uses an unsupported version of Firefox
 
     const unsupportedBrowsers = [
         "zen"
@@ -726,7 +741,9 @@ function createCompatibilityWarning() {
 
     let mainBrowserName = AppConstants.MOZ_APP_NAME.toLowerCase();
     let displayBrowserName = AppConstants.MOZ_APP_NAME;
+    let browserName = AppConstants.MOZ_APP_BASENAME;
     const altBrowserName = AppConstants.MOZ_APP_DISPLAYNAME_DO_NOT_USE.toLowerCase();
+    let browserVersion = Services.appinfo.platformVersion ?? Services.appinfo.version;
 
     if (altBrowserName === "tor browser") {
         mainBrowserName = "torbrowser";
@@ -735,7 +752,16 @@ function createCompatibilityWarning() {
         displayBrowserName = AppConstants.MOZ_APP_DISPLAYNAME_DO_NOT_USE;
     }
 
+    if (browserName.toLowerCase() === "glide") {
+        browserVersion = AppConstants.GLIDE_FIREFOX_VERSION;
+    }
+
+    const majorVersion = parseInt(browserVersion.split(".")[0]);
+
+    console.log(`On Firefox ${majorVersion}`)
+
     const isUnsupported = unsupportedBrowsers.includes(mainBrowserName);
+    const isOutdated = majorVersion < requiredFirefox;
     let isTorSecurityIssue = torSecurityBrowsers.includes(mainBrowserName);
 
     if (isTorSecurityIssue) {
@@ -751,9 +777,6 @@ function createCompatibilityWarning() {
     }
 
     document.body.setAttribute("natsumi-welcome", "");
-
-    // Get browser name
-    let browserName = AppConstants.MOZ_APP_BASENAME;
 
     let warningNode = convertToXUL(`
         <div id="natsumi-compat-warning">
@@ -780,6 +803,15 @@ function createCompatibilityWarning() {
             warningBodyNode.textContent = `Natsumi is incompatible with ${displayBrowserName}. This can be due to compatibility issues or severe concerns such as security/privacy or ethics.`;
             let warningBodyNode2 = document.getElementById("natsumi-compat-warning-body-2");
             warningBodyNode2.textContent = `Please use a supported browser or uninstall Natsumi.`;
+            let warningRestartNode = document.getElementById("natsumi-compat-warning-restart");
+            warningRestartNode.style.display = "none";
+        } else if (isOutdated) {
+            let warningHeaderNode = document.getElementById("natsumi-compat-warning-header");
+            warningHeaderNode.textContent = "Your browser is outdated";
+            let warningBodyNode = document.getElementById("natsumi-compat-warning-body-1");
+            warningBodyNode.textContent = `You're currently on Firefox ${browserVersion}. Natsumi requires Firefox ${requiredFirefox}.`;
+            let warningBodyNode2 = document.getElementById("natsumi-compat-warning-body-2");
+            warningBodyNode2.textContent = "Please update your browser or uninstall Natsumi.";
             let warningRestartNode = document.getElementById("natsumi-compat-warning-restart");
             warningRestartNode.style.display = "none";
         } else if (isTorSecurityIssue) {
@@ -885,7 +917,7 @@ const potentialIssueBrowsers = [
 ]
 
 try {
-    if (potentialIssueBrowsers.includes(browserName)) {
+    if (potentialIssueBrowsers.includes(browserName) || isOutdated()) {
         createCompatibilityWarning();
     }
 } catch (e) {

@@ -80,6 +80,12 @@ SOFTWARE.
   margin-top: calc(var(--natsumi-pinned-toolbar-height, -8px) + 8px);
 }
 
+&:has(#pinned-tabs-container:empty) {
+  #natsumi-tabs-clearer {
+    margin-top: calc(var(--natsumi-pinned-toolbar-height, -16px) + 16px) !important;
+  }
+}
+
 &:has(#sidebar-main:not([sidebar-launcher-expanded])) {
   #natsumi-pinned-toolbar {
     flex-wrap: nowrap;
