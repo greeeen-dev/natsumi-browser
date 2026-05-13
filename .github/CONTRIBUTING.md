@@ -65,8 +65,8 @@ open a Pull request.
 ## 4. Guidelines enforcement
 All contributions shall be subject to this repository's Code of Conduct, as well as any other policies described on the
 Guidelines. The Code of Conduct and Contributing Guidelines only provide a rough idea of the expectations on contributors;
-it is not a comprehensive list. If you are unsure if your contribution bypasses the Code of Conduct or Contributor
-Guidelines, err on the side of caution. Do not attempt to use loopholes to bypass the Code of Conduct or Contributor
+it is not a comprehensive list. If you are unsure if your contribution violates the Code of Conduct or Contributor
+Guidelines, err on the side of caution. Do not attempt to use loopholes to violate the Code of Conduct or Contributor
 Guidelines.
 
 ### 4.1. Sanctions for guidelines violations
