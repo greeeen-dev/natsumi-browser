@@ -8,7 +8,7 @@
   Welcome to your <strong>personal</strong> internet.
 </p>
 <h5 align="center">
-  <a href="https://natsumi.greeeen.dev">Website (under construction)</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a> • <a href="https://fluxer.gg/natsumi">Fluxer</a>
+  <a href="https://natsumi.greeeen.dev">Website</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a> • <a href="https://fluxer.gg/natsumi">Fluxer</a>
 </h5>
 
 ![](./images/main-backgroundless.webp)
