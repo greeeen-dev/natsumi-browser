@@ -1611,6 +1611,12 @@ SOFTWARE.
     }
   }
 
+  @media not -moz-pref("browser.nova.enabled") {
+    #natsumiIslandsButtonBox {
+      display: none !important;
+    }
+  }
+
   @media not -moz-pref("natsumi.theme.single-toolbar") {
     #natsumiShowAddonsButtonBox, #natsumiShowMenuButtonBox, #natsumiShowToolbarButtonBox, #natsumiForceToolbarButtonBox,
     #natsumiShowBookmarksOnHoverBox, #natsumiForceWinControlsToLeftBox {

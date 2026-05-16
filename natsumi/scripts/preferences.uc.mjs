@@ -54,9 +54,20 @@ const enableTextColor = false;
 // Get redesign status
 let categoryNode = document.getElementById("categories");
 const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
+const hasRedesignV2 = document.getElementById("category-general").getAttribute("hidden") && hasRedesign;
 
 if (hasRedesign) {
     document.body.setAttribute("natsumi-preferences-redesign", "");
+}
+if (hasRedesignV2) {
+    document.body.setAttribute("natsumi-preferences-redesign-v2", "");
+}
+
+// Get correct header
+let categoryHeader = "h1";
+
+if (hasRedesignV2) {
+    categoryHeader = "h2"
 }
 
 function convertToXUL(node) {
@@ -841,8 +852,8 @@ class CustomThemePicker {
     }
 
     calculateAngleRadiusGrid(relativeX, relativeY, radian = false) {
-        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 340);
-        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 340);
+        let gridWidth = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().width, 300);
+        let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
 
         return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
     }
@@ -1327,7 +1338,7 @@ class CustomThemePicker {
             }
         }
 
-        const circlePosData = this.calculateAngleRadiusPos(relativeX, relativeY);
+        const circlePosData = this.calculateAngleRadiusGrid(relativeX, relativeY);
         this.colors[index]["angle"] = circlePosData["angle"];
         this.colors[index]["radius"] = circlePosData["radius"];
         this.colors[index]["code"] = this.generateCssColorCodeFromData(this.colors[index]);
@@ -2527,7 +2538,7 @@ function addToSidebar() {
 }
 
 function addOptionStyles() {
-    let styleNode = document.createElement("style");;
+    let styleNode = document.createElement("style");
     styleNode.id = "natsumi-options-style";
     styleNode.textContent = `
         moz-checkbox::part(label) {
@@ -2598,11 +2609,18 @@ function addLayoutPane() {
         "Choose the layout you want for your browser."
     );
 
+    let novaIslandsCheckbox = new CheckboxChoice(
+        "natsumi.theme.islands",
+        "natsumiIslandsButton",
+        "Enable Islands view",
+        "This will change the layout to look closer to the Firefox Nova design."
+    );
+
     let menuButtonCheckbox = new CheckboxChoice(
         "natsumi.theme.single-toolbar-show-menu-button",
         "natsumiShowMenuButton",
         "Show Menu button"
-    )
+    );
 
     let addonsButtonCheckbox = new CheckboxChoice(
         "natsumi.theme.single-toolbar-hide-extensions-button",
@@ -2610,36 +2628,37 @@ function addLayoutPane() {
         "Show Extensions button",
         "",
         true
-    )
+    );
 
     let customizableToolbarCheckbox = new CheckboxChoice(
         "natsumi.theme.customizable-single-toolbar",
         "natsumiShowToolbarButton",
         "Show toolbar buttons",
         "This will show other toolbar buttons in the overflow menu."
-    )
+    );
 
     let forceCustomizableToolbarCheckbox = new CheckboxChoice(
         "natsumi.theme.force-customizable-single-toolbar",
         "natsumiForceToolbarButton",
         "Force show overflow button",
         "Use this if the overflow button doesn't show when it should."
-    )
+    );
 
     let bookmarksOnHoverCheckbox = new CheckboxChoice(
         "natsumi.theme.show-bookmarks-on-hover",
         "natsumiShowBookmarksOnHover",
         "Show Bookmarks on hover",
         "When the Bookmarks bar is expanded, the bar will stay hidden until hovered."
-    )
+    );
 
     let windowControlsCheckbox = new CheckboxChoice(
         "natsumi.theme.force-window-controls-to-left",
         "natsumiForceWinControlsToLeft",
         "Display window controls on the sidebar in Single Toolbar",
         windowControlsDescription
-    )
+    );
 
+    layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
     layoutSelection.registerExtras("natsumiShowMenuButtonBox", menuButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowToolbarButtonBox", customizableToolbarCheckbox);
@@ -3627,13 +3646,18 @@ function addCompactBehaviorPane() {
         "natsumiCompactLongVisibility",
         "Display sidebar/toolbar for longer on hover"
     ));
-    compactBehaviorGroup.registerOption("natsumiCompactInterceptZenMode", new CheckboxChoice(
-        "natsumi.theme.compact-keep-zen-mode",
-        "natsumiCompactInterceptZenMode",
-        "Use Floorp's Zen Mode as a toggle",
-        "Enabling Zen Mode will toggle Compact Mode instead.",
-        true
-    ));
+
+    if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
+        if (ucApi.Prefs.get("natsumi.browser.type").value === "floorp") {
+            compactBehaviorGroup.registerOption("natsumiCompactInterceptZenMode", new CheckboxChoice(
+                "natsumi.theme.compact-keep-zen-mode",
+                "natsumiCompactInterceptZenMode",
+                "Use Floorp's Zen Mode as a toggle",
+                "Enabling Zen Mode will toggle Compact Mode instead.",
+                true
+            ));
+        }
+    }
 
     let compactBehaviorNode = compactBehaviorGroup.generateNode();
 
@@ -4199,47 +4223,47 @@ function addPreferencesPanes() {
     // Category nodes
     let appearanceNode = convertToXUL(`
         <hbox id="natsumiAppearanceCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Browser Appearance</html:h1>
+            <html:${categoryHeader}>Browser Appearance</html:${categoryHeader}>
         </hbox>
     `);
     let sidebarNode = convertToXUL(`
         <hbox id="natsumiSidebarCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Sidebar &amp; Tabs</html:h1>
+            <html:${categoryHeader}>Sidebar &amp; Tabs</html:${categoryHeader}>
         </hbox>
     `);
     let compactModeNode = convertToXUL(`
         <hbox id="natsumiCompactModeCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Compact Mode</html:h1>
+            <html:${categoryHeader}>Compact Mode</html:${categoryHeader}>
         </hbox>
     `);
     let glimpseNode = convertToXUL(`
         <hbox id="natsumiGlimpseCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Glimpse</html:h1>
+            <html:${categoryHeader}>Glimpse</html:${categoryHeader}>
         </hbox>
     `);
     let miniPlayerNode = convertToXUL(`
         <hbox id="natsumiMiniplayerCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Miniplayer</html:h1>
+            <html:${categoryHeader}>Miniplayer</html:${categoryHeader}>
         </hbox>
     `);
     let pipNode = convertToXUL(`
         <hbox id="natsumiPipCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Picture-in-Picture</html:h1>
+            <html:${categoryHeader}>Picture-in-Picture</html:${categoryHeader}>
         </hbox>
     `);
     let pdfjsNode = convertToXUL(`
         <hbox id="natsumiPDFCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>PDF Viewer</html:h1>
+            <html:${categoryHeader}>PDF Viewer</html:${categoryHeader}>
         </hbox>
     `);
     let urlbarNode = convertToXUL(`
         <hbox id="natsumiUrlbarCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>URL Bar</html:h1>
+            <html:${categoryHeader}>URL Bar</html:${categoryHeader}>
         </hbox>
     `);
     let miscNode = convertToXUL(`
         <hbox id="natsumiMiscCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Miscellaneous</html:h1>
+            <html:${categoryHeader}>Miscellaneous</html:${categoryHeader}>
         </hbox>
     `);
 

@@ -309,7 +309,7 @@ SOFTWARE.
         h2 {
           margin-top: -4px !important;
           font-weight: var(--font-weight-heading);
-          font-size: var(--font-size-heading-large);
+          font-size: var(--font-size-large) !important;
         }
       }
     }
@@ -361,11 +361,19 @@ SOFTWARE.
         background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
       }
 
-      &[highlight]::before {
-        background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      &[highlight] {
+        color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
 
         @media -moz-pref("natsumi.theme.classic-preferences") {
-          background-color: var(--color-accent-primary);
+          color: var(--color-accent-primary);
+        }
+
+        &::before {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+
+          @media -moz-pref("natsumi.theme.classic-preferences") {
+            background-color: var(--color-accent-primary);
+          }
         }
       }
     }

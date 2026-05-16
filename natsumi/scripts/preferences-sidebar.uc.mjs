@@ -115,7 +115,11 @@ function addSidebarSubcategory(categoryButton) {
                 subcategoryHeader = subcategory.getAttribute("label");
                 break;
             default:
-                subcategoryHeader = subcategory.querySelector("h1").textContent;
+                if (subcategory.querySelector("h1") !== null) {
+                    subcategoryHeader = subcategory.querySelector("h1").textContent;
+                } else {
+                    subcategoryHeader = subcategory.querySelector("h2").textContent;
+                }
         }
 
         // Create and add button
