@@ -92,12 +92,16 @@ SOFTWARE.
 #tabbrowser-arrowscrollbox .tabbrowser-tab {
   &[natsumi-animation]:not([pending="true"]) {
     animation: natsumi-tab-appear-blur 0.2s ease;
+    min-width: unset !important;
+    min-height: unset !important;
 
     .tab-stack {
       animation: natsumi-tab-appear 0.2s ease;
+      animation-fill-mode: forwards;
 
       @media -moz-pref("sidebar.verticalTabs") {
         animation: natsumi-tab-appear-vertical 0.2s ease;
+        animation-fill-mode: forwards;
       }
     }
   }
