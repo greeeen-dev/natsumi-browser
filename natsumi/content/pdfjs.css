@@ -43,6 +43,8 @@ SOFTWARE.
 @media not -moz-pref("natsumi.pdfjs.disabled") {
   html[mozdisallowselectionprint] {
     &:has(head link:nth-of-type(1)[href^="resource://pdf.js"]) {
+      position: fixed !important;
+
       /* Set material */
       * {
         --natsumi-material-background: var(--natsumi-mat-hz-background);
@@ -59,8 +61,6 @@ SOFTWARE.
       --natsumi-colors-border: color-mix(in srgb, var(--natsumi-colors-secondary) 80%, black 20%);
 
       body {
-        overflow-x: hidden !important;
-
         @media (prefers-color-scheme: dark) {
           background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%) !important;
         }

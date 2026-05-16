@@ -1,0 +1,88 @@
+@keyframes lockscreen-fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lockscreen-unlock {
+  from {
+    top: 0;
+  }
+
+  to {
+    top: -100%;
+  }
+}
+
+#natsumi-lockscreen {
+  display: none;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: gray;
+  z-index: 999;
+
+  &:not([hidden]) {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    animation: lockscreen-fadein 0.2s ease;
+  }
+
+  &[unlocking] {
+    animation: lockscreen-unlock 0.5s cubic-bezier(0,1,0.4,1);
+    animation-fill-mode: forwards;
+  }
+
+  #natsumi-lockscreen-unlock {
+    display: flex;
+    align-items: center;
+    position: relative;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    left: 50%;
+    top: 90%;
+    translate: -50%;
+    width: fit-content;
+    height: 32px;
+    font-size: small;
+    background: var(--natsumi-mat-hz-background);
+    border: var(--natsumi-mat-hz-border);
+    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+    border-radius: 18px;
+    padding-inline: 8px 8px;
+    z-index: 999;
+
+    &::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      background-size: 16px;
+      margin-right: 8px;
+      -moz-context-properties: stroke, stroke-opacity !important;
+      stroke: currentColor;
+      background-image: url("../icons/lucide/secure.svg");
+    }
+  }
+}
+
+body[natsumi-locked="true"] {
+  #urlbar {
+    display: none !important;
+  }
+
+  #navigator-toolbox, #browser, #status-bar, #nora-statusbar {
+    transition: opacity 0.2s ease;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+&:has(body[natsumi-locked="true"]) {
+  #command-palette-overlay {
+    display: none !important;
+  }
+}

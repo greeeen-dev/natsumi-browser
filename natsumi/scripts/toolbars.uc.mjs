@@ -1,36 +1,178 @@
 // ==UserScript==
 // @include   main
 // @ignorecache
-// @loadOrder 11
 // ==/UserScript==
 
-/*
-
-Natsumi Browser - Welcome to your personal internet.
-
-Copyright (c) 2024-present Green (@greeeen-dev)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-*/
-
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+
+class NatsumiToolbarManager {
+    constructor() {
+        this.pinnedTabsObserver = null;
+        this.pinnedToolbarObserver = null;
+        this.verticalTabsObserver = null;
+        this.sidebarObserver = null;
+    }
+
+    init() {
+        try {
+            this.initPinnedToolbar();
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    initPinnedToolbar() {
+        let verticalTabsEnabled = ucApi.Prefs.get("sidebar.verticalTabs").value;
+        this.createToolbar("natsumi-pinned-toolbar");
+
+        if (!verticalTabsEnabled) {
+            this.removeToolbar("natsumi-pinned-toolbar");
+        }
+
+        // Disable pinned toolbar if vertical tabs is disabled
+        Services.prefs.addObserver("sidebar.verticalTabs", () => {
+            let verticalTabsEnabled = ucApi.Prefs.get("sidebar.verticalTabs").value;
+
+            if (!verticalTabsEnabled) {
+                this.removeToolbar("natsumi-pinned-toolbar");
+            } else {
+                this.createToolbar("natsumi-pinned-toolbar");
+            }
+        });
+
+        // Copy pinned tabs height
+        this.copyPinnedTabsHeight();
+        this.pinnedTabsObserver = new MutationObserver(() => {
+            this.copyPinnedTabsHeight();
+        });
+
+        let pinnedTabs = document.querySelector("#pinned-tabs-container");
+        if (pinnedTabs) {
+            this.pinnedTabsObserver.observe(pinnedTabs, {attributes: true, childList: true, attributeFilter: ["style", "hidden"]});
+        }
+
+        // Copy pinned toolbar height
+        this.copyPinnedToolbarHeight();
+        this.pinnedToolbarObserver = new MutationObserver(() => {
+            this.copyPinnedToolbarHeight();
+        });
+
+        let pinnedToolbar = document.querySelector("#natsumi-pinned-toolbar");
+        if (pinnedToolbar) {
+            this.pinnedToolbarObserver.observe(pinnedToolbar, {attributes: true, childList: true, attributeFilter: ["style", "hidden"]});
+        }
+
+        // Create observer for vertical tabs
+        let verticalTabs = document.querySelector("#vertical-tabs");
+
+        this.verticalTabsObserver = new MutationObserver(() => {
+            if (verticalTabs.querySelector("#pinned-tabs-container")) {
+                this.copyPinnedTabsHeight();
+                this.copyPinnedToolbarHeight();
+            }
+        });
+
+        if (verticalTabs) {
+            this.verticalTabsObserver.observe(pinnedToolbar, {childList: true});
+        }
+
+        // Create observer for sidebar
+        let sidebar = document.querySelector("#sidebar-main");
+
+        this.sidebarObserver = new MutationObserver(() => {
+            this.copyPinnedToolbarHeight();
+        });
+
+        if (sidebar) {
+            this.sidebarObserver.observe(sidebar, {attributes: true, attributeFilter: ["sidebar-launcher-expanded"]});
+        }
+    }
+
+    createToolbar(toolbarId, textMode = false, canOverflow = false, defaultPlacements = []) {
+        // Get toolbar element
+        let toolbar = document.getElementById(toolbarId);
+
+        if (!toolbar) {
+            // Create toolbar element
+            toolbar = document.createXULElement("toolbar");
+            toolbar.id = toolbarId;
+            toolbar.setAttribute("customizable", "true");
+            toolbar.setAttribute("mode", "icons");
+            toolbar.setAttribute("class", "browser-toolbar");
+            toolbar.setAttribute("context", "toolbar-context-menu");
+            toolbar.setAttribute("overflowable", `${canOverflow}`);
+
+            if (textMode) {
+                toolbar.setAttribute("mode", "text");
+            }
+
+            // Add toolbar to body
+            document.body.appendChild(toolbar);
+        }
+
+        // Register toolbar
+        window.CustomizableUI.registerArea(toolbarId, {defaultPlacements: defaultPlacements, overflowable: canOverflow});
+        window.CustomizableUI.registerToolbarNode(toolbar);
+    }
+
+    removeToolbar(toolbarId, destroyPlacements = false) {
+        window.CustomizableUI.unregisterArea(toolbarId, destroyPlacements);
+    }
+
+    copyPinnedToolbarHeight() {
+        let pinnedToolbar = document.querySelector("#natsumi-pinned-toolbar");
+
+        if (!pinnedToolbar) {
+            return;
+        }
+
+        // If pinned tabs are hidden, set height to 0
+        if (pinnedToolbar.hasAttribute("hidden")) {
+            document.body.style.setProperty("--natsumi-pinned-toolbar-height", `0px`);
+            return;
+        }
+
+        // If there's nothing, then remove the property
+        if (pinnedToolbar.children.length === 0) {
+            document.body.style.removeProperty("--natsumi-pinned-toolbar-height");
+            return;
+        }
+
+        // We can't use style.height so we need to compute it
+        const pinnedToolbarHeight = pinnedToolbar.getBoundingClientRect().height;
+        document.body.style.setProperty("--natsumi-pinned-toolbar-height", `${pinnedToolbarHeight}px`);
+    }
+
+    copyPinnedTabsHeight() {
+        let pinnedTabs = document.querySelector("#pinned-tabs-container");
+
+        if (!pinnedTabs) {
+            return;
+        }
+
+        if (!ucApi.Prefs.get("sidebar.verticalTabs").value) {
+            return;
+        }
+
+        // If pinned tabs are hidden, set height to 0
+        if (pinnedTabs.hasAttribute("hidden")) {
+            document.body.style.setProperty("--natsumi-pinned-tabs-height", `0px`);
+            return;
+        }
+
+        // We can't use style.height so we need to compute it
+        const pinnedTabsHeight = pinnedTabs.getBoundingClientRect().height;
+
+        if (pinnedTabsHeight === 0) {
+            if (pinnedTabs.childElementCount !== 0) {
+                // This isn't right
+                return;
+            }
+        }
+
+        document.body.style.setProperty("--natsumi-pinned-tabs-height", `${pinnedTabsHeight}px`);
+    }
+}
 
 class NatsumiStatusBarHandler {
     constructor() {
@@ -182,6 +324,11 @@ class NatsumiStatusBarHandler {
             navBar.style.setProperty("--natsumi-window-buttons-width", width);
         }
     }
+}
+
+if (!document.body.natsumiToolbarManager) {
+    document.body.natsumiToolbarManager = new NatsumiToolbarManager();
+    document.body.natsumiToolbarManager.init();
 }
 
 let sidebar = document.querySelector("#sidebar-main");

@@ -38,6 +38,18 @@ SOFTWARE.
   }
 }
 
+@keyframes miniplayer-appear-horizontal {
+  from {
+    translate: 10px 0;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
 #vertical-tabs {
   flex-direction: column;
 }
@@ -45,10 +57,14 @@ SOFTWARE.
 #natsumi-miniplayer-container {
   -moz-window-dragging: no-drag;
   margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
-  flex-direction: column;
-  order: 1;
+  flex-direction: row;
 
-  @media -moz-pref("natsumi.miniplayer.scroll-view") {
+  @media -moz-pref("sidebar.verticalTabs") {
+    order: 1;
+    flex-direction: column;
+  }
+
+  @media -moz-pref("natsumi.miniplayer.scroll-view") and -moz-pref("sidebar.verticalTabs") {
     display: inline-flex !important;
     overflow-x: scroll;
     flex-direction: row;
@@ -71,12 +87,12 @@ SOFTWARE.
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   min-width: 100%;
   min-height: 36px;
-  transition: min-height 0.2s ease;
+  transition: min-height 0.2s ease, max-width 0.2s ease;
   flex-direction: column;
   overflow: hidden;
   margin-top: 5px !important;
 
-  @media -moz-pref("natsumi.miniplayer.scroll-view") {
+  @media -moz-pref("natsumi.miniplayer.scroll-view") and -moz-pref("sidebar.verticalTabs") {
     margin-top: auto !important;
     scroll-snap-align: center;
   }
@@ -103,6 +119,10 @@ SOFTWARE.
 
   &:not([hidden=true]) {
     animation: miniplayer-appear 0.2s ease;
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      animation: miniplayer-appear-horizontal 0.2s ease;
+    }
   }
 
   &::before {
@@ -487,19 +507,49 @@ SOFTWARE.
   }
 }
 
-#sidebar-main:not([sidebar-launcher-expanded]) {
+#sidebar-main:not([sidebar-launcher-expanded]), #nav-bar {
   #natsumi-miniplayer-container {
-    max-width: var(--tab-collapsed-background-width) !important;
+    @media -moz-pref("sidebar.verticalTabs") {
+      max-width: var(--tab-collapsed-background-width) !important;
+    }
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      display: flex !important;
+      min-height: 40px;
+      margin: 0 6px !important;
+      flex-align: row !important;
+      align-items: center;
+      gap: 4px;
+
+      &:not(:has(.natsumi-miniplayer:not([hidden]))) {
+        margin-inline: 0 !important;
+      }
+    }
   }
 
   .natsumi-miniplayer {
+    @media not -moz-pref("sidebar.verticalTabs") {
+      min-height: 32px !important;
+      min-width: 32px !important;
+      height: 32px !important;
+      margin-top: 0 !important;
+    }
+
     .natsumi-miniplayer-info-container {
       display: none;
     }
 
     .natsumi-miniplayer-controls-container {
       padding: calc(calc(var(--tab-collapsed-background-width) - 28px) / 2) !important;
-      flex-direction: column;
+
+      @media -moz-pref("sidebar.verticalTabs") {
+        flex-direction: column;
+      }
+
+      @media not -moz-pref("sidebar.verticalTabs") {
+        margin-top: 0 !important;
+        padding-block: 2px !important;
+      }
     }
 
     .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
@@ -507,14 +557,30 @@ SOFTWARE.
     }
 
     &:hover {
-      min-height: calc(var(--tab-collapsed-background-width) + 112px) !important;
+      @media -moz-pref("sidebar.verticalTabs") {
+        min-height: calc(var(--tab-collapsed-background-width) + 112px) !important;
+      }
+
+      @media not -moz-pref("sidebar.verticalTabs") {
+        max-width: 148px !important;
+      }
     }
 
     &:not(:hover) {
-      min-height: var(--tab-collapsed-background-width) !important;
+      @media -moz-pref("sidebar.verticalTabs") {
+        min-height: var(--tab-collapsed-background-width) !important;
 
-      .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
-        margin-bottom: -100% !important;
+        .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
+          margin-bottom: -100% !important;
+        }
+      }
+
+      @media not -moz-pref("sidebar.verticalTabs") {
+        max-width: 32px !important;
+
+        .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
+          margin-right: -100% !important;
+        }
       }
     }
   }
@@ -528,7 +594,7 @@ SOFTWARE.
   display: none;
   order: 2;
 
-  @media -moz-pref("natsumi.miniplayer.scroll-view") {
+  @media -moz-pref("natsumi.miniplayer.scroll-view") and -moz-pref("sidebar.verticalTabs") {
     display: flex;
     margin: 0 auto !important;
     gap: 4px;

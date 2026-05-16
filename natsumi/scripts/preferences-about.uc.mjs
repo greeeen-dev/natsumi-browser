@@ -35,6 +35,17 @@ let version;
 let branch;
 let codename;
 
+let categoryNode = document.getElementById("categories");
+const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
+const hasRedesignV2 = document.getElementById("category-general").getAttribute("hidden") && hasRedesign;
+
+// Get correct header
+let categoryHeader = "h1";
+
+if (hasRedesignV2) {
+    categoryHeader = "h2"
+}
+
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
     return window.MozXULElement.parseXULToFragment(node);
@@ -71,7 +82,7 @@ function addAboutPane() {
 
     let nodeString = `
         <hbox id="natsumiAboutCategory" class="subcategory" data-category="paneNatsumiAbout" hidden="true">
-            <html:h1>About Natsumi</html:h1>
+            <html:${categoryHeader}>About Natsumi</html:${categoryHeader}>
         </hbox>
         <groupbox id="natsumiAboutExperimentalWarning" data-category="paneNatsumiAbout" hidden="true">
             <div class="natsumi-settings-info warning">

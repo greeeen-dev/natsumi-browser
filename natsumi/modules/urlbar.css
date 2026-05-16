@@ -367,7 +367,7 @@ SOFTWARE.
         }
 
         #urlbar-background, .urlbar-background {
-          background-color: light-dark(var(--toolbar-field-background-color), color-mix(in srgb, currentColor 7%, transparent)) !important;
+          background-color: color-mix(in srgb, currentColor 7%, transparent) !important;
           border-radius: var(--natsumi-tab-border-radius) !important;
           transition: background-color 0.2s ease;
         }
@@ -895,6 +895,12 @@ SOFTWARE.
       @media -moz-pref("natsumi.urlbar.do-not-float") and -moz-pref("natsumi.theme.single-toolbar") {
         width: 45% !important;
       }
+    }
+  }
+
+  &[customizing]:not([taskbartab]) #urlbar:not([open]) {
+    @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
+      height: 32px !important;
     }
   }
 

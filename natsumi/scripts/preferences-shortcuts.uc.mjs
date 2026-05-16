@@ -471,6 +471,17 @@ if (!browserWindow) {
     browserWindow = preliminaryBrowserWindow;
 }
 
+let categoryNode = document.getElementById("categories");
+const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
+const hasRedesignV2 = document.getElementById("category-general").getAttribute("hidden") && hasRedesign;
+
+// Get correct header
+let categoryHeader = "h1";
+
+if (hasRedesignV2) {
+    categoryHeader = "h2"
+}
+
 let availableShortcuts = Object.keys(browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcuts);
 
 class NatsumiShortcutsPrefPane {
@@ -492,7 +503,7 @@ class NatsumiShortcutsPrefPane {
         // Create heading
         let shortcutsNode = convertToXUL(`
             <hbox id="natsumiShortcutsCategory" class="subcategory" data-category="paneNatsumiShortcuts" hidden="true">
-                <html:h1>Customize Keyboard Shortcuts</html:h1>
+                <html:${categoryHeader}>Customize Keyboard Shortcuts</html:${categoryHeader}>
                 <div id="natsumi-shortcut-reset">Reset</div>
                 <div id="natsumi-shortcut-import">Import</div>
                 <div id="natsumi-shortcut-export">Export</div>

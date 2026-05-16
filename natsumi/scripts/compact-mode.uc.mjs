@@ -44,12 +44,18 @@ class NatsumiCompactModeManager {
 
     init() {
         let sidebarNode = document.getElementById("sidebar-main");
+        let pinnedToolbarNode = document.getElementById("natsumi-pinned-toolbar");
         let navigatorToolboxNode = document.getElementById("navigator-toolbox");
         let navbarNode = document.getElementById("nav-bar");
 
         if (sidebarNode) {
             sidebarNode.addEventListener("mouseenter", this.handleElementEnter.bind(this), true);
             sidebarNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
+        }
+
+        if (pinnedToolbarNode) {
+            pinnedToolbarNode.addEventListener("mouseenter", this.handleElementEnter.bind(this), true);
+            pinnedToolbarNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
         }
 
         if (navigatorToolboxNode) {
@@ -215,7 +221,7 @@ class NatsumiCompactModeManager {
             }
         }
 
-        if (event.target.id === "sidebar-main" && sidebarHidden) {
+        if ((event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
             if (this.sidebarTimeout) {
                 clearTimeout(this.sidebarTimeout);
                 this.sidebarTimeout = null;
@@ -290,7 +296,7 @@ class NatsumiCompactModeManager {
             }
         }
 
-        if (event.target.id === "sidebar-main" && sidebarHidden) {
+        if ((event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
             this.sidebarHovered--;
             sidebarInteracted = true;
         } else if ((

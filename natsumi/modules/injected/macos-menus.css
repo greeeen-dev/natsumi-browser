@@ -24,40 +24,13 @@ SOFTWARE.
 
 */
 
-/* ==== Tabs design (Classic) ==== */
-/* Just the standard Firefox tabs design */
+/* ==== macOS translucent popups ==== */
 
-@media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "classic") {
-  .tabbrowser-tab {
-    &[natsumi-glimpse-selected] {
-      & > .tab-stack > .tab-background {
-        background-color: var(--tab-background-color-selected, var(--tab-selected-bgcolor)) !important;
-        box-shadow: var(--tab-selected-shadow, var(--tab-box-shadow));
-        outline-color: var(--tab-selected-outline-color);
-      }
-    }
-  }
-
-  tab-split-view-wrapper {
-    .tabbrowser-tab {
-      padding-block: 3px 2px !important;
-    }
-  }
-
-  #tabbrowser-tabs:not([expanded]) {
-    tab-split-view-wrapper {
-      .tabbrowser-tab {
-        min-width: 36px !important;
-        max-width: 36px !important;
-        margin-inline: 2px !important;
-
-        & > .tab-stack > .tab-content {
-          padding-inline: 10px !important;
-        }
-
-        & > .tab-stack > .tab-background {
-          margin-inline: auto !important;
-        }
+@media (-moz-platform: macos) {
+  @media -moz-pref("widget.macos.native-popovers") and -moz-pref("widget.macos.native-anchored-menus") {
+    .panel-no-padding {
+      &::part(content) {
+        background-color: transparent !important;
       }
     }
   }
