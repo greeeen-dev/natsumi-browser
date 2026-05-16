@@ -296,5 +296,6 @@ SOFTWARE.
   * {
     --toolbarbutton-icon-fill: light-dark(var(--color-gray-70), var(--color-gray-05));
     --chrome-block-radius: var(--natsumi-browser-border-radius) !important;
+    --tab-background-color-hover: color-mix(currentColor 11%, transparent);
   }
 }

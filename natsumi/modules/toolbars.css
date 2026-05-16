@@ -139,7 +139,8 @@ SOFTWARE.
   }
 }
 
-&:has(#pinned-tabs-container:not(:has(tab[natsumi-workspace-hidden]))) {
+&:not(:has(#pinned-tabs-container tab:not([natsumi-workspace-hidden]))),
+&:has(#pinned-tabs-container:empty) {
   @media -moz-pref("natsumi.browser.type", "floorp") {
     #natsumi-workspace-indicator {
       margin-top: calc(var(--tab-block-margin) + var(--natsumi-pinned-toolbar-height, -16px) + 16px) !important;
