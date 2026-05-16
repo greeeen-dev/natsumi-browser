@@ -17,7 +17,7 @@ class NatsumiTabAnimationManager {
     }
 
     runTabAnimation(tab) {
-        if (tab.getAttribute("pending") === true) {
+        if (tab.getAttribute("pending") === true || tab.hasAttribute("natsumi-animation-done")) {
             return;
         }
 
@@ -32,6 +32,7 @@ class NatsumiTabAnimationManager {
 
         setTimeout(() => {
             tab.removeAttribute("natsumi-animation");
+            tab.setAttribute("natsumi-animation-done");
         }, 200);
     }
 }
