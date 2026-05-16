@@ -25,14 +25,12 @@ Attach any screenshots showcasing your changes here. This is optional.
 <!--
 Describe the changes you've made on a per-file basis. Include descriptions of your code, how it works and what it does.
 
-THIS FIELD IS CURRENTLY OPTIONAL. This will likely change with the new contributing guidelines.
+This field is optional for maintainers.
 -->
 
 ## AI use declaration
 <!--
 Tick one field that best matches your use of AI tools.
-
-THIS FIELD IS CURRENTLY OPTIONAL. This will likely change with the new contributing guidelines.
 -->
 - [ ] AI tools were used to create the majority of this contribution.
 - [ ] AI tools were partially used to assist with this contribution.
@@ -41,6 +39,4 @@ THIS FIELD IS CURRENTLY OPTIONAL. This will likely change with the new contribut
 ### AI use details
 <!--
 Describe your use of AI tools here. If no AI tools were used, leave this empty.
-
-THIS FIELD IS CURRENTLY OPTIONAL. This will likely change with the new contributing guidelines.
 -->
