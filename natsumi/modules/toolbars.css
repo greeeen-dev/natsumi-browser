@@ -28,7 +28,7 @@ SOFTWARE.
 
 #natsumi-pinned-toolbar {
   --natsumi-toolbar-margin: calc(var(--space-small) + var(--space-xsmall));
-  --natsumi-toolbar-offset: 0px;
+  --natsumi-toolbar-offset: var(--natsumi-toolbar-override, 0px);
   display: flex !important;
   position: absolute;
   width: calc(var(--natsumi-sidebar-width) - calc(2 * var(--natsumi-toolbar-margin)));
@@ -37,6 +37,10 @@ SOFTWARE.
   flex-wrap: wrap;
   gap: 5px;
   min-height: 0 !important;
+
+  @media not -moz-pref("sidebar.position_start") {
+    right: 0;
+  }
 
   @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
     top: calc(45px + var(--natsumi-toolbar-offset));
@@ -51,13 +55,13 @@ SOFTWARE.
     padding-inline: 0 !important;
   }
 
-  toolbarbutton {
+  toolbarbutton:not(.bookmark-item):not(#PlacesChevron), #personal-bookmarks {
     background: color-mix(in srgb, currentColor 7%, transparent) !important;
     border-radius: var(--natsumi-tab-border-radius) !important;
     transition: background 0.2s ease, box-shadow 0.2s ease;
     padding-inline: 0 !important;
 
-    &:not([disabled="true"]) {
+    &:not([disabled="true"]):not(#personal-bookmarks) {
       &:hover {
         background: var(--tab-background-color-hover, var(--tab-hover-background-color)) !important;
       }
@@ -68,8 +72,49 @@ SOFTWARE.
       }
     }
 
+    &#personal-bookmarks {
+      min-width: 100% !important;
+    }
+
     .toolbarbutton-icon, .toolbarbutton-badge-stack {
       background: transparent !important;
+    }
+  }
+
+  #PlacesToolbarItems {
+    align-items: center;
+    padding-left: 2px;
+    min-height: 32px;
+
+    .bookmark-item {
+      max-height: 24px;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color) !important;
+      }
+
+      &:active, &[open] {
+        background-color: var(--natsumi-button-active-color) !important;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  #PlacesChevron {
+    max-width: 24px;
+    max-height: 24px;
+    margin: 4px !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: var(--toolbarbutton-border-radius);
+
+    &:hover {
+      background-color: var(--natsumi-button-hover-color) !important;
+    }
+
+    &:active, &[open] {
+      background-color: var(--natsumi-button-active-color) !important;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
     }
   }
 
@@ -112,14 +157,15 @@ SOFTWARE.
   }
 }
 
-&:has(#PersonalToolbar:not([collapsed])) {
-  #natsumi-pinned-toolbar {
-    @media not -moz-pref("natsumi.theme.single-toolbar") {
-      transition-delay: 0s !important;
-      top: calc(73px + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset));
+body:has(#PersonalToolbar:not([collapsed])) {
+  &:not([natsumi-compact-mode]) {
+    #natsumi-pinned-toolbar {
+      @media not -moz-pref("natsumi.theme.single-toolbar") {
+        top: calc(73px + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset));
 
-      @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
-        top: calc(73px + var(--natsumi-toolbar-offset));
+        @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
+          top: calc(73px + var(--natsumi-toolbar-offset));
+        }
       }
     }
   }
@@ -127,11 +173,6 @@ SOFTWARE.
 
 :root:not([customizing]) {
   #natsumi-pinned-toolbar {
-    @media not -moz-pref("natsumi.theme.single-toolbar") {
-      transition: top 0.1s linear;
-      transition-delay: 0.04s;
-    }
-
     @media -moz-pref("natsumi.theme.single-toolbar") {
       top: calc(86px + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset));
 
