@@ -88,9 +88,10 @@ class NatsumiToolbarManager {
         }
     }
 
-    createToolbar(toolbarId, textMode = false, canOverflow = false, defaultPlacements = []) {
+    createToolbar(toolbarId, textMode = false, canOverflow = false, defaultPlacements = [], parent = null) {
         // Get toolbar element
         let toolbar = document.getElementById(toolbarId);
+        let parentNode = parent ?? document.body;
 
         if (!toolbar) {
             // Create toolbar element
@@ -107,7 +108,7 @@ class NatsumiToolbarManager {
             }
 
             // Add toolbar to body
-            document.body.appendChild(toolbar);
+            parentNode.appendChild(toolbar);
         }
 
         // Register toolbar
