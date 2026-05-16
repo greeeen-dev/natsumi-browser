@@ -48,6 +48,10 @@ SOFTWARE.
     @media -moz-pref("natsumi.theme.use-legacy-translucency") {
       appearance: -moz-window-titlebar;
     }
+
+    @media (-moz-platform: linux) {
+      background-color: transparent !important;
+    }
   }
 }
 
