@@ -118,7 +118,9 @@ class NatsumiLockScreenManager {
     }
 }
 
+// Disable lockscreen for now
+/*
 if (!document.body.natsumiLockScreenManager) {
     document.body.natsumiLockScreenManager = new NatsumiLockScreenManager();
     document.body.natsumiLockScreenManager.init();
-}
+}*/

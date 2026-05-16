@@ -161,7 +161,7 @@ SOFTWARE.
     #PersonalToolbar {
       --natsumi-bookmarks-width: calc(100vw - var(--natsumi-sidebar-width));
       width: var(--natsumi-bookmarks-width) !important;
-      margin-left: var(--natsumi-sidebar-width) !important;
+      margin-left: var(--natsumi-bookmarks-override, var(--natsumi-sidebar-width)) !important;
       padding-inline: 0 !important;
       padding-top: 6px !important;
       padding-bottom: 6px !important;
@@ -343,7 +343,7 @@ SOFTWARE.
         }
       }
 
-      body:has(#PersonalToolbar[collapsed]) {
+      &:not([inFullscreen="true"]) body:has(#PersonalToolbar[collapsed]) {
         @media not -moz-pref("sidebar.position_start") {
           @media (-moz-platform: macos) {
             @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {

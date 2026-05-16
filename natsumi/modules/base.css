@@ -144,6 +144,7 @@ SOFTWARE.
 
 #sidebar-splitter {
   width: var(--natsumi-browser-separation) !important;
+  margin-inline: 0 !important;
 }
 
 #vertical-spacer {
@@ -285,6 +286,11 @@ SOFTWARE.
     .toolbarbutton-badge-stack {
       padding: 6px !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 4px !important;
+
+      @media (-moz-mac-tahoe-theme) {
+        border-radius: 8px !important;
+      }
     }
 
     &:hover .toolbarbutton-badge-stack {

@@ -97,6 +97,7 @@ SOFTWARE.
         display: grid;
         grid-template-columns: 1fr;
         backdrop-filter: saturate(1) contrast(1);
+        border: none !important;
 
         .tab-context-line {
           display: none !important;
@@ -145,7 +146,6 @@ SOFTWARE.
           box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
           background-image: none !important;
           background-color: var(--natsumi-mat-hz-background) !important;
-          border: none !important;
           animation: backdrop-fadein 0.2s ease;
 
           @media -moz-pref("natsumi.sidebar.blur-tab-button") {

@@ -376,7 +376,7 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
 </details>
 
 ## Browser support
-All browsers must be based on Firefox 137 or above.
+All browsers must be based on Firefox 140 or above.
 
 | Browser     | Status                       | Versions | Notes                                                                                     |
 |-------------|------------------------------|----------|-------------------------------------------------------------------------------------------|
@@ -392,7 +392,12 @@ All browsers must be based on Firefox 137 or above.
 
 ## FAQs
 ### "Does Natsumi support the new Firefox Nova redesign?"
-Not as of now, but I'm working hard to get Natsumi working under the new design.
+Yes (sort of).
+
+Firefox Nova is still in early development and constantly changing. Each Natsumi release will aim to
+address these changes, so that once Firefox Nova is complete and rolled out, Natsumi will be
+**Firefox Nova-ready from day one** while being fully backwards compatible with the old Proton design
+for older supported versions.
 
 ### "Can I use other userchromes with Natsumi?"
 Sure! Just paste it right below the Natsumi Browser loader (userChrome.css) and you can use your own
@@ -483,6 +488,13 @@ You can fix this by going to Floorp Hub => Tab & Appearance in Floorp or Look & 
 ### "I can't use custom skin X with Natsumi, please add support for it!"
 This is not something I am able to help with. Natsumi is not tested with other themes in mind, so it is
 possible that installing incompatible themes alongside Natsumi may break one or more of them.
+
+### "Why is my browser showing as not recommended to be used with Natsumi?"
+If you're on browsers like Tor or Mullvad, you may be greeted with this message on first boot.
+
+This means the developers of such browsers don't recommend use of plugins or any other modifications due
+to the high-security or/and privacy nature of the browser. You can still use Natsumi on these browsers,
+but you do so at your own risk.
 
 ### "Why is my browser showing as not compatible with Natsumi?"
 > [!NOTE]

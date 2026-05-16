@@ -257,8 +257,8 @@ class NatsumiKBSManager {
             "natsumiSelectTab7": new NatsumiKeyboardShortcut(false, true, false, false, "7", 3, true),
             "natsumiSelectTab8": new NatsumiKeyboardShortcut(false, true, false, false, "8", 3, true),
             "natsumiSelectTabLast": new NatsumiKeyboardShortcut(false, true, false, false, "9", 3, true),
-            "natsumiLock": new NatsumiKeyboardShortcut(false, true, true, false, "q", 0, true),
-            "natsumiUnlock": new NatsumiKeyboardShortcut(false, true, true, false, "enter", 0, true)
+            //"natsumiLock": new NatsumiKeyboardShortcut(false, true, true, false, "q", 0, true),
+            //"natsumiUnlock": new NatsumiKeyboardShortcut(false, true, true, false, "enter", 0, true)
         };
         this.shortcutActions = {
             "copyCurrentUrl": NatsumiShortcutActions.copyCurrentUrl,
