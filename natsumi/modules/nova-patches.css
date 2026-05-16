@@ -207,10 +207,6 @@ SOFTWARE.
   /* Global fixes */
   @media -moz-pref("natsumi.theme.single-toolbar") {
     #urlbar:not([open]) {
-      .urlbar-background {
-        display: flex !important;
-      }
-
       .urlbar-input-container {
         min-height: 40px !important;
       }
@@ -234,6 +230,7 @@ SOFTWARE.
     }
 
     .urlbar-background {
+      display: flex !important;
       box-shadow: none !important;
       border: 1px solid transparent !important;
     }
