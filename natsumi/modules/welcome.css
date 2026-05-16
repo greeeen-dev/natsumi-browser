@@ -1028,16 +1028,22 @@ SOFTWARE.
 }
 
 body[natsumi-welcome-complete] {
-  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
+  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button,
+  #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
+  #panel-sidebar-select-box, #notifications-toolbar, #sidebar-main,
+  #TabsToolbar-customization-target, #nav-bar-overflow-button,
+  #natsumi-pinned-toolbar {
     opacity: 0;
     transition: opacity 0.3s ease !important;
     pointer-events: none !important;
   }
 
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
-    opacity: 0;
-    transition: opacity 0.3s ease !important;
-    pointer-events: none !important;
+  @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+    #navigator-toolbox {
+      opacity: 0;
+      transition: opacity 0.3s ease !important;
+      pointer-events: none !important;
+    }
   }
 
   #natsumi-welcome-content-body, #natsumi-welcome-button-next {
@@ -1057,12 +1063,21 @@ body[natsumi-welcome-complete] {
 }
 
 body[natsumi-welcome-drumroll-complete] {
-  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
+  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button,
+  #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
+  #panel-sidebar-select-box, #notifications-toolbar {
     opacity: 0.5;
   }
 
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
+  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
+  #natsumi-pinned-toolbar {
     opacity: 0.5;
+  }
+
+  @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+    #navigator-toolbox {
+      opacity: 0.5;
+    }
   }
 
   #natsumi-welcome-drumroll-progress {
@@ -1080,12 +1095,21 @@ body[natsumi-welcome-drumroll-complete] {
 }
 
 body[natsumi-welcome-complete-full] {
-  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
+  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button,
+  #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
+  #panel-sidebar-select-box, #notifications-toolbar {
     opacity: 1;
   }
 
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
+  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
+  #natsumi-pinned-toolbar {
     opacity: 1;
+  }
+
+  @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+    #navigator-toolbox {
+      opacity: 1;
+    }
   }
 
   #natsumi-welcome-drumroll-complete {
@@ -1096,14 +1120,24 @@ body[natsumi-welcome-complete-full] {
 
 body[natsumi-welcome] {
   &:not([natsumi-welcome-complete]) {
-    #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar {
+    #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button,
+    #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
+    #panel-sidebar-select-box, #notifications-toolbar {
       display: none !important;
       opacity: 0 !important;
       pointer-events: none !important;
     }
+
+    @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+      #navigator-toolbox {
+        background-color: transparent !important;
+        border-color: transparent !important;
+      }
+    }
   }
 
-  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button {
+  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
+  #natsumi-pinned-toolbar {
     opacity: 0;
     pointer-events: none !important;
   }

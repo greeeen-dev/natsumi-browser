@@ -42,7 +42,7 @@ SOFTWARE.
   :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
     #browser:not([data-is-child="true"]) {
       #tabbrowser-tabbox {
-        margin-left: var(--natsumi-browser-separation) !important;
+        margin-left: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
         margin-right: 0 !important;
       }
     }
@@ -61,7 +61,7 @@ SOFTWARE.
   @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
     :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) {
       #PersonalToolbar {
-        margin-left: calc(-100vw + var(--natsumi-sidebar-width))  !important;
+        margin-left: calc(-100vw + var(--natsumi-bookmarks-override, var(--natsumi-sidebar-width))) !important;
       }
 
       body[natsumi-compact-mode] #PersonalToolbar {

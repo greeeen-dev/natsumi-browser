@@ -97,6 +97,7 @@ SOFTWARE.
         display: grid;
         grid-template-columns: 1fr;
         backdrop-filter: saturate(1) contrast(1);
+        border: none !important;
 
         .tab-context-line {
           display: none !important;
@@ -143,6 +144,7 @@ SOFTWARE.
         /*noinspection CssInvalidFunction*/
         & > .tab-stack > .tab-background {
           box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+          background-image: none !important;
           background-color: var(--natsumi-mat-hz-background) !important;
           animation: backdrop-fadein 0.2s ease;
 
@@ -185,6 +187,7 @@ SOFTWARE.
     --tab-height-with-margin-padding: calc(41px + (2 * var(--tab-block-margin)));
 
     .tab-background {
+      border: none !important;
       border-radius: var(--natsumi-tab-border-radius) !important;
       transition: background-color 0.2s ease;
     }

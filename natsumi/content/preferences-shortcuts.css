@@ -302,4 +302,8 @@ SOFTWARE.
   #natsumiKBSFloorpWarning {
     display: none;
   }
+
+  body[natsumi-preferences-redesign-v2] groupbox[data-category="paneNatsumiShortcuts"] h2 {
+    font-size: var(--font-size-large) !important;
+  }
 }

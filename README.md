@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="420" src="./images/kawaii.webp">
+  <img width="420" src="./images/kawaii.png">
   <br>
   Natsumi Browser
 </h1>
@@ -8,7 +8,7 @@
   Welcome to your <strong>personal</strong> internet.
 </p>
 <h5 align="center">
-  <a href="https://natsumi.greeeen.dev">Website (under construction)</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a>
+  <a href="https://natsumi.greeeen.dev">Website</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a> • <a href="https://fluxer.gg/natsumi">Fluxer</a>
 </h5>
 
 ![](./images/main-backgroundless.webp)
@@ -147,9 +147,7 @@ You can get this file from the `Installers` folder in this repo.
 
 #### Installing via Sine
 > [!WARNING]
-> Installing via Sine is supported but not recommended. The following features will not work:
-> - Any features included in Natsumi Append
-> - Icon packs aside from Firefox default
+> Installing via Sine is supported but not recommended.
 
 You can install the CSS-only version of Natsumi through [Sine](https://github.com/CosmoCreeper/Sine).
 
@@ -378,14 +376,14 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
 </details>
 
 ## Browser support
-All browsers must be based on Firefox 137 or above.
+All browsers must be based on Firefox 140 or above.
 
 | Browser     | Status                       | Versions | Notes                                                                                     |
 |-------------|------------------------------|----------|-------------------------------------------------------------------------------------------|
 | Floorp      | :star: Recommended           | 12.3.0+  | Natsumi works best on Floorp!                                                             |
-| Firefox     | :white_check_mark: Supported | 137+     |                                                                                           |
+| Firefox     | :white_check_mark: Supported | 140+     |                                                                                           |
 | Waterfox    | :white_check_mark: Supported | 6.6.0+   |                                                                                           |
-| Librewolf   | :white_check_mark: Supported | 137+     |                                                                                           |
+| Librewolf   | :white_check_mark: Supported | 140+     |                                                                                           |
 | Mullvad/Tor | :white_check_mark: Supported | 15.0+    | **Tor does not recommend installing plugins onto Tor Browser.** Proceed at your own risk. |
 | FireDragon  | :white_check_mark: Supported | 12+      | Default Sweet-Dark theme may cause contrast issues with Natsumi.                          |
 | Glide       | :white_check_mark: Supported | 0.1.54a+ |                                                                                           |
@@ -393,6 +391,14 @@ All browsers must be based on Firefox 137 or above.
 | Zen         | :x: Unsupported              | -        | Incompatible since Natsumi v4 (see FAQ)                                                   |
 
 ## FAQs
+### "Does Natsumi support the new Firefox Nova redesign?"
+Yes (sort of).
+
+Firefox Nova is still in early development and constantly changing. Each Natsumi release will aim to
+address these changes, so that once Firefox Nova is complete and rolled out, Natsumi will be
+**Firefox Nova-ready from day one** while being fully backwards compatible with the old Proton design
+for older supported versions.
+
 ### "Can I use other userchromes with Natsumi?"
 Sure! Just paste it right below the Natsumi Browser loader (userChrome.css) and you can use your own
 userchrome alongside Natsumi Browser.
@@ -482,6 +488,13 @@ You can fix this by going to Floorp Hub => Tab & Appearance in Floorp or Look & 
 ### "I can't use custom skin X with Natsumi, please add support for it!"
 This is not something I am able to help with. Natsumi is not tested with other themes in mind, so it is
 possible that installing incompatible themes alongside Natsumi may break one or more of them.
+
+### "Why is my browser showing as not recommended to be used with Natsumi?"
+If you're on browsers like Tor or Mullvad, you may be greeted with this message on first boot.
+
+This means the developers of such browsers don't recommend use of plugins or any other modifications due
+to the high-security or/and privacy nature of the browser. You can still use Natsumi on these browsers,
+but you do so at your own risk.
 
 ### "Why is my browser showing as not compatible with Natsumi?"
 > [!NOTE]

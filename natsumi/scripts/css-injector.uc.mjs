@@ -1,3 +1,8 @@
+// ==UserScript==
+// @include      main
+// @ignorecache
+// ==/UserScript==
+
 /*
 
 Natsumi Browser - Welcome to your personal internet.
@@ -24,41 +29,39 @@ SOFTWARE.
 
 */
 
-/* ==== Tabs design (Classic) ==== */
-/* Just the standard Firefox tabs design */
+// CSS injector for styles that need inline injection
 
-@media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "classic") {
-  .tabbrowser-tab {
-    &[natsumi-glimpse-selected] {
-      & > .tab-stack > .tab-background {
-        background-color: var(--tab-background-color-selected, var(--tab-selected-bgcolor)) !important;
-        box-shadow: var(--tab-selected-shadow, var(--tab-box-shadow));
-        outline-color: var(--tab-selected-outline-color);
-      }
+class NatsumiCSSInjector {
+    constructor() {
+        this.injected = new Map();
     }
-  }
 
-  tab-split-view-wrapper {
-    .tabbrowser-tab {
-      padding-block: 3px 2px !important;
-    }
-  }
-
-  #tabbrowser-tabs:not([expanded]) {
-    tab-split-view-wrapper {
-      .tabbrowser-tab {
-        min-width: 36px !important;
-        max-width: 36px !important;
-        margin-inline: 2px !important;
-
-        & > .tab-stack > .tab-content {
-          padding-inline: 10px !important;
+    inject(filepath) {
+        if (this.injected.has(filepath)) {
+            console.error(`Style already exists for ${filepath}`);
+            return;
         }
 
-        & > .tab-stack > .tab-background {
-          margin-inline: auto !important;
-        }
-      }
+        const injectedStyle = document.createElement("link");
+        injectedStyle.rel = "stylesheet"
+        injectedStyle.href = `chrome://natsumi/content/modules/injected/${filepath}`;
+        document.head.appendChild(injectedStyle);
+        this.injected.set(filepath, injectedStyle);
     }
-  }
+
+    remove(filepath) {
+        if (!this.injected.has(filepath)) {
+            console.error(`Style does not exist for ${filepath}`);
+            return;
+        }
+
+        this.injected.get(filepath).remove();
+        this.injected.delete(filepath);
+    }
+}
+
+if (!document.body.natsumiCSSInjector) {
+    document.body.natsumiCSSInjector = new NatsumiCSSInjector();
+    document.body.natsumiCSSInjector.inject("linux-border-radius.css")
+    document.body.natsumiCSSInjector.inject("macos-menus.css")
 }
