@@ -46,7 +46,7 @@ class NatsumiToolbarManager {
             this.copyPinnedTabsHeight();
         });
 
-        let pinnedTabs = document.querySelector("#pinned-tabs-container");
+        let pinnedTabs = document.getElementById("pinned-tabs-container") ?? document.getElementById("vertical-pinned-tabs-container");
         if (pinnedTabs) {
             this.pinnedTabsObserver.observe(pinnedTabs, {attributes: true, childList: true, attributeFilter: ["style", "hidden"]});
         }
@@ -57,16 +57,16 @@ class NatsumiToolbarManager {
             this.copyPinnedToolbarHeight();
         });
 
-        let pinnedToolbar = document.querySelector("#natsumi-pinned-toolbar");
+        let pinnedToolbar = document.getElementById("natsumi-pinned-toolbar");
         if (pinnedToolbar) {
             this.pinnedToolbarObserver.observe(pinnedToolbar, {attributes: true, childList: true, attributeFilter: ["style", "hidden"]});
         }
 
         // Create observer for vertical tabs
-        let verticalTabs = document.querySelector("#vertical-tabs");
+        let verticalTabs = document.getElementById("vertical-tabs");
 
         this.verticalTabsObserver = new MutationObserver(() => {
-            if (verticalTabs.querySelector("#pinned-tabs-container")) {
+            if (verticalTabs.querySelector("#pinned-tabs-container") || verticalTabs.querySelector("#vertical-pinned-tabs-container")) {
                 this.copyPinnedTabsHeight();
                 this.copyPinnedToolbarHeight();
             }
@@ -146,7 +146,7 @@ class NatsumiToolbarManager {
     }
 
     copyPinnedTabsHeight() {
-        let pinnedTabs = document.querySelector("#pinned-tabs-container");
+        let pinnedTabs = document.getElementById("pinned-tabs-container") ?? document.getElementById("vertical-pinned-tabs-container");
 
         if (!pinnedTabs) {
             return;
