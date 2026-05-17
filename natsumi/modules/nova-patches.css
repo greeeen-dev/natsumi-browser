@@ -223,7 +223,13 @@ SOFTWARE.
     }
   }
 
+  #urlbar-container {
+    max-height: 40px !important;
+  }
+
   #urlbar:not([open]) {
+    top: unset !important;
+
     .urlbar-input-container {
       border: 1px solid transparent !important;
       padding: 1px !important;
@@ -293,8 +299,13 @@ SOFTWARE.
     border: none !important;
   }
 
+  .split-view-splitter {
+    margin: 0 !important;
+  }
+
   * {
     --toolbarbutton-icon-fill: light-dark(var(--color-gray-70), var(--color-gray-05));
     --chrome-block-radius: var(--natsumi-browser-border-radius) !important;
+    --tab-background-color-hover: color-mix(currentColor 11%, transparent);
   }
 }
