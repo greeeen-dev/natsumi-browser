@@ -2231,6 +2231,19 @@ const tabDesigns = {
         </div>
         `,
     ),
+    "neutron": new MCChoice(
+        "neutron",
+        "Neutron",
+        "A Proton-like design for Firefox Nova.",
+        `
+            <div id='tab-neutron' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+                </div>
+            </div>
+        `
+    ),
     "classic": new MCChoice(
         "classic",
         "Classic",
@@ -2243,7 +2256,7 @@ const tabDesigns = {
                 </div>
             </div>
         `
-    ),
+    )
 }
 
 const urlbarLayouts = {

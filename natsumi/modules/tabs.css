@@ -34,8 +34,9 @@ SOFTWARE.
 @import url("tabs/material.css");
 @import url("tabs/hexagonal.css");
 @import url("tabs/bubble.css");
-@import url("tabs/classic.css");
 @import url("tabs/clicky.css");
+@import url("tabs/neutron.css");
+@import url("tabs/classic.css");
 
 @keyframes natsumi-tab-appear {
   from {
