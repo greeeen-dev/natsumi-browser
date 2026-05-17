@@ -1,3 +1,5 @@
+import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+
 class NatsumiWidgetStyle {
     constructor(value, name) {
         this.value = value;
@@ -62,10 +64,26 @@ class NatsumiLockScreenManager {
     }
 
     init() {
+        let initialLocked = false;
+        if (ucApi.Prefs.get("natsumi.lockscreen.default-lock").exists) {
+            initialLocked = ucApi.Prefs.get("natsumi.lockscreen.default-lock").value;
+        }
+
+        let shouldPlayAudio = false;
+        if (ucApi.Prefs.get("natsumi.lockscreen.play-audio").exists && initialLocked) {
+            shouldPlayAudio = ucApi.Prefs.get("natsumi.lockscreen.play-audio").value;
+        }
+
         // Create node
         this.node = document.createElement("div");
         this.node.id = "natsumi-lockscreen";
-        this.node.setAttribute("hidden", "true");
+
+        if (initialLocked) {
+            document.body.setAttribute("natsumi-locked", "true");
+        } else {
+            this.node.setAttribute("hidden", "true");
+        }
+
         document.body.appendChild(this.node);
 
         // Create unlock text
