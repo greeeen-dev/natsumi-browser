@@ -27,6 +27,7 @@ SOFTWARE.
 /* ==== Firefox Nova patches ==== */
 
 @media -moz-pref("browser.nova.enabled") {
+  /* Standard mode */
   @media not -moz-pref("natsumi.theme.islands") {
     #navigator-toolbox {
       @media -moz-pref("sidebar.position_start") {
@@ -59,6 +60,7 @@ SOFTWARE.
     }
   }
 
+  /* Islands mode */
   @media -moz-pref("natsumi.theme.islands") {
     * {
       --chrome-window-gap: var(--natsumi-browser-separation);
@@ -202,16 +204,77 @@ SOFTWARE.
     }
   }
 
+  /* Global fixes */
   @media -moz-pref("natsumi.theme.single-toolbar") {
     #urlbar:not([open]) {
-      .urlbar-background {
-        border: none !important;
+      .urlbar-input-container {
+        min-height: 40px !important;
       }
     }
   }
 
+  @media not -moz-pref("natsumi.theme.single-toolbar") {
+    #urlbar:not([open]) {
+      margin-block: 4px !important;
+
+      .urlbar-input-container {
+        max-height: 30px !important;
+      }
+    }
+  }
+
+  #urlbar-container {
+    max-height: 40px !important;
+  }
+
+  #urlbar:not([open]) {
+    top: unset !important;
+
+    .urlbar-input-container {
+      border: 1px solid transparent !important;
+      padding: 1px !important;
+    }
+
+    .urlbar-background {
+      display: flex !important;
+      box-shadow: none !important;
+      border: 1px solid transparent !important;
+    }
+
+    &[breakout-extend] {
+      outline: 2px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+    }
+  }
+
+  #urlbar[open] {
+    .urlbar-input-container {
+      padding-inline: 6px !important;
+    }
+
+    .urlbar-input-container {
+      border: 1px solid transparent !important;
+    }
+  }
+
+  .urlbarView {
+    margin-inline: 7px !important;
+  }
+
   .urlbarView-row {
     border: none !important;
+  }
+
+  .urlbarView-body-inner {
+    border-top: var(--natsumi-mat-th-border-thin) !important;
+  }
+
+  .urlbar-background {
+    inset: 0 !important;
+  }
+
+  .urlbar-input-container {
+    margin-top: 0 !important;
+    background: transparent !important;
   }
 
   body::after {
@@ -236,8 +299,13 @@ SOFTWARE.
     border: none !important;
   }
 
+  .split-view-splitter {
+    margin: 0 !important;
+  }
+
   * {
     --toolbarbutton-icon-fill: light-dark(var(--color-gray-70), var(--color-gray-05));
     --chrome-block-radius: var(--natsumi-browser-border-radius) !important;
+    --tab-background-color-hover: color-mix(currentColor 11%, transparent);
   }
 }

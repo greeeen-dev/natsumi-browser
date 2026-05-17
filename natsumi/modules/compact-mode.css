@@ -213,10 +213,15 @@ SOFTWARE.
       z-index: 999 !important;
       left: calc(var(--natsumi-sidebar-width) * -1) !important;
       opacity: 0;
-      --natsumi-toolbar-offset: -25px;
+      --natsumi-compact-toolbar-offset: 0px;
+      --natsumi-toolbar-offset: calc(-25px + var(--natsumi-compact-toolbar-offset));
 
       @media -moz-pref("natsumi.theme.single-toolbar") {
-        --natsumi-toolbar-offset: 5px;
+        --natsumi-toolbar-offset: calc(5px + var(--natsumi-compact-toolbar-offset));
+      }
+
+      @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {
+        --natsumi-compact-toolbar-offset: 15vh;
       }
 
       @media not -moz-pref("sidebar.position_start") {

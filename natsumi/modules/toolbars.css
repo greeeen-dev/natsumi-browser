@@ -139,9 +139,30 @@ SOFTWARE.
   }
 }
 
+&:not(:has(#pinned-tabs-container tab:not([natsumi-workspace-hidden]))),
 &:has(#pinned-tabs-container:empty) {
-  #natsumi-tabs-clearer {
-    margin-top: calc(var(--natsumi-pinned-toolbar-height, -16px) + 16px) !important;
+  --natsumi-pinned-toolbar-default: -16px;
+
+  #natsumi-workspace-indicator {
+    margin-top: calc(var(--tab-block-margin) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
+  }
+
+  @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") or (not -moz-pref("natsumi.browser.type", "floorp")) {
+    #natsumi-tabs-clearer {
+      margin-top: calc(var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
+    }
+
+    @media -moz-pref("natsumi.sidebar.clear-merge-with-workspaces") or -moz-pref("natsumi.sidebar.hide-clear-tabs") {
+      #vertical-tabs {
+        --natsumi-tabs-padding-offset: calc(var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px);
+      }
+
+      @media not -moz-pref("natsumi.theme.single-toolbar") {
+        #tabbrowser-tabs {
+          padding-top: var(--natsumi-tabs-padding-offset, 0px) !important;
+        }
+      }
+    }
   }
 }
 
@@ -153,6 +174,22 @@ SOFTWARE.
     & > toolbarbutton, & > toolbaritem {
       min-width: unset !important;
       max-width: 32px !important;
+    }
+  }
+}
+
+@media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+  &:has(#panel-sidebar-select-box) body:not([natsumi-compact-mode]) {
+    @media -moz-pref("sidebar.position_start") {
+      &:not([natsumi-panel-sidebar-on-right]) #natsumi-pinned-toolbar {
+        left: calc(calc(var(--natsumi-browser-separation) * 2) + 36px);
+      }
+    }
+
+    @media not -moz-pref("sidebar.position_start") {
+      &[natsumi-panel-sidebar-on-right] #natsumi-pinned-toolbar {
+        right: calc(calc(var(--natsumi-browser-separation) * 2) + 36px);
+      }
     }
   }
 }
@@ -184,6 +221,10 @@ body:has(#PersonalToolbar:not([collapsed])) {
 }
 
 :root[customizing] {
+  * {
+    --natsumi-pinned-toolbar-default: 32px;
+  }
+
   #natsumi-pinned-toolbar {
     min-height: 32px !important;
     border: light-dark(black, white) 1px dashed !important;

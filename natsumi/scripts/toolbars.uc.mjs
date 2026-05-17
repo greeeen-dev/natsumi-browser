@@ -80,17 +80,19 @@ class NatsumiToolbarManager {
         let sidebar = document.querySelector("#sidebar-main");
 
         this.sidebarObserver = new MutationObserver(() => {
+            this.copyPinnedTabsHeight();
             this.copyPinnedToolbarHeight();
         });
 
         if (sidebar) {
-            this.sidebarObserver.observe(sidebar, {attributes: true, attributeFilter: ["sidebar-launcher-expanded"]});
+            this.sidebarObserver.observe(sidebar, {attributes: true, attributeFilter: ["sidebar-launcher-expanded", "sidebar-ongoing-animations"]});
         }
     }
 
-    createToolbar(toolbarId, textMode = false, canOverflow = false, defaultPlacements = []) {
+    createToolbar(toolbarId, textMode = false, canOverflow = false, defaultPlacements = [], parent = null) {
         // Get toolbar element
         let toolbar = document.getElementById(toolbarId);
+        let parentNode = parent ?? document.body;
 
         if (!toolbar) {
             // Create toolbar element
@@ -107,7 +109,7 @@ class NatsumiToolbarManager {
             }
 
             // Add toolbar to body
-            document.body.appendChild(toolbar);
+            parentNode.appendChild(toolbar);
         }
 
         // Register toolbar
@@ -249,13 +251,13 @@ class NatsumiStatusBarHandler {
             return;
         }
 
-        let width = sidebar.style.width;
+        let width = sidebar.getBoundingClientRect().width;
 
-        if (!width || width.length === 0) {
-            width = "242px";
+        if (!width || width === 0) {
+            width = 242;
         }
 
-        document.body.style.setProperty("--natsumi-sidebar-width", width);
+        document.body.style.setProperty("--natsumi-sidebar-width", `${width}px`);
     }
 
     copySidebarOptionsHeight() {
