@@ -252,6 +252,12 @@ SOFTWARE.
     .urlbar-input-container {
       border: 1px solid transparent !important;
     }
+
+    @media -moz-pref("natsumi.urlbar.do-not-float") {
+      .urlbar-input-container {
+        margin-top: 4px !important;
+      }
+    }
   }
 
   .urlbarView {
@@ -260,6 +266,7 @@ SOFTWARE.
 
   .urlbarView-row {
     border: none !important;
+    --urlbarview-text-color-selected: currentColor;
   }
 
   .urlbarView-body-inner {
