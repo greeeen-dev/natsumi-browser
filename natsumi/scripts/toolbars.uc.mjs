@@ -80,11 +80,12 @@ class NatsumiToolbarManager {
         let sidebar = document.querySelector("#sidebar-main");
 
         this.sidebarObserver = new MutationObserver(() => {
+            this.copyPinnedTabsHeight();
             this.copyPinnedToolbarHeight();
         });
 
         if (sidebar) {
-            this.sidebarObserver.observe(sidebar, {attributes: true, attributeFilter: ["sidebar-launcher-expanded"]});
+            this.sidebarObserver.observe(sidebar, {attributes: true, attributeFilter: ["sidebar-launcher-expanded", "sidebar-ongoing-animations"]});
         }
     }
 
@@ -250,13 +251,13 @@ class NatsumiStatusBarHandler {
             return;
         }
 
-        let width = sidebar.style.width;
+        let width = sidebar.getBoundingClientRect().width;
 
-        if (!width || width.length === 0) {
-            width = "242px";
+        if (!width || width === 0) {
+            width = 242;
         }
 
-        document.body.style.setProperty("--natsumi-sidebar-width", width);
+        document.body.style.setProperty("--natsumi-sidebar-width", `${width}px`);
     }
 
     copySidebarOptionsHeight() {
