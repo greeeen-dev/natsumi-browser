@@ -280,53 +280,59 @@ SOFTWARE.
     }
 
     @media -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
-      #PlacesToolbar, #PersonalToolbar .chromeclass-toolbar-additional {
-        visibility: collapse;
-      }
-
-      #PersonalToolbar .titlebar-buttonbox-container {
-        display: none !important;
-      }
-
-      body:not([natsumi-bookmarks-hover]), body[natsumi-compact-sidebar-hover], body[natsumi-compact-sidebar-extend] {
-        #PersonalToolbar {
-          -moz-window-dragging: no-drag !important;
-          translate: 0 calc(-34px + var(--natsumi-browser-separation));
+      &:has(#PersonalToolbar #personal-bookmarks) {
+        #PlacesToolbar, #PersonalToolbar .chromeclass-toolbar-additional {
+          visibility: collapse;
         }
-      }
 
-      body[natsumi-bookmarks-hover] {
-        #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
-          transition-delay: 0s !important;
-          margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
-          --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 30px);
+        #PersonalToolbar .titlebar-buttonbox-container {
+          display: none !important;
+        }
 
-          /* Probably redundant but keeping it here just in case */
-          @media (-moz-platform: windows) {
-            margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
-            --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 36px);
+        #navigator-toolbox {
+          z-index: 999 !important;
+        }
+
+        body:not([natsumi-bookmarks-hover]), body[natsumi-compact-sidebar-hover], body[natsumi-compact-sidebar-extend] {
+          #PersonalToolbar {
+            -moz-window-dragging: no-drag !important;
+            translate: 0 calc(-34px + var(--natsumi-browser-separation));
           }
         }
 
-        #PlacesToolbar, #PersonalToolbar .chromeclass-toolbar-additional {
-          visibility: visible;
-        }
+        body[natsumi-bookmarks-hover] {
+          #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
+            transition-delay: 0s !important;
+            margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
+            --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 30px);
 
-        @media (not (-moz-platform: macos)) {
-          @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
-            #PersonalToolbar .titlebar-buttonbox-container {
-              display: flex !important;
+            /* Probably redundant but keeping it here just in case */
+            @media (-moz-platform: windows) {
+              margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
+              --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 36px);
             }
           }
-        }
-      }
 
-      &:not([inFullscreen="true"]) body[natsumi-bookmarks-hover] {
-        @media not -moz-pref("sidebar.position_start") {
-          @media (-moz-platform: macos) {
+          #PlacesToolbar, #PersonalToolbar .chromeclass-toolbar-additional {
+            visibility: visible;
+          }
+
+          @media (not (-moz-platform: macos)) {
             @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
               #PersonalToolbar .titlebar-buttonbox-container {
                 display: flex !important;
+              }
+            }
+          }
+        }
+
+        &:not([inFullscreen="true"]) body[natsumi-bookmarks-hover] {
+          @media not -moz-pref("sidebar.position_start") {
+            @media (-moz-platform: macos) {
+              @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
+                #PersonalToolbar .titlebar-buttonbox-container {
+                  display: flex !important;
+                }
               }
             }
           }
