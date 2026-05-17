@@ -307,7 +307,11 @@ export class NatsumiShortcutActions {
         let selectedTab = gBrowser.selectedTab;
 
         if (selectedTab.splitview) {
-            gBrowser.unsplitTabs(selectedTab.splitview);
+            if (gBrowser.unsplitTabs !== undefined) {
+                gBrowser.unsplitTabs(selectedTab.splitview);
+            } else {
+                selectedTab.splitview.unsplitTabs();
+            }
         }
     }
 
