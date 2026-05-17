@@ -82,6 +82,11 @@ SOFTWARE.
         outline: none !important;
         backdrop-filter: saturate(1) contrast(1);
 
+        @media -moz-pref("browser.nova.enabled") {
+          border: none !important;
+          background-image: none !important;
+        }
+
         .tab-context-line {
           display: none !important;
         }
@@ -165,6 +170,8 @@ SOFTWARE.
     .tab-background {
       border-radius: var(--natsumi-tab-border-radius) !important;
       transition: background-color 0.2s ease;
+      background-image: none !important;
+      border: none !important;
     }
 
     .tabbrowser-tab {

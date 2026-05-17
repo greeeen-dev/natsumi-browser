@@ -228,8 +228,6 @@ SOFTWARE.
   }
 
   #urlbar:not([open]) {
-    top: unset !important;
-
     .urlbar-input-container {
       border: 1px solid transparent !important;
       padding: 1px !important;
