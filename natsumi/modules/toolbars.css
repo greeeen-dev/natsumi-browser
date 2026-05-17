@@ -141,38 +141,20 @@ SOFTWARE.
 
 &:not(:has(#pinned-tabs-container tab:not([natsumi-workspace-hidden]))),
 &:has(#pinned-tabs-container:empty) {
-  @media -moz-pref("natsumi.browser.type", "floorp") {
-    #natsumi-workspace-indicator {
-      margin-top: calc(var(--tab-block-margin) + var(--natsumi-pinned-toolbar-height, -16px) + 16px) !important;
-    }
+  --natsumi-pinned-toolbar-default: -16px;
 
-    @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") {
-      #natsumi-tabs-clearer {
-        margin-top: calc(var(--natsumi-pinned-toolbar-height, -16px) + 16px) !important;
-      }
-
-      @media -moz-pref("natsumi.sidebar.clear-merge-with-workspaces") or -moz-pref("natsumi.sidebar.hide-clear-tabs") {
-        #vertical-tabs {
-          --natsumi-tabs-padding-offset: calc(var(--natsumi-pinned-toolbar-height, -16px) + 16px);
-        }
-
-        @media not -moz-pref("natsumi.theme.single-toolbar") {
-          #tabbrowser-tabs {
-            padding-top: var(--natsumi-tabs-padding-offset, 0px) !important;
-          }
-        }
-      }
-    }
+  #natsumi-workspace-indicator {
+    margin-top: calc(var(--tab-block-margin) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
   }
 
-  @media not -moz-pref("natsumi.browser.type", "floorp") {
+  @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") or (not -moz-pref("natsumi.browser.type", "floorp")) {
     #natsumi-tabs-clearer {
-      margin-top: calc(var(--natsumi-pinned-toolbar-height, -16px) + 16px) !important;
+      margin-top: calc(var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
     }
 
-    @media -moz-pref("natsumi.sidebar.hide-clear-tabs") {
+    @media -moz-pref("natsumi.sidebar.clear-merge-with-workspaces") or -moz-pref("natsumi.sidebar.hide-clear-tabs") {
       #vertical-tabs {
-        --natsumi-tabs-padding-offset: calc(var(--natsumi-pinned-toolbar-height, -16px) + 16px);
+        --natsumi-tabs-padding-offset: calc(var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px);
       }
 
       @media not -moz-pref("natsumi.theme.single-toolbar") {
@@ -239,6 +221,10 @@ body:has(#PersonalToolbar:not([collapsed])) {
 }
 
 :root[customizing] {
+  * {
+    --natsumi-pinned-toolbar-default: 32px;
+  }
+
   #natsumi-pinned-toolbar {
     min-height: 32px !important;
     border: light-dark(black, white) 1px dashed !important;
