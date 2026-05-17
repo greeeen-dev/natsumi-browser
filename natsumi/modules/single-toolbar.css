@@ -291,6 +291,7 @@ SOFTWARE.
       body:not([natsumi-bookmarks-hover]), body[natsumi-compact-sidebar-hover], body[natsumi-compact-sidebar-extend] {
         #PersonalToolbar {
           -moz-window-dragging: no-drag !important;
+          translate: 0 calc(-34px + var(--natsumi-browser-separation));
         }
       }
 
@@ -298,10 +299,12 @@ SOFTWARE.
         #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
           transition-delay: 0s !important;
           margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
+          --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 30px);
 
           /* Probably redundant but keeping it here just in case */
           @media (-moz-platform: windows) {
             margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
+            --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 36px);
           }
         }
 

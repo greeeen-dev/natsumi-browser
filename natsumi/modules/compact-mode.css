@@ -45,6 +45,7 @@ SOFTWARE.
     @media -moz-pref("natsumi.theme.compact-marginless") {
       &:not(:has(#tabbrowser-tabpanels[split-view="true"])) {
         margin: 0 !important;
+        margin-top: var(--natsumi-marginless-override, 0) !important;
 
         .browserSidebarContainer {
           border: none !important;
