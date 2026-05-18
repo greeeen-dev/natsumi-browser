@@ -36,7 +36,7 @@ class NatsumiTabAnimationManager {
 
         setTimeout(() => {
             tab.removeAttribute("natsumi-animation");
-            tab.setAttribute("natsumi-animation-done");
+            tab.setAttribute("natsumi-animation-done", "");
         }, 200);
     }
 }
