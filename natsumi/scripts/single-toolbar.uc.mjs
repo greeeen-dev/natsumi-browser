@@ -69,6 +69,8 @@ class NatsumiSingleToolbarManager {
                 await enableCustomizableToolbar();
             } else {
                 await resetCustomizableToolbar();
+                this.hoveredElements = 0;
+                document.body.removeAttribute("natsumi-bookmarks-hover");
             }
         });
 

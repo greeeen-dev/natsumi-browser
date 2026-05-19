@@ -97,6 +97,8 @@ SOFTWARE.
     }
 
     &:not([open]) {
+      top: unset !important;
+
       @media (not -moz-pref("natsumi.theme.single-toolbar")) or (not -moz-pref("sidebar.verticalTabs")) {
         border-radius: 16px !important;
         border: 1px solid light-dark(var(--natsumi-colors-border-alt), var(--natsumi-button-active-color)) !important;

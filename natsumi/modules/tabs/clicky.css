@@ -102,6 +102,13 @@ SOFTWARE.
   .tabbrowser-tab {
     transition: all 150ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     transform: translateY(var(--natsumi-shift-default));
+
+    & > .tab-stack > .tab-background {
+      @media -moz-pref("browser.nova.enabled") {
+        border-radius: 8px !important;
+        border: none !important;
+      }
+    }
   }
 
   .tabbrowser-tab[selected] {

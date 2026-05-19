@@ -23,16 +23,20 @@ class NatsumiTabAnimationManager {
 
         const tabWidth = tab.getBoundingClientRect().width;
         const tabHeight = tab.getBoundingClientRect().height;
+        const paddingLeft = window.getComputedStyle(tab).paddingLeft;
+        const paddingRight = window.getComputedStyle(tab).paddingRight;
+        const paddingTop = window.getComputedStyle(tab).paddingTop;
+        const paddingBottom = window.getComputedStyle(tab).paddingBottom;
 
-        tab.style.setProperty("--natsumi-animation–width", `${tabWidth}px`);
-        tab.style.setProperty("--natsumi-animation–height", `${tabHeight}px`);
+        tab.style.setProperty("--natsumi-animation–width", `calc(${tabWidth}px - ${paddingLeft} - ${paddingRight})`);
+        tab.style.setProperty("--natsumi-animation–height", `calc(${tabHeight}px - ${paddingTop} - ${paddingBottom})`);
         tab.setAttribute("natsumi-animation-incoming", "true");
         tab.setAttribute("natsumi-animation", "true");
         tab.removeAttribute("natsumi-animation-incoming");
 
         setTimeout(() => {
             tab.removeAttribute("natsumi-animation");
-            tab.setAttribute("natsumi-animation-done");
+            tab.setAttribute("natsumi-animation-done", "");
         }, 200);
     }
 }

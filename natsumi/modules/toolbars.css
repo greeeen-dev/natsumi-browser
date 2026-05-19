@@ -139,8 +139,10 @@ SOFTWARE.
   }
 }
 
-&:not(:has(#pinned-tabs-container tab:not([natsumi-workspace-hidden]))),
-&:has(#pinned-tabs-container:empty) {
+&:has(#pinned-tabs-container):not(:has(#pinned-tabs-container tab:not([natsumi-workspace-hidden]))),
+&:has(#pinned-tabs-container:empty),
+&:has(#vertical-pinned-tabs-container):not(:has(#vertical-pinned-tabs-container tab:not([natsumi-workspace-hidden]))),
+&:has(#vertical-pinned-tabs-container:empty) {
   --natsumi-pinned-toolbar-default: -16px;
 
   #natsumi-workspace-indicator {

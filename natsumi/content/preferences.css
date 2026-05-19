@@ -44,7 +44,13 @@ SOFTWARE.
     }
 
     body[natsumi-preferences-redesign] {
-      --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      * {
+        --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        --button-background-color-primary: var(--color-accent-primary) !important;
+        --button-background-color-primary: var(--color-accent-primary) !important;
+        --button-background-color-primary-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
+        --button-background-color-primary-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+      }
 
       #search-container {
         background: transparent !important;
@@ -62,6 +68,21 @@ SOFTWARE.
           background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
           z-index: 999;
         }
+      }
+    }
+
+    @media -moz-pref("browser.nova.enabled") {
+      .content-wrapper, button {
+        --button-border: 1px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        --button-border-color-disabled: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        --select-border: var(--button-border) !important;
+        --select-border-color-hover: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        --select-border-color-disabled: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        --select-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
+        --toggle-background-color-pressed-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
+        --toggle-background-color-pressed-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+        --toggle-background-color-hover: color-mix(in srgb, var(--color-accent-primary) 20%, transparent) !important;
+        --toggle-background-color-active: color-mix(in srgb, var(--color-accent-primary) 30%, transparent) !important;
       }
     }
 
