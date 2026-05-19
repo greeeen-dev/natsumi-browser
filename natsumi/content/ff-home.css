@@ -321,6 +321,18 @@ SOFTWARE.
         border-radius: 0 50px 50px 0 !important;
       }
     }
+
+    .widget, .widget-wrapper > article {
+      background-color: var(--natsumi-mat-hz-background) !important;
+      backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+      border: var(--natsumi-mat-hz-border-thin) !important;
+      box-shadow: var(--natsumi-mat-hz-shadow) !important;
+      outline: none !important;
+
+      &:hover {
+        background-color: light-dark(#fff, #222) !important;
+      }
+    }
   }
 
   /* PB patches */
