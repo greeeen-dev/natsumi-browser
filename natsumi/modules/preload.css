@@ -51,7 +51,7 @@ SOFTWARE.
     --natsumi-colors-urlbar-background: transparent;
     --natsumi-ff-background-color: color-mix(in srgb, var(--natsumi-primary-color) 15%, black);
 
-    @media (-moz-bool-pref: 'natsumi.theme.colors-colorful') {
+    @media -moz-pref("natsumi.theme.colors-colorful") {
       --natsumi-colors-primary: color-mix(in srgb, var(--natsumi-primary-color) 50%, black 50%);
       --natsumi-colors-secondary: color-mix(in srgb, var(--natsumi-primary-color) 40%, black 60%);
       --natsumi-colors-tertiary: color-mix(in srgb, var(--natsumi-primary-color) 15%, black 85%);
