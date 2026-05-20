@@ -282,19 +282,6 @@ SOFTWARE.
     background: transparent !important;
   }
 
-  body::after {
-    z-index: -3 !important;
-    appearance: none !important;
-  }
-
-  #browser::before {
-    z-index: -2 !important;
-  }
-
-  #browser::after {
-    z-index: -1 !important;
-  }
-
   #navigator-toolbox {
     overflow: visible !important;
   }

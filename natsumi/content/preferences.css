@@ -72,17 +72,30 @@ SOFTWARE.
     }
 
     @media -moz-pref("browser.nova.enabled") {
-      .content-wrapper, button {
-        --button-border: 1px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
-        --button-border-color-disabled: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+      .content-wrapper, button, a, .picker-item {
+        --natsumi-content-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        --natsumi-hover-color: color-mix(in srgb, var(--color-accent-primary) 85%, black);
+        --natsumi-active-color: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+        --button-border: 1px solid var(--natsumi-content-color) !important;
+        --button-border-color-hover: var(--natsumi-content-color) !important;
+        --button-border-color-active: var(--natsumi-content-color) !important;
+        --button-border-color-disabled: var(--natsumi-content-color) !important;
+        --button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
+        --button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent) !important;
         --select-border: var(--button-border) !important;
-        --select-border-color-hover: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
-        --select-border-color-disabled: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        --select-border-color-hover: var(--natsumi-content-color) !important;
+        --select-border-color-disabled: var(--natsumi-content-color) !important;
         --select-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
-        --toggle-background-color-pressed-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
-        --toggle-background-color-pressed-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+        --select-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent) !important;
+        --toggle-background-color-pressed-hover: var(--natsumi-hover-color);
+        --toggle-background-color-pressed-active: var(--natsumi-active-color);
         --toggle-background-color-hover: color-mix(in srgb, var(--color-accent-primary) 20%, transparent) !important;
         --toggle-background-color-active: color-mix(in srgb, var(--color-accent-primary) 30%, transparent) !important;
+        --box-button-background-color-hover: color-mix(in srgb, var(--color-accent-primary) 20%, transparent) !important;
+        --box-button-background-color-active: color-mix(in srgb, var(--color-accent-primary) 30%, transparent) !important;
+        --link-color: var(--natsumi-content-color);
+        --link-color-hover: var(--natsumi-hover-color);
+        --link-color-active: var(--natsumi-active-color);
       }
     }
 
