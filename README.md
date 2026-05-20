@@ -392,7 +392,7 @@ All browsers must be based on Firefox 140 or above.
 
 ## FAQs
 ### "Does Natsumi support the new Firefox Nova redesign?"
-Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 152**.
+Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 153**.
 
 Firefox Nova is still in early development and constantly changing. Each Natsumi release will aim to
 address these changes, so that once Firefox Nova is complete and rolled out, Natsumi will be

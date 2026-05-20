@@ -628,6 +628,10 @@ SOFTWARE.
   }
 }
 
+splitter:hover {
+  background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+}
+
 /* Add soft glow to web page */
 @media -moz-pref("natsumi.theme.soft-glow") {
     #tabbrowser-tabpanels .deck-selected {
