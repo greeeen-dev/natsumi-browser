@@ -295,18 +295,6 @@ class NatsumiWelcome {
             document.body.removeAttribute("natsumi-welcome-drumroll-complete");
             document.body.removeAttribute("natsumi-welcome-complete-full");
 
-            // Also set userChromeJS.persistent_domcontent_callback to true
-            let shouldNotify = false;
-            if (ucApi.Prefs.get("userChromeJS.persistent_domcontent_callback").exists()) {
-                if (!ucApi.Prefs.get("userChromeJS.persistent_domcontent_callback").value) {
-                    ucApi.Prefs.set("userChromeJS.persistent_domcontent_callback", true);
-                    shouldNotify = true;
-                }
-            } else {
-                ucApi.Prefs.set("userChromeJS.persistent_domcontent_callback", true);
-                shouldNotify = true;
-            }
-
             // Add to notifications
             let notificationObject = new NatsumiNotification(
                 "Welcome to Natsumi!",
@@ -315,17 +303,6 @@ class NatsumiWelcome {
                 10000
             )
             notificationObject.addToContainer();
-
-            if (shouldNotify) {
-                let restartNotificationObject = new NatsumiNotification(
-                    "Restart required",
-                    "You may need to restart your browser for some features to work.",
-                    "chrome://natsumi/content/icons/lucide/warning.svg",
-                    10000,
-                    "warning"
-                )
-                restartNotificationObject.addToContainer();
-            }
 
             if (tabStyleReset) {
                 let tabStyleResetObject = new NatsumiNotification(
@@ -835,6 +812,129 @@ function createCompatibilityWarning() {
     }
 }
 
+function setupInitialConfig() {
+    document.body.setAttribute("natsumi-inhibit-postload", "true");
+
+    const natsumiWarningPermanentCss = `
+        #natsumi-glimpse-launcher, #natsumi-glimpse-chainer-indicator, #natsumi-workspace-indicator, #natsumi-tabs-clearer,
+        #natsumi-welcome {
+            display: none !important;
+        }
+    `
+
+    const permanentStyleElement = document.createElement("style");
+    permanentStyleElement.id = "natsumi-initial-config-permanent-style";
+    permanentStyleElement.textContent = natsumiWarningPermanentCss;
+    document.head.appendChild(permanentStyleElement);
+
+    const natsumiWarningCss = `
+        @keyframes natsumi-loading {
+            from {
+                transform: rotate(0deg);
+            }
+    
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels,
+        #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
+        #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
+        #natsumi-pinned-toolbar, #nav-bar {
+            opacity: 0;
+            pointer-events: none !important;
+        }
+        
+        #navigator-toolbox {
+            transition: none !important;
+            background-color: transparent !important;
+            border: none !important;
+        }
+        
+        #natsumi-init-config {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: 998 !important;
+        
+            #natsumi-init-config-content {
+                flex-direction: column;
+                margin: auto !important;
+                padding: 100px !important;
+                text-align: center;
+                align-items: center;
+            
+                #natsumi-init-config-icon {
+                    width: 48px;
+                    height: 48px;
+                    background-size: 48px;
+                    -moz-context-properties: stroke, stroke-opacity !important;
+                    stroke: light-dark(black, white);
+                    background-image: url("chrome://natsumi/content/icons/lucide/loading.svg");
+                    animation: natsumi-loading 1s linear infinite;
+                }
+            
+                #natsumi-init-config-header {
+                    font-weight: bold;
+                    font-size: x-large;
+                    margin-block: 5px;
+                }
+            
+                #natsumi-init-config-body-1, #natsumi-init-config-body-2 {
+                    font-size: small;
+                }
+                
+                #natsumi-init-config-hide {
+                    margin-top: 20px !important;
+                }
+                
+                #natsumi-init-config-hide, #natsumi-init-config-restart {
+                    margin-top: 10px;
+                    font-size: small;
+                    padding: 5px;
+                    border-radius: 5px;
+                    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+                    
+                    &:hover {
+                        background-color: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
+                    }
+                }
+            }
+        }
+    `
+
+    const styleElement = document.createElement("style");
+    styleElement.id = "natsumi-postload-warning-style";
+    styleElement.textContent = natsumiWarningCss;
+    document.head.appendChild(styleElement);
+
+    let initConfigNode = convertToXUL(`
+            <div id="natsumi-init-config">
+                <div id="natsumi-init-config-content">
+                    <image id="natsumi-init-config-icon"></image>
+                    <div id="natsumi-init-config-header">
+                        Configuring your browser
+                    </div>
+                    <div id="natsumi-init-config-body-1">We're configuring your browser to get Natsumi set up and working.</div>
+                    <div id="natsumi-init-config-body-2">Your browser will restart automatically once ready.</div>
+                </div>
+            </div>
+        `);
+
+    document.body.appendChild(initConfigNode);
+
+    // Configure browser
+    ucApi.Prefs.set("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+    ucApi.Prefs.set("userChromeJS.persistent_domcontent_callback", true);
+
+    // Restart and clear cache
+    Services.appinfo.invalidateCachesOnRestart();
+    Services.startup.quit(
+        Ci.nsIAppStartup.eRestart | Ci.nsIAppStartup.eAttemptQuit
+    );
+}
+
 const welcomeAudioUrl = "chrome://natsumi/content/sounds/welcome.ogg";
 
 let welcomeViewed = false;
@@ -868,7 +968,17 @@ if (torBrowsers.includes(browserName)) {
     }
 }
 
-if (!welcomeViewed && !blockOnboarding) {
+const cssEnabled = ucApi.Prefs.get("toolkit.legacyUserProfileCustomizations.stylesheets").value;
+
+let settingsEnabled = false;
+if (ucApi.Prefs.get("userChromeJS.persistent_domcontent_callback").exists()) {
+    settingsEnabled = ucApi.Prefs.get("userChromeJS.persistent_domcontent_callback").value;
+}
+
+if (!cssEnabled || !settingsEnabled) {
+    console.log("Configuring browser...");
+    setupInitialConfig();
+} else if (!welcomeViewed && !blockOnboarding) {
     // Set up welcomer
     setupWelcome();
     createLayoutPane();
