@@ -81,6 +81,10 @@ SOFTWARE.
       max-width: 4px !important;
     }
 
+    #natsumi-pinned-toolbar {
+      border: 1px solid transparent !important;
+    }
+
     body:not([natsumi-compact-mode]) {
       #tabbrowser-tabbox {
         --natsumi-tabbox-margin-override: 0;
@@ -144,6 +148,7 @@ SOFTWARE.
       ) or -moz-pref("natsumi.theme.single-toolbar") {
         #sidebar-main {
           --natsumi-sidebar-height-override: calc(42px + var(--natsumi-browser-separation)) !important;
+          --natsumi-compact-sidebar-offset: 1px;
         }
 
         #natsumi-pinned-toolbar {

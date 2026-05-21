@@ -174,15 +174,16 @@ SOFTWARE.
         content: "";
         width: var(--natsumi-browser-separation);
         height: 100%;
+        top: 0;
         position: absolute;
         border-radius: 0 !important;
 
         @media -moz-pref("sidebar.position_start") {
-          left: calc(var(--natsumi-browser-separation) * -1) !important;
+          left: calc(var(--natsumi-browser-separation) * -1 - var(--natsumi-compact-sidebar-offset, 0px)) !important;
         }
 
         @media not -moz-pref("sidebar.position_start") {
-          right: calc(var(--natsumi-browser-separation) * -1) !important;
+          right: calc(var(--natsumi-browser-separation) * -1 - var(--natsumi-compact-sidebar-offset, 0px)) !important;
         }
       }
     }
