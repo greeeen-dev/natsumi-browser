@@ -276,7 +276,7 @@ SOFTWARE.
   }
 
   /* Workspaces indicator */
-  @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") {
+  @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") or (not -moz-pref("floorp.workspaces.enabled")) {
     #natsumi-workspace-indicator {
       display: none !important;
     }

@@ -417,7 +417,7 @@ export async function applyCustomTheme() {
         let workspaceId;
         let toApplyData = customThemeData;
 
-        if (isFloorp) {
+        if (isFloorp && floorpWorkspacesEnabled) {
             workspaceId = body.natsumiWorkspacesWrapper.getCurrentWorkspaceID();
 
             if (perWorkspaceData[workspaceId]) {
