@@ -87,6 +87,10 @@ SOFTWARE.
       }
     }
 
+    body > * {
+      font-family: var(--natsumi-custom-font) !important;
+    }
+
     html {
       animation: pip-fadein-html 0.5s ease !important;
     }

@@ -1770,6 +1770,28 @@ class RadioChoice extends MCChoice {
     }
 }
 
+class SelectChoice extends MCChoice {
+    constructor(value, label) {
+        super(value, label, "", "", "");
+    }
+
+    generateNode(selected = false) {
+        let nodeString = `
+            <html:option class="natsumi-select-choice" value="${this.value}">
+                ${this.label}
+            </html:option>
+        `;
+        let node = convertToXUL(nodeString);
+        let choiceButton = node.querySelector(".natsumi-select-choice");
+
+        if (selected) {
+            choiceButton.setAttribute("selected", "selected");
+        }
+
+        return node;
+    }
+}
+
 class SliderChoice {
     constructor(valueMin, valueMax, value, label, description, affect) {
         this.valueMin = valueMin;
@@ -2445,6 +2467,45 @@ class RadioPreference extends MultipleChoicePreference {
     }
 }
 
+class SelectPreference extends MultipleChoicePreference {
+    constructor(id, preference, label, description, overrideDefault = null) {
+        super(id, preference, label, description, overrideDefault);
+    }
+
+    generateNode(color = false) {
+        let nodeString = `
+            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                <html:h2>${this.label}</html:h2>
+                <html:div id="${this.id}Settings">
+                    <description class="description-deemphasized">
+                        ${this.description}
+                    </description>
+                    <html:select class="natsumi-select-chooser">
+                    </html:select>
+                </html:div>
+            </groupbox>
+        `
+        let node = convertToXUL(nodeString);
+        let groupNode = node.querySelector(`#${this.id}Group`);
+
+        for (let extra in this.extras) {
+            let extraNode = convertToXUL(`<vbox id="${extra}"></vbox>`)
+            let extraBox = extraNode.querySelector(`#${extra}`);
+            extraBox.appendChild(this.extras[extra].generateNode());
+            groupNode.appendChild(extraNode);
+        }
+
+        let form = node.querySelector(".natsumi-select-chooser");
+        for (let option in this.options) {
+            let choice = this.options[option];
+            const selected = (this.getSelected() === choice.value);
+            let choiceNode = choice.generateNode(selected, color);
+            form.appendChild(choiceNode);
+        }
+        return node;
+    }
+}
+
 function toggleDisabled(node, disabled) {
     if (disabled) {
         node.setAttribute("disabled", "true");
@@ -3020,6 +3081,68 @@ function addIconsPane() {
     });
 
     prefsView.insertBefore(iconNode, homePane);
+}
+
+function addFontsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    let availableFonts = [
+        new SelectChoice(
+            "default",
+            "System font"
+        )
+    ]
+
+    // Get fonts list
+    const enumerator = Cc["@mozilla.org/gfx/fontenumerator;1"].createInstance(
+        Ci.nsIFontEnumerator
+    );
+    const fonts = enumerator.EnumerateFonts(Services.locale.fontLanguageGroup, "");
+
+    for (const font of fonts) {
+        availableFonts.push(new SelectChoice(font, font))
+    }
+
+    // Create icons selection
+    let fontSelection = new SelectPreference(
+        "natsumiFonts",
+        "natsumi.theme.font",
+        "Font",
+        "Choose the font you want to use."
+    );
+
+    for (let availableFont of availableFonts) {
+        fontSelection.registerOption(availableFont.value, availableFont);
+    }
+
+    let fontNode = fontSelection.generateNode();
+
+    // Set listeners for select
+    let fontSelect = fontNode.querySelector("select");
+    fontSelect.addEventListener("change", (event) => {
+        setStringPreference("natsumi.theme.font", event.target.value);
+    })
+
+    // Set listeners for each checkbox
+    let checkboxes = fontNode.querySelectorAll("checkbox");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("command", () => {
+            let prefName = checkbox.getAttribute("preference");
+            let isChecked = checkbox.checked;
+
+            if (checkbox.getAttribute("opposite") === "true") {
+                isChecked = !isChecked;
+            }
+
+            console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            // noinspection JSUnresolvedReference
+            ucApi.Prefs.set(prefName, isChecked);
+        });
+    });
+
+    prefsView.insertBefore(fontNode, homePane);
 }
 
 function addSDL2Pane() {
@@ -4288,6 +4411,7 @@ function addPreferencesPanes() {
     addWindowMaterialPane();
     addColorsPane();
     addIconsPane();
+    addFontsPane();
     addSDL2Pane();
 
     prefsView.insertBefore(sidebarNode, homePane);

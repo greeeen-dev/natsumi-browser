@@ -50,6 +50,10 @@ SOFTWARE.
   border: none !important;
 }
 
+body > * {
+  font-family: var(--natsumi-custom-font) !important;
+}
+
 :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
   #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     margin-right: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;

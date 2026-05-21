@@ -72,7 +72,7 @@ SOFTWARE.
     }
 
     @media -moz-pref("browser.nova.enabled") {
-      .content-wrapper, button, a, .picker-item {
+      .content-wrapper, button, a, .picker-item, select {
         --natsumi-content-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
         --natsumi-hover-color: color-mix(in srgb, var(--color-accent-primary) 85%, black);
         --natsumi-active-color: color-mix(in srgb, var(--color-accent-primary) 70%, black);
@@ -347,6 +347,10 @@ SOFTWARE.
         }
       }
     }
+  }
+
+  body > * {
+    font-family: var(--natsumi-custom-font) !important;
   }
 
   .page-nav-icon {
