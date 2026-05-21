@@ -87,7 +87,7 @@ SOFTWARE.
       }
     }
 
-    body > * {
+    body[style*="--natsumi-custom-font"] * {
       font-family: var(--natsumi-custom-font) !important;
     }
 
