@@ -31,8 +31,11 @@ SOFTWARE.
 
 */
 
+import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+
 let categoryNode = document.getElementById("categories");
 const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
+const hasRedesignV2 = document.getElementById("category-general").getAttribute("hidden") && hasRedesign;
 let hasSubcategories = [];
 let hasDynamic = [];
 
@@ -254,10 +257,90 @@ function addSidebarSubcategories() {
     sidebarObserver.observe(sidebarCategories, {childList: true});
 }
 
+function applySidebarIcons(update = false) {
+    const sidebarIconMapping = {
+        "category-general": "settings",
+        "category-home": "house",
+        "natsumi-settings": "paintbrush",
+        "natsumi-shortcuts": "meta",
+        "category-search": "search",
+        "category-privacy": "secure",
+        "category-passwords-autofill": "passwords",
+        "category-appearance": "appearance",
+        "category-downloads": "download",
+        "category-tabs-browsing": "browsing",
+        "category-sync": "sync",
+        "category-accessibility": "accessibility",
+        "category-languages": "language",
+        "category-ai-features": "robot",
+        "category-permissions-data": "permissions",
+        "category-experimental": "experimental",
+        "addonsButton": "addons",
+        "helpButton": "help"
+    }
+    const sidebarIconMappingV2 = {
+        "category-sync": "profile"
+    }
+    const sidebarUpdateOnly = [
+        "natsumi-settings",
+        "natsumi-shortcuts"
+    ]
+    const availablePacks = [
+        "lucide",
+        "fluent"
+    ]
+
+    let iconPack = "";
+
+    if (ucApi.Prefs.get("natsumi.theme.icons").exists()) {
+        iconPack = ucApi.Prefs.get("natsumi.theme.icons").value;
+    }
+
+    let revertIcons = !availablePacks.includes(iconPack);
+
+    for (let sidebarCategory in sidebarIconMapping) {
+        if (!update && sidebarUpdateOnly.includes(sidebarCategory)) {
+            continue;
+        }
+
+        let sidebarIcon = sidebarIconMapping[sidebarCategory];
+
+        if (hasRedesignV2) {
+            sidebarIcon = sidebarIconMappingV2[sidebarCategory] ?? sidebarIconMapping[sidebarCategory];
+        }
+
+        let sidebarCategoryNode = document.getElementById(sidebarCategory);
+        if (!sidebarCategoryNode) {
+            continue;
+        }
+
+        if (revertIcons) {
+            if (!sidebarCategoryNode.hasAttribute("original-icon")) {
+                continue;
+            }
+
+            sidebarCategoryNode.setAttribute("iconsrc", sidebarCategoryNode.getAttribute("original-icon"));
+        } else {
+            const sidebarIconLink = `chrome://natsumi/content/icons/${iconPack}/${sidebarIcon}.svg`;
+
+            if (!sidebarCategoryNode.hasAttribute("original-icon")) {
+                sidebarCategoryNode.setAttribute("original-icon", sidebarCategoryNode.getAttribute("iconsrc"));
+            }
+
+            sidebarCategoryNode.setAttribute("iconsrc", sidebarIconLink);
+        }
+    }
+}
+
 // Add subcategories
 if (hasRedesign) {
     try {
         addSidebarSubcategories();
+        applySidebarIcons();
+
+        Services.prefs.addObserver("natsumi.theme.icons", () => {
+            applySidebarIcons(true);
+        })
     } catch (e) {
         console.error(e);
     }

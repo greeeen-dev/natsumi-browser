@@ -2499,6 +2499,7 @@ function addToSidebar() {
     customizeNode.id = "natsumi-settings";
     customizeNode.setAttribute("view", "paneNatsumiSettings");
     customizeNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/paintbrush.svg");
+    customizeNode.setAttribute("original-icon", "chrome://natsumi/content/icons/lucide/paintbrush.svg");
     customizeNode.setAttribute("data-l10n-id", "category-natsumi-settings");
     customizeNode.innerHTML = "Customize Natsumi";
 
@@ -2507,6 +2508,7 @@ function addToSidebar() {
     shortcutsNode.id = "natsumi-shortcuts";
     shortcutsNode.setAttribute("view", "paneNatsumiShortcuts");
     shortcutsNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/meta.svg");
+    shortcutsNode.setAttribute("original-icon", "chrome://natsumi/content/icons/lucide/meta.svg");
     shortcutsNode.setAttribute("data-l10n-id", "category-natsumi-shortcuts");
     shortcutsNode.innerHTML = "Keyboard Shortcuts";
 
@@ -2515,6 +2517,7 @@ function addToSidebar() {
     aboutNode.id = "natsumi-about";
     aboutNode.setAttribute("view", "paneNatsumiAbout");
     aboutNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/info.svg");
+    aboutNode.setAttribute("original-icon", "chrome://natsumi/content/icons/lucide/info.svg");
     aboutNode.setAttribute("data-l10n-id", "category-natsumi-about");
     aboutNode.innerHTML = "About Natsumi";
 

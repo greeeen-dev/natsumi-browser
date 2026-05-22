@@ -343,6 +343,10 @@ SOFTWARE.
   .page-nav-icon {
     -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity !important;
     stroke: currentColor;
+
+    &[src*="chrome://natsumi/content/icons/fluent"] {
+      scale: 1.2 !important;
+    }
   }
 
   .natsumi-subcategory-container {
