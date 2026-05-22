@@ -76,7 +76,7 @@ SOFTWARE.
         background-color: var(--natsumi-button-hover-color) !important;
       }
 
-      &[data-checked], &:active {
+      &[data-checked="true"], &:active {
         background-color: var(--natsumi-button-active-color) !important;
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
       }
