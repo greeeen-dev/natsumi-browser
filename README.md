@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="420" src="./images/kawaii.png">
+  <img width="420" src="./images/kawaii-pride.png">
   <br>
   Natsumi Browser
 </h1>
@@ -195,6 +195,9 @@ latest version of Natsumi as new changes are released, you can simply clone the 
 folder. This can be followed up with `git pull` from time-to-time.
 
 ## Browser configs (in about:config)
+> [!NOTE]
+> This is a non-exhaustive list. Most of these options are available in preferences.
+
 These are the configs you can use to tweak Natsumi Browser. If you want to tweak the animation duration
 and delay, change the variables in the config.css file.
 
@@ -213,7 +216,7 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   - **Lucid** (`lucid`) - A recreation of the Zen Dream and Zen Galaxy themes.
   - **Frutiger Aero** (`frutiger-aero`) - A Windows Vista/7-like design.
   - **OLED** (`oled`) - A completely black and white theme for the minimalists.
-  - **🏳️‍🌈 LGBTQ+** (`lgntq`) - Browsing with pride!
+  - **🏳️‍🌈 LGBTQ+** (`lgbtq`) - Browsing with pride!
   - **🏳️‍⚧️ Transgender** (`transgender`) - Trans rights are human rights!
   - **Custom** (`custom`) - Create your own theme (in the preferences page)!
 - `natsumi.theme.accent-color` (string): Sets the browser theme color from a given accent color.

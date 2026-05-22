@@ -290,6 +290,7 @@ SOFTWARE.
   .urlbar-input-container {
     margin-top: 0 !important;
     background: transparent !important;
+    min-height: 30px;
   }
 
   #navigator-toolbox {
