@@ -175,6 +175,14 @@ SOFTWARE.
     list-style-image: url("../../../icons/lucide/plus.svg") !important;
   }
 
+  body:not([natsumi-compact-mode]) #zen-mode-button {
+    list-style-image: url("../../../icons/lucide/compact-mode.svg") !important;
+  }
+
+  body[natsumi-compact-mode] #zen-mode-button {
+    list-style-image: url("../../../icons/lucide/compact-mode-disable.svg") !important;
+  }
+
   #screenshot-button {
     list-style-image: url("../../../icons/lucide/screenshot.svg") !important;
   }

@@ -40,22 +40,27 @@ class NatsumiCompactModeManager {
         this.pwaFullscreenListener = null;
         this.disableShortcutActions = false;
         this.visibleDuration = 300;
+        this.deferrable = [];
+        this.deferrableRegistered = [];
     }
 
     init() {
         let sidebarNode = document.getElementById("sidebar-main");
-        let pinnedToolbarNode = document.getElementById("natsumi-pinned-toolbar");
         let navigatorToolboxNode = document.getElementById("navigator-toolbox");
         let navbarNode = document.getElementById("nav-bar");
+
+        // Check if browser is Floorp or Waterfox
+        let isFloorp = false;
+        let isWaterfox = false;
+
+        if (ucApi.Prefs.get("natsumi.browser.type").exists) {
+            isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
+            isWaterfox = ucApi.Prefs.get("natsumi.browser.type").value === "waterfox";
+        }
 
         if (sidebarNode) {
             sidebarNode.addEventListener("mouseenter", this.handleElementEnter.bind(this), true);
             sidebarNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
-        }
-
-        if (pinnedToolbarNode) {
-            pinnedToolbarNode.addEventListener("mouseenter", this.handleElementEnter.bind(this), true);
-            pinnedToolbarNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
         }
 
         if (navigatorToolboxNode) {
@@ -68,7 +73,26 @@ class NatsumiCompactModeManager {
             navbarNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
         }
 
-        this.initStatusbar();
+        this.registerDeferrable("natsumi-pinned-toolbar");
+
+        if (isFloorp) {
+            this.registerDeferrable("nora-statusbar");
+        } else if (isWaterfox) {
+            this.registerDeferrable("status-bar");
+        }
+
+        let deferrableListener = new MutationObserver(() => {
+            for (let deferrable of this.deferrable) {
+                if (this.deferrableRegistered.includes(deferrable)) {
+                    continue;
+                }
+
+                this.registerDeferrable(deferrable);
+            }
+        });
+        deferrableListener.observe(document.body, {
+            childList: true
+        });
 
         let bodyMutationOnserver = new MutationObserver((mutations) => {
             mutations.forEach(() => {
@@ -131,12 +155,6 @@ class NatsumiCompactModeManager {
         }
 
         // Listen for Floorp Zen Mode
-        let isFloorp = false;
-
-        if (ucApi.Prefs.get("natsumi.browser.type").exists) {
-            isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
-        }
-
         if (isFloorp) {
             Services.prefs.addObserver("floorp.zenmode.enabled", () => {
                 let canIntercept = true;
@@ -162,13 +180,17 @@ class NatsumiCompactModeManager {
         }
     }
 
-    // initStatusbar can be deferred if the status bars tend to be lazy and take a while to load
-    initStatusbar() {
-        let statusbarNode = document.getElementById("nora-statusbar") || document.getElementById("status-bar");
+    registerDeferrable(elementId) {
+        if (!this.deferrable.includes(elementId)) {
+            this.deferrable.push(elementId);
+        }
 
-        if (statusbarNode) {
-            statusbarNode.addEventListener("mouseenter", this.handleElementEnter.bind(this), true);
-            statusbarNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
+        let deferrableNode = document.getElementById(elementId);
+
+        if (deferrableNode) {
+            deferrableNode.addEventListener("mouseenter", this.handleElementEnter.bind(this), true);
+            deferrableNode.addEventListener("mouseleave", this.handleElementLeave.bind(this), true);
+            this.deferrableRegistered.push(elementId);
         }
     }
 

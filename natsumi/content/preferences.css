@@ -117,6 +117,10 @@ SOFTWARE.
       }
     }
 
+    #mainPrefPane > .toc {
+      display: none !important;
+    }
+
     #searchInput {
       width: 100% !important;
       height: 36px !important;
@@ -356,6 +360,10 @@ SOFTWARE.
   .page-nav-icon {
     -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity !important;
     stroke: currentColor;
+
+    &[src*="chrome://natsumi/content/icons/fluent"] {
+      scale: 1.2 !important;
+    }
   }
 
   .natsumi-subcategory-container {
