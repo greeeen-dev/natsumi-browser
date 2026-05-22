@@ -104,6 +104,10 @@ SOFTWARE.
       }
     }
 
+    #mainPrefPane > .toc {
+      display: none !important;
+    }
+
     #searchInput {
       width: 100% !important;
       height: 36px !important;
