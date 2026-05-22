@@ -2521,6 +2521,19 @@ function addToSidebar() {
     aboutNode.setAttribute("data-l10n-id", "category-natsumi-about");
     aboutNode.innerHTML = "About Natsumi";
 
+    // Set icon if needed
+    let iconPack = "";
+
+    if (ucApi.Prefs.get("natsumi.theme.icons").exists()) {
+        iconPack = ucApi.Prefs.get("natsumi.theme.icons").value;
+    }
+
+    if (iconPack === "fluent") {
+        customizeNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/fluent/paintbrush.svg");
+        shortcutsNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/fluent/meta.svg");
+        aboutNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/fluent/info.svg");
+    }
+
     let sidebar = document.getElementById("categories");
     let generalPane = sidebar.querySelector("#category-general");
 

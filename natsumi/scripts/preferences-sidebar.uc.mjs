@@ -80,8 +80,6 @@ function addSidebarSubcategory(categoryButton) {
     }
 
     if (allSubcategories.length <= 1 || categoryShadowButton === null || categoryShadowButton === undefined) {
-        console.log(`Found no subcategories or shadow root for ${categoryName}.`);
-
         if (!hasDynamic.includes(categoryName)) {
             categoryButton.addEventListener("click", () => {
                 addSidebarSubcategory(categoryButton);
