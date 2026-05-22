@@ -1,0 +1,183 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Preferences theme ==== */
+
+@-moz-document url-prefix(about:addons) {
+  @media not -moz-pref("natsumi.theme.classic-preferences") {
+    body {
+      --natsumi-background-color: color-mix(in srgb, var(--natsumi-primary-color) 10%, white 90%);
+      background-color: var(--natsumi-background-color) !important;
+
+      @media (prefers-color-scheme: dark) {
+        --natsumi-background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%);
+      }
+    }
+
+    body[natsumi-addons-redesign] {
+      * {
+        --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        --button-background-color-primary: var(--color-accent-primary) !important;
+        --button-background-color-primary: var(--color-accent-primary) !important;
+        --button-background-color-primary-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
+        --button-background-color-primary-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+      }
+
+      #page-header {
+        display: flex !important;
+        background: transparent !important;
+      }
+
+      .sticky-container {
+        background: transparent !important;
+        max-width: calc(100% - calc(var(--space-xxlarge) * 2)) !important;
+        padding-inline: var(--space-xxlarge);
+
+        @media (max-width: 950px) {
+          max-width: calc(100% - calc(var(--space-medium) * 2)) !important;
+          padding-inline: var(--space-medium);
+        }
+      }
+
+      global-warnings {
+        margin: 0 !important;
+      }
+
+      .main-search {
+        position: fixed;
+        max-width: unset !important;
+        width: -moz-available !important;
+        height: 38px !important;
+        background: transparent !important;
+        padding-top: 72px !important;
+        padding-bottom: 0.5rem !important;
+        padding-left: 0 !important;
+        margin-inline: -4px;
+        margin-bottom: 4px !important;
+        padding-right: var(--space-xxlarge);
+
+        &::before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 72px;
+          background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
+          z-index: 999;
+          top: 0 !important;
+        }
+
+        @media (max-width: 950px) {
+          padding-right: var(--space-medium);
+        }
+
+        .search-label {
+          display: none !important;
+        }
+
+        search-addons {
+          width: calc(100% + 4px) !important;
+          border-radius: 18px !important;
+          background-color: var(--natsumi-mat-th-background);
+          backdrop-filter: var(--natsumi-mat-th-backdrop);
+          border: var(--natsumi-mat-th-border-thin);
+          box-shadow: var(--natsumi-mat-th-shadow);
+
+          moz-input-search {
+            width: -moz-available !important;
+          }
+
+          moz-button {
+            margin: 2px !important;
+          }
+        }
+      }
+
+      .main-heading {
+        margin-top: calc(114px + 0.5rem) !important;
+        margin-left: 0 !important;
+        background: transparent !important;
+        max-width: unset !important;
+      }
+
+      #main {
+        max-width: 100% !important;
+        padding-inline: var(--space-xxlarge);
+        margin-left: 0 !important;
+
+        @media (max-width: 950px) {
+          padding-inline: var(--space-medium);
+        }
+      }
+
+      addon-list[type="theme"], recommended-themes-section, recommended-addon-list {
+        display: block;
+        max-width: var(--page-main-content-width) !important;
+      }
+
+      @media (max-width: 950px) {
+        #full {
+          --sidebar-width: calc(72px + 0.5rem);
+        }
+
+        moz-page-nav {
+          width: 32px !important;
+        }
+      }
+
+      @media -moz-pref("browser.nova.enabled") {
+        .content-wrapper, button {
+          --button-border: 1px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+          --button-border-color-disabled: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+          --select-border: var(--button-border) !important;
+          --select-border-color-hover: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+          --select-border-color-disabled: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+          --select-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
+          --toggle-background-color-pressed-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
+          --toggle-background-color-pressed-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+          --toggle-background-color-hover: color-mix(in srgb, var(--color-accent-primary) 20%, transparent) !important;
+          --toggle-background-color-active: color-mix(in srgb, var(--color-accent-primary) 30%, transparent) !important;
+        }
+      }
+    }
+  }
+
+  #input[type="search"] {
+    appearance: none;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    height: 36px !important;
+  }
+
+  .page-nav-icon {
+    -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity !important;
+    stroke: currentColor;
+
+    &[src*="chrome://natsumi/content/icons/fluent"] {
+      scale: 1.2 !important;
+    }
+  }
+}
