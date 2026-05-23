@@ -1268,6 +1268,68 @@ SOFTWARE.
         }
       }
 
+      .natsumi-custom-theme-image {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/custom-image.svg");
+        }
+
+        .natsumi-custom-theme-tool-container:not([hidden]) {
+          display: block;
+        }
+
+        .natsumi-image-container {
+          height: 44px !important;
+          align-items: center;
+          margin-bottom: 10px !important;
+          gap: 8px;
+          border-radius: 10px;
+          background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+        }
+
+        .natsumi-image-blur {
+          display: block;
+        }
+
+        .natsumi-image-current {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-left: 8px !important;
+        }
+
+        .natsumi-image-remove, .natsumi-image-submit {
+          min-width: 36px !important;
+          min-height: 36px !important;
+          margin-block: 4px !important;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+          border-radius: 6px;
+          -moz-context-properties: stroke, stroke-opacity;
+          stroke: light-dark(black, white);
+          background-size: 20px;
+          background-repeat: no-repeat;
+          background-position: center;
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color);
+          }
+
+          &:active {
+            background-color: var(--natsumi-button-active-color);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          }
+        }
+
+        .natsumi-image-remove {
+          background-image: url("../icons/lucide/close.svg");
+        }
+
+        .natsumi-image-submit {
+          background-image: url("../icons/lucide/upload-image.svg");
+          margin-right: 4px !important;
+        }
+      }
+
       .natsumi-custom-theme-text-color {
         .natsumi-custom-theme-tool-icon {
           background-image: url("../icons/lucide/text.svg");
@@ -1574,6 +1636,26 @@ SOFTWARE.
         .natsumi-custom-theme-slider-icon-0 {
           stroke: var(--natsumi-slider-custom-stroke, white);
           background-image: url("../icons/lucide/grain-0.svg");
+        }
+      }
+
+      &.natsumi-color-slider-image-opacity {
+        background-image: url("../icons/custom/transparent.png");
+        background-size: 20px;
+        margin-bottom: 10px !important;
+
+        &::before {
+          background: linear-gradient(90deg, light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)), transparent);
+        }
+
+        .natsumi-custom-theme-slider-icon-1 {
+          stroke: light-dark(white, black);
+          background-image: url("../icons/lucide/opacity-1.svg");
+        }
+
+        .natsumi-custom-theme-slider-icon-0 {
+          stroke: light-dark(black, white);
+          background-image: url("../icons/lucide/opacity-0.svg");
         }
       }
     }
