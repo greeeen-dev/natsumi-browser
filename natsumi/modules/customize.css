@@ -87,7 +87,7 @@ SOFTWARE.
     --natsumi-bookmarks-offset: 28px;
   }
 
-  &:has(#navigator-toolbox.fullscreen-with-menubar) #customization-panel-container {
+  &:has(#navigator-toolbox.fullscreen-with-menubar, #navigator-toolbox.fullscreen-floating-toolbox) #customization-panel-container {
     --natsumi-macos-offset: 62px;
   }
 }

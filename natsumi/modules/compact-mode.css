@@ -318,7 +318,7 @@ SOFTWARE.
         transition: background 0s linear, opacity 0.1s ease, top 0.1s ease !important;
         z-index: 999 !important;
         border-radius: 0 0 6px 6px !important;
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.6) !important;
         --natsumi-compact-bookmarks-height: 0px;
         --natsumi-compact-tabs-height: 0px;
         --natsumi-compact-offset: calc(40px + var(--natsumi-compact-bookmarks-height) + var(--natsumi-compact-tabs-height) - var(--natsumi-compact-hoverable));
@@ -376,6 +376,7 @@ SOFTWARE.
       &[natsumi-compact-navbar-hover] #navigator-toolbox,
       &[natsumi-compact-navbar-extend] #navigator-toolbox,
       #navigator-toolbox.fullscreen-with-menubar,
+      #navigator-toolbox.fullscreen-floating-toolbox,
       #navigator-toolbox:has(toolbarbutton[open], #urlbar[focused]) {
         top: 0 !important;
         opacity: 1 !important;
@@ -387,6 +388,7 @@ SOFTWARE.
 
       &[natsumi-compact-navbar-hover], &[natsumi-compact-navbar-extend],
       &:has(#navigator-toolbox.fullscreen-with-menubar),
+      &:has(#navigator-toolbox.fullscreen-floating-toolbar),
       &:has(#navigator-toolbox toolbarbutton[open], #urlbar[focused]) {
         @media not -moz-pref("natsumi.theme.compact-smaller-sidebar") {
           #sidebar-main {
@@ -466,7 +468,7 @@ SOFTWARE.
         }
       }
 
-      &[natsumi-bookmarks-hover] {
+      &[natsumi-bookmarks-hover], &[natsumi-bookmarks-extend] {
         #sidebar-main {
           top: 28px !important;
           --natsumi-sidebar-height-offset: 28px !important;

@@ -212,9 +212,17 @@ SOFTWARE.
   /* Global fixes */
   @media -moz-pref("natsumi.theme.single-toolbar") {
     #urlbar:not([open]) {
+      translate: 0 !important;
+
       .urlbar-input-container {
         min-height: 40px !important;
       }
+    }
+
+    #navigator-toolbox {
+      border-radius: 0 !important;
+      background-image: none !important;
+      translate: 0 !important;
     }
   }
 
@@ -225,6 +233,13 @@ SOFTWARE.
       .urlbar-input-container {
         max-height: 30px !important;
       }
+    }
+  }
+
+  body:not([natsumi-compact-mode]) {
+    #navigator-toolbox {
+      border-radius: 0 !important;
+      background-image: none !important;
     }
   }
 

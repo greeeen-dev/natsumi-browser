@@ -217,7 +217,7 @@ SOFTWARE.
 #navigator-toolbox {
   transition: background-color 0.3s ease;
 
-  &.fullscreen-with-menubar {
+  &.fullscreen-with-menubar, &.fullscreen-floating-toolbox {
     background-color: var(--natsumi-toolbox-color) !important;
 
     &:-moz-window-inactive {

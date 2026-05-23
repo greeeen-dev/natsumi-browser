@@ -44,6 +44,7 @@ class NatsumiSingleToolbarManager {
 
     init() {
         this.detectBookmarkHover();
+        this.extendBookmarksIfNeeded();
 
         // Check if single toolbar is active
         let singleToolbarEnabled = false;
@@ -84,6 +85,25 @@ class NatsumiSingleToolbarManager {
             }
         });
 
+        // Create observer for bookmarks bar hover pref
+        Services.prefs.addObserver("natsumi.theme.show-bookmarks-on-hover", () => {
+            this.extendBookmarksIfNeeded();
+        });
+        Services.prefs.addObserver("natsumi.theme.force-window-controls-to-left", () => {
+            this.extendBookmarksIfNeeded();
+        });
+        Services.prefs.addObserver("sidebar.position_start", () => {
+            this.extendBookmarksIfNeeded();
+        });
+
+        // Create event listeners for window
+        window.addEventListener("willenterfullscreen", () => {
+            this.extendBookmarksIfNeeded(true);
+        })
+        window.addEventListener("willexitfullscreen", () => {
+            this.extendBookmarksIfNeeded(false);
+        })
+
         // Add event listeners for customization
         window.gNavToolbox.addEventListener("aftercustomization", () => {
             let singleToolbarEnabled = false;
@@ -109,6 +129,45 @@ class NatsumiSingleToolbarManager {
 
             resetCustomizableToolbar();
         });
+    }
+
+    extendBookmarksIfNeeded(isFullScreen = null) {
+        let hoverableBookmarksEnabled = false;
+        let controlsInSidebar = false;
+        const sidebarOnLeft = ucApi.Prefs.get("sidebar.position_start").value;
+        const isMac = Services.appinfo.OS.toLowerCase() === "darwin";
+
+        if (isFullScreen === null) {
+            isFullScreen = document.documentElement.hasAttribute("inFullscreen");
+        }
+
+        if (ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").exists()) {
+            hoverableBookmarksEnabled = ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").value;
+        }
+        if (ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").exists()) {
+            controlsInSidebar = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
+        }
+
+        if (hoverableBookmarksEnabled) {
+            document.body.removeAttribute("natsumi-bookmarks-extend");
+            return;
+        }
+
+        if (isMac && !sidebarOnLeft && !controlsInSidebar && !isFullScreen) {
+            document.body.setAttribute("natsumi-bookmarks-extend", "");
+        } else if (!isMac && sidebarOnLeft && !controlsInSidebar) {
+            document.body.setAttribute("natsumi-bookmarks-extend", "");
+        } else {
+            document.body.removeAttribute("natsumi-bookmarks-extend");
+        }
+    }
+
+    canUseHoverable() {
+        if (ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").exists()) {
+            return ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").value;
+        }
+
+        return false;
     }
 
     setHover(isWindowButton = false) {
@@ -182,6 +241,11 @@ class NatsumiSingleToolbarManager {
     }
 
     detectBookmarkHover() {
+        if (!this.canUseHoverable()) {
+            this.removeHover();
+            return;
+        }
+
         let bookmarksToolbar = document.getElementById("PersonalToolbar");
         let windowButtonsContainer = document.querySelector("#PersonalToolbar .titlebar-buttonbox-container");
 
@@ -202,7 +266,6 @@ class NatsumiSingleToolbarManager {
 
         if (windowButtonsContainer) {
             windowButtonsContainer.addEventListener("mouseover", (event) => {
-                console.log(event);
                 this.setHover(true);
             });
             windowButtonsContainer.addEventListener("mouseout", (event) => {
