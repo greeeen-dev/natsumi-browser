@@ -159,7 +159,7 @@ SOFTWARE.
       }
 
       @media not (-moz-platform: macos) {
-        @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
+        @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) and (-moz-pref("sidebar.position_start")) {
           visibility: visible !important;
         }
       }
