@@ -317,6 +317,7 @@ class CustomThemePicker {
         }
 
         resetButton.addEventListener("click", () => {
+            this.removeImage();
             this.removeAllColors();
         });
 
@@ -1770,6 +1771,7 @@ class CustomThemePicker {
         this.renderGrid();
         this.renderSliders();
         this.renderAngle();
+        this.renderMisc();
         this.saveLayer();
     }
 
