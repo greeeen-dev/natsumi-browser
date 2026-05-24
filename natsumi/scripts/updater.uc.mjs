@@ -127,7 +127,7 @@ class NatsumiUpdater {
         })
     }
 
-    async downloadZip(url, fileName) {
+    async downloadZip(url, fileName, fileHash = null) {
         // Get file
         const zipResponse = await fetch(url);
         const zipName = zipResponse.headers.get('content-disposition').split("filename=")[1];
@@ -140,6 +140,16 @@ class NatsumiUpdater {
         // Get file data
         const zipBlob = await zipResponse.blob();
         const zipBytes = await zipBlob.bytes();
+
+        // Check file hash if provided
+        if (fileHash) {
+            const hashBuffer = await window.crypto.subtle.digest("SHA-256", zipBytes);
+            const zipHash = new Uint8Array(hashBuffer).toHex();
+
+            if (zipHash !== fileHash) {
+                throw new Error(`Hash mismatch: expected ${fileHash}, got ${zipHash}`)
+            }
+        }
 
         // Write file data
         const toWritePath = PathUtils.join(natsumiDownloadPath, fileName);
@@ -193,9 +203,10 @@ class NatsumiUpdater {
 
     async downloadUpdate(updateData) {
         let versionTag = updateData["tag"];
+        let versionHash = updateData["hash"];
 
         // Download zip file
-        await this.downloadZip(`https://github.com/greeeen-dev/natsumi-browser/archive/refs/tags/${versionTag}.zip`, "update.zip")
+        await this.downloadZip(`https://github.com/greeeen-dev/natsumi-browser/archive/refs/tags/${versionTag}.zip`, "update.zip", versionHash)
 
         // Extract zip file
         await this.extractZip("update.zip");
