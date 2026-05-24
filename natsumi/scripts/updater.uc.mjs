@@ -43,6 +43,20 @@ function convertToXUL(node) {
     return window.MozXULElement.parseXULToFragment(node);
 }
 
+function shouldDisableUpdater() {
+    // Detect disabled updater
+    if (ucApi.Prefs.get("natsumi.updater.disabled").exists()) {
+        if (ucApi.Prefs.get("natsumi.updater.disabled").value) {
+            return true;
+        }
+    }
+
+    // Detect Sine
+    if (window.addUnloadListener) {
+        return true;
+    }
+}
+
 class NatsumiUpdater {
     constructor() {
         this.updaterAvailable = true;
@@ -58,6 +72,9 @@ class NatsumiUpdater {
         if (ucApi.Prefs.get("natsumi.updater.keep-old-versions").exists()) {
             this.keepOldVersions = ucApi.Prefs.get("natsumi.updater.keep-old-versions").value;
         }
+
+        // Disable updater if needed
+        this.updaterAvailable = !shouldDisableUpdater();
     }
 
     async checkForUpdates() {

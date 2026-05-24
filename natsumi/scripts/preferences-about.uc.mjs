@@ -124,6 +124,14 @@ function checkForUpdates() {
     }, 100);
 }
 
+function setUpdaterUnavailable() {
+    const updaterContainer = document.getElementById("natsumi-about-updater");
+    const updaterStatus = document.getElementById("natsumi-about-updater-status");
+
+    updaterContainer.setAttribute("natsumi-update-disabled", "");
+    updaterStatus.textContent = "Updates are disabled or externally managed";
+}
+
 function addAboutPane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
@@ -249,7 +257,15 @@ function addAboutPane() {
     })
 
     // Run initial check
-    checkForUpdates();
+    const lastFocusedWindow = ucApi.Windows.getLastFocused();
+    const primaryDocument = lastFocusedWindow.document;
+    const updater = primaryDocument.body.natsumiUpdater;
+
+    if (updater.updaterAvailable) {
+        checkForUpdates();
+    } else {
+        setUpdaterUnavailable();
+    }
 }
 
 function addToSidebar() {
