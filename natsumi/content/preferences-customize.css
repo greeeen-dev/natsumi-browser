@@ -1291,11 +1291,12 @@ SOFTWARE.
         }
 
         .natsumi-image-current {
+          display: block;
           flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          margin-left: 8px !important;
+          margin-left: 12px !important;
         }
 
         .natsumi-image-remove, .natsumi-image-submit {
