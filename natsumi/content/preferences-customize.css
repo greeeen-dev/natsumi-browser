@@ -1166,6 +1166,10 @@ SOFTWARE.
       flex-direction: column;
       gap: 8px;
 
+      &[hidden] {
+        display: none;
+      }
+
       &:not([hidden]) {
         .natsumi-custom-theme-tool {
           animation: tool-fadein 0.2s ease;
