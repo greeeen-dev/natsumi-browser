@@ -277,6 +277,7 @@ class NatsumiWelcome {
 
         this.hasCompletedOnboarding = true;
         document.body.setAttribute("natsumi-welcome-complete", "");
+        document.body.removeAttribute("natsumi-welcome");
 
         setTimeout(() => {
             // Show welcome complete drumroll
@@ -290,7 +291,6 @@ class NatsumiWelcome {
 
         setTimeout(() => {
             // We're finally through with the welcome
-            document.body.removeAttribute("natsumi-welcome");
             document.body.removeAttribute("natsumi-welcome-complete");
             document.body.removeAttribute("natsumi-welcome-drumroll-complete");
             document.body.removeAttribute("natsumi-welcome-complete-full");
