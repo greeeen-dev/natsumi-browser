@@ -58,6 +58,22 @@ SOFTWARE.
     #sidebar-launcher-splitter {
       margin-inline: -6px 0 !important;
     }
+
+    body:not([natsumi-compact-mode]) {
+      #navigator-toolbox {
+        border-radius: 0 !important;
+        background-image: none !important;
+      }
+    }
+
+    @media (
+      not -moz-pref("natsumi.theme.compact-style", "toolbar")
+    ) or -moz-pref("natsumi.theme.single-toolbar") {
+      #navigator-toolbox {
+        border-radius: 0 !important;
+        background-image: none !important;
+      }
+    }
   }
 
   /* Islands mode */
@@ -67,6 +83,7 @@ SOFTWARE.
     }
 
     #navigator-toolbox {
+      background-image: none !important;
       background-color: var(--toolbar-background-color) !important;
       border: 1px solid var(--chrome-content-separator-color) !important;
     }
@@ -127,6 +144,11 @@ SOFTWARE.
       }
 
       @media -moz-pref("natsumi.theme.single-toolbar") {
+        #navigator-toolbox {
+          border-radius: 0 !important;
+          background-image: none !important;
+        }
+
         #PersonalToolbar {
           max-width: calc(var(--natsumi-bookmarks-width) - var(--natsumi-browser-separation)) !important;
           --natsumi-bookmarks-override: calc(var(--natsumi-sidebar-width) + var(--natsumi-browser-separation));
