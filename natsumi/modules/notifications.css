@@ -54,11 +54,16 @@ SOFTWARE.
   text-align: right;
 
   @media -moz-pref("natsumi.theme.single-toolbar") {
-    top: 20px;
+    top: 40px;
   }
 
   @media not -moz-pref("sidebar.verticalTabs") {
     top: 90px;
+  }
+
+  @media not -moz-pref("sidebar.position_start") {
+    right: unset !important;
+    left: 20px;
   }
 
   &[style*="--natsumi-notifications-overflow"] {
