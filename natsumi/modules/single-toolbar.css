@@ -33,9 +33,11 @@ SOFTWARE.
       z-index: 1 !important;
     }
 
-    body[natsumi-compact-mode] #navigator-toolbox.fullscreen-with-menubar {
-      background-color: transparent !important;
-      box-shadow: none !important;
+    body[natsumi-compact-mode] {
+      #navigator-toolbox.fullscreen-with-menubar, #navigator-toolbox.fullscreen-floating-toolbox {
+        background-color: transparent !important;
+        box-shadow: none !important;
+      }
     }
 
     @media not -moz-pref("natsumi.browser.type", "floorp") {
@@ -56,6 +58,7 @@ SOFTWARE.
       min-height: 40px;
       order: 1 !important;
       overflow-x: scroll;
+      scrollbar-width: none;
 
       & > toolbarbutton, & > toolbaritem, & > toolbarspring {
         display: none !important;
@@ -86,35 +89,13 @@ SOFTWARE.
         }
       }
 
-      @media not -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        #stop-reload-button {
-          margin-right: var(--urlbar-margin-inline) !important;
-        }
-      }
-    }
-
-    #nav-bar:not([overflowing], [nonemptyoverflow], [customizing]) {
-      @media not -moz-pref("natsumi.theme.force-customizable-single-toolbar") {
-        #stop-reload-button {
-          margin-right: var(--urlbar-margin-inline) !important;
-        }
+      #stop-reload-button {
+        margin-right: var(--urlbar-margin-inline) !important;
       }
     }
 
     #nav-bar-overflow-button {
-      order: 999 !important;
-
-      @media not -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        display: none !important;
-      }
-
-      @media -moz-pref("natsumi.theme.force-customizable-single-toolbar") and -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        display: flex !important;
-      }
-
-      @media -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        margin-right: var(--urlbar-margin-inline) !important;
-      }
+      display: none !important;
     }
 
     #urlbar-container {
@@ -171,13 +152,37 @@ SOFTWARE.
       min-height: 40px !important;
       max-height: 40px !important;
 
-      &[collapsed="true"] {
+      @media (-moz-platform: macos) {
+        .titlebar-buttonbox-container {
+          margin-left: 4px !important;
+        }
+      }
+
+      @media not (-moz-platform: macos) {
+        @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) and (-moz-pref("sidebar.position_start")) {
+          visibility: visible !important;
+        }
+      }
+
+      &[collapsed] {
         #PlacesToolbar {
-          visibility: collapse;
+          visibility: collapse !important;
         }
 
         .chromeclass-toolbar-additional {
           visibility: collapse !important;
+        }
+      }
+    }
+
+    @media (-moz-platform: macos) {
+      body:not([inFullscreen]) #PersonalToolbar {
+        @media (
+          not (-moz-pref("natsumi.theme.force-window-controls-to-left"))
+        ) and (
+          not (-moz-pref("sidebar.position_start"))
+        ) {
+          visibility: visible !important;
         }
       }
     }
@@ -228,7 +233,7 @@ SOFTWARE.
       padding-inline: 0 !important;
     }
 
-    body[natsumi-compact-mode]:has(#navigator-toolbox.fullscreen-with-menubar) #PersonalToolbar {
+    body[natsumi-compact-mode]:has(#navigator-toolbox.fullscreen-with-menubar, #navigator-toolbox.fullscreen-floating-toolbox) #PersonalToolbar {
       background-color: var(--natsumi-toolbox-color) !important;
     }
 
@@ -266,7 +271,7 @@ SOFTWARE.
     }
 
     @media not -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
-      #PersonalToolbar[collapsed] {
+      body:not([natsumi-bookmarks-extend]) #PersonalToolbar[collapsed] {
         visibility: collapse;
 
         #PersonalToolbar .chromeclass-toolbar-additional {
@@ -293,14 +298,14 @@ SOFTWARE.
           z-index: 999 !important;
         }
 
-        body:not([natsumi-bookmarks-hover]), body[natsumi-compact-sidebar-hover], body[natsumi-compact-sidebar-extend] {
+        body:not([natsumi-bookmarks-hover]):not([natsumi-bookmarks-extend]), body[natsumi-compact-sidebar-hover], body[natsumi-compact-sidebar-extend] {
           #PersonalToolbar {
             -moz-window-dragging: no-drag !important;
             translate: 0 calc(-34px + var(--natsumi-browser-separation));
           }
         }
 
-        body[natsumi-bookmarks-hover] {
+        body[natsumi-bookmarks-hover], body[natsumi-bookmarks-extend] {
           #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
             transition-delay: 0s !important;
             margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
@@ -326,12 +331,14 @@ SOFTWARE.
           }
         }
 
-        &:not([inFullscreen="true"]) body[natsumi-bookmarks-hover] {
-          @media not -moz-pref("sidebar.position_start") {
-            @media (-moz-platform: macos) {
-              @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
-                #PersonalToolbar .titlebar-buttonbox-container {
-                  display: flex !important;
+        &:not([inFullscreen="true"]) {
+          body[natsumi-bookmarks-hover], body[natsumi-bookmarks-extend] {
+            @media not -moz-pref("sidebar.position_start") {
+              @media (-moz-platform: macos) {
+                @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
+                  #PersonalToolbar .titlebar-buttonbox-container {
+                    display: flex !important;
+                  }
                 }
               }
             }
@@ -341,7 +348,7 @@ SOFTWARE.
     }
 
     @media not -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
-      body:has(#PersonalToolbar:not([collapsed])) {
+      body:has(#PersonalToolbar:not([collapsed])), body[natsumi-bookmarks-extend] {
         #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
           margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
 
@@ -352,14 +359,12 @@ SOFTWARE.
         }
       }
 
-      &:not([inFullscreen="true"]) body:has(#PersonalToolbar[collapsed]) {
-        @media not -moz-pref("sidebar.position_start") {
-          @media (-moz-platform: macos) {
-            @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
-              #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
-                margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
-              }
-            }
+      body[natsumi-bookmarks-extend] {
+        #PersonalToolbar {
+          visibility: visible !important;
+
+          &[collapsed] #personal-bookmarks {
+            visibility: collapse !important;
           }
         }
       }

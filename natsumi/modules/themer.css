@@ -217,11 +217,26 @@ SOFTWARE.
 #navigator-toolbox {
   transition: background-color 0.3s ease;
 
-  &.fullscreen-with-menubar {
+  &.fullscreen-with-menubar, &.fullscreen-floating-toolbox {
     background-color: var(--natsumi-toolbox-color) !important;
 
     &:-moz-window-inactive {
       background-color: var(--natsumi-toolbox-color-inactive) !important;
     }
+  }
+}
+
+@media -moz-pref("browser.theme.native-theme") {
+  body::after {
+    z-index: -3 !important;
+    appearance: none !important;
+  }
+
+  #browser::before {
+    z-index: -2 !important;
+  }
+
+  #browser::after {
+    z-index: -1 !important;
   }
 }

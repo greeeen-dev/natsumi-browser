@@ -359,20 +359,4 @@ export class NatsumiShortcutActions {
 
         document.body.natsumiGesturesWrapper.executeAction("floorp-toggle-command-palette");
     }
-
-    static lockLockscreen() {
-        if (!document.body.natsumiLockScreenManager) {
-            return;
-        }
-
-        document.body.natsumiLockScreenManager.lockLockscreen();
-    }
-
-    static unlockLockscreen() {
-        if (!document.body.natsumiLockScreenManager) {
-            return;
-        }
-
-        document.body.natsumiLockScreenManager.unlockLockscreen();
-    }
 }

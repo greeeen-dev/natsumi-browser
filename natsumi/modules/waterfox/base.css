@@ -125,7 +125,7 @@ SOFTWARE.
 
   /* For some reason, we need this here to fight Waterfox's own CSS */
   #navigator-toolbox {
-    &.fullscreen-with-menubar {
+    &.fullscreen-with-menubar, &.fullscreen-floating-toolbox {
       background-color: var(--natsumi-toolbox-color) !important;
 
       &:-moz-window-inactive {

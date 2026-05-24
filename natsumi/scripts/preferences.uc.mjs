@@ -34,6 +34,11 @@ SOFTWARE.
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import { NatsumiNotification } from "./notifications.sys.mjs";
 import {
+    uploadFile,
+    getFile,
+    deleteFile
+} from "./files.sys.mjs";
+import {
     customThemeLoader,
     // customColorLoader,
     colorPresetNames,
@@ -70,6 +75,9 @@ if (hasRedesignV2) {
     categoryHeader = "h2"
 }
 
+// Pride easter egg!
+let lgbtqThemeClicked = 0;
+
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
     return window.MozXULElement.parseXULToFragment(node);
@@ -96,6 +104,9 @@ class CustomThemePicker {
         this.gradientType = "linear";
         this.angle = 0;
         this.colors = [];
+        this.customImage = null;
+        this.customImageOpacity = 1;
+        this.customImageBlur = "none";
         this.managedPosition = false;
         this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.grain = 0;
@@ -252,9 +263,13 @@ class CustomThemePicker {
         let colorPositionButton = this.node.querySelector(".natsumi-position-button");
         let resetButton = this.node.querySelector(".natsumi-reset-button");
         let hexInput = this.node.querySelector(".natsumi-hex-input");
+        let imageInput = this.node.querySelector(".natsumi-image-submit");
+        let imageRemove = this.node.querySelector(".natsumi-image-remove");
+        let imageBlurOptions = this.node.querySelectorAll(".natsumi-image-blur-choice");
         let toolsButton = this.node.querySelector(".natsumi-tools-button");
         let hexButton = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-button");
         let grainButton = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-button");
+        let customImageButton = this.node.querySelector(".natsumi-custom-theme-image .natsumi-custom-theme-tool-button");
         let textColorButton = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-button");
         const actionButtons = [presetButton, gradientTypeButton, colorPositionButton, resetButton, toolsButton];
 
@@ -305,6 +320,7 @@ class CustomThemePicker {
         }
 
         resetButton.addEventListener("click", () => {
+            this.removeImage();
             this.removeAllColors();
         });
 
@@ -320,7 +336,7 @@ class CustomThemePicker {
 
         hexButton.addEventListener("click", () => {
             let hexInputContainer = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-container");
-            if (hexInputContainer.attributes["hidden"]) {
+            if (hexInputContainer.hasAttribute("hidden")) {
                 hexInputContainer.removeAttribute("hidden");
             } else {
                 hexInputContainer.setAttribute("hidden", "");
@@ -328,18 +344,45 @@ class CustomThemePicker {
             }
         });
 
+        imageInput.addEventListener("click", () => {
+            this.uploadImage().catch((e) => {
+                console.error(e);
+            });
+        })
+
+        imageRemove.addEventListener("click", () => {
+            this.removeImage();
+        })
+
         grainButton.addEventListener("click", () => {
             let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-container");
-            if (grainSliderContainer.attributes["hidden"]) {
+            if (grainSliderContainer.hasAttribute("hidden")) {
                 grainSliderContainer.removeAttribute("hidden");
             } else {
                 grainSliderContainer.setAttribute("hidden", "");
             }
         })
 
+        customImageButton.addEventListener("click", () => {
+            let customImageContainer = this.node.querySelector(".natsumi-custom-theme-image .natsumi-custom-theme-tool-container");
+            if (customImageContainer.hasAttribute("hidden")) {
+                customImageContainer.removeAttribute("hidden");
+            } else {
+                customImageContainer.setAttribute("hidden", "");
+            }
+        })
+
+        imageBlurOptions.forEach(button => {
+            button.addEventListener("click", () => {
+                this.setImageBlur(button.getAttribute("value"));
+                this.renderMisc();
+                this.saveLayer();
+            });
+        });
+
         textColorButton.addEventListener("click", () => {
             let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-container");
-            if (grainSliderContainer.attributes["hidden"]) {
+            if (grainSliderContainer.hasAttribute("hidden")) {
                 grainSliderContainer.removeAttribute("hidden");
             } else {
                 grainSliderContainer.setAttribute("hidden", "");
@@ -389,6 +432,8 @@ class CustomThemePicker {
         let luminositySliderNode = this.node.querySelector(".natsumi-color-slider-luminosity");
         let opacitySliderNode = this.node.querySelector(".natsumi-color-slider-opacity");
         let grainSliderNode = this.node.querySelector(".natsumi-color-slider-grain");
+        let imageOpacitySliderNode = this.node.querySelector(".natsumi-color-slider-image-opacity");
+
         luminositySliderNode.addEventListener("mousedown", (event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -407,6 +452,12 @@ class CustomThemePicker {
             event.stopPropagation();
             event.preventDefault();
             this.sliderEvent("grain", event);
+        });
+
+        imageOpacitySliderNode.addEventListener("mousedown", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            this.sliderEvent("image-opacity", event);
         });
 
         // Add listener for gradient angle
@@ -532,9 +583,21 @@ class CustomThemePicker {
                 toLoad["version"] = 1;
             }
 
-            this.data = this.loaderMethod(toLoad);
+            this.data = this.loaderMethod(toLoad, false);
         } catch(e) {
             console.error("Import failed:", e);
+
+            if (e.message !== "Import timed out.") {
+                let notification = new NatsumiNotification(
+                    "Theme import failed.",
+                    "Either the theme is corrupted or something went wrong with the import process.",
+                    "chrome://natsumi/content/icons/lucide/caution.svg",
+                    10000,
+                    "caution"
+                );
+                notification.addToContainer();
+            }
+
             return;
         }
 
@@ -638,9 +701,21 @@ class CustomThemePicker {
             this.textColor = this.data[this.theme]["textColor"];
         }
 
+        this.customImageOpacity = 1;
+        this.customImageBlur = "none";
+
+        if (this.data[this.theme][`${layer}`]["image"]) {
+            this.customImage = this.data[this.theme][`${layer}`]["image"]["id"];
+            this.customImageOpacity = this.data[this.theme][`${layer}`]["image"]["opacity"] ?? 1;
+            this.customImageBlur = this.data[this.theme][`${layer}`]["image"]["blur"] ?? "none";
+        } else {
+            this.customImage = null;
+        }
+
         this.renderGrid();
         this.renderSliders();
         this.renderAngle();
+        this.renderMisc();
     }
 
     async saveLayer() {
@@ -673,14 +748,34 @@ class CustomThemePicker {
                         continue;
                     }
 
-                    if (!layerData["background"]) {
+                    let hasImage = false;
+                    if (layerData["image"]) {
+                        hasImage = layerData["image"]["id"] !== undefined;
+                    }
+
+                    if (!layerData["background"] && !hasImage) {
                         continue;
                     }
 
-                    if (layerData["background"]["colors"]) {
+                    if (layerData["background"] && layerData["background"]["colors"]) {
                         usedColors += layerData["background"]["colors"].length;
                     }
+
+                    if (hasImage) {
+                        usedColors += 1;
+                    }
                 }
+            }
+
+            if (this.customImage) {
+                this.data[this.theme][`${this.layer}`]["image"] = {
+                    "id": this.customImage,
+                    "opacity": this.customImageOpacity,
+                    "blur": this.customImageBlur
+                };
+                usedColors += 1;
+            } else {
+                this.data[this.theme][`${this.layer}`]["image"] = {};
             }
         }
 
@@ -786,6 +881,68 @@ class CustomThemePicker {
                                 <div class="natsumi-custom-theme-slider natsumi-color-slider-grain">
                                     <div class="natsumi-custom-theme-slider-icon-1"></div>
                                     <div class="natsumi-custom-theme-slider-icon-0"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-image">
+                            <div class="natsumi-custom-theme-tool-button">
+                                <div class="natsumi-custom-theme-tool-icon"></div>
+                                <div class="natsumi-custom-theme-tool-label">
+                                    Image
+                                </div>
+                            </div>
+                            <div class="natsumi-custom-theme-tool-container" hidden="">
+                                <div class="natsumi-image-container">
+                                    <div class="natsumi-image-current"></div>
+                                    <div class="natsumi-image-remove"></div>
+                                    <div class="natsumi-image-submit"></div>
+                                </div>
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-image-opacity">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                    <div class="natsumi-custom-theme-slider-icon-0"></div>
+                                </div>
+                                <div class="natsumi-image-blur">
+                                    <div class="natsumi-image-blur-label">
+                                        Image blur
+                                    </div>
+                                    <radiogroup class="natsumi-image-blur-select" value="none">
+                                        <radio class="natsumi-image-blur-choice" value="none" selected="true">
+                                            <image class="radio-check" selected="true"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    None
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                        <radio class="natsumi-image-blur-choice" value="light">
+                                            <image class="radio-check"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    Light
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                        <radio class="natsumi-image-blur-choice" value="medium">
+                                            <image class="radio-check"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    Medium
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                        <radio class="natsumi-image-blur-choice" value="strong">
+                                            <image class="radio-check"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    Strong
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                    </radiogroup>
                                 </div>
                             </div>
                         </div>
@@ -1418,7 +1575,7 @@ class CustomThemePicker {
             relativeX = Math.round(sliderWidth * (1 - sliderValue));
         }
 
-        if (slider !== "grain" && this.lastSelected === null) {
+        if (slider !== "grain" && slider !== "image-opacity" && this.lastSelected === null) {
             // No color selected here, so we can't modify its properties
             return;
         }
@@ -1430,6 +1587,8 @@ class CustomThemePicker {
         } else if (slider === "grain") {
             sliderValue = 1 - sliderValue;
             this.setGrain(sliderValue);
+        } else if (slider === "image-opacity") {
+            this.setImageOpacity(sliderValue);
         }
 
         sliderNode.style.setProperty("--natsumi-slider-position", `${relativeX}px`);
@@ -1442,6 +1601,7 @@ class CustomThemePicker {
         let luminositySliderNode = this.node.querySelector(".natsumi-color-slider-luminosity");
         let opacitySliderNode = this.node.querySelector(".natsumi-color-slider-opacity");
         let grainSliderNode = this.node.querySelector(".natsumi-color-slider-grain");
+        let imageOpacitySliderNode = this.node.querySelector(".natsumi-color-slider-image-opacity");
         let textColorHueSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-hue");
         let textColorSaturationSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-saturation");
         let textColorValueSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-value");
@@ -1471,6 +1631,11 @@ class CustomThemePicker {
         const grainPosition = grainSliderWidth * this.grain;
         grainSliderNode.style.setProperty("--natsumi-slider-position", `${grainPosition}px`);
 
+        // Render image opacity slider
+        const imageOpacitySliderWidth = Math.max(imageOpacitySliderNode.getBoundingClientRect().width, 380);
+        const imageOpacityPosition = imageOpacitySliderWidth * (1 - this.customImageOpacity);
+        imageOpacitySliderNode.style.setProperty("--natsumi-slider-position", `${imageOpacityPosition}px`);
+
         // Render text color sliders
         if (this.textColor) {
             const textColorHuePosition = textColorHueSliderNode.getBoundingClientRect().width * (1 - (this.textColor["hue"] / 360));
@@ -1493,6 +1658,38 @@ class CustomThemePicker {
         } else {
             angleNode.removeAttribute("disabled");
         }
+    }
+
+    renderMisc() {
+        let imageDisplay = this.node.querySelector(".natsumi-image-current");
+        let imageRemove = this.node.querySelector(".natsumi-image-remove");
+        let imageBlurOptions = this.node.querySelectorAll(".natsumi-image-blur-choice");
+
+        if (this.customImage) {
+            getFile(this.customImage).then((fileObject) => {
+                imageDisplay.textContent = fileObject.name;
+                imageRemove.removeAttribute("hidden");
+            }).catch((e) => {
+                console.error("Could not get image:", e);
+            });
+        } else {
+            imageDisplay.textContent = "No image uploaded";
+            imageRemove.setAttribute("hidden", "");
+        }
+
+        imageBlurOptions.forEach((btn) => {
+            btn.checked = false;
+            btn.removeAttribute("selected")
+            let radioCheck = btn.querySelector(".radio-check");
+            radioCheck.removeAttribute("selected");
+
+            if (btn.getAttribute("value") === this.customImageBlur) {
+                btn.checked = true;
+                btn.setAttribute("selected", "true");
+                let selectedRadioCheck = btn.querySelector(".radio-check");
+                selectedRadioCheck.setAttribute("selected", "true");
+            }
+        });
     }
 
     sliderEvent(slider, event) {
@@ -1581,6 +1778,7 @@ class CustomThemePicker {
         this.renderGrid();
         this.renderSliders();
         this.renderAngle();
+        this.renderMisc();
         this.saveLayer();
     }
 
@@ -1644,6 +1842,86 @@ class CustomThemePicker {
         for (let i = 0; i < this.colors.length; i++) {
             this.colors[i]["position"] = (1 / (this.colors.length - 1)) * i;
         }
+    }
+
+    async uploadImage() {
+        let uploadNode = document.createElement("input");
+        uploadNode.type = "file";
+        uploadNode.accept = "image/*";
+        uploadNode.style.display = "none";
+        uploadNode.setAttribute("moz-accept", "image/*");
+        uploadNode.setAttribute("accept", "image/*");
+        uploadNode.click();
+
+        let uploadTimeout;
+
+        const filePromise = new Promise((resolve, reject) => {
+            uploadNode.onchange = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+
+                const file = uploadNode.files[0];
+                if (!file) {
+                    reject("No file selected.");
+                    return;
+                }
+
+                resolve(file);
+            };
+
+            uploadNode.onabort = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+                reject("User aborted import.");
+            }
+
+            uploadTimeout = setTimeout(() => {
+                reject("Upload timed out.");
+            }, 120000);
+        });
+
+        try {
+            const uploadedFile = await filePromise;
+            await this.uploadSelectedImage(uploadedFile);
+        } catch(e) {
+            console.error("Upload failed:", e);
+            return;
+        }
+
+        this.renderMisc();
+        this.saveLayer();
+    }
+
+    async uploadSelectedImage(file) {
+        const newFileId = await uploadFile(file);
+
+        if (this.customImage) {
+            await this.removeImage();
+        }
+
+        this.customImage = newFileId;
+    }
+
+    async removeImage() {
+        try {
+            await deleteFile(this.customImage);
+        } catch(e) {
+            console.warn("Failed to delete file:", e);
+        }
+        this.customImage = null;
+
+        this.renderMisc();
+        this.saveLayer();
+    }
+
+    setImageOpacity(opacity) {
+        this.customImageOpacity = opacity;
+    }
+
+    setImageBlur(imageBlur) {
+        this.customImageBlur = imageBlur;
     }
 }
 
@@ -1764,6 +2042,28 @@ class RadioChoice extends MCChoice {
             choiceButton.setAttribute("selected", "true");
             let checkNode = choiceButton.querySelector(".radio-check");
             checkNode.setAttribute("selected", "true");
+        }
+
+        return node;
+    }
+}
+
+class SelectChoice extends MCChoice {
+    constructor(value, label) {
+        super(value, label, "", "", "");
+    }
+
+    generateNode(selected = false) {
+        let nodeString = `
+            <html:option class="natsumi-select-choice" value="${this.value}">
+                ${this.label}
+            </html:option>
+        `;
+        let node = convertToXUL(nodeString);
+        let choiceButton = node.querySelector(".natsumi-select-choice");
+
+        if (selected) {
+            choiceButton.setAttribute("selected", "selected");
         }
 
         return node;
@@ -2231,6 +2531,19 @@ const tabDesigns = {
         </div>
         `,
     ),
+    "neutron": new MCChoice(
+        "neutron",
+        "Neutron",
+        "A Proton-like design for Firefox Nova.",
+        `
+            <div id='tab-neutron' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+                </div>
+            </div>
+        `
+    ),
     "classic": new MCChoice(
         "classic",
         "Classic",
@@ -2243,7 +2556,7 @@ const tabDesigns = {
                 </div>
             </div>
         `
-    ),
+    )
 }
 
 const urlbarLayouts = {
@@ -2422,6 +2735,45 @@ class RadioPreference extends MultipleChoicePreference {
         }
 
         let form = node.querySelector(".natsumi-radio-chooser");
+        for (let option in this.options) {
+            let choice = this.options[option];
+            const selected = (this.getSelected() === choice.value);
+            let choiceNode = choice.generateNode(selected, color);
+            form.appendChild(choiceNode);
+        }
+        return node;
+    }
+}
+
+class SelectPreference extends MultipleChoicePreference {
+    constructor(id, preference, label, description, overrideDefault = null) {
+        super(id, preference, label, description, overrideDefault);
+    }
+
+    generateNode(color = false) {
+        let nodeString = `
+            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                <html:h2>${this.label}</html:h2>
+                <html:div id="${this.id}Settings">
+                    <description class="description-deemphasized">
+                        ${this.description}
+                    </description>
+                    <html:select class="natsumi-select-chooser">
+                    </html:select>
+                </html:div>
+            </groupbox>
+        `
+        let node = convertToXUL(nodeString);
+        let groupNode = node.querySelector(`#${this.id}Group`);
+
+        for (let extra in this.extras) {
+            let extraNode = convertToXUL(`<vbox id="${extra}"></vbox>`)
+            let extraBox = extraNode.querySelector(`#${extra}`);
+            extraBox.appendChild(this.extras[extra].generateNode());
+            groupNode.appendChild(extraNode);
+        }
+
+        let form = node.querySelector(".natsumi-select-chooser");
         for (let option in this.options) {
             let choice = this.options[option];
             const selected = (this.getSelected() === choice.value);
@@ -2646,20 +2998,6 @@ function addLayoutPane() {
         true
     );
 
-    let customizableToolbarCheckbox = new CheckboxChoice(
-        "natsumi.theme.customizable-single-toolbar",
-        "natsumiShowToolbarButton",
-        "Show toolbar buttons",
-        "This will show other toolbar buttons in the overflow menu."
-    );
-
-    let forceCustomizableToolbarCheckbox = new CheckboxChoice(
-        "natsumi.theme.force-customizable-single-toolbar",
-        "natsumiForceToolbarButton",
-        "Force show overflow button",
-        "Use this if the overflow button doesn't show when it should."
-    );
-
     let bookmarksOnHoverCheckbox = new CheckboxChoice(
         "natsumi.theme.show-bookmarks-on-hover",
         "natsumiShowBookmarksOnHover",
@@ -2677,8 +3015,6 @@ function addLayoutPane() {
     layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
     layoutSelection.registerExtras("natsumiShowMenuButtonBox", menuButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
-    layoutSelection.registerExtras("natsumiShowToolbarButtonBox", customizableToolbarCheckbox);
-    layoutSelection.registerExtras("natsumiForceToolbarButtonBox", forceCustomizableToolbarCheckbox);
     layoutSelection.registerExtras("natsumiShowBookmarksOnHoverBox", bookmarksOnHoverCheckbox);
     layoutSelection.registerExtras("natsumiForceWinControlsToLeftBox", windowControlsCheckbox);
 
@@ -2798,6 +3134,42 @@ function addThemesPane() {
             setStringPreference("natsumi.theme.type", selectedValue);
             themeButtons.forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
+
+            if (selectedValue === "lgbtq") {
+                lgbtqThemeClicked++;
+            } else {
+                lgbtqThemeClicked = 0;
+            }
+
+            if (lgbtqThemeClicked === 5) {
+                lgbtqThemeClicked = 0;
+
+                // Enable pride theme
+                let prideEnabled = false;
+                if (ucApi.Prefs.get("natsumi.theme.pride").exists()) {
+                    prideEnabled = ucApi.Prefs.get("natsumi.theme.pride").value;
+                }
+
+                ucApi.Prefs.set("natsumi.theme.pride", !prideEnabled);
+
+                if (!prideEnabled) {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Pride mode activated!",
+                        "You can click the LGBTQ+ theme 5 times in a row to disable this again.",
+                        "chrome://natsumi/content/icons/lucide/heart.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                } else {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Pride mode deactivated!",
+                        "You can click the LGBTQ+ theme 5 times in a row to enable this again.",
+                        "chrome://natsumi/content/icons/lucide/luminosity-0.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                }
+            }
         });
     });
 
@@ -3023,6 +3395,68 @@ function addIconsPane() {
     });
 
     prefsView.insertBefore(iconNode, homePane);
+}
+
+function addFontsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    let availableFonts = [
+        new SelectChoice(
+            "default",
+            "System font"
+        )
+    ]
+
+    // Get fonts list
+    const enumerator = Cc["@mozilla.org/gfx/fontenumerator;1"].createInstance(
+        Ci.nsIFontEnumerator
+    );
+    const fonts = enumerator.EnumerateFonts(Services.locale.fontLanguageGroup, "");
+
+    for (const font of fonts) {
+        availableFonts.push(new SelectChoice(font, font))
+    }
+
+    // Create icons selection
+    let fontSelection = new SelectPreference(
+        "natsumiFonts",
+        "natsumi.theme.font",
+        "Font",
+        "Choose the font you want to use."
+    );
+
+    for (let availableFont of availableFonts) {
+        fontSelection.registerOption(availableFont.value, availableFont);
+    }
+
+    let fontNode = fontSelection.generateNode();
+
+    // Set listeners for select
+    let fontSelect = fontNode.querySelector("select");
+    fontSelect.addEventListener("change", (event) => {
+        setStringPreference("natsumi.theme.font", event.target.value);
+    })
+
+    // Set listeners for each checkbox
+    let checkboxes = fontNode.querySelectorAll("checkbox");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("command", () => {
+            let prefName = checkbox.getAttribute("preference");
+            let isChecked = checkbox.checked;
+
+            if (checkbox.getAttribute("opposite") === "true") {
+                isChecked = !isChecked;
+            }
+
+            console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            // noinspection JSUnresolvedReference
+            ucApi.Prefs.set(prefName, isChecked);
+        });
+    });
+
+    prefsView.insertBefore(fontNode, homePane);
 }
 
 function addSDL2Pane() {
@@ -4291,6 +4725,7 @@ function addPreferencesPanes() {
     addWindowMaterialPane();
     addColorsPane();
     addIconsPane();
+    addFontsPane();
     addSDL2Pane();
 
     prefsView.insertBefore(sidebarNode, homePane);

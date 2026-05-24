@@ -23,6 +23,11 @@ class NatsumiPostloadManager {
     }
 
     showPostLoadWarning(isCatastrophic = false) {
+        if (document.body.hasAttribute("natsumi-inhibit-postload")) {
+            console.log("Inhibiting postload error message.");
+            return;
+        }
+
         console.error("Natsumi CSS loading doesn't seem to have completed. Expect absolutely everything to go south from here, good luck.");
 
         const natsumiWarningPermanentCss = `
@@ -58,9 +63,16 @@ class NatsumiPostloadManager {
         const natsumiWarningCss = `
             #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels,
             #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
-            #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox {
+            #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
+            #natsumi-pinned-toolbar, #nav-bar {
                 opacity: 0;
                 pointer-events: none !important;
+            }
+            
+            #navigator-toolbox {
+                transition: none !important;
+                background-color: transparent !important;
+                border: none !important;
             }
             
             #natsumi-css-warning {
