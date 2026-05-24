@@ -105,7 +105,7 @@ class NatsumiUpdater {
         let updaterResponse;
 
         try {
-            updaterResponse = await fetch(`${this.updateUrl}/${updateBranch}.json`, {cache: "reload"});
+            updaterResponse = await fetch(`${this.updateUrl}/${updateBranch}.json`, {cache: "reload", signal: AbortSignal.timeout(10000)});
         } catch(e) {
             this.successfulUpdateCheck = false;
             this.lastAvailableUpdate = null;
