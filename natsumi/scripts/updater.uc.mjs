@@ -259,6 +259,7 @@ class NatsumiUpdater {
         ucApi.Prefs.set("natsumi.updater.last-update", updateData["releasedAt"]);
 
         // Restart browser
+        Services.appinfo.invalidateCachesOnRestart();
         Services.startup.quit(
             Ci.nsIAppStartup.eRestart | Ci.nsIAppStartup.eAttemptQuit
         );
