@@ -45,6 +45,7 @@ function convertToXUL(node) {
 
 class NatsumiUpdater {
     constructor() {
+        this.updaterAvailable = true;
         this.lastUpdated = 0;
         this.lastAvailableUpdate = null;
         this.updateUrl = "https://natsumi-updates.greeeen.dev"
@@ -59,6 +60,11 @@ class NatsumiUpdater {
     }
 
     async checkForUpdates() {
+        if (!this.updaterAvailable) {
+            // Updater is unavailable
+            throw new Error("Updater is not available");
+        }
+
         // Set allowed branches
         const allowedBranches = [
             "stable",
@@ -230,6 +236,11 @@ class NatsumiUpdater {
     }
 
     showUpdateOverlay(isUpdating = true) {
+        if (document.getElementById("natsumi-updater")) {
+            // Silently stop execution
+            return;
+        }
+
         let updaterNode = convertToXUL(`
             <div id="natsumi-updater">
                 <div id="natsumi-updater-content">
@@ -253,6 +264,10 @@ class NatsumiUpdater {
     }
 
     async userUpdate(updateData) {
+        if (!document.getElementById("natsumi-updater")) {
+            throw new Error("Updater overlay is not showing");
+        }
+
         try {
             await this.runUpdate(updateData);
         } catch(e) {
@@ -275,5 +290,7 @@ class NatsumiUpdater {
 
 if (!document.body.natsumiUpdater) {
     document.body.natsumiUpdater = new NatsumiUpdater();
-    document.body.natsumiUpdater.notifyNewUpdate();
+    if (document.body.natsumiUpdater.updaterAvailable) {
+        document.body.natsumiUpdater.notifyNewUpdate();
+    }
 }

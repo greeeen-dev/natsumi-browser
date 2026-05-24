@@ -85,4 +85,11 @@ body[natsumi-updater-updating] {
       font-size: small;
     }
   }
+
+  &[natsumi-update-failed] {
+    #natsumi-updater-icon {
+      background-image: url("chrome://natsumi/content/icons/lucide/caution.svg") !important;
+      animation: none !important;
+    }
+  }
 }
