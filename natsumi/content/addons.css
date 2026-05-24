@@ -27,7 +27,7 @@ SOFTWARE.
 /* ==== Preferences theme ==== */
 
 @-moz-document url-prefix(about:addons) {
-  @media not -moz-pref("natsumi.theme.classic-preferences") {
+  @media (not -moz-pref("natsumi.theme.classic-preferences")) and (not -moz-pref("natsumi.theme.addons-style-unsupported")) {
     body {
       --natsumi-background-color: color-mix(in srgb, var(--natsumi-primary-color) 10%, white 90%);
       background-color: var(--natsumi-background-color) !important;
