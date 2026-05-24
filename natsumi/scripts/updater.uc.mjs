@@ -220,6 +220,9 @@ class NatsumiUpdater {
         statusElement.textContent = `Installing update (Step 3 of ${totalSteps})`
         await this.installUpdate();
 
+        // Set last update time
+        ucApi.Prefs.set("natsumi.updater.last-update", updateData["releasedAt"]);
+
         // Restart browser
         Services.startup.quit(
             Ci.nsIAppStartup.eRestart | Ci.nsIAppStartup.eAttemptQuit
