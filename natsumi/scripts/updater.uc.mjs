@@ -99,6 +99,14 @@ class NatsumiUpdater {
 
         // Can we update?
         let canUpdate = updateData["releasedAt"] > this.lastUpdated;
+        if (this.lastUpdated === 0) {
+            // The browser was never updated
+            // In this case, check the version tag instead
+            let versionPath = "chrome://natsumi/content/version.json";
+            const versionResponse = await fetch(versionPath);
+            const versionData = await versionResponse.json();
+            canUpdate = updateData["version"] !== versionData["version"];
+        }
 
         if (canUpdate) {
             this.lastAvailableUpdate = updateData;
