@@ -1,0 +1,36 @@
+name: Release (testing)
+on: workflow_dispatch
+
+jobs:
+  publish:
+    name: "Publish release"
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'natsumi-browser/updates'
+          ref: main
+          token: ${{ secrets.DEPLOY_KEY }}
+      - name: Download Natsumi
+        run: |
+          git clone --branch ${{ github.ref_name }} https://github.com/greeeen-dev/natsumi-browser
+      - name: Set up Git config
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "<>"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Bump version
+        run: |
+          python3 ./scripts/bump.py
+      - name: Delete Natsumi
+        run: |
+          rm -rf ./natsumi-browser
+      - name: Push to repository
+        run: |
+          git add .
+          git commit -m "Version bump"
+          git push
