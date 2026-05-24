@@ -75,6 +75,9 @@ if (hasRedesignV2) {
     categoryHeader = "h2"
 }
 
+// Pride easter egg!
+let lgbtqThemeClicked = 0;
+
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
     return window.MozXULElement.parseXULToFragment(node);
@@ -583,14 +586,18 @@ class CustomThemePicker {
             this.data = this.loaderMethod(toLoad, false);
         } catch(e) {
             console.error("Import failed:", e);
-            let notification = new NatsumiNotification(
-                "Theme import failed.",
-                "Either the theme is corrupted or something went wrong with the import process.",
-                "chrome://natsumi/content/icons/lucide/caution.svg",
-                10000,
-                "caution"
-            );
-            notification.addToContainer();
+
+            if (e.message !== "Import timed out.") {
+                let notification = new NatsumiNotification(
+                    "Theme import failed.",
+                    "Either the theme is corrupted or something went wrong with the import process.",
+                    "chrome://natsumi/content/icons/lucide/caution.svg",
+                    10000,
+                    "caution"
+                );
+                notification.addToContainer();
+            }
+
             return;
         }
 
@@ -1871,7 +1878,7 @@ class CustomThemePicker {
             }
 
             uploadTimeout = setTimeout(() => {
-                reject("Import timed out.");
+                reject("Upload timed out.");
             }, 120000);
         });
 
@@ -3143,6 +3150,42 @@ function addThemesPane() {
             setStringPreference("natsumi.theme.type", selectedValue);
             themeButtons.forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
+
+            if (selectedValue === "lgbtq") {
+                lgbtqThemeClicked++;
+            } else {
+                lgbtqThemeClicked = 0;
+            }
+
+            if (lgbtqThemeClicked === 5) {
+                lgbtqThemeClicked = 0;
+
+                // Enable pride theme
+                let prideEnabled = false;
+                if (ucApi.Prefs.get("natsumi.theme.pride").exists()) {
+                    prideEnabled = ucApi.Prefs.get("natsumi.theme.pride").value;
+                }
+
+                ucApi.Prefs.set("natsumi.theme.pride", !prideEnabled);
+
+                if (!prideEnabled) {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Pride mode activated!",
+                        "You can click the LGBTQ+ theme 5 times in a row to disable this again.",
+                        "chrome://natsumi/content/icons/lucide/heart.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                } else {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Pride mode deactivated!",
+                        "You can click the LGBTQ+ theme 5 times in a row to enable this again.",
+                        "chrome://natsumi/content/icons/lucide/luminosity-0.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                }
+            }
         });
     });
 
