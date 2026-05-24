@@ -42,13 +42,18 @@ SOFTWARE.
 
     #browser {
       padding: 0 !important;
-      gap: 1px !important;
+      gap: 0 !important;
     }
 
     #sidebar-main {
       border: 0 !important;
       border-radius: 0 !important;
       background-color: transparent !important;
+    }
+
+    #sidebar-splitter {
+      margin-inline: calc(var(--natsumi-browser-separation) / 2 - 2px) !important;
+      max-width: 4px !important;
     }
 
     #sidebar-splitter {
@@ -63,6 +68,16 @@ SOFTWARE.
       #navigator-toolbox {
         border-radius: 0 !important;
         background-image: none !important;
+      }
+
+      #sidebar-main {
+        @media -moz-pref("sidebar.position_start") {
+          margin-right: 2px !important;
+        }
+
+        @media not -moz-pref("sidebar.position_start") {
+          margin-left: 2px !important;
+        }
       }
     }
 
@@ -88,12 +103,7 @@ SOFTWARE.
       border: 1px solid var(--chrome-content-separator-color) !important;
     }
 
-    #sidebar-splitter {
-      margin-inline: calc(var(--natsumi-browser-separation) / -2 - 2px) !important;
-      max-width: 4px !important;
-    }
-
-    #sidebar-launcher-splitter {
+    #sidebar-splitter, #sidebar-launcher-splitter {
       margin-inline: calc(var(--natsumi-browser-separation) / -2 - 2px) !important;
       max-width: 4px !important;
     }
