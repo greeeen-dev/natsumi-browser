@@ -48,6 +48,7 @@ class NatsumiUpdater {
         this.updaterAvailable = true;
         this.lastUpdated = 0;
         this.lastAvailableUpdate = null;
+        this.successfulUpdateCheck = false;
         this.updateUrl = "https://natsumi-updates.greeeen.dev"
         this.keepOldVersions = false;
 
@@ -84,7 +85,16 @@ class NatsumiUpdater {
         }
 
         // Check for updates
-        const updaterResponse = await fetch(`${this.updateUrl}/${updateBranch}.json`);
+        let updaterResponse;
+
+        try {
+            updaterResponse = await fetch(`${this.updateUrl}/${updateBranch}.json`);
+        } catch(e) {
+            this.successfulUpdateCheck = false;
+            this.lastAvailableUpdate = null;
+            throw e;
+        }
+
         const updateData = await updaterResponse.json();
 
         // Can we update?
