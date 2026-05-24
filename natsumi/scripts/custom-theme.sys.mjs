@@ -434,6 +434,7 @@ export async function applyCustomTheme() {
         }
 
         // Remove existing properties
+        body.removeAttribute("natsumi-custom-theme-has-image");
         body.style.removeProperty("--natsumi-theme-layer-0-background");
         body.style.removeProperty("--natsumi-theme-layer-0-background-dark");
         body.style.removeProperty("--natsumi-theme-layer-1-background");
@@ -463,6 +464,7 @@ export async function applyCustomTheme() {
 
             if (imageId) {
                 getFile(imageId).then((fileDict) => {
+                    body.setAttribute("natsumi-custom-theme-has-image", "");
                     body.style.setProperty(`--natsumi-theme-layer-${index}-background`, `url(${fileDict.data})`);
                     body.style.setProperty(`--natsumi-theme-layer-${index}-opacity`, layerData["image"]["opacity"]);
 

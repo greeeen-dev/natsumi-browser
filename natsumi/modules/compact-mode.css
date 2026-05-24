@@ -187,6 +187,10 @@ SOFTWARE.
         }
       }
     }
+
+    &[natsumi-custom-theme-has-image] #sidebar-main {
+      background: light-dark(#ebebeb, #171717) !important;
+    }
   }
 
   &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend] {
@@ -367,6 +371,10 @@ SOFTWARE.
         @media not -moz-pref("sidebar.verticalTabs") {
           --natsumi-compact-tabs-height: 44px !important;
         }
+      }
+
+      &[natsumi-custom-theme-has-image] #navigator-toolbox {
+        background: light-dark(#ebebeb, #171717) !important;
       }
 
       #sidebar-box {
