@@ -1315,6 +1315,10 @@ SOFTWARE.
           background-repeat: no-repeat;
           background-position: center;
 
+          &[hidden] {
+            display: none;
+          }
+
           &:hover {
             background-color: var(--natsumi-button-hover-color);
           }
