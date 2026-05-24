@@ -38,6 +38,12 @@ class NatsumiSingleToolbarManager {
     }
 
     init() {
+        // Set up window control buttons
+        let bookmarksToolbar = document.getElementById("PersonalToolbar");
+        let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
+        let windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
+        bookmarksToolbar.appendChild(windowButtonsContainer);
+
         this.detectBookmarkHover();
         this.extendBookmarksIfNeeded();
 
@@ -194,12 +200,6 @@ class NatsumiSingleToolbarManager {
 
         let bookmarksToolbar = document.getElementById("PersonalToolbar");
         let windowButtonsContainer = document.querySelector("#PersonalToolbar .titlebar-buttonbox-container");
-
-        if (!windowButtonsContainer) {
-            let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
-            windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
-            bookmarksToolbar.appendChild(windowButtonsContainer);
-        }
 
         if (bookmarksToolbar) {
             bookmarksToolbar.addEventListener("mouseover", (event) => {

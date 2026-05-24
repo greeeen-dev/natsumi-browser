@@ -514,6 +514,7 @@ export async function applyCustomTheme() {
 
             if (imageId) {
                 getFile(imageId).then((fileDict) => {
+                    body.setAttribute("natsumi-custom-theme-has-image", "");
                     body.style.setProperty(`--natsumi-theme-layer-${index}-background-dark`, `url(${fileDict.data})`);
                     body.style.setProperty(`--natsumi-theme-layer-${index}-opacity-dark`, layerData["image"]["opacity"]);
 
