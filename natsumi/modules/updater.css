@@ -36,18 +36,20 @@ SOFTWARE.
   }
 }
 
-#PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels,
-#nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
-#sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
-#natsumi-pinned-toolbar, #nav-bar {
-  opacity: 0;
-  pointer-events: none !important;
-}
+body[natsumi-updater-updating] {
+  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels,
+  #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
+  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
+  #natsumi-pinned-toolbar, #nav-bar {
+    opacity: 0;
+    pointer-events: none !important;
+  }
 
-#navigator-toolbox {
-  transition: none !important;
-  background-color: transparent !important;
-  border: none !important;
+  #navigator-toolbox {
+    transition: none !important;
+    background-color: transparent !important;
+    border: none !important;
+  }
 }
 
 #natsumi-updater {

@@ -38,6 +38,11 @@ const natsumiPath = PathUtils.join(chromePath, "natsumi");
 const natsumiOldPath = PathUtils.join(chromePath, "natsumi-old");
 const natsumiNewPath = PathUtils.join(chromePath, "natsumi-new");
 
+function convertToXUL(node) {
+    // noinspection JSUnresolvedReference
+    return window.MozXULElement.parseXULToFragment(node);
+}
+
 class NatsumiUpdater {
     constructor() {
         this.lastUpdated = 0;
@@ -65,7 +70,7 @@ class NatsumiUpdater {
         // Get branch
         let updateBranch = "stable";
         if (ucApi.Prefs.get("natsumi.updater.branch").exists()) {
-            updateBranch = ucApi.Prefs.get("natsumi.browser.branch").value;
+            updateBranch = ucApi.Prefs.get("natsumi.updater.branch").value;
         }
 
         if (!allowedBranches.includes(updateBranch)) {
@@ -163,6 +168,9 @@ class NatsumiUpdater {
 
                 // Copy file
                 zipReader.extract(entryName, finalFile);
+
+                // Set file permissions
+                await IOUtils.setPermissions(finalFilePath, 0o644);
             }
         }
     }
@@ -204,13 +212,15 @@ class NatsumiUpdater {
         statusElement.textContent = `Downloading update (Step 1 of ${totalSteps})`
         await this.downloadUpdate(updateData);
 
-        // Step 2: Install update
-        statusElement.textContent = `Installing update (Step 2 of ${totalSteps})`
+        // Step 2: Extract update
+        statusElement.textContent = `Extracting update (Step 2 of ${totalSteps})`
         await this.extractZip("update.zip");
+
+        // Step 3: Install update
+        statusElement.textContent = `Installing update (Step 3 of ${totalSteps})`
         await this.installUpdate();
 
-        // Step 3: Restart browser
-        statusElement.textContent = `Restarting browser (Step 3 of ${totalSteps})`
+        // Restart browser
         Services.startup.quit(
             Ci.nsIAppStartup.eRestart | Ci.nsIAppStartup.eAttemptQuit
         );
@@ -231,6 +241,7 @@ class NatsumiUpdater {
         `);
 
         document.body.appendChild(updaterNode);
+        document.body.setAttribute("natsumi-updater-updating", "")
 
         if (!isUpdating) {
             const statusElement = document.getElementById("natsumi-updater-body-2");
