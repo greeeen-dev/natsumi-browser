@@ -89,35 +89,13 @@ SOFTWARE.
         }
       }
 
-      @media not -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        #stop-reload-button {
-          margin-right: var(--urlbar-margin-inline) !important;
-        }
-      }
-    }
-
-    #nav-bar:not([overflowing], [nonemptyoverflow], [customizing]) {
-      @media not -moz-pref("natsumi.theme.force-customizable-single-toolbar") {
-        #stop-reload-button {
-          margin-right: var(--urlbar-margin-inline) !important;
-        }
+      #stop-reload-button {
+        margin-right: var(--urlbar-margin-inline) !important;
       }
     }
 
     #nav-bar-overflow-button {
-      order: 999 !important;
-
-      @media not -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        display: none !important;
-      }
-
-      @media -moz-pref("natsumi.theme.force-customizable-single-toolbar") and -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        display: flex !important;
-      }
-
-      @media -moz-pref("natsumi.theme.customizable-single-toolbar") {
-        margin-right: var(--urlbar-margin-inline) !important;
-      }
+      display: none !important;
     }
 
     #urlbar-container {
@@ -199,7 +177,11 @@ SOFTWARE.
 
     @media (-moz-platform: macos) {
       body:not([inFullscreen]) #PersonalToolbar {
-        @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) {
+        @media (
+          not (-moz-pref("natsumi.theme.force-window-controls-to-left"))
+        ) and (
+          not (-moz-pref("sidebar.position_start"))
+        ) {
           visibility: visible !important;
         }
       }

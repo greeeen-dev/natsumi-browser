@@ -242,10 +242,6 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   Single Toolbar.
 - `natsumi.theme.show-bookmarks-on-hover` (boolean): Shows the bookmarks bar on hover when in Single
   Toolbar.
-- `natsumi.theme.customizable-single-toolbar` (boolean): Moves toolbar buttons to the overflow menu when
-  in Single Toolbar.
-- `natsumi.theme.force-customizable-single-toolbar` (boolean): Force shows the overflow button if it
-  doesn't show for some reason.
 - `natsumi.theme.compact-marginless` (boolean): Removes the frame around the website content when in 
   compact mode.
 - `natsumi.theme.compact-on-new-window` (boolean): Enables Compact Mode by default for new windows.
