@@ -63,6 +63,22 @@ function makeCatNoisesAndDoSomeVeryCuteInitialSetupBecauseIFeltVeryCuteWhenWriti
         ucApi.Prefs.get("natsumi.theme.enable-sdl2").reset();
     }
 
+    // Get version
+    let browserName = AppConstants.MOZ_APP_BASENAME;
+    let browserVersion = Services.appinfo.platformVersion ?? Services.appinfo.version;
+
+    if (browserName.toLowerCase() === "glide") {
+        browserVersion = AppConstants.GLIDE_FIREFOX_VERSION;
+    }
+
+    const majorVersion = parseInt(browserVersion.split(".")[0]);
+
+    if (majorVersion < 153) {
+        ucApi.Prefs.set("natsumi.theme.addons-style-unsupported", true);
+    } else {
+        ucApi.Prefs.get("natsumi.theme.addons-style-unsupported").reset();
+    }
+
     // communicate in the average transfemme communication language (i.e. make cat noises) >:3333
     const catNoises = [
         "meow",

@@ -30,11 +30,6 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
-import {
-    customizationFilePath,
-    enableCustomizableToolbar,
-    resetCustomizableToolbar
-} from "./single-toolbar-customization.sys.mjs";
 
 class NatsumiSingleToolbarManager {
     constructor() {
@@ -43,6 +38,12 @@ class NatsumiSingleToolbarManager {
     }
 
     init() {
+        // Set up window control buttons
+        let bookmarksToolbar = document.getElementById("PersonalToolbar");
+        let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
+        let windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
+        bookmarksToolbar.appendChild(windowButtonsContainer);
+
         this.detectBookmarkHover();
         this.extendBookmarksIfNeeded();
 
@@ -51,29 +52,6 @@ class NatsumiSingleToolbarManager {
         if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
             singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
         }
-
-        if (singleToolbarEnabled) {
-            // Check if customization file exists
-            IOUtils.exists(customizationFilePath).then((exists) => {
-                if (!exists) {
-                    enableCustomizableToolbar();
-                }
-            });
-        }
-
-        // Create observer for single toolbar pref
-        Services.prefs.addObserver("natsumi.theme.single-toolbar", async () => {
-            // Since the pref already exists, we don't need to check for its existence
-            let singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-
-            if (singleToolbarEnabled) {
-                await enableCustomizableToolbar();
-            } else {
-                await resetCustomizableToolbar();
-                this.hoveredElements = 0;
-                document.body.removeAttribute("natsumi-bookmarks-hover");
-            }
-        });
 
         // Create observer for vertical tabs pref
         Services.prefs.addObserver("sidebar.verticalTabs", () => {
@@ -103,32 +81,6 @@ class NatsumiSingleToolbarManager {
         window.addEventListener("willexitfullscreen", () => {
             this.extendBookmarksIfNeeded(false);
         })
-
-        // Add event listeners for customization
-        window.gNavToolbox.addEventListener("aftercustomization", () => {
-            let singleToolbarEnabled = false;
-            if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-                singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-            }
-
-            if (!singleToolbarEnabled) {
-                return;
-            }
-
-            enableCustomizableToolbar();
-        })
-        window.gNavToolbox.addEventListener("customizationready", () => {
-            let singleToolbarEnabled = false;
-            if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-                singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-            }
-
-            if (!singleToolbarEnabled) {
-                return;
-            }
-
-            resetCustomizableToolbar();
-        });
     }
 
     extendBookmarksIfNeeded(isFullScreen = null) {
@@ -248,12 +200,6 @@ class NatsumiSingleToolbarManager {
 
         let bookmarksToolbar = document.getElementById("PersonalToolbar");
         let windowButtonsContainer = document.querySelector("#PersonalToolbar .titlebar-buttonbox-container");
-
-        if (!windowButtonsContainer) {
-            let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
-            windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
-            bookmarksToolbar.appendChild(windowButtonsContainer);
-        }
 
         if (bookmarksToolbar) {
             bookmarksToolbar.addEventListener("mouseover", (event) => {
