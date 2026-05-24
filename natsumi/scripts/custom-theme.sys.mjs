@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+import { getFile } from "./files.sys.mjs";
 
 const themesPath = PathUtils.join(PathUtils.profileDir, "natsumi-themes");
 let isFloorp = false;
@@ -95,7 +96,14 @@ export const gradientTypeNames = {
     "hybrid": "Hybrid"
 }
 
-export function customThemeLoader(data) {
+export function customThemeLoader(data, includeImages = true) {
+    if (!includeImages) {
+        data["light"]["0"]["image"] = {}
+        data["light"]["1"]["image"] = {}
+        data["dark"]["0"]["image"] = {}
+        data["dark"]["1"]["image"] = {}
+    }
+
     return data;
 }
 
@@ -426,17 +434,58 @@ export async function applyCustomTheme() {
         }
 
         // Remove existing properties
+        body.removeAttribute("natsumi-custom-theme-has-image");
         body.style.removeProperty("--natsumi-theme-layer-0-background");
         body.style.removeProperty("--natsumi-theme-layer-0-background-dark");
         body.style.removeProperty("--natsumi-theme-layer-1-background");
         body.style.removeProperty("--natsumi-theme-layer-1-background-dark");
+        body.style.removeProperty("--natsumi-theme-layer-0-filter");
+        body.style.removeProperty("--natsumi-theme-layer-0-filter-dark");
+        body.style.removeProperty("--natsumi-theme-layer-1-filter");
+        body.style.removeProperty("--natsumi-theme-layer-1-filter-dark");
+        body.style.removeProperty("--natsumi-theme-layer-0-opacity");
+        body.style.removeProperty("--natsumi-theme-layer-0-opacity-dark");
+        body.style.removeProperty("--natsumi-theme-layer-1-opacity");
+        body.style.removeProperty("--natsumi-theme-layer-1-opacity-dark");
+        body.style.removeProperty("--natsumi-theme-layer-0-scale");
+        body.style.removeProperty("--natsumi-theme-layer-0-scale-dark");
+        body.style.removeProperty("--natsumi-theme-layer-1-scale");
+        body.style.removeProperty("--natsumi-theme-layer-1-scale-dark");
         body.style.removeProperty("--natsumi-theme-text-color");
         body.style.removeProperty("--natsumi-theme-text-color-dark");
 
         for (let index in toApplyData["light"]) {
             let layerData = toApplyData["light"][index];
+            let imageId;
 
-            if (layerData["background"]) {
+            if (layerData["image"]) {
+                imageId = layerData["image"]["id"];
+            }
+
+            if (imageId) {
+                getFile(imageId).then((fileDict) => {
+                    body.setAttribute("natsumi-custom-theme-has-image", "");
+                    body.style.setProperty(`--natsumi-theme-layer-${index}-background`, `url(${fileDict.data})`);
+                    body.style.setProperty(`--natsumi-theme-layer-${index}-opacity`, layerData["image"]["opacity"]);
+
+                    switch(layerData["image"]["blur"]) {
+                        case "light":
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-filter`, "blur(5px)");
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-scale`, "1.02");
+                            break;
+                        case "medium":
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-filter`, "blur(10px)");
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-scale`, "1.04");
+                            break;
+                        case "strong":
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-filter`, "blur(20px)");
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-scale`, "1.08");
+                            break;
+                        default:
+                            // Do nothing
+                    }
+                })
+            } else if (layerData["background"]) {
                 const backgroundValue = parseBackground(layerData["background"]);
                 if (!backgroundValue) {
                     body.style.removeProperty(`--natsumi-theme-layer-${index}-background`);
@@ -457,8 +506,35 @@ export async function applyCustomTheme() {
 
         for (let index in toApplyData["dark"]) {
             let layerData = toApplyData["dark"][index];
+            let imageId;
 
-            if (layerData["background"]) {
+            if (layerData["image"]) {
+                imageId = layerData["image"]["id"];
+            }
+
+            if (imageId) {
+                getFile(imageId).then((fileDict) => {
+                    body.style.setProperty(`--natsumi-theme-layer-${index}-background-dark`, `url(${fileDict.data})`);
+                    body.style.setProperty(`--natsumi-theme-layer-${index}-opacity-dark`, layerData["image"]["opacity"]);
+
+                    switch(layerData["image"]["blur"]) {
+                        case "light":
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-filter-dark`, "blur(5px)");
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-scale-dark`, "1.02");
+                            break;
+                        case "medium":
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-filter-dark`, "blur(10px)");
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-scale-dark`, "1.04");
+                            break;
+                        case "strong":
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-filter-dark`, "blur(20px)");
+                            body.style.setProperty(`--natsumi-theme-layer-${index}-scale-dark`, "1.08");
+                            break;
+                        default:
+                            // Do nothing
+                    }
+                })
+            } else if (layerData["background"]) {
                 const backgroundValue = parseBackground(layerData["background"]);
                 if (!backgroundValue) {
                     body.style.removeProperty(`--natsumi-theme-layer-${index}-background-dark`);

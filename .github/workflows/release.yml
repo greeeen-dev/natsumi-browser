@@ -103,7 +103,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v8
       - name: Create GitHub release
-        uses: ncipollo/release-action@v1.14.0
+        uses: ncipollo/release-action@v1.21.0
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

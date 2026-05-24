@@ -1,3 +1,11 @@
+// ==UserScript==
+// @include   main
+// @include   chrome://global/content/pictureinpicture/player.xhtml*
+// @include   about:preferences*
+// @include   about:settings*
+// @ignorecache
+// ==/UserScript==
+
 /*
 
 Natsumi Browser - Welcome to your personal internet.
@@ -24,35 +32,34 @@ SOFTWARE.
 
 */
 
-/* ==== Load config and Natsumi Browser Pages ==== */
+import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
-/*
-WARNING: DO NOT TOUCH THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING.
-Removing or modifying parts of this file may break some parts of Natsumi.
-*/
+class NatsumiFontManager {
+    constructor() {}
 
-/* Setup (config and global modules) */
-@import "../natsumi-config.css";
-@import "content/preload.css";
-@import "global/colors.css";
-@import "global/starlight.css";
+    init() {
+        if (ucApi.Prefs.get("natsumi.theme.font").exists()) {
+            this.setFont(ucApi.Prefs.get("natsumi.theme.font").value);
+        }
 
-/* Base modules */
-@import "content/pdfjs.css";
-@import "content/ff-home.css";
-@import "content/preferences.css";
-@import "content/preferences-customize.css";
-@import "content/preferences-shortcuts.css";
-@import "content/preferences-about.css";
-@import "content/addons.css";
-@import "content/neterror.css";
-@import "content/certerror.css";
-@import "content/unsecureerror.css";
-@import "content/tabcrashed.css";
-@import "content/blocked.css";
-@import "content/natsumi-web.css";
-@import "content/global.css";
-@import "content/icons.css";
+        Services.prefs.addObserver("natsumi.theme.font", () => {
+            if (ucApi.Prefs.get("natsumi.theme.font").exists()) {
+                this.setFont(ucApi.Prefs.get("natsumi.theme.font").value);
+            }
+        })
+    }
 
-/* Floorp-specific modules */
-@import "content/floorp/preferences.css";
+    setFont(newFont) {
+        if (newFont === "default") {
+            document.body.style.removeProperty("--natsumi-custom-font");
+            return;
+        }
+
+        document.body.style.setProperty("--natsumi-custom-font", newFont);
+    }
+}
+
+if (!document.body.natsumiFontManager) {
+    document.body.natsumiFontManager = new NatsumiFontManager();
+    document.body.natsumiFontManager.init();
+}

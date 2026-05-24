@@ -187,7 +187,11 @@ SOFTWARE.
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    list-style-image: url("../icons/natsumi-glass.png");
+    list-style-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
+
+    @media -moz-pref("natsumi.theme.pride") {
+      list-style-image: url("../icons/natsumi-pride.png");
+    }
   }
 
   .natsumi-welcome-button {
@@ -251,8 +255,12 @@ SOFTWARE.
     #natsumi-corner-icon-image {
       width: 50px;
       height: 50px;
-      list-style-image: url("../icons/natsumi-glass.png");
+      list-style-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
       margin-right: 5px !important;
+
+      @media -moz-pref("natsumi.theme.pride") {
+        background-image: url("../icons/natsumi-pride.png");
+      }
     }
 
     #natsumi-corner-icon-label {
@@ -294,21 +302,25 @@ SOFTWARE.
   }
 
   &.natsumi-welcome-initial-animation {
+    --natsumi-global-delay: 0.5s;
     animation: icon-fadein-background 10s ease;
+    animation-delay: var(--natsumi-global-delay);
 
     #natsumi-icon {
       animation: icon-fadein 3.5s linear;
       animation-fill-mode: forwards;
+      animation-delay: var(--natsumi-global-delay);
     }
 
     #natsumi-welcome-button-next {
       animation: button-fadein 0.2s ease;
-      animation-delay: 4.5s;
+      animation-delay: calc(var(--natsumi-global-delay) + 4.5s);
       animation-fill-mode: forwards;
     }
 
     #natsumi-corner-icon {
       transition-delay: 4.5s;
+      transition-delay: calc(var(--natsumi-global-delay) + 4.5s);
       opacity: 1;
     }
 
@@ -319,11 +331,11 @@ SOFTWARE.
     }
 
     #natsumi-slogan-1 {
-      animation-delay: 3.5s;
+      animation-delay: calc(var(--natsumi-global-delay) + 3.5s);
     }
 
     #natsumi-slogan-2 {
-      animation-delay: 4s;
+      animation-delay: calc(var(--natsumi-global-delay) + 4s);
 
       span {
         background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
@@ -340,7 +352,7 @@ SOFTWARE.
 
     #natsumi-welcome-content {
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
-      transition-delay: 4.5s;
+      transition-delay: calc(var(--natsumi-global-delay) + 4.5s);
       background-color: light-dark(white, #222);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
     }

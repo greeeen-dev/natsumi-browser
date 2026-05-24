@@ -147,17 +147,19 @@ SOFTWARE.
           height: calc(100vh - 12px) !important;
         }
 
-        @media -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
-          &[natsumi-bookmarks-hover] #panel-sidebar-select-box {
+        &[natsumi-bookmarks-hover], &[natsumi-bookmarks-extend] {
+          #panel-sidebar-select-box {
             height: calc(100vh - 42px) !important;
             margin-top: 36px !important;
           }
         }
 
         @media not -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
-          &:has(#PersonalToolbar:not([collapsed])) #panel-sidebar-select-box {
-            height: calc(100vh - 42px) !important;
-            margin-top: 36px !important;
+          &:has(#PersonalToolbar:not([collapsed])), body[natsumi-bookmarks-extend] {
+            #panel-sidebar-select-box {
+              height: calc(100vh - 42px) !important;
+              margin-top: 36px !important;
+            }
           }
         }
       }

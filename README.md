@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="420" src="./images/kawaii.png">
+  <img width="420" src="./images/kawaii-pride.png">
   <br>
   Natsumi Browser
 </h1>
@@ -20,13 +20,8 @@ Natsumi Browser (or Natsumi, for short) is a skin made for Firefox and its forks
 polish to the design and adds new features to further enhance the browsing experience, while retaining
 customization options to allow you to fully make things yours.
 
-Natsumi is NOT a standalone browser. It only supports Firefox-based browsers that are not known to
-be hostile towards user personalization.
-
-> [!NOTE]
-> Please remember that Natsumi in the end is **my personal browser skin**. If you don't like a design
-> choice I've made, chances are I'll keep it if I still like it. So please be respectful and refrain
-> from attacking people when you make suggestions. Thanks!
+Despite the name, Natsumi is NOT a standalone browser - it's meant to be applied on top of your
+favorite Firefox-based browser!
 
 ## Features
 Natsumi has lots of features to enhance your browser - so many that I can't list them all here!
@@ -195,6 +190,9 @@ latest version of Natsumi as new changes are released, you can simply clone the 
 folder. This can be followed up with `git pull` from time-to-time.
 
 ## Browser configs (in about:config)
+> [!NOTE]
+> This is a non-exhaustive list. Most of these options are available in preferences.
+
 These are the configs you can use to tweak Natsumi Browser. If you want to tweak the animation duration
 and delay, change the variables in the config.css file.
 
@@ -213,7 +211,7 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   - **Lucid** (`lucid`) - A recreation of the Zen Dream and Zen Galaxy themes.
   - **Frutiger Aero** (`frutiger-aero`) - A Windows Vista/7-like design.
   - **OLED** (`oled`) - A completely black and white theme for the minimalists.
-  - **🏳️‍🌈 LGBTQ+** (`lgntq`) - Browsing with pride!
+  - **🏳️‍🌈 LGBTQ+** (`lgbtq`) - Browsing with pride!
   - **🏳️‍⚧️ Transgender** (`transgender`) - Trans rights are human rights!
   - **Custom** (`custom`) - Create your own theme (in the preferences page)!
 - `natsumi.theme.accent-color` (string): Sets the browser theme color from a given accent color.
@@ -244,10 +242,6 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   Single Toolbar.
 - `natsumi.theme.show-bookmarks-on-hover` (boolean): Shows the bookmarks bar on hover when in Single
   Toolbar.
-- `natsumi.theme.customizable-single-toolbar` (boolean): Moves toolbar buttons to the overflow menu when
-  in Single Toolbar.
-- `natsumi.theme.force-customizable-single-toolbar` (boolean): Force shows the overflow button if it
-  doesn't show for some reason.
 - `natsumi.theme.compact-marginless` (boolean): Removes the frame around the website content when in 
   compact mode.
 - `natsumi.theme.compact-on-new-window` (boolean): Enables Compact Mode by default for new windows.
@@ -392,7 +386,7 @@ All browsers must be based on Firefox 140 or above.
 
 ## FAQs
 ### "Does Natsumi support the new Firefox Nova redesign?"
-Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 152**.
+Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 153**.
 
 Firefox Nova is still in early development and constantly changing. Each Natsumi release will aim to
 address these changes, so that once Firefox Nova is complete and rolled out, Natsumi will be

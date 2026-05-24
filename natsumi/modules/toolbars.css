@@ -38,6 +38,11 @@ SOFTWARE.
   gap: 5px;
   min-height: 0 !important;
 
+  @media not -moz-pref("sidebar.verticalTabs") {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
   @media not -moz-pref("sidebar.position_start") {
     right: 0;
   }
