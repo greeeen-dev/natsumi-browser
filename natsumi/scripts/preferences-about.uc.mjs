@@ -124,12 +124,17 @@ function checkForUpdates() {
     }, 100);
 }
 
-function setUpdaterUnavailable() {
+function setUpdaterUnavailable(catastrophic = false) {
     const updaterContainer = document.getElementById("natsumi-about-updater");
     const updaterStatus = document.getElementById("natsumi-about-updater-status");
 
     updaterContainer.setAttribute("natsumi-update-disabled", "");
-    updaterStatus.textContent = "Updates are disabled or externally managed";
+
+    if (catastrophic) {
+        updaterStatus.textContent = "Updater is unavailable";
+    } else {
+        updaterStatus.textContent = "Updates are disabled or externally managed";
+    }
 }
 
 function addAboutPane() {
@@ -260,6 +265,11 @@ function addAboutPane() {
     const lastFocusedWindow = ucApi.Windows.getLastFocused();
     const primaryDocument = lastFocusedWindow.document;
     const updater = primaryDocument.body.natsumiUpdater;
+
+    if (!updater) {
+        setUpdaterUnavailable(true);
+        return;
+    }
 
     if (updater.updaterAvailable) {
         checkForUpdates();
