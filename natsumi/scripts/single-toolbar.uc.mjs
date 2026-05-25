@@ -44,7 +44,7 @@ class NatsumiSingleToolbarManager {
         let windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
         bookmarksToolbar.appendChild(windowButtonsContainer);
 
-        this.detectBookmarkHover();
+        this.setupDetectBookmarkHover();
         this.extendBookmarksIfNeeded();
 
         // Check if single toolbar is active
@@ -123,6 +123,11 @@ class NatsumiSingleToolbarManager {
     }
 
     setHover(isWindowButton = false) {
+        if (!this.canUseHoverable()) {
+            this.removeHover();
+            return;
+        }
+
         let singleToolbarEnabled = false;
         if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
             singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
@@ -185,6 +190,10 @@ class NatsumiSingleToolbarManager {
             return;
         } else if (this.hoveredElements < 0) {
             this.hoveredElements = 0;
+
+            if (!this.canUseHoverable()) {
+                return;
+            }
         }
 
         this.hoverTimeout = setTimeout(() => {
@@ -192,12 +201,7 @@ class NatsumiSingleToolbarManager {
         }, 1000);
     }
 
-    detectBookmarkHover() {
-        if (!this.canUseHoverable()) {
-            this.removeHover();
-            return;
-        }
-
+    setupDetectBookmarkHover() {
         let bookmarksToolbar = document.getElementById("PersonalToolbar");
         let windowButtonsContainer = document.querySelector("#PersonalToolbar .titlebar-buttonbox-container");
 
