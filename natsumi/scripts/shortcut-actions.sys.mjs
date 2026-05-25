@@ -29,11 +29,21 @@ import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
 export class NatsumiShortcutActions {
     static copyCurrentUrl() {
-        let currentUrl = gBrowser.currentURI.spec;
+        const currentUrl = gBrowser.currentURI.spec;
         navigator.clipboard.writeText(currentUrl);
 
         // Add to notifications
         let notificationObject = new NatsumiNotification("Copied URL to clipboard!", null, "chrome://natsumi/content/icons/lucide/copy.svg")
+        notificationObject.addToContainer();
+    }
+
+    static copyCurrentUrlMarkdown() {
+        const currentUrl = gBrowser.currentURI.spec;
+        const currentTabName = gBrowser.selectedTab.label;
+        navigator.clipboard.writeText(`[${currentTabName}](${currentUrl})`);
+
+        // Add to notifications
+        let notificationObject = new NatsumiNotification("Copied URL as Markdown to clipboard!", null, "chrome://natsumi/content/icons/lucide/copy.svg")
         notificationObject.addToContainer();
     }
 
