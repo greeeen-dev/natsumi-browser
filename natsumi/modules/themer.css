@@ -205,7 +205,7 @@ SOFTWARE.
 
 /* Add background on fullscreen hover (macOS) */
 * {
-  --natsumi-toolbox-color: var(--lwt-accent-color, var(--toolbox-bgcolor));
+  --natsumi-toolbox-color: var(--lwt-accent-color, var(--toolbox-bgcolor, light-dark(#ebebeb, #171717)));
   --natsumi-toolbox-color-inactive: var(--lwt-accent-color, var(--toolbox-bgcolor-inactive));
 
   @media (-moz-platform: windows) {
@@ -214,15 +214,23 @@ SOFTWARE.
   }
 }
 
-#navigator-toolbox {
-  transition: background-color 0.3s ease;
+@media not -moz-pref("natsumi.theme.single-toolbar") {
+  #navigator-toolbox {
+    transition: background-color 0.3s ease;
 
-  &.fullscreen-with-menubar, &.fullscreen-floating-toolbox {
-    background-color: var(--natsumi-toolbox-color) !important;
+    &.fullscreen-with-menubar, &.fullscreen-floating-toolbox {
+      background-color: var(--natsumi-toolbox-color) !important;
 
-    &:-moz-window-inactive {
-      background-color: var(--natsumi-toolbox-color-inactive) !important;
+      &:-moz-window-inactive {
+        background-color: var(--natsumi-toolbox-color-inactive) !important;
+      }
     }
+  }
+}
+
+@media -moz-pref("natsumi.theme.single-toolbar") {
+  #navigator-toolbox {
+    box-shadow: none !important;
   }
 }
 

@@ -189,7 +189,9 @@ SOFTWARE.
     }
 
     &[natsumi-custom-theme-has-image] #sidebar-main {
-      background: light-dark(#ebebeb, #171717) !important;
+      @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+        background: light-dark(#ebebeb, #171717) !important;
+      }
     }
   }
 
@@ -374,7 +376,9 @@ SOFTWARE.
       }
 
       &[natsumi-custom-theme-has-image] #navigator-toolbox {
-        background: light-dark(#ebebeb, #171717) !important;
+        @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+          background: light-dark(#ebebeb, #171717) !important;
+        }
       }
 
       #sidebar-box {

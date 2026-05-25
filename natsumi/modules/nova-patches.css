@@ -268,13 +268,6 @@ SOFTWARE.
     }
   }
 
-  body:not([natsumi-compact-mode]) {
-    #navigator-toolbox {
-      border-radius: 0 !important;
-      background-image: none !important;
-    }
-  }
-
   #urlbar-container {
     max-height: 40px !important;
   }
