@@ -146,10 +146,19 @@ class NatsumiUpdater {
                     `Natsumi ${updateData.data["version"]} is available to install.`,
                     "chrome://natsumi/content/icons/lucide/update.svg",
                     10000
-                )
+                );
+                notificationObject.addButton("Update", () => {
+                    this.showUpdateOverlay(true);
+
+                    ucApi.Windows.forEach((browserDocument) => {
+                        browserDocument.body.natsumiUpdater.showUpdateOverlay(false);
+                    });
+
+                    this.userUpdate(this.lastAvailableUpdate);
+                }, "chrome://natsumi/content/icons/lucide/update.svg", true);
                 notificationObject.addToContainer();
             }
-        })
+        });
     }
 
     async downloadZip(url, fileName, fileHash = null) {

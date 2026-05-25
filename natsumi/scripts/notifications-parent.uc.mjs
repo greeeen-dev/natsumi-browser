@@ -74,13 +74,33 @@ class NatsumiNotificationsParent {
 
         let notificationTimeout = notificationNode.getAttribute("natsumi-notification-time");
 
-        notificationNode.addEventListener("click", () => {
-            this.removeNotification(notificationNode);
-        })
+        if (notificationNode.hasAttribute("natsumi-notification-buttons")) {
+            // Get dismiss button
+            let dismissButton = notificationNode.querySelector(".natsumi-notification-dismiss");
 
-        setTimeout(() => {
-            this.removeNotification(notificationNode);
-        }, parseInt(notificationTimeout, 10) || 5000);
+            dismissButton.addEventListener("click", () => {
+                this.removeNotification(notificationNode);
+            });
+
+            // Get other buttons that dismiss on click
+            let allDismissButtons = notificationNode.querySelectorAll(".natsumi-notification-button[natsumi-dismiss-on-click]");
+            for (let button of allDismissButtons) {
+                button.addEventListener("click", () => {
+                    this.removeNotification(notificationNode);
+                });
+            }
+        } else {
+            // Make notification itself the dismiss button
+            notificationNode.addEventListener("click", () => {
+                this.removeNotification(notificationNode);
+            });
+        }
+
+        if (parseInt(notificationTimeout, 10) || 5000 > 0) {
+            setTimeout(() => {
+                this.removeNotification(notificationNode);
+            }, parseInt(notificationTimeout, 10) || 5000);
+        }
     }
 
     removeNotification(notificationNode) {

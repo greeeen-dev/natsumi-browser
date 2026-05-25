@@ -41,7 +41,7 @@ body[natsumi-updater-updating] {
   #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
   #natsumi-pinned-toolbar, #nav-bar {
-    opacity: 0;
+    opacity: 0 !important;
     pointer-events: none !important;
   }
 

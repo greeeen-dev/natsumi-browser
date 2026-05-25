@@ -115,7 +115,7 @@ SOFTWARE.
       background-image: url("../icons/lucide/close.svg");
     }
 
-    &:hover {
+    &:not([natsumi-notification-buttons]):hover {
       .natsumi-notification-body {
         opacity: 0.1;
       }
@@ -144,6 +144,7 @@ SOFTWARE.
     &[natsumi-notification-disappear] {
       animation: notification-disappear 0.3s ease;
       animation-fill-mode: forwards;
+      pointer-events: none;
     }
 
     &[has-icon] {
@@ -165,6 +166,62 @@ SOFTWARE.
     .natsumi-notification-subtext {
       color: light-dark(#777, #aaa);
       font-size: small;
+    }
+
+    .natsumi-notification-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      gap: 8px;
+
+      .natsumi-notification-button {
+        display: flex;
+        align-items: center;
+        min-height: 32px;
+        border-radius: 16px;
+        padding-inline: 14px;
+        font-size: small;
+        gap: 6px;
+        background-color: var(--natsumi-sdl2-haze-button-idle-color);
+        box-shadow: var(--natsumi-sdl2-haze-button-idle-shadow);
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          background-color: var(--natsumi-sdl2-haze-button-hover-color) !important;
+        }
+
+        &:active {
+          background-color: var(--natsumi-sdl2-haze-button-active-color) !important;
+        }
+
+        @media -moz-pref("natsumi.theme.disable-sdl2") {
+          /* Fallback to SDL1 */
+          background-color: transparent;
+          box-shadow: none;
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color) !important;
+          }
+
+          &:active {
+            background-color: var(--natsumi-button-active-color) !important;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          }
+        }
+
+        .natsumi-notification-button-icon {
+          min-width: 16px;
+          height: 16px;
+          background-image: var(--natsumi-button-icon);
+          background-size: 16px;
+          -moz-context-properties: stroke, stroke-opacity;
+          stroke: light-dark(black, white);
+        }
+      }
+
+      .natsumi-notification-dismiss {
+        order: 999;
+      }
     }
   }
 }
