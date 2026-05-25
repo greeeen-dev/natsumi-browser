@@ -115,16 +115,6 @@ SOFTWARE.
       background-image: url("../icons/lucide/close.svg");
     }
 
-    &:not([natsumi-notification-buttons]):hover {
-      .natsumi-notification-body {
-        opacity: 0.1;
-      }
-
-      &::before {
-        opacity: 1;
-      }
-    }
-
     &[natsumi-notification-type="warning"] {
       --natsumi-primary-color: #ffaa00;
     }
@@ -221,6 +211,22 @@ SOFTWARE.
 
       .natsumi-notification-dismiss {
         order: 999;
+      }
+    }
+
+    &:not([natsumi-notification-buttons]) {
+      &:hover {
+        .natsumi-notification-body {
+          opacity: 0.1;
+        }
+
+        &::before {
+          opacity: 1;
+        }
+      }
+
+      .natsumi-notification-buttons {
+        display: none !important;
       }
     }
   }

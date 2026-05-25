@@ -318,6 +318,9 @@ class NatsumiWelcome {
                 "chrome://natsumi/content/icons/lucide/party.svg",
                 10000
             )
+            notificationObject.addButton("Open settings", () => {
+                window.openPreferences();
+            }, null, true);
             notificationObject.addToContainer();
 
             if (tabStyleReset) {
