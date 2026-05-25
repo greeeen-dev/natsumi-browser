@@ -279,11 +279,6 @@ SOFTWARE.
     max-height: 40px !important;
   }
 
-  #urlbar {
-    --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
-    --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-05)) !important;
-  }
-
   #urlbar:not([open]) {
     .urlbar-input-container {
       border: 1px solid transparent !important;
