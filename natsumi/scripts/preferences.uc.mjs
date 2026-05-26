@@ -4646,6 +4646,12 @@ function addMiscPreferencesPane() {
         "Hide subcategories list"
     ));
 
+    miscPreferencesGroup.registerOption("natsumiMiscCopyCleanUrl", new CheckboxChoice(
+        "natsumi.browser.copy-clean-link",
+        "natsumiMiscCopyCleanUrl",
+        "Copy clean URL with shortcut where possible"
+    ));
+
     let miscPreferencesNode = miscPreferencesGroup.generateNode();
 
     // Set listeners for each checkbox

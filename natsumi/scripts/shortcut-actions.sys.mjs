@@ -27,9 +27,37 @@ SOFTWARE.
 import {NatsumiNotification} from "./notifications.sys.mjs";
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
+const urlCleaner = Cc["@mozilla.org/url-query-string-stripper;1"].createInstance(Ci.nsIURLQueryStringStripper);
+
+function getCurrentUrl() {
+    let copyCleanIfPossible = false;
+    if (ucApi.Prefs.get("natsumi.browser.copy-clean-link").exists()) {
+        copyCleanIfPossible = ucApi.Prefs.get("natsumi.browser.copy-clean-link").value;
+    }
+
+    let currentUrl = gBrowser.currentURI.spec;
+
+    if (copyCleanIfPossible) {
+        // Get clean URL
+        let cleanedLink;
+
+        try {
+            cleanedLink = urlCleaner.stripForCopyOrShare(gBrowser.currentURI);
+        } catch(e) {
+            console.warn("Failed to get clean URL, falling back to current URL:", e);
+        }
+
+        if (cleanedLink) {
+            currentUrl = Services.io.createExposableURI(cleanedLink)?.displaySpec ?? gBrowser.currentURI.spec;
+        }
+    }
+
+    return currentUrl;
+}
+
 export class NatsumiShortcutActions {
     static copyCurrentUrl() {
-        const currentUrl = gBrowser.currentURI.spec;
+        let currentUrl = getCurrentUrl();
         navigator.clipboard.writeText(currentUrl);
 
         // Add to notifications
@@ -38,7 +66,7 @@ export class NatsumiShortcutActions {
     }
 
     static copyCurrentUrlMarkdown() {
-        const currentUrl = gBrowser.currentURI.spec;
+        const currentUrl = getCurrentUrl();
         const currentTabName = gBrowser.selectedTab.label;
         navigator.clipboard.writeText(`[${currentTabName}](${currentUrl})`);
 
