@@ -232,6 +232,7 @@ class NatsumiKBSManager {
         // Shortcuts
         this.shortcuts = {
             "copyCurrentUrl": new NatsumiKeyboardShortcut(false, true, false, true, "c", 0, true),
+            "copyCurrentUrlMarkdown": new NatsumiKeyboardShortcut(false, true, true, true, "c", 0, true),
             "toggleBrowserLayout": new NatsumiKeyboardShortcut(false, true, true, false, "l", 0, true),
             "toggleVerticalTabs": new NatsumiKeyboardShortcut(false, true, true, false, "v", 0, true),
             "toggleCompactMode": new NatsumiKeyboardShortcut(false, true, false, true, "s", 0, true),
@@ -260,6 +261,7 @@ class NatsumiKBSManager {
         };
         this.shortcutActions = {
             "copyCurrentUrl": NatsumiShortcutActions.copyCurrentUrl,
+            "copyCurrentUrlMarkdown": NatsumiShortcutActions.copyCurrentUrlMarkdown,
             "toggleBrowserLayout": NatsumiShortcutActions.toggleBrowserLayout,
             "toggleVerticalTabs": NatsumiShortcutActions.toggleVerticalTabs,
             "toggleCompactMode": NatsumiShortcutActions.toggleCompactMode,
@@ -325,7 +327,7 @@ class NatsumiKBSManager {
                 "ctrl": Services.appinfo.OS.toLowerCase() !== "darwin",
                 "alt": true,
                 "shift": true,
-                "key": "c",
+                "key": "p",
                 "unregistered": false,
                 "shortcutMode": 3
             },

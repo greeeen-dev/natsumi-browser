@@ -1179,7 +1179,7 @@ body[natsumi-welcome] {
   }
 }
 
-body:not([natsumi-welcome]) {
+body:not([natsumi-welcome]):not([natsumi-welcome-complete]) {
   #natsumi-welcome {
     display: none !important;
   }

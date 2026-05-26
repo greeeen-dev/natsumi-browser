@@ -162,9 +162,13 @@ SOFTWARE.
         @media not (-moz-pref("natsumi.theme.force-window-controls-to-left")) and (-moz-pref("sidebar.position_start")) {
           visibility: visible !important;
         }
+
+        .titlebar-buttonbox-container {
+          margin-left: auto !important;
+        }
       }
 
-      &[collapsed] {
+      &[collapsed]:not([collapsed="false"]) {
         #PlacesToolbar {
           visibility: collapse !important;
         }
@@ -271,7 +275,7 @@ SOFTWARE.
     }
 
     @media not -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
-      body:not([natsumi-bookmarks-extend]) #PersonalToolbar[collapsed] {
+      body:not([natsumi-bookmarks-extend]) #PersonalToolbar[collapsed]:not([collapsed="false"]) {
         visibility: collapse;
 
         #PersonalToolbar .chromeclass-toolbar-additional {
@@ -348,7 +352,7 @@ SOFTWARE.
     }
 
     @media not -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
-      body:has(#PersonalToolbar:not([collapsed])), body[natsumi-bookmarks-extend] {
+      body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]), body[natsumi-bookmarks-extend] {
         #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
           margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
 
@@ -363,7 +367,7 @@ SOFTWARE.
         #PersonalToolbar {
           visibility: visible !important;
 
-          &[collapsed] #personal-bookmarks {
+          &[collapsed]:not([collapsed="false"]) #personal-bookmarks {
             visibility: collapse !important;
           }
         }

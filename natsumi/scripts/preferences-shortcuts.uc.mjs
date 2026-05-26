@@ -127,6 +127,9 @@ let shortcutsMap = {
             "copyCurrentUrl": {
                 "name": "Copy Current URL"
             },
+            "copyCurrentUrlMarkdown": {
+                "name": "Copy Current URL as Markdown"
+            },
             "printKb": {
                 "name": "Print"
             },

@@ -189,7 +189,9 @@ SOFTWARE.
     }
 
     &[natsumi-custom-theme-has-image] #sidebar-main {
-      background: light-dark(#ebebeb, #171717) !important;
+      @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+        background: light-dark(#ebebeb, #171717) !important;
+      }
     }
   }
 
@@ -364,7 +366,7 @@ SOFTWARE.
           opacity: 0 !important;
         }
 
-        &:has(#PersonalToolbar:not([collapsed])) {
+        &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) {
           --natsumi-compact-bookmarks-height: 28px !important;
         }
 
@@ -374,7 +376,9 @@ SOFTWARE.
       }
 
       &[natsumi-custom-theme-has-image] #navigator-toolbox {
-        background: light-dark(#ebebeb, #171717) !important;
+        @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+          background: light-dark(#ebebeb, #171717) !important;
+        }
       }
 
       #sidebar-box {
@@ -404,7 +408,7 @@ SOFTWARE.
             --natsumi-sidebar-height-offset: var(--natsumi-sidebar-height-override, 40px) !important;
           }
 
-          &:has(#PersonalToolbar:not([collapsed])) #sidebar-main {
+          &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) #sidebar-main {
             top: calc(var(--natsumi-sidebar-height-override, 40px) + 28px) !important;
             --natsumi-sidebar-height-offset: calc(var(--natsumi-sidebar-height-override, 40px) + 28px) !important;
           }
@@ -414,7 +418,7 @@ SOFTWARE.
               --natsumi-toolbar-offset: var(--natsumi-toolbar-override, 15px);
             }
 
-            &:has(#PersonalToolbar:not([collapsed])) #natsumi-pinned-toolbar {
+            &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) #natsumi-pinned-toolbar {
               --natsumi-toolbar-offset: calc(var(--natsumi-toolbar-override, 15px) + 28px);
             }
           }
@@ -458,7 +462,7 @@ SOFTWARE.
       max-width: calc(100vw - calc(var(--natsumi-browser-separation) * 2)) !important;
       transition: min-height 170ms ease-out, max-height 170ms ease-out, var(--ext-theme-background-transition), margin 0.2s ease !important;
 
-      &[collapsed="true"] {
+      &[collapsed="true"], [collapsed=""] {
         margin-top: calc(-81px - var(--natsumi-browser-separation)) !important; !important;
       }
     }
