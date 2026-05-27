@@ -33,8 +33,77 @@ import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
 // Adjust this as needed
 const movementMultiplier = 0.7;
+const zoomMultiplier = 8;
 
 let wheelTimeout = null;
+let originalWidth;
+let originalHeight;
+
+function setScrollAttribute(timeout = 100) {
+    document.body.setAttribute("natsumi-scrolling", "true");
+
+    if (wheelTimeout) {
+        clearTimeout(wheelTimeout);
+    }
+
+    wheelTimeout = setTimeout(() => {
+        document.body.removeAttribute("natsumi-scrolling");
+    }, timeout);
+}
+
+function zoomPictureInPicture(event) {
+    let scrollToMoveDisabled = false;
+    if (ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").exists()) {
+        scrollToMoveDisabled = ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").value;
+    }
+
+    if (scrollToMoveDisabled) {
+        return;
+    }
+
+    // Get zoom amount
+    let zoomAmount = event.deltaY * -1;
+
+    // Calculate height zoom
+    if (!originalWidth || !originalHeight) {
+        originalWidth = window.innerWidth;
+        originalHeight = window.innerHeight;
+    } else {
+        // Ensure the ratio hasn't changed significantly
+        const currentRatio = window.innerWidth / window.innerHeight;
+        const originalRatio = originalWidth / originalHeight;
+
+        if (Math.abs(currentRatio - originalRatio) > 0.1) {
+            originalWidth = window.innerWidth;
+            originalHeight = window.innerHeight;
+        }
+    }
+
+    // Calculate new width
+    const newWidth = window.innerWidth + (zoomAmount * zoomMultiplier);
+
+    // Calculate new height
+    const newHeight = originalHeight * (newWidth / originalWidth);
+
+    // Get rounded widths and heights
+    const flooredNewWidth = Math.floor(newWidth);
+    const flooredNewHeight = Math.floor(newHeight);
+
+    // Is there any actual change?
+    if (flooredNewWidth === window.innerWidth || flooredNewHeight === window.innerHeight) {
+        return;
+    }
+
+    // Calculate movement amount
+    let newX = ((flooredNewWidth - window.innerWidth) / -2) + screenX;
+    let newY = ((flooredNewHeight - window.innerHeight) / -2) + screenY;
+
+    // Resize window
+    window.resizeTo(newWidth, newHeight);
+    window.moveTo(newX, newY);
+
+    setScrollAttribute(300);
+}
 
 function movePictureInPicture(event) {
     let scrollToMoveDisabled = false;
@@ -73,7 +142,7 @@ function movePictureInPicture(event) {
     // Calculate new positions for mouse
     const nativePixelRatio = window.devicePixelRatio || 1;
     const nativeNewX = newX * nativePixelRatio + (mouseRelativeX * nativePixelRatio);
-    let nativeNewY = newY * nativePixelRatio + (mouseRelativeY * nativePixelRatio);;
+    let nativeNewY = newY * nativePixelRatio + (mouseRelativeY * nativePixelRatio);
 
     // Move PiP window and mouse
     window.moveTo(newX, newY);
@@ -89,18 +158,15 @@ function movePictureInPicture(event) {
         window.windowUtils.sendNativeMouseEvent(nativeNewX, nativeNewY, 3, 0, 0, null);
     }
 
-    document.body.setAttribute("natsumi-scrolling", "true");
-
-    if (wheelTimeout) {
-        clearTimeout(wheelTimeout);
-    }
-
-    wheelTimeout = setTimeout(() => {
-        document.body.removeAttribute("natsumi-scrolling");
-    }, 100);
+    setScrollAttribute();
 }
 
 document.addEventListener("wheel", function (e) {
-    // we only want to see how this works for now
-    movePictureInPicture(e);
+    if (e.ctrlKey) {
+        // Zoom window
+        zoomPictureInPicture(e);
+    } else {
+        // Move window
+        movePictureInPicture(e);
+    }
 });
