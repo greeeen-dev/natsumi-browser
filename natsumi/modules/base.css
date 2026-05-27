@@ -648,7 +648,7 @@ splitter:hover {
     background: transparent !important;
   }
 
-  #tabbrowser-tabbox {
+  &:has(#sidebar-box[hidden]) #tabbrowser-tabbox, #sidebar-box {
     &[sidebar-ongoing-animations] {
       &[sidebar-launcher-expanded] {
         animation: sidebar-hover-tabbox-extend 0.4s ease;
