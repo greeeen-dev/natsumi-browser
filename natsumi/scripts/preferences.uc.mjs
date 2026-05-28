@@ -4407,7 +4407,7 @@ function addPipBehaviorPane() {
         "natsumi.pip.disable-scroll-to-move",
         "natsumiPipScrollToMove",
         "Scroll-to-move",
-        "Scroll-to-move allows you to move the Picture-in-Picture window by scrolling on it.",
+        "Scroll-to-move allows you to move and resize the Picture-in-Picture window with mouse/trackpad scrolling.",
         true
     ));
 

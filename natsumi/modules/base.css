@@ -638,7 +638,31 @@ splitter:hover {
 
 /* Add soft glow to web page */
 @media -moz-pref("natsumi.theme.soft-glow") {
-    #tabbrowser-tabpanels .deck-selected {
-        box-shadow: 0px 0px 30px var(--tab-selected-bgcolor) !important;
+  #tabbrowser-tabpanels .deck-selected {
+    box-shadow: 0px 0px 30px var(--tab-selected-bgcolor) !important;
+  }
+}
+
+:root[sidebar-expand-on-hover] {
+  #sidebar-main {
+    background: transparent !important;
+  }
+
+  &:has(#sidebar-box[hidden]) #tabbrowser-tabbox, #sidebar-box {
+    &[sidebar-ongoing-animations] {
+      &[sidebar-launcher-expanded] {
+        animation: sidebar-hover-tabbox-extend 0.4s ease;
+        animation-fill-mode: forwards;
+      }
+
+      &:not([sidebar-launcher-expanded]) {
+        animation: sidebar-hover-tabbox-collapse 0.4s ease;
+        animation-fill-mode: forwards;
+      }
     }
+
+    &:not([sidebar-ongoing-animations])[sidebar-launcher-expanded] {
+      margin-inline-start: var(--natsumi-sidebar-width) !important;
+    }
+  }
 }
