@@ -38,6 +38,10 @@ const zoomMultiplier = 8;
 let wheelTimeout = null;
 let originalWidth;
 let originalHeight;
+let originalMouseX;
+let originalMouseY;
+let originalMouseRelativeX;
+let originalMouseRelativeY;
 
 function setScrollAttribute(timeout = 100) {
     document.body.setAttribute("natsumi-scrolling", "true");
@@ -85,6 +89,11 @@ function zoomPictureInPicture(event) {
     // Calculate new height
     const newHeight = originalHeight * (newWidth / originalWidth);
 
+    // Ensure width and height are above 120px
+    if (newWidth < 120 || newHeight < 120) {
+        return;
+    }
+
     // Get rounded widths and heights
     const flooredNewWidth = Math.floor(newWidth);
     const flooredNewHeight = Math.floor(newHeight);
@@ -94,9 +103,41 @@ function zoomPictureInPicture(event) {
         return;
     }
 
+    // Get relative position of mouse within window
+    const mouseRelativeX = event.pageX;
+    const mouseRelativeY = event.pageY;
+
+    // Calculate relative position ratio
+    const mouseRelativeRatioX = mouseRelativeX / window.innerWidth;
+    const mouseRelativeRatioY = mouseRelativeY / window.innerHeight;
+
+    // Check if mouse position has changed
+    if (!originalMouseX || !originalMouseY) {
+        originalMouseX = event.screenX;
+        originalMouseY = event.screenY;
+        originalMouseRelativeX = mouseRelativeRatioX;
+        originalMouseRelativeY = mouseRelativeRatioY;
+    }
+    if (originalMouseX !== event.screenX || originalMouseY !== event.screenY) {
+        originalMouseX = event.screenX;
+        originalMouseY = event.screenY;
+        originalMouseRelativeX = mouseRelativeRatioX;
+        originalMouseRelativeY = mouseRelativeRatioY;
+    }
+
     // Calculate movement amount
-    let newX = ((flooredNewWidth - window.innerWidth) / -2) + screenX;
-    let newY = ((flooredNewHeight - window.innerHeight) / -2) + screenY;
+    let newX = event.screenX - (flooredNewWidth * originalMouseRelativeX);
+    let newY = event.screenY - (flooredNewHeight * originalMouseRelativeY);
+
+    let shouldCenter = false;
+    if (ucApi.Prefs.get("natsumi.pip.center-scale").exists()) {
+        shouldCenter = ucApi.Prefs.get("natsumi.pip.center-scale").value;
+    }
+
+    if (shouldCenter) {
+        newX = ((flooredNewWidth - window.innerWidth) / -2) + screenX;
+        newY = ((flooredNewHeight - window.innerHeight) / -2) + screenY;
+    }
 
     // Resize window
     window.resizeTo(newWidth, newHeight);
@@ -126,6 +167,8 @@ function movePictureInPicture(event) {
     // Get total movable area
     const movableX = screen.availWidth - window.innerWidth;
     const movableY = screen.availHeight - window.innerHeight;
+    const minimumX = screen.availLeft;
+    const minimumY = screen.availTop;
 
     // Calculate movement based on scroll distance
     const movedX = Math.round(event.wheelDeltaX * movementMultiplier);
@@ -133,10 +176,10 @@ function movePictureInPicture(event) {
 
     // Calculate new positions for window
     const newX = Math.min(
-        Math.max(currentX + movedX, 0), movableX
+        Math.max(currentX + movedX, 0), movableX + minimumX
     );
     const newY = Math.min(
-        Math.max(currentY + movedY, 0), movableY
+        Math.max(currentY + movedY, 0), movableY + minimumY
     );
 
     // Calculate new positions for mouse
@@ -162,8 +205,13 @@ function movePictureInPicture(event) {
 }
 
 document.addEventListener("wheel", function (e) {
+    if (window.fullScreen) {
+        // Do not move or resize in fullscreen
+        return;
+    }
+
     if (e.ctrlKey) {
-        // Zoom window
+        // Resize window
         zoomPictureInPicture(e);
     } else {
         // Move window

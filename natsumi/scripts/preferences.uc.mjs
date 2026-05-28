@@ -4411,6 +4411,20 @@ function addPipBehaviorPane() {
         true
     ));
 
+    let scrollToMoveSubgroup = new OptionsGroup(
+        "natsumiPiPScrollToMoveOptions",
+        "",
+        ""
+    );
+
+    scrollToMoveSubgroup.registerOption("natsumiPiPCenterScale", new CheckboxChoice(
+        "natsumi.pip.center-scale",
+        "natsumiPiPCenterScale",
+        "Keep PiP window centered relative to original position on resize"
+    ));
+
+    pipBehaviorGroup.registerOption("natsumiPiPScrollToMoveOptions", scrollToMoveSubgroup);
+
     pipBehaviorGroup.registerOption("natsumiPipLegacyStyle", new CheckboxChoice(
         "natsumi.pip.legacy-style",
         "natsumiPipLegacyStyle",
@@ -4419,6 +4433,12 @@ function addPipBehaviorPane() {
     ));
 
     let pipBehaviorNode = pipBehaviorGroup.generateNode();
+
+    let centerScaleCheckbox = pipBehaviorNode.querySelector("#natsumiPiPCenterScale");
+
+    if (ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").exists()) {
+        toggleDisabled(centerScaleCheckbox, ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").value);
+    }
 
     // Set listeners for each checkbox
     let checkboxes = pipBehaviorNode.querySelectorAll("checkbox");
@@ -4429,6 +4449,10 @@ function addPipBehaviorPane() {
 
             if (checkbox.getAttribute("opposite") === "true") {
                 isChecked = !isChecked;
+            }
+
+            if (checkbox.id === "natsumiPipScrollToMove") {
+                toggleDisabled(centerScaleCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);

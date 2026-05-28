@@ -97,6 +97,10 @@ SOFTWARE.
 
     body[natsumi-scrolling] {
       cursor: none !important;
+
+      * {
+        cursor: none !important;
+      }
     }
 
     .player-holder {
