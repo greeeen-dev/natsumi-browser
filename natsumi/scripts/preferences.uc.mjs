@@ -34,6 +34,11 @@ SOFTWARE.
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import { NatsumiNotification } from "./notifications.sys.mjs";
 import {
+    uploadFile,
+    getFile,
+    deleteFile
+} from "./files.sys.mjs";
+import {
     customThemeLoader,
     // customColorLoader,
     colorPresetNames,
@@ -46,6 +51,32 @@ import {
     applyCustomTheme
 } from "./custom-theme.sys.mjs";
 import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
+
+// Dev features - still heavy WIP
+const enablePositionFreeform = false;
+const enableTextColor = false;
+
+// Get redesign status
+let categoryNode = document.getElementById("categories");
+const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
+const hasRedesignV2 = document.getElementById("category-general").getAttribute("hidden") && hasRedesign;
+
+if (hasRedesign) {
+    document.body.setAttribute("natsumi-preferences-redesign", "");
+}
+if (hasRedesignV2) {
+    document.body.setAttribute("natsumi-preferences-redesign-v2", "");
+}
+
+// Get correct header
+let categoryHeader = "h1";
+
+if (hasRedesignV2) {
+    categoryHeader = "h2"
+}
+
+// Pride easter egg!
+let lgbtqThemeClicked = 0;
 
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
@@ -73,6 +104,10 @@ class CustomThemePicker {
         this.gradientType = "linear";
         this.angle = 0;
         this.colors = [];
+        this.customImage = null;
+        this.customImageOpacity = 1;
+        this.customImageBlur = "none";
+        this.managedPosition = false;
         this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.grain = 0;
         this.newColorAllowed = true;
@@ -225,13 +260,18 @@ class CustomThemePicker {
         // Add listeners for gradient controls
         let presetButton = this.node.querySelector(".natsumi-preset-button");
         let gradientTypeButton = this.node.querySelector(".natsumi-gradient-button");
+        let colorPositionButton = this.node.querySelector(".natsumi-position-button");
         let resetButton = this.node.querySelector(".natsumi-reset-button");
         let hexInput = this.node.querySelector(".natsumi-hex-input");
+        let imageInput = this.node.querySelector(".natsumi-image-submit");
+        let imageRemove = this.node.querySelector(".natsumi-image-remove");
+        let imageBlurOptions = this.node.querySelectorAll(".natsumi-image-blur-choice");
         let toolsButton = this.node.querySelector(".natsumi-tools-button");
         let hexButton = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-button");
         let grainButton = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-button");
+        let customImageButton = this.node.querySelector(".natsumi-custom-theme-image .natsumi-custom-theme-tool-button");
         let textColorButton = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-button");
-        const actionButtons = [presetButton, gradientTypeButton, resetButton, toolsButton];
+        const actionButtons = [presetButton, gradientTypeButton, colorPositionButton, resetButton, toolsButton];
 
         if (!this.singleColor) {
             presetButton.addEventListener("click", () => {
@@ -241,6 +281,14 @@ class CustomThemePicker {
             gradientTypeButton.addEventListener("click", () => {
                 this.cycleGradientType();
             });
+
+            if (enablePositionFreeform) {
+                colorPositionButton.addEventListener("click", () => {
+                    this.toggleManagedPosition();
+                });
+            } else {
+                colorPositionButton.style.display = "none";
+            }
         }
 
         for (let actionButton of actionButtons) {
@@ -249,6 +297,13 @@ class CustomThemePicker {
                     this.displayAction("Preset", colorPresetNames[this.preset]);
                 } else if (Array.from(actionButton.classList).includes("natsumi-gradient-button")) {
                     this.displayAction("Gradient", gradientTypeNames[this.gradientType]);
+                } else if (Array.from(actionButton.classList).includes("natsumi-position-button")) {
+                    let actionString = "Freeform";
+                    if (this.managedPosition) {
+                        actionString = "Managed";
+                    }
+
+                    this.displayAction("Color positions", actionString);
                 } else if (Array.from(actionButton.classList).includes("natsumi-reset-button")) {
                     this.displayAction("Reset", "Reset theme layer");
                 } else if (Array.from(actionButton.classList).includes("natsumi-tools-button")) {
@@ -265,6 +320,7 @@ class CustomThemePicker {
         }
 
         resetButton.addEventListener("click", () => {
+            this.removeImage();
             this.removeAllColors();
         });
 
@@ -280,7 +336,7 @@ class CustomThemePicker {
 
         hexButton.addEventListener("click", () => {
             let hexInputContainer = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-container");
-            if (hexInputContainer.attributes["hidden"]) {
+            if (hexInputContainer.hasAttribute("hidden")) {
                 hexInputContainer.removeAttribute("hidden");
             } else {
                 hexInputContainer.setAttribute("hidden", "");
@@ -288,18 +344,45 @@ class CustomThemePicker {
             }
         });
 
+        imageInput.addEventListener("click", () => {
+            this.uploadImage().catch((e) => {
+                console.error(e);
+            });
+        })
+
+        imageRemove.addEventListener("click", () => {
+            this.removeImage();
+        })
+
         grainButton.addEventListener("click", () => {
             let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-container");
-            if (grainSliderContainer.attributes["hidden"]) {
+            if (grainSliderContainer.hasAttribute("hidden")) {
                 grainSliderContainer.removeAttribute("hidden");
             } else {
                 grainSliderContainer.setAttribute("hidden", "");
             }
         })
 
+        customImageButton.addEventListener("click", () => {
+            let customImageContainer = this.node.querySelector(".natsumi-custom-theme-image .natsumi-custom-theme-tool-container");
+            if (customImageContainer.hasAttribute("hidden")) {
+                customImageContainer.removeAttribute("hidden");
+            } else {
+                customImageContainer.setAttribute("hidden", "");
+            }
+        })
+
+        imageBlurOptions.forEach(button => {
+            button.addEventListener("click", () => {
+                this.setImageBlur(button.getAttribute("value"));
+                this.renderMisc();
+                this.saveLayer();
+            });
+        });
+
         textColorButton.addEventListener("click", () => {
             let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-text-color .natsumi-custom-theme-tool-container");
-            if (grainSliderContainer.attributes["hidden"]) {
+            if (grainSliderContainer.hasAttribute("hidden")) {
                 grainSliderContainer.removeAttribute("hidden");
             } else {
                 grainSliderContainer.setAttribute("hidden", "");
@@ -349,6 +432,8 @@ class CustomThemePicker {
         let luminositySliderNode = this.node.querySelector(".natsumi-color-slider-luminosity");
         let opacitySliderNode = this.node.querySelector(".natsumi-color-slider-opacity");
         let grainSliderNode = this.node.querySelector(".natsumi-color-slider-grain");
+        let imageOpacitySliderNode = this.node.querySelector(".natsumi-color-slider-image-opacity");
+
         luminositySliderNode.addEventListener("mousedown", (event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -367,6 +452,12 @@ class CustomThemePicker {
             event.stopPropagation();
             event.preventDefault();
             this.sliderEvent("grain", event);
+        });
+
+        imageOpacitySliderNode.addEventListener("mousedown", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            this.sliderEvent("image-opacity", event);
         });
 
         // Add listener for gradient angle
@@ -492,9 +583,21 @@ class CustomThemePicker {
                 toLoad["version"] = 1;
             }
 
-            this.data = this.loaderMethod(toLoad);
+            this.data = this.loaderMethod(toLoad, false);
         } catch(e) {
             console.error("Import failed:", e);
+
+            if (e.message !== "Import timed out.") {
+                let notification = new NatsumiNotification(
+                    "Theme import failed.",
+                    "Either the theme is corrupted or something went wrong with the import process.",
+                    "chrome://natsumi/content/icons/lucide/caution.svg",
+                    10000,
+                    "caution"
+                );
+                notification.addToContainer();
+            }
+
             return;
         }
 
@@ -550,6 +653,7 @@ class CustomThemePicker {
         this.textColor = {"enabled": false, "hue": 0, "saturation": 0, "value": 0};
         this.preset = null;
         this.lastSelected = null;
+        this.managedPosition = true;
 
         if (!this.data[this.theme]) {
             return;
@@ -589,13 +693,29 @@ class CustomThemePicker {
             this.grain = 0;
         }
 
+        if (this.data[this.theme]["managedPosition"]) {
+            this.managedPosition = this.data[this.theme]["managedPosition"];
+        }
+
         if (this.data[this.theme]["textColor"]) {
             this.textColor = this.data[this.theme]["textColor"];
+        }
+
+        this.customImageOpacity = 1;
+        this.customImageBlur = "none";
+
+        if (this.data[this.theme][`${layer}`]["image"]) {
+            this.customImage = this.data[this.theme][`${layer}`]["image"]["id"];
+            this.customImageOpacity = this.data[this.theme][`${layer}`]["image"]["opacity"] ?? 1;
+            this.customImageBlur = this.data[this.theme][`${layer}`]["image"]["blur"] ?? "none";
+        } else {
+            this.customImage = null;
         }
 
         this.renderGrid();
         this.renderSliders();
         this.renderAngle();
+        this.renderMisc();
     }
 
     async saveLayer() {
@@ -628,19 +748,40 @@ class CustomThemePicker {
                         continue;
                     }
 
-                    if (!layerData["background"]) {
+                    let hasImage = false;
+                    if (layerData["image"]) {
+                        hasImage = layerData["image"]["id"] !== undefined;
+                    }
+
+                    if (!layerData["background"] && !hasImage) {
                         continue;
                     }
 
-                    if (layerData["background"]["colors"]) {
+                    if (layerData["background"] && layerData["background"]["colors"]) {
                         usedColors += layerData["background"]["colors"].length;
                     }
+
+                    if (hasImage) {
+                        usedColors += 1;
+                    }
                 }
+            }
+
+            if (this.customImage) {
+                this.data[this.theme][`${this.layer}`]["image"] = {
+                    "id": this.customImage,
+                    "opacity": this.customImageOpacity,
+                    "blur": this.customImageBlur
+                };
+                usedColors += 1;
+            } else {
+                this.data[this.theme][`${this.layer}`]["image"] = {};
             }
         }
 
         this.data["version"] = this.version;
         this.data[this.theme]["grain"] = this.grain;
+        this.data[this.theme]["managedPosition"] = this.managedPosition;
 
         let themeDirectoryPath = PathUtils.join(PathUtils.profileDir, "natsumi-themes");
         let themePath = PathUtils.join(themeDirectoryPath, "master.json");
@@ -706,6 +847,9 @@ class CustomThemePicker {
                         <div class="natsumi-custom-theme-controls-button natsumi-gradient-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
                         </div>
+                        <div class="natsumi-custom-theme-controls-button natsumi-position-button">
+                            <div class="natsumi-custom-theme-controls-icon"></div>
+                        </div>
                         <div class="natsumi-custom-theme-controls-button natsumi-reset-button">
                             <div class="natsumi-custom-theme-controls-icon"></div>
                         </div>
@@ -740,7 +884,69 @@ class CustomThemePicker {
                                 </div>
                             </div>
                         </div>
-                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-text-color">
+                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-image">
+                            <div class="natsumi-custom-theme-tool-button">
+                                <div class="natsumi-custom-theme-tool-icon"></div>
+                                <div class="natsumi-custom-theme-tool-label">
+                                    Image
+                                </div>
+                            </div>
+                            <div class="natsumi-custom-theme-tool-container" hidden="">
+                                <div class="natsumi-image-container">
+                                    <div class="natsumi-image-current"></div>
+                                    <div class="natsumi-image-remove"></div>
+                                    <div class="natsumi-image-submit"></div>
+                                </div>
+                                <div class="natsumi-custom-theme-slider natsumi-color-slider-image-opacity">
+                                    <div class="natsumi-custom-theme-slider-icon-1"></div>
+                                    <div class="natsumi-custom-theme-slider-icon-0"></div>
+                                </div>
+                                <div class="natsumi-image-blur">
+                                    <div class="natsumi-image-blur-label">
+                                        Image blur
+                                    </div>
+                                    <radiogroup class="natsumi-image-blur-select" value="none">
+                                        <radio class="natsumi-image-blur-choice" value="none" selected="true">
+                                            <image class="radio-check" selected="true"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    None
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                        <radio class="natsumi-image-blur-choice" value="light">
+                                            <image class="radio-check"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    Light
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                        <radio class="natsumi-image-blur-choice" value="medium">
+                                            <image class="radio-check"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    Medium
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                        <radio class="natsumi-image-blur-choice" value="strong">
+                                            <image class="radio-check"></image>
+                                            <hbox class="radio-label-box" align="center" flex="1">
+                                                <image class="radio-icon"></image>
+                                                <label class="radio-label" flex="1">
+                                                    Strong
+                                                </label>
+                                            </hbox>
+                                        </radio>
+                                    </radiogroup>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="natsumi-custom-theme-tool natsumi-custom-theme-text-color" hidden="${!enableTextColor}">
                             <div class="natsumi-custom-theme-tool-button">
                                 <div class="natsumi-custom-theme-tool-icon"></div>
                                 <div class="natsumi-custom-theme-tool-label">
@@ -809,6 +1015,13 @@ class CustomThemePicker {
         return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
     }
 
+    calculateAngleRadiusPos(relativeX, relativeY, radian = false) {
+        let gridWidth = 355;
+        let gridHeight = 355;
+
+        return this.calculateAngleRadius(relativeX, relativeY, gridWidth, gridHeight, radian);
+    }
+
     calculateAngleRadius(relativeX, relativeY, width, height, radian = false, lockRadius = false) {
         // Calculate the center of object
         let centerX = width / 2;
@@ -843,6 +1056,14 @@ class CustomThemePicker {
         let gridHeight = Math.max(this.node.querySelector(".natsumi-custom-theme-grid").getBoundingClientRect().height, 300);
 
         return this.calculatePosition(angle, radius, gridWidth, gridHeight, radian);
+    }
+
+    calculatePositionPos(position, radian = false) {
+        let gridWidth = 355;
+        let gridHeight = 355;
+        let angle = position * 300 - 150;
+
+        return this.calculatePosition(angle, 1, gridWidth, gridHeight, radian);
     }
 
     calculatePosition(angle, radius, width, height, radian = false) {
@@ -986,8 +1207,10 @@ class CustomThemePicker {
         }
 
         let gridNode = this.node.querySelector(".natsumi-custom-theme-grid");
+        let positionNode = this.node.querySelector(".natsumi-custom-theme-position-container");
         let newColors = this.colors.length;
         let currentColors = gridNode.querySelectorAll(".natsumi-custom-theme-color");
+        let currentColorPositions = gridNode.querySelectorAll(".natsumi-custom-theme-position-color");
         const replaceColors = (newColors !== currentColors.length);
 
         if (replaceColors) {
@@ -1028,6 +1251,8 @@ class CustomThemePicker {
 
         for (let colorIndex in this.colors) {
             let colorData = this.colors[colorIndex];
+
+            // Process color grid entry
             let colorNode;
 
             if (replaceColors) {
@@ -1103,6 +1328,60 @@ class CustomThemePicker {
                     this.setLastSelected(colorIndex);
                 });
             }
+
+            // Process color position entry
+            if (enablePositionFreeform) {
+                let colorPosNode;
+
+                if (replaceColors) {
+                    colorPosNode = document.createElement("div");
+                    colorPosNode.classList.add("natsumi-custom-theme-position-color");
+                } else {
+                    colorPosNode = currentColorPositions[colorIndex];
+                }
+
+                colorPosNode.style.setProperty("--natsumi-selected-color", `${colorData.code}`);
+
+                if (replaceColors) {
+                    let colorDisplayNode = document.createElement("div");
+                    colorDisplayNode.classList.add("natsumi-custom-theme-position-color-display");
+                    colorPosNode.appendChild(colorDisplayNode);
+                }
+
+                let colorPosNodePosition = this.calculatePositionPos(colorData.position);
+                colorPosNode.style.translate = `${colorPosNodePosition.x}px ${colorPosNodePosition.y}px`;
+                colorPosNode.style.setProperty("--natsumi-color-index", `"${colorData.order + 1}"`);
+
+                if ((45 <= colorData.angle && colorData.angle <= 205 && colorData.value >= 0.8 && colorData.opacity >= 0.6) || (colorData.radius <= 0.5 && colorData.value >= 0.8)) {
+                    colorPosNode.style.setProperty("--natsumi-color-index-color", "black");
+                } else if (colorData.opacity < 0.6 && colorData.value >= 0.8) {
+                    colorPosNode.style.setProperty("--natsumi-color-index-color", "light-dark(black, white)");
+                } else {
+                    colorPosNode.style.setProperty("--natsumi-color-index-color", "white");
+                }
+
+                if (replaceColors) {
+                    positionNode.appendChild(colorPosNode);
+                }
+
+                colorPosNode.addEventListener("mousedown", (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    let gridPositionNode = this.node.querySelector(".natsumi-custom-theme-position-container");
+                    gridPositionNode.setAttribute("natsumi-color-dragging", "");
+
+                    document.onmouseup = () => {
+                        gridPositionNode.removeAttribute("natsumi-color-dragging");
+                        this.resetListeners();
+                    }
+                    document.onmousemove = (event => {
+                        let relativeX = event.clientX - gridPositionNode.getBoundingClientRect().left;
+                        let relativeY = event.clientY - gridPositionNode.getBoundingClientRect().top;
+                        this.moveColor(colorIndex, relativeX, relativeY);
+                    });
+                });
+            }
         }
     }
 
@@ -1134,16 +1413,22 @@ class CustomThemePicker {
         const value = 1;
         const opacity = 1;
 
+        // Add new color
         const colorData = {
             "code": this.generateCssColorCode(hue, saturation, value, opacity),
             "angle": circlePosData["angle"],
             "radius": circlePosData["radius"],
             "value": value,
             "opacity": opacity,
-            "order": this.colors.length
+            "order": this.colors.length,
+            "position": 1
         }
-
         this.colors.push(colorData);
+
+        // Set managed position
+        this.managedPosition = true;
+        this.ensureManagedPosition();
+
         this.setLastSelected(`${this.colors.length - 1}`);
         this.saveLayer();
     }
@@ -1184,8 +1469,12 @@ class CustomThemePicker {
             "opacity": a,
             "order": this.colors.length
         }
-
         this.colors.push(colorData);
+
+        // Set managed position
+        this.managedPosition = true;
+        this.ensureManagedPosition();
+
         this.setLastSelected(`${this.colors.length - 1}`);
         this.saveLayer();
     }
@@ -1212,6 +1501,30 @@ class CustomThemePicker {
         this.colors[index]["code"] = this.generateCssColorCodeFromData(this.colors[index]);
 
         this.setLastSelected(index);
+        this.saveLayer();
+    }
+
+    moveColorPosition(index, relativeX, relativeY) {
+        if (index < 0 || index >= this.colors.length) {
+            console.error("Invalid color index:", index);
+            return;
+        }
+
+        if (this.preset) {
+            if (!availablePresets[this.colors.length].includes(this.preset)) {
+                this.preset = null;
+            }
+
+            if (index !== "0") {
+                return;
+            }
+        }
+
+        const circlePosData = this.calculateAngleRadiusGrid(relativeX, relativeY);
+        this.colors[index]["angle"] = circlePosData["angle"];
+        this.colors[index]["radius"] = circlePosData["radius"];
+        this.colors[index]["code"] = this.generateCssColorCodeFromData(this.colors[index]);
+
         this.saveLayer();
     }
 
@@ -1262,7 +1575,7 @@ class CustomThemePicker {
             relativeX = Math.round(sliderWidth * (1 - sliderValue));
         }
 
-        if (slider !== "grain" && this.lastSelected === null) {
+        if (slider !== "grain" && slider !== "image-opacity" && this.lastSelected === null) {
             // No color selected here, so we can't modify its properties
             return;
         }
@@ -1274,6 +1587,8 @@ class CustomThemePicker {
         } else if (slider === "grain") {
             sliderValue = 1 - sliderValue;
             this.setGrain(sliderValue);
+        } else if (slider === "image-opacity") {
+            this.setImageOpacity(sliderValue);
         }
 
         sliderNode.style.setProperty("--natsumi-slider-position", `${relativeX}px`);
@@ -1286,6 +1601,7 @@ class CustomThemePicker {
         let luminositySliderNode = this.node.querySelector(".natsumi-color-slider-luminosity");
         let opacitySliderNode = this.node.querySelector(".natsumi-color-slider-opacity");
         let grainSliderNode = this.node.querySelector(".natsumi-color-slider-grain");
+        let imageOpacitySliderNode = this.node.querySelector(".natsumi-color-slider-image-opacity");
         let textColorHueSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-hue");
         let textColorSaturationSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-saturation");
         let textColorValueSliderNode = this.node.querySelector(".natsumi-color-slider-text-color-value");
@@ -1315,6 +1631,11 @@ class CustomThemePicker {
         const grainPosition = grainSliderWidth * this.grain;
         grainSliderNode.style.setProperty("--natsumi-slider-position", `${grainPosition}px`);
 
+        // Render image opacity slider
+        const imageOpacitySliderWidth = Math.max(imageOpacitySliderNode.getBoundingClientRect().width, 380);
+        const imageOpacityPosition = imageOpacitySliderWidth * (1 - this.customImageOpacity);
+        imageOpacitySliderNode.style.setProperty("--natsumi-slider-position", `${imageOpacityPosition}px`);
+
         // Render text color sliders
         if (this.textColor) {
             const textColorHuePosition = textColorHueSliderNode.getBoundingClientRect().width * (1 - (this.textColor["hue"] / 360));
@@ -1337,6 +1658,38 @@ class CustomThemePicker {
         } else {
             angleNode.removeAttribute("disabled");
         }
+    }
+
+    renderMisc() {
+        let imageDisplay = this.node.querySelector(".natsumi-image-current");
+        let imageRemove = this.node.querySelector(".natsumi-image-remove");
+        let imageBlurOptions = this.node.querySelectorAll(".natsumi-image-blur-choice");
+
+        if (this.customImage) {
+            getFile(this.customImage).then((fileObject) => {
+                imageDisplay.textContent = fileObject.name;
+                imageRemove.removeAttribute("hidden");
+            }).catch((e) => {
+                console.error("Could not get image:", e);
+            });
+        } else {
+            imageDisplay.textContent = "No image uploaded";
+            imageRemove.setAttribute("hidden", "");
+        }
+
+        imageBlurOptions.forEach((btn) => {
+            btn.checked = false;
+            btn.removeAttribute("selected")
+            let radioCheck = btn.querySelector(".radio-check");
+            radioCheck.removeAttribute("selected");
+
+            if (btn.getAttribute("value") === this.customImageBlur) {
+                btn.checked = true;
+                btn.setAttribute("selected", "true");
+                let selectedRadioCheck = btn.querySelector(".radio-check");
+                selectedRadioCheck.setAttribute("selected", "true");
+            }
+        });
     }
 
     sliderEvent(slider, event) {
@@ -1425,6 +1778,7 @@ class CustomThemePicker {
         this.renderGrid();
         this.renderSliders();
         this.renderAngle();
+        this.renderMisc();
         this.saveLayer();
     }
 
@@ -1474,6 +1828,101 @@ class CustomThemePicker {
         this.renderAngle();
         this.saveLayer();
     }
+
+    toggleManagedPosition() {
+        this.managedPosition = !this.managedPosition;
+        this.saveLayer();
+    }
+
+    ensureManagedPosition() {
+        if (!this.managedPosition) {
+            return;
+        }
+
+        for (let i = 0; i < this.colors.length; i++) {
+            this.colors[i]["position"] = (1 / (this.colors.length - 1)) * i;
+        }
+    }
+
+    async uploadImage() {
+        let uploadNode = document.createElement("input");
+        uploadNode.type = "file";
+        uploadNode.accept = "image/*";
+        uploadNode.style.display = "none";
+        uploadNode.setAttribute("moz-accept", "image/*");
+        uploadNode.setAttribute("accept", "image/*");
+        uploadNode.click();
+
+        let uploadTimeout;
+
+        const filePromise = new Promise((resolve, reject) => {
+            uploadNode.onchange = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+
+                const file = uploadNode.files[0];
+                if (!file) {
+                    reject("No file selected.");
+                    return;
+                }
+
+                resolve(file);
+            };
+
+            uploadNode.onabort = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+                reject("User aborted import.");
+            }
+
+            uploadTimeout = setTimeout(() => {
+                reject("Upload timed out.");
+            }, 120000);
+        });
+
+        try {
+            const uploadedFile = await filePromise;
+            await this.uploadSelectedImage(uploadedFile);
+        } catch(e) {
+            console.error("Upload failed:", e);
+            return;
+        }
+
+        this.renderMisc();
+        this.saveLayer();
+    }
+
+    async uploadSelectedImage(file) {
+        const newFileId = await uploadFile(file);
+
+        if (this.customImage) {
+            await this.removeImage();
+        }
+
+        this.customImage = newFileId;
+    }
+
+    async removeImage() {
+        try {
+            await deleteFile(this.customImage);
+        } catch(e) {
+            console.warn("Failed to delete file:", e);
+        }
+        this.customImage = null;
+
+        this.renderMisc();
+        this.saveLayer();
+    }
+
+    setImageOpacity(opacity) {
+        this.customImageOpacity = opacity;
+    }
+
+    setImageBlur(imageBlur) {
+        this.customImageBlur = imageBlur;
+    }
 }
 
 class CheckboxChoice {
@@ -1513,8 +1962,13 @@ class CheckboxChoice {
             `;
         }
 
+        let checkedAttribute = ""
+        if (selected) {
+            checkedAttribute = ` checked="true"`
+        }
+
         let nodeString = `
-            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}" checked="${selected}" label="${this.label}">
+            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}"${checkedAttribute} label="${this.label}">
                 <image class="checkbox-check" checked="${selected}"/>
                 <label class="checkbox-label-box" flex="1">
                     <image class="checkbox-icon"/>
@@ -1589,6 +2043,65 @@ class RadioChoice extends MCChoice {
             let checkNode = choiceButton.querySelector(".radio-check");
             checkNode.setAttribute("selected", "true");
         }
+
+        return node;
+    }
+}
+
+class SelectChoice extends MCChoice {
+    constructor(value, label) {
+        super(value, label, "", "", "");
+    }
+
+    generateNode(selected = false) {
+        let nodeString = `
+            <html:option class="natsumi-select-choice" value="${this.value}">
+                ${this.label}
+            </html:option>
+        `;
+        let node = convertToXUL(nodeString);
+        let choiceButton = node.querySelector(".natsumi-select-choice");
+
+        if (selected) {
+            choiceButton.setAttribute("selected", "selected");
+        }
+
+        return node;
+    }
+}
+
+class SliderChoice {
+    constructor(valueMin, valueMax, value, label, description, affect) {
+        this.valueMin = valueMin;
+        this.valueMax = valueMax;
+        this.label = label;
+        this.description = description;
+        this.affect = affect;
+        this.value = value;
+    }
+
+    generateNode() {
+        const prefObj = ucApi.Prefs.get(this.affect);
+        if (prefObj && prefObj.exists()) {
+            this.value = prefObj.value;
+        }
+
+        let nodeString = `
+        <label class="natsumi-mc-choice-label">
+        ${this.label}
+        </label>
+        <html:input class="natsumi-slider-choice" type="range"
+        title="${this.description}"
+        min="${this.valueMin}" max="${this.valueMax}"
+        value="${this.value}" />
+        `;
+
+        let node = convertToXUL(nodeString);
+        let choiceButton = node.querySelector(".natsumi-slider-choice");
+
+        choiceButton.addEventListener('input', () => {
+            ucApi.Prefs.set(this.affect, parseInt(choiceButton.value));
+        });
 
         return node;
     }
@@ -2005,6 +2518,32 @@ const tabDesigns = {
             </div>
         `
     ),
+    "clicky": new MCChoice(
+        "clicky",
+        "Clicky",
+        "Click that tab",
+        `
+            <div id='tab-clicky' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+            </div>
+        </div>
+        `,
+    ),
+    "neutron": new MCChoice(
+        "neutron",
+        "Neutron",
+        "A Proton-like design for Firefox Nova.",
+        `
+            <div id='tab-neutron' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                    <div class='natsumi-mc-tab-text'></div>
+                </div>
+            </div>
+        `
+    ),
     "classic": new MCChoice(
         "classic",
         "Classic",
@@ -2017,7 +2556,7 @@ const tabDesigns = {
                 </div>
             </div>
         `
-    ),
+    )
 }
 
 const urlbarLayouts = {
@@ -2206,7 +2745,55 @@ class RadioPreference extends MultipleChoicePreference {
     }
 }
 
-function addToSidebar() {
+class SelectPreference extends MultipleChoicePreference {
+    constructor(id, preference, label, description, overrideDefault = null) {
+        super(id, preference, label, description, overrideDefault);
+    }
+
+    generateNode(color = false) {
+        let nodeString = `
+            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                <html:h2>${this.label}</html:h2>
+                <html:div id="${this.id}Settings">
+                    <description class="description-deemphasized">
+                        ${this.description}
+                    </description>
+                    <html:select class="natsumi-select-chooser">
+                    </html:select>
+                </html:div>
+            </groupbox>
+        `
+        let node = convertToXUL(nodeString);
+        let groupNode = node.querySelector(`#${this.id}Group`);
+
+        for (let extra in this.extras) {
+            let extraNode = convertToXUL(`<vbox id="${extra}"></vbox>`)
+            let extraBox = extraNode.querySelector(`#${extra}`);
+            extraBox.appendChild(this.extras[extra].generateNode());
+            groupNode.appendChild(extraNode);
+        }
+
+        let form = node.querySelector(".natsumi-select-chooser");
+        for (let option in this.options) {
+            let choice = this.options[option];
+            const selected = (this.getSelected() === choice.value);
+            let choiceNode = choice.generateNode(selected, color);
+            form.appendChild(choiceNode);
+        }
+        return node;
+    }
+}
+
+function toggleDisabled(node, disabled) {
+    if (disabled) {
+        node.setAttribute("disabled", "true");
+    } else {
+        node.removeAttribute("disabled");
+    }
+}
+
+function addToSidebarLegacy() {
+    // FF150 and below
     let customizeNodeString = `
         <richlistitem id="natsumi-settings" class="category" value="paneNatsumiSettings" data-l10n-id="category-natsumi-settings" data-l10n-attrs="tooltiptext" align="center" tooltiptext="Customize Natsumi">
             <image class="category-icon"/>
@@ -2232,7 +2819,11 @@ function addToSidebar() {
         </richlistitem>
     `
     let sidebar = document.getElementById("categories");
-    const generalPane = sidebar.querySelector("#category-general");
+    let generalPane = sidebar.querySelector("#category-general");
+
+    if (hasRedesign) {
+        generalPane = sidebar.querySelector("#category-home");
+    }
 
     // Add entries to sidebar all in one go to ensure consistent ordering
     sidebar.insertBefore(convertToXUL(customizeNodeString), generalPane.nextSibling);
@@ -2246,8 +2837,76 @@ function addToSidebar() {
     });
 }
 
+function addToSidebar() {
+    if (!hasRedesign) {
+        // Use legacy method
+        return addToSidebarLegacy();
+    }
+
+    // We'll clone the home settings button here instead of making our own
+    let homeNode = document.getElementById("category-home");
+
+    // Create Customize Natsumi button
+    let customizeNode = homeNode.cloneNode(true);
+    customizeNode.id = "natsumi-settings";
+    customizeNode.setAttribute("view", "paneNatsumiSettings");
+    customizeNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/paintbrush.svg");
+    customizeNode.setAttribute("original-icon", "chrome://natsumi/content/icons/lucide/paintbrush.svg");
+    customizeNode.setAttribute("data-l10n-id", "category-natsumi-settings");
+    customizeNode.innerHTML = "Customize Natsumi";
+
+    // Create Keyboard Shortcuts button
+    let shortcutsNode = homeNode.cloneNode(true);
+    shortcutsNode.id = "natsumi-shortcuts";
+    shortcutsNode.setAttribute("view", "paneNatsumiShortcuts");
+    shortcutsNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/meta.svg");
+    shortcutsNode.setAttribute("original-icon", "chrome://natsumi/content/icons/lucide/meta.svg");
+    shortcutsNode.setAttribute("data-l10n-id", "category-natsumi-shortcuts");
+    shortcutsNode.innerHTML = "Keyboard Shortcuts";
+
+    // Create About Natsumi button
+    let aboutNode = homeNode.cloneNode(true);
+    aboutNode.id = "natsumi-about";
+    aboutNode.setAttribute("view", "paneNatsumiAbout");
+    aboutNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/lucide/info.svg");
+    aboutNode.setAttribute("original-icon", "chrome://natsumi/content/icons/lucide/info.svg");
+    aboutNode.setAttribute("data-l10n-id", "category-natsumi-about");
+    aboutNode.innerHTML = "About Natsumi";
+
+    // Set icon if needed
+    let iconPack = "";
+
+    if (ucApi.Prefs.get("natsumi.theme.icons").exists()) {
+        iconPack = ucApi.Prefs.get("natsumi.theme.icons").value;
+    }
+
+    if (iconPack === "fluent") {
+        customizeNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/fluent/paintbrush.svg");
+        shortcutsNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/fluent/meta.svg");
+        aboutNode.setAttribute("iconsrc", "chrome://natsumi/content/icons/fluent/info.svg");
+    }
+
+    let sidebar = document.getElementById("categories");
+    let generalPane = sidebar.querySelector("#category-general");
+
+    if (hasRedesign) {
+        generalPane = sidebar.querySelector("#category-home");
+    }
+
+    // Add entries to sidebar all in one go to ensure consistent ordering
+    sidebar.insertBefore(customizeNode, generalPane.nextSibling);
+    sidebar.insertBefore(shortcutsNode, generalPane.nextSibling.nextSibling);
+    sidebar.appendChild(aboutNode);
+
+    // noinspection JSUnresolvedReference
+    gCategoryInits.set("paneNatsumiSettings", {
+        _initted: true,
+        init: () => {}
+    });
+}
+
 function addOptionStyles() {
-    let styleNode = document.createElement("style");;
+    let styleNode = document.createElement("style");
     styleNode.id = "natsumi-options-style";
     styleNode.textContent = `
         moz-checkbox::part(label) {
@@ -2262,12 +2921,12 @@ function addOptionStyles() {
             --natsumi-checkbox-background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
             --natsumi-checkbox-background-image: url("chrome://natsumi/content/icons/lucide/check.svg");
         }
-        
+
         moz-checkbox[disabled]::part(label) {
             --natsumi-checkbox-filter: grayscale(1);
             --natsumi-checkbox-opacity: 0.4;
         }
-        
+
         moz-radio::part(label) {
             --natsumi-radio-appearance: none;
             --natsumi-radio-width: var(--input-height);
@@ -2291,7 +2950,7 @@ function addOptionStyles() {
             --natsumi-radio-background-color: transparent;
             --natsumi-radio-before-opacity: 1;
         }
-        
+
         moz-radio[disabled]::part(label) {
             --natsumi-radio-filter: grayscale(1);
             --natsumi-radio-opacity: 0.4;
@@ -2318,11 +2977,18 @@ function addLayoutPane() {
         "Choose the layout you want for your browser."
     );
 
+    let novaIslandsCheckbox = new CheckboxChoice(
+        "natsumi.theme.islands",
+        "natsumiIslandsButton",
+        "Enable Islands view",
+        "This will change the layout to look closer to the Firefox Nova design."
+    );
+
     let menuButtonCheckbox = new CheckboxChoice(
         "natsumi.theme.single-toolbar-show-menu-button",
         "natsumiShowMenuButton",
         "Show Menu button"
-    )
+    );
 
     let addonsButtonCheckbox = new CheckboxChoice(
         "natsumi.theme.single-toolbar-hide-extensions-button",
@@ -2330,40 +2996,25 @@ function addLayoutPane() {
         "Show Extensions button",
         "",
         true
-    )
-
-    let customizableToolbarCheckbox = new CheckboxChoice(
-        "natsumi.theme.customizable-single-toolbar",
-        "natsumiShowToolbarButton",
-        "Show toolbar buttons",
-        "This will show other toolbar buttons in the overflow menu."
-    )
-
-    let forceCustomizableToolbarCheckbox = new CheckboxChoice(
-        "natsumi.theme.force-customizable-single-toolbar",
-        "natsumiForceToolbarButton",
-        "Force show overflow button",
-        "Use this if the overflow button doesn't show when it should."
-    )
+    );
 
     let bookmarksOnHoverCheckbox = new CheckboxChoice(
         "natsumi.theme.show-bookmarks-on-hover",
         "natsumiShowBookmarksOnHover",
         "Show Bookmarks on hover",
         "When the Bookmarks bar is expanded, the bar will stay hidden until hovered."
-    )
+    );
 
     let windowControlsCheckbox = new CheckboxChoice(
         "natsumi.theme.force-window-controls-to-left",
         "natsumiForceWinControlsToLeft",
         "Display window controls on the sidebar in Single Toolbar",
         windowControlsDescription
-    )
+    );
 
+    layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
     layoutSelection.registerExtras("natsumiShowMenuButtonBox", menuButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
-    layoutSelection.registerExtras("natsumiShowToolbarButtonBox", customizableToolbarCheckbox);
-    layoutSelection.registerExtras("natsumiForceToolbarButtonBox", forceCustomizableToolbarCheckbox);
     layoutSelection.registerExtras("natsumiShowBookmarksOnHoverBox", bookmarksOnHoverCheckbox);
     layoutSelection.registerExtras("natsumiForceWinControlsToLeftBox", windowControlsCheckbox);
 
@@ -2439,17 +3090,34 @@ function addThemesPane() {
         true
     )
 
+    let softGlowCheckbox = new CheckboxChoice(
+        "natsumi.theme.soft-glow",
+        "natsumiSoftGlowToggle",
+        "Add a soft glow to your web page",
+    )
+
     let grayOutCheckbox = new CheckboxChoice(
         "natsumi.theme.gray-out-when-inactive",
         "natsumiGrayOutWhenInactive",
         "Gray out background when the browser window is inactive"
     )
 
+    let separationSlider = new SliderChoice(
+            "6",
+            "30",
+            "6",
+            "Browser Separation",
+            "Change the separation of the web page",
+            "natsumi.theme.browser-separation",
+        )
+
     let customThemePickerUi = new CustomThemePicker("natsumiCustomThemePicker", customThemeLoader, applyCustomTheme, "natsumi.theme.custom-theme-data");
 
     themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
+    themeSelection.registerExtras("softGlowBox", softGlowCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
+    themeSelection.registerExtras("separationSlider", separationSlider);
 
     for (let theme in themes) {
         themeSelection.registerOption(theme, themes[theme]);
@@ -2466,6 +3134,42 @@ function addThemesPane() {
             setStringPreference("natsumi.theme.type", selectedValue);
             themeButtons.forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
+
+            if (selectedValue === "lgbtq") {
+                lgbtqThemeClicked++;
+            } else {
+                lgbtqThemeClicked = 0;
+            }
+
+            if (lgbtqThemeClicked === 5) {
+                lgbtqThemeClicked = 0;
+
+                // Enable pride theme
+                let prideEnabled = false;
+                if (ucApi.Prefs.get("natsumi.theme.pride").exists()) {
+                    prideEnabled = ucApi.Prefs.get("natsumi.theme.pride").value;
+                }
+
+                ucApi.Prefs.set("natsumi.theme.pride", !prideEnabled);
+
+                if (!prideEnabled) {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Pride mode activated!",
+                        "You can click the LGBTQ+ theme 5 times in a row to disable this again.",
+                        "chrome://natsumi/content/icons/lucide/heart.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                } else {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Pride mode deactivated!",
+                        "You can click the LGBTQ+ theme 5 times in a row to enable this again.",
+                        "chrome://natsumi/content/icons/lucide/luminosity-0.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                }
+            }
         });
     });
 
@@ -2693,6 +3397,68 @@ function addIconsPane() {
     prefsView.insertBefore(iconNode, homePane);
 }
 
+function addFontsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    let availableFonts = [
+        new SelectChoice(
+            "default",
+            "System font"
+        )
+    ]
+
+    // Get fonts list
+    const enumerator = Cc["@mozilla.org/gfx/fontenumerator;1"].createInstance(
+        Ci.nsIFontEnumerator
+    );
+    const fonts = enumerator.EnumerateFonts(Services.locale.fontLanguageGroup, "");
+
+    for (const font of fonts) {
+        availableFonts.push(new SelectChoice(font, font))
+    }
+
+    // Create icons selection
+    let fontSelection = new SelectPreference(
+        "natsumiFonts",
+        "natsumi.theme.font",
+        "Font",
+        "Choose the font you want to use."
+    );
+
+    for (let availableFont of availableFonts) {
+        fontSelection.registerOption(availableFont.value, availableFont);
+    }
+
+    let fontNode = fontSelection.generateNode();
+
+    // Set listeners for select
+    let fontSelect = fontNode.querySelector("select");
+    fontSelect.addEventListener("change", (event) => {
+        setStringPreference("natsumi.theme.font", event.target.value);
+    })
+
+    // Set listeners for each checkbox
+    let checkboxes = fontNode.querySelectorAll("checkbox");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("command", () => {
+            let prefName = checkbox.getAttribute("preference");
+            let isChecked = checkbox.checked;
+
+            if (checkbox.getAttribute("opposite") === "true") {
+                isChecked = !isChecked;
+            }
+
+            console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            // noinspection JSUnresolvedReference
+            ucApi.Prefs.set(prefName, isChecked);
+        });
+    });
+
+    prefsView.insertBefore(fontNode, homePane);
+}
+
 function addSDL2Pane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
@@ -2766,6 +3532,12 @@ function addSidebarTabsPane() {
         "natsumi.tabs.blade-legacy-color",
         "natsumiTabBladeLegacyColor",
         "Use legacy Blade highlight color"
+    ));
+    tabDesignSelection.registerExtras("natsumiTabBrokenScaling", new CheckboxChoice(
+        "natsumi.theme.buggy-scaling",
+        "natsumiTabBrokenScaling",
+        "My desktop environment can't scale properly",
+        "Applies a 0.5px offset to Blade highlight to account for scaling issues."
     ));
 
     // Fusion options
@@ -2925,7 +3697,7 @@ function addSidebarWorkspacesPane() {
     let checkboxes = sidebarWorkspacesNode.querySelectorAll("checkbox");
     let legacyIndicatorCheckbox = sidebarWorkspacesNode.getElementById("natsumiSidebarLegacyWorkspaceIndicator");
     if (ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").exists()) {
-        legacyIndicatorCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").value}`);
+        toggleDisabled(legacyIndicatorCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-workspace-indicator").value)
     }
 
     checkboxes.forEach(checkbox => {
@@ -2938,7 +3710,7 @@ function addSidebarWorkspacesPane() {
             }
 
             if (checkbox.id === "natsumiSidebarHideWorkspaceIndicator") {
-                legacyIndicatorCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(legacyIndicatorCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3040,6 +3812,12 @@ function addSidebarButtonsPane() {
         }
     }
 
+    buttonsGroup.registerOption("natsumiSidebarPinnedToolbarTop", new CheckboxChoice(
+        "natsumi.theme.pinned-toolbar-on-top",
+        "natsumiSidebarPinnedToolbarTop",
+        "Display Pinned Toolbar above pinned tabs"
+    ));
+
     buttonsGroup.registerOption("natsumiSidebarHideClearTabs", new CheckboxChoice(
         "natsumi.sidebar.hide-clear-tabs",
         "natsumiSidebarHideClearTabs",
@@ -3123,15 +3901,15 @@ function addSidebarButtonsPane() {
     let newTabPositionCheckbox = sidebarButtonsNode.querySelector("#natsumiSidebarNewTabPosition");
 
     if (ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").exists()) {
-        keepSelectedCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
-        openNewTabCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+        toggleDisabled(keepSelectedCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
+        toggleDisabled(openNewTabCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
 
         if (mergeWithWorkspacesCheckbox) {
-            mergeWithWorkspacesCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value}`);
+            toggleDisabled(mergeWithWorkspacesCheckbox, ucApi.Prefs.get("natsumi.sidebar.hide-clear-tabs").value);
         }
     }
     if (ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").exists()) {
-        newTabPositionCheckbox.setAttribute("disabled", `${ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").value}`);
+        toggleDisabled(newTabPositionCheckbox, ucApi.Prefs.get("natsumi.tabs.hide-new-tab-button").value);
     }
 
     // Set listeners for each checkbox
@@ -3146,14 +3924,14 @@ function addSidebarButtonsPane() {
             }
 
             if (checkbox.id === "natsumiSidebarHideClearTabs") {
-                keepSelectedCheckbox.setAttribute("disabled", `${isChecked}`);
-                openNewTabCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(keepSelectedCheckbox, isChecked);
+                toggleDisabled(openNewTabCheckbox, isChecked);
 
                 if (mergeWithWorkspacesCheckbox) {
-                    mergeWithWorkspacesCheckbox.setAttribute("disabled", `${isChecked}`);
+                    toggleDisabled(mergeWithWorkspacesCheckbox, isChecked);
                 }
             } else if (checkbox.id === "natsumiSidebarHideNewTab") {
-                newTabPositionCheckbox.setAttribute("disabled", `${isChecked}`);
+                toggleDisabled(newTabPositionCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3318,6 +4096,18 @@ function addCompactBehaviorPane() {
         "natsumiCompactLongVisibility",
         "Display sidebar/toolbar for longer on hover"
     ));
+
+    if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
+        if (ucApi.Prefs.get("natsumi.browser.type").value === "floorp") {
+            compactBehaviorGroup.registerOption("natsumiCompactInterceptZenMode", new CheckboxChoice(
+                "natsumi.theme.compact-keep-zen-mode",
+                "natsumiCompactInterceptZenMode",
+                "Use Floorp's Zen Mode as a toggle",
+                "Enabling Zen Mode will toggle Compact Mode instead.",
+                true
+            ));
+        }
+    }
 
     let compactBehaviorNode = compactBehaviorGroup.generateNode();
 
@@ -3521,6 +4311,16 @@ function addSidebarMiniplayerPane() {
     ));
 
     let miniplayerLayoutNode = miniplayerLayoutSelection.generateNode();
+    let miniplayerVerticalNotice = convertToXUL(`
+        <div id="natsumiMiniplayerVerticalTabsWarning" class="natsumi-settings-info warning">
+            <div class="natsumi-settings-info-icon"></div>
+            <div class="natsumi-settings-info-text">
+                You need to enable Vertical Tabs to change the Miniplayer layout.
+            </div>
+        </div>
+    `);
+    let miniplayerLayoutSelector = miniplayerLayoutNode.querySelector(".natsumi-mc-chooser");
+    miniplayerLayoutSelector.parentNode.insertBefore(miniplayerVerticalNotice, miniplayerLayoutSelector);
 
     // Set listeners for each button
     let miniplayerLayoutButtons = miniplayerLayoutNode.querySelectorAll(".natsumi-mc-choice");
@@ -3607,9 +4407,23 @@ function addPipBehaviorPane() {
         "natsumi.pip.disable-scroll-to-move",
         "natsumiPipScrollToMove",
         "Scroll-to-move",
-        "Scroll-to-move allows you to move the Picture-in-Picture window by scrolling on it.",
+        "Scroll-to-move allows you to move and resize the Picture-in-Picture window with mouse/trackpad scrolling.",
         true
     ));
+
+    let scrollToMoveSubgroup = new OptionsGroup(
+        "natsumiPiPScrollToMoveOptions",
+        "",
+        ""
+    );
+
+    scrollToMoveSubgroup.registerOption("natsumiPiPCenterScale", new CheckboxChoice(
+        "natsumi.pip.center-scale",
+        "natsumiPiPCenterScale",
+        "Keep PiP window centered relative to original position on resize"
+    ));
+
+    pipBehaviorGroup.registerOption("natsumiPiPScrollToMoveOptions", scrollToMoveSubgroup);
 
     pipBehaviorGroup.registerOption("natsumiPipLegacyStyle", new CheckboxChoice(
         "natsumi.pip.legacy-style",
@@ -3620,6 +4434,12 @@ function addPipBehaviorPane() {
 
     let pipBehaviorNode = pipBehaviorGroup.generateNode();
 
+    let centerScaleCheckbox = pipBehaviorNode.querySelector("#natsumiPiPCenterScale");
+
+    if (ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").exists()) {
+        toggleDisabled(centerScaleCheckbox, ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").value);
+    }
+
     // Set listeners for each checkbox
     let checkboxes = pipBehaviorNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
@@ -3629,6 +4449,10 @@ function addPipBehaviorPane() {
 
             if (checkbox.getAttribute("opposite") === "true") {
                 isChecked = !isChecked;
+            }
+
+            if (checkbox.id === "natsumiPipScrollToMove") {
+                toggleDisabled(centerScaleCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3711,7 +4535,7 @@ function addPDFCompactPane() {
     let dynamicCheckbox = compactNode.querySelector("#natsumiPDFDynamicCompact");
 
     if (ucApi.Prefs.get("natsumi.pdfjs.compact").exists()) {
-        dynamicCheckbox.setAttribute("disabled", `${!ucApi.Prefs.get("natsumi.pdfjs.compact").value}`);
+        toggleDisabled(dynamicCheckbox, !ucApi.Prefs.get("natsumi.pdfjs.compact").value);
     }
 
     // Set listeners for each checkbox
@@ -3726,7 +4550,7 @@ function addPDFCompactPane() {
             }
 
             if (checkbox.id === "natsumiPDFEnableCompact") {
-                dynamicCheckbox.setAttribute("disabled", `${!isChecked}`);
+                toggleDisabled(dynamicCheckbox, !isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -3840,6 +4664,18 @@ function addMiscPreferencesPane() {
         "If you don't like Natsumi's custom preferences design, you can enable this to disable it."
     ));
 
+    miscPreferencesGroup.registerOption("natsumiMiscPreferencesHideSubcategory", new CheckboxChoice(
+        "natsumi.theme.preferences-hide-subcategories",
+        "natsumiMiscPreferencesHideSubcategory",
+        "Hide subcategories list"
+    ));
+
+    miscPreferencesGroup.registerOption("natsumiMiscCopyCleanUrl", new CheckboxChoice(
+        "natsumi.browser.copy-clean-link",
+        "natsumiMiscCopyCleanUrl",
+        "Copy clean URL with shortcut where possible"
+    ));
+
     let miscPreferencesNode = miscPreferencesGroup.generateNode();
 
     // Set listeners for each checkbox
@@ -3867,47 +4703,47 @@ function addPreferencesPanes() {
     // Category nodes
     let appearanceNode = convertToXUL(`
         <hbox id="natsumiAppearanceCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Browser Appearance</html:h1>
+            <html:${categoryHeader}>Browser Appearance</html:${categoryHeader}>
         </hbox>
     `);
     let sidebarNode = convertToXUL(`
         <hbox id="natsumiSidebarCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Sidebar &amp; Tabs</html:h1>
+            <html:${categoryHeader}>Sidebar &amp; Tabs</html:${categoryHeader}>
         </hbox>
     `);
     let compactModeNode = convertToXUL(`
         <hbox id="natsumiCompactModeCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Compact Mode</html:h1>
+            <html:${categoryHeader}>Compact Mode</html:${categoryHeader}>
         </hbox>
     `);
     let glimpseNode = convertToXUL(`
         <hbox id="natsumiGlimpseCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Glimpse</html:h1>
+            <html:${categoryHeader}>Glimpse</html:${categoryHeader}>
         </hbox>
     `);
     let miniPlayerNode = convertToXUL(`
         <hbox id="natsumiMiniplayerCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Miniplayer</html:h1>
+            <html:${categoryHeader}>Miniplayer</html:${categoryHeader}>
         </hbox>
     `);
     let pipNode = convertToXUL(`
         <hbox id="natsumiPipCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Picture-in-Picture</html:h1>
+            <html:${categoryHeader}>Picture-in-Picture</html:${categoryHeader}>
         </hbox>
     `);
     let pdfjsNode = convertToXUL(`
         <hbox id="natsumiPDFCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>PDF Viewer</html:h1>
+            <html:${categoryHeader}>PDF Viewer</html:${categoryHeader}>
         </hbox>
     `);
     let urlbarNode = convertToXUL(`
         <hbox id="natsumiUrlbarCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>URL Bar</html:h1>
+            <html:${categoryHeader}>URL Bar</html:${categoryHeader}>
         </hbox>
     `);
     let miscNode = convertToXUL(`
         <hbox id="natsumiMiscCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:h1>Miscellaneous</html:h1>
+            <html:${categoryHeader}>Miscellaneous</html:${categoryHeader}>
         </hbox>
     `);
 
@@ -3919,6 +4755,7 @@ function addPreferencesPanes() {
     addWindowMaterialPane();
     addColorsPane();
     addIconsPane();
+    addFontsPane();
     addSDL2Pane();
 
     prefsView.insertBefore(sidebarNode, homePane);

@@ -628,17 +628,60 @@ SOFTWARE.
       }
     }
 
-    #tab-classic {
+    #tab-clicky {
+      .natsumi-mc-tab {
+        background: light-dark(
+                linear-gradient(
+                        0deg,
+                        rgb(255, 255, 255) 50%,
+                        color-mix(rgb(255, 255, 255), transparent 40%)
+                ),
+                linear-gradient(
+                        0deg,
+                        rgba(106, 106, 120, 0.7) 50%,
+                        color-mix(rgba(106, 106, 120, 0.7), transparent 40%)
+                )
+        );
+        box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+      }
+    }
+
+    #tab-neutron {
       .natsumi-mc-tab {
         background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
         border-radius: 3px;
         box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
       }
     }
+
+    #tab-classic {
+      .natsumi-mc-tab {
+        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+
+        @media -moz-pref("browser.nova.enabled") {
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background: linear-gradient(light-dark(rgb(255, 255, 255), #252428)) padding-box,
+                      linear-gradient(96deg, #b89cff 20.68%, light-dark(#ff9565, #764edd) 79.34%) border-box !important;
+        }
+      }
+    }
+
+    @media not -moz-pref("browser.nova.enabled") {
+      .natsumi-mc-choice:has(#tab-neutron) {
+        display: none !important;
+      }
+    }
   }
 
   @media -moz-pref("natsumi.tabs.use-custom-type") {
     #natsumiTabBladeLegacyColor {
+      display: none !important;
+    }
+    #natsumiTabBrokenScaling {
       display: none !important;
     }
   }
@@ -771,6 +814,20 @@ SOFTWARE.
   }
 
   #natsumiMiniplayerLayoutGroup {
+    #natsumiMiniplayerVerticalTabsWarning {
+      display: none !important;
+    }
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      #natsumiMiniplayerVerticalTabsWarning {
+        display: flex !important;
+      }
+
+    .natsumi-mc-chooser {
+        display: none;
+      }
+    }
+
     .natsumi-mc-choice-image-browser {
       &::before, &::after {
         content: "";
@@ -1095,6 +1152,11 @@ SOFTWARE.
         mask-image: conic-gradient(black 0deg, black 150deg, transparent 150deg, transparent 210deg, black 210deg);
         border: 5px solid light-dark(#aaa, #ddd);
       }
+
+      .natsumi-custom-theme-position-color {
+        grid-row-start: 1;
+        grid-column-start: 1;
+      }
     }
 
     .natsumi-custom-theme-tools-container {
@@ -1105,6 +1167,10 @@ SOFTWARE.
       flex-direction: column;
       gap: 8px;
 
+      &[hidden] {
+        display: none;
+      }
+
       &:not([hidden]) {
         .natsumi-custom-theme-tool {
           animation: tool-fadein 0.2s ease;
@@ -1114,6 +1180,10 @@ SOFTWARE.
       .natsumi-custom-theme-tool {
         display: flex;
         flex-direction: column;
+
+        &[hidden="true"] {
+          display: none !important;
+        }
 
         .natsumi-custom-theme-tool-button {
           align-items: center;
@@ -1148,6 +1218,10 @@ SOFTWARE.
         .natsumi-custom-theme-tool-container {
           padding-block: 10px;
           border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+
+          &[hidden] {
+            display: none;
+          }
         }
       }
 
@@ -1200,6 +1274,73 @@ SOFTWARE.
       .natsumi-custom-theme-grain {
         .natsumi-custom-theme-tool-icon {
           background-image: url("../icons/lucide/grain-0.svg");
+        }
+      }
+
+      .natsumi-custom-theme-image {
+        .natsumi-custom-theme-tool-icon {
+          background-image: url("../icons/lucide/custom-image.svg");
+        }
+
+        .natsumi-custom-theme-tool-container:not([hidden]) {
+          display: block;
+        }
+
+        .natsumi-image-container {
+          height: 44px !important;
+          align-items: center;
+          margin-bottom: 10px !important;
+          gap: 8px;
+          border-radius: 10px;
+          background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+        }
+
+        .natsumi-image-blur {
+          display: block;
+        }
+
+        .natsumi-image-current {
+          display: block;
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-left: 12px !important;
+        }
+
+        .natsumi-image-remove, .natsumi-image-submit {
+          min-width: 36px !important;
+          min-height: 36px !important;
+          margin-block: 4px !important;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+          border-radius: 6px;
+          -moz-context-properties: stroke, stroke-opacity;
+          stroke: light-dark(black, white);
+          background-size: 20px;
+          background-repeat: no-repeat;
+          background-position: center;
+
+          &[hidden] {
+            display: none;
+          }
+
+          &:hover {
+            background-color: var(--natsumi-button-hover-color);
+          }
+
+          &:active {
+            background-color: var(--natsumi-button-active-color);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          }
+        }
+
+        .natsumi-image-remove {
+          background-image: url("../icons/lucide/close.svg");
+        }
+
+        .natsumi-image-submit {
+          background-image: url("../icons/lucide/upload-image.svg");
+          margin-right: 4px !important;
         }
       }
 
@@ -1364,6 +1505,10 @@ SOFTWARE.
           background-image: url("../icons/lucide/gradient-type.svg");
         }
 
+        &.natsumi-position-button .natsumi-custom-theme-controls-icon {
+          background-image: url("../icons/lucide/color-position.svg");
+        }
+
         &.natsumi-reset-button .natsumi-custom-theme-controls-icon {
           background-image: url("../icons/lucide/rotate-right.svg");
         }
@@ -1507,6 +1652,26 @@ SOFTWARE.
           background-image: url("../icons/lucide/grain-0.svg");
         }
       }
+
+      &.natsumi-color-slider-image-opacity {
+        background-image: url("../icons/custom/transparent.png");
+        background-size: 20px;
+        margin-bottom: 10px !important;
+
+        &::before {
+          background: linear-gradient(90deg, light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)), transparent);
+        }
+
+        .natsumi-custom-theme-slider-icon-1 {
+          stroke: light-dark(white, black);
+          background-image: url("../icons/lucide/opacity-1.svg");
+        }
+
+        .natsumi-custom-theme-slider-icon-0 {
+          stroke: light-dark(black, white);
+          background-image: url("../icons/lucide/opacity-0.svg");
+        }
+      }
     }
 
     .natsumi-custom-theme-luminosity {
@@ -1559,6 +1724,12 @@ SOFTWARE.
         background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
         scale: 1.5;
       }
+    }
+  }
+
+  @media not -moz-pref("browser.nova.enabled") {
+    #natsumiIslandsButtonBox {
+      display: none !important;
     }
   }
 

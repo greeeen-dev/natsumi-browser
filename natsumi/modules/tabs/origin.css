@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -28,28 +28,33 @@ SOFTWARE.
 /* Origin is a tab design inspired by Natsumi v1. */
 
 @media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "origin") {
-  #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
-    .tabbrowser-tab {
+  #tabbrowser-arrowscrollbox .tabbrowser-tab, #natsumi-static-tabs-container .tabbrowser-tab {
+    & > .tab-stack > .tab-background {
+      transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+      box-shadow: none !important;
+
+      @media -moz-pref("browser.nova.enabled") {
+        border-radius: 8px !important;
+        border-left: none !important;
+        border-right: none !important;
+        background-image: none !important;
+      }
+    }
+
+    .close-icon {
+      transition: background-color 0.1s ease-out;
+
+      &:hover {
+        background-color: rgba(255, 100, 100, 0.90) !important;
+        transition: background-color 0.1s ease-in;
+      }
+    }
+
+    &[selected], &[visuallyselected], &[natsumi-glimpse-selected], &[multiselected] {
       & > .tab-stack > .tab-background {
-        transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
-        box-shadow: none !important;
-      }
-
-      .close-icon {
-        transition: background-color 0.1s ease-out;
-
-        &:hover {
-          background-color: rgba(255, 100, 100, 0.90) !important;
-          transition: background-color 0.1s ease-in;
-        }
-      }
-
-      &[selected], &[visuallyselected], &[natsumi-glimpse-selected], &[multiselected] {
-        & > .tab-stack > .tab-background {
-          background-color: light-dark(var(--tab-selected-bgcolor), rgba(255, 255, 255, 0.17)) !important;
-          border-top: 1px solid light-dark(#8888882d, #ffffff2d);
-          border-bottom: 1px solid #0000002d;
-        }
+        background-color: light-dark(var(--tab-selected-bgcolor), rgba(255, 255, 255, 0.17)) !important;
+        border-top: 1px solid light-dark(#8888882d, #ffffff2d);
+        border-bottom: 1px solid #0000002d;
       }
     }
   }

@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="120" height="120" src="./images/icon-glass.webp">
+  <img width="420" src="./images/kawaii-pride.png">
   <br>
   Natsumi Browser
 </h1>
@@ -8,17 +8,10 @@
   Welcome to your <strong>personal</strong> internet.
 </p>
 <h5 align="center">
-  <a href="https://natsumi.greeeen.dev">Website (under construction)</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a>
+  <a href="https://natsumi.greeeen.dev">Website</a> • <a href="https://natsumi.greeeen.dev/discord">Discord</a> • <a href="https://fluxer.gg/natsumi">Fluxer</a>
 </h5>
 
 ![](./images/main-backgroundless.webp)
-
-## ⚠️ IMPORTANT NOTICE
-Natsumi doesn't do crypto. Any crypto coins that may seem like it's affiliated with the project
-**is not affiliated with Natsumi whatsoever**.
-
-All funds go to some random third party and not me. If you do get scammed because of it I take zero
-responsibility for any financial losses.
 
 ## Meet Natsumi! 🦋
 Meet Natsumi Browser (or Natsumi, for short) - a browser mod that truly puts you in control.
@@ -27,13 +20,8 @@ Natsumi Browser (or Natsumi, for short) is a skin made for Firefox and its forks
 polish to the design and adds new features to further enhance the browsing experience, while retaining
 customization options to allow you to fully make things yours.
 
-Natsumi is NOT a standalone browser. It only supports Firefox-based browsers that are not known to
-be hostile towards user personalization.
-
-> [!NOTE]
-> Please remember that Natsumi in the end is **my personal browser skin**. If you don't like a design
-> choice I've made, chances are I'll keep it if I still like it. So please be respectful and refrain
-> from attacking people when you make suggestions. Thanks!
+Despite the name, Natsumi is NOT a standalone browser - it's meant to be applied on top of your
+favorite Firefox-based browser!
 
 ## Features
 Natsumi has lots of features to enhance your browser - so many that I can't list them all here!
@@ -154,9 +142,7 @@ You can get this file from the `Installers` folder in this repo.
 
 #### Installing via Sine
 > [!WARNING]
-> Installing via Sine is supported but not recommended. The following features will not work:
-> - Any features included in Natsumi Append
-> - Icon packs aside from Firefox default
+> Installing via Sine is supported but not recommended.
 
 You can install the CSS-only version of Natsumi through [Sine](https://github.com/CosmoCreeper/Sine).
 
@@ -204,6 +190,9 @@ latest version of Natsumi as new changes are released, you can simply clone the 
 folder. This can be followed up with `git pull` from time-to-time.
 
 ## Browser configs (in about:config)
+> [!NOTE]
+> This is a non-exhaustive list. Most of these options are available in preferences.
+
 These are the configs you can use to tweak Natsumi Browser. If you want to tweak the animation duration
 and delay, change the variables in the config.css file.
 
@@ -222,7 +211,7 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   - **Lucid** (`lucid`) - A recreation of the Zen Dream and Zen Galaxy themes.
   - **Frutiger Aero** (`frutiger-aero`) - A Windows Vista/7-like design.
   - **OLED** (`oled`) - A completely black and white theme for the minimalists.
-  - **🏳️‍🌈 LGBTQ+** (`lgntq`) - Browsing with pride!
+  - **🏳️‍🌈 LGBTQ+** (`lgbtq`) - Browsing with pride!
   - **🏳️‍⚧️ Transgender** (`transgender`) - Trans rights are human rights!
   - **Custom** (`custom`) - Create your own theme (in the preferences page)!
 - `natsumi.theme.accent-color` (string): Sets the browser theme color from a given accent color.
@@ -253,10 +242,6 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   Single Toolbar.
 - `natsumi.theme.show-bookmarks-on-hover` (boolean): Shows the bookmarks bar on hover when in Single
   Toolbar.
-- `natsumi.theme.customizable-single-toolbar` (boolean): Moves toolbar buttons to the overflow menu when
-  in Single Toolbar.
-- `natsumi.theme.force-customizable-single-toolbar` (boolean): Force shows the overflow button if it
-  doesn't show for some reason.
 - `natsumi.theme.compact-marginless` (boolean): Removes the frame around the website content when in 
   compact mode.
 - `natsumi.theme.compact-on-new-window` (boolean): Enables Compact Mode by default for new windows.
@@ -385,14 +370,14 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
 </details>
 
 ## Browser support
-All browsers must be based on Firefox 137 or above.
+All browsers must be based on Firefox 140 or above.
 
 | Browser     | Status                       | Versions | Notes                                                                                     |
 |-------------|------------------------------|----------|-------------------------------------------------------------------------------------------|
 | Floorp      | :star: Recommended           | 12.3.0+  | Natsumi works best on Floorp!                                                             |
-| Firefox     | :white_check_mark: Supported | 137+     |                                                                                           |
+| Firefox     | :white_check_mark: Supported | 140+     |                                                                                           |
 | Waterfox    | :white_check_mark: Supported | 6.6.0+   |                                                                                           |
-| Librewolf   | :white_check_mark: Supported | 137+     |                                                                                           |
+| Librewolf   | :white_check_mark: Supported | 140+     |                                                                                           |
 | Mullvad/Tor | :white_check_mark: Supported | 15.0+    | **Tor does not recommend installing plugins onto Tor Browser.** Proceed at your own risk. |
 | FireDragon  | :white_check_mark: Supported | 12+      | Default Sweet-Dark theme may cause contrast issues with Natsumi.                          |
 | Glide       | :white_check_mark: Supported | 0.1.54a+ |                                                                                           |
@@ -400,6 +385,14 @@ All browsers must be based on Firefox 137 or above.
 | Zen         | :x: Unsupported              | -        | Incompatible since Natsumi v4 (see FAQ)                                                   |
 
 ## FAQs
+### "Does Natsumi support the new Firefox Nova redesign?"
+Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 153**.
+
+Firefox Nova is still in early development and constantly changing. Each Natsumi release will aim to
+address these changes, so that once Firefox Nova is complete and rolled out, Natsumi will be
+**Firefox Nova-ready from day one** while being fully backwards compatible with the old Proton design
+for older supported versions.
+
 ### "Can I use other userchromes with Natsumi?"
 Sure! Just paste it right below the Natsumi Browser loader (userChrome.css) and you can use your own
 userchrome alongside Natsumi Browser.
@@ -490,6 +483,13 @@ You can fix this by going to Floorp Hub => Tab & Appearance in Floorp or Look & 
 This is not something I am able to help with. Natsumi is not tested with other themes in mind, so it is
 possible that installing incompatible themes alongside Natsumi may break one or more of them.
 
+### "Why is my browser showing as not recommended to be used with Natsumi?"
+If you're on browsers like Tor or Mullvad, you may be greeted with this message on first boot.
+
+This means the developers of such browsers don't recommend use of plugins or any other modifications due
+to the high-security or/and privacy nature of the browser. You can still use Natsumi on these browsers,
+but you do so at your own risk.
+
 ### "Why is my browser showing as not compatible with Natsumi?"
 > [!NOTE]
 > This is for users seeing the compatibility warning after installing Natsumi. If you're wondering why
@@ -520,7 +520,7 @@ Thank you to:
 - [vicky5124](https://github.com/vicky5124) for the Tab Groups CSS used until v2.4.0
 - [AlexCookieDev](https://github.com/AlexCookieDev) for inspiring some of the animations I used in Natsumi
   v2 and v3
-- [InterstellarOne](https://github.com/InterstellarOne) for the Liquid Glass style Natsumi icons
+- [InterstellarOne](https://github.com/InterstellarOne) for the Liquid Glass style Natsumi icons and the kawaii logo
 
 ## Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT

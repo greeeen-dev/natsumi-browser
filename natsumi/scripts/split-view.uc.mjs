@@ -43,8 +43,9 @@ class NatsumiSplitViewManager {
             }
         }
 
-        // Add event listener
+        // Add event listeners
         gBrowser.tabContainer.addEventListener("TabClose", this.onTabClose.bind(this));
+        window.addEventListener("TabSplitViewActivate", this.onSplitViewActivate.bind(this));
     }
 
     onTabClose(event) {
@@ -58,6 +59,17 @@ class NatsumiSplitViewManager {
                     linkedPanelNode.style.removeProperty("width");
                     linkedPanelNode.removeAttribute("width");
                 }
+            }
+        }
+    }
+
+    onSplitViewActivate() {
+        // Ensure split views have valid tabs
+        let splitTabs = document.querySelectorAll("tab-split-view-wrapper tab");
+        for (let splitTab of splitTabs) {
+            if (splitTab.hasAttribute("natsumi-glimpse-tab")) {
+                // Glimpse should never be split, destroy tab
+                gBrowser.removeTab(splitTab);
             }
         }
     }

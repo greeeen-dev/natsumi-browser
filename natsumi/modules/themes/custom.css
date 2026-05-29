@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -30,15 +30,21 @@ SOFTWARE.
 @media -moz-pref("natsumi.theme.type", "custom") {
   :root[windowtype*="navigator:browser"] {
     body::after {
-      opacity: 1 !important;
+      opacity: var(--natsumi-theme-layer-0-opacity, 1) !important;
       background: var(--natsumi-theme-layer-0-background, transparent) !important;
+      background-size: cover !important;
+      background-position: center !important;
       filter: var(--natsumi-theme-layer-0-filter, none) !important;
+      scale: var(--natsumi-theme-layer-0-scale, 1) !important;
     }
 
     #browser::before {
-      opacity: 1 !important;
+      opacity: var(--natsumi-theme-layer-1-opacity, 1) !important;
       background: var(--natsumi-theme-layer-1-background, transparent) !important;
+      background-size: cover !important;
+      background-position: center !important;
       filter: var(--natsumi-theme-layer-1-filter, none) !important;
+      scale: var(--natsumi-theme-layer-1-scale, 1) !important;
     }
 
     #browser::after {
@@ -52,13 +58,21 @@ SOFTWARE.
     /* Dark mode specific theme */
     @media (prefers-color-scheme: dark) {
       body::after {
+        opacity: var(--natsumi-theme-layer-0-opacity-dark, var(--natsumi-theme-layer-0-opacity, 1)) !important;
         background: var(--natsumi-theme-layer-0-background-dark, var(--natsumi-theme-layer-0-background, transparent)) !important;
+        background-size: cover !important;
+        background-position: center !important;
         filter: var(--natsumi-theme-layer-0-filter-dark, var(--natsumi-theme-layer-0-filter, none)) !important;
+        scale: var(--natsumi-theme-layer-0-scale-dark, var(--natsumi-theme-layer-0-scale, 1)) !important;
       }
 
       #browser::before {
+        opacity: var(--natsumi-theme-layer-1-opacity-dark, var(--natsumi-theme-layer-1-opacity, 1)) !important;
         background: var(--natsumi-theme-layer-1-background-dark, var(--natsumi-theme-layer-1-background, transparent)) !important;
+        background-size: cover !important;
+        background-position: center !important;
         filter: var(--natsumi-theme-layer-1-filter-dark, var(--natsumi-theme-layer-1-filter, none)) !important;
+        scale: var(--natsumi-theme-layer-1-scale-dark, var(--natsumi-theme-layer-1-scale, 1)) !important;
       }
     }
 

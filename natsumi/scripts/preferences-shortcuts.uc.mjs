@@ -127,6 +127,9 @@ let shortcutsMap = {
             "copyCurrentUrl": {
                 "name": "Copy Current URL"
             },
+            "copyCurrentUrlMarkdown": {
+                "name": "Copy Current URL as Markdown"
+            },
             "printKb": {
                 "name": "Print"
             },
@@ -300,6 +303,9 @@ let shortcutsMap = {
             },
             "key_screenshot": {
                 "name": "Take a Screenshot"
+            },
+            "showCommandPalette": {
+                "name": "Show Command Palette"
             }
         }
     },
@@ -468,6 +474,17 @@ if (!browserWindow) {
     browserWindow = preliminaryBrowserWindow;
 }
 
+let categoryNode = document.getElementById("categories");
+const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
+const hasRedesignV2 = document.getElementById("category-general").getAttribute("hidden") && hasRedesign;
+
+// Get correct header
+let categoryHeader = "h1";
+
+if (hasRedesignV2) {
+    categoryHeader = "h2"
+}
+
 let availableShortcuts = Object.keys(browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcuts);
 
 class NatsumiShortcutsPrefPane {
@@ -489,7 +506,7 @@ class NatsumiShortcutsPrefPane {
         // Create heading
         let shortcutsNode = convertToXUL(`
             <hbox id="natsumiShortcutsCategory" class="subcategory" data-category="paneNatsumiShortcuts" hidden="true">
-                <html:h1>Customize Keyboard Shortcuts</html:h1>
+                <html:${categoryHeader}>Customize Keyboard Shortcuts</html:${categoryHeader}>
                 <div id="natsumi-shortcut-reset">Reset</div>
                 <div id="natsumi-shortcut-import">Import</div>
                 <div id="natsumi-shortcut-export">Export</div>
@@ -834,8 +851,18 @@ class NatsumiShortcutsPrefPane {
 
             this.editing = true;
             shortcutElement.setAttribute("editing", "");
+
+            // Run initial ignore
+            browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.ignoreShortcutHandling(
+                1100, (event) => {this.onKeyDown(event)}
+            );
+
+            // Keep "pinging" the shortcuts handler to ignore shortcuts during customization
             this.editInterval = setInterval(() => {
-                browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.ignoreShortcutHandling(1100);
+                console.log("Shortcut handling ignored");
+                browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.ignoreShortcutHandling(
+                    1100, (event) => {this.onKeyDown(event)}
+                );
             }, 1000);
             this.updateShortcutKeybindsDisplay(this.selected, false, false, false, false, "");
         }
@@ -897,6 +924,27 @@ class NatsumiShortcutsPrefPane {
                     10000,
                     "warning"
                 )
+                notificationObject.addButton(
+                    "Unregister this shortcut",
+                    () => {
+                        let conflictShortcutObject = browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcuts[conflictShortcut];
+                        let conflictCustomizationData = {
+                            "customKeybinds": false,
+                            "unregistered": true,
+                            "shortcutMode": conflictShortcutObject.shortcutMode
+                        }
+                        let neverSaved = true;
+                        ucApi.Windows.forEach((browserDocument) => {
+                            if (browserDocument.body.natsumiKBSManager) {
+                                browserDocument.body.natsumiKBSManager.updateShortcut(conflictShortcut, conflictCustomizationData, true, neverSaved);
+                            }
+                            neverSaved = false;
+                        });
+                        this.updateShortcutKeybindsDisplay(document.getElementById(conflictShortcut));
+                    },
+                    null,
+                    true
+                )
                 notificationObject.addToContainer();
                 this.toggleShortcutEdit(this.selected);
                 return;
@@ -925,7 +973,7 @@ class NatsumiShortcutsPrefPane {
 
             // Update shortcut
             let neverSaved = true;
-            ucApi.Windows.forEach((browserDocument, browserWindow) => {
+            ucApi.Windows.forEach((browserDocument) => {
                 if (browserDocument.body.natsumiKBSManager) {
                     browserDocument.body.natsumiKBSManager.updateShortcut(this.selected.id, customizationData, true, neverSaved);
                 }

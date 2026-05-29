@@ -68,6 +68,25 @@ export class NatsumiKeyboardShortcut {
         this.setShortcutMode(shortcutMode);
     }
 
+    getModifierString() {
+        let modifiers = []
+
+        if (this.meta) {
+            modifiers.push("accel");
+        }
+        if (this.ctrl) {
+            modifiers.push("control");
+        }
+        if (this.alt) {
+            modifiers.push("alt");
+        }
+        if (this.shift) {
+            modifiers.push("shift");
+        }
+
+        return modifiers.join(",");
+    }
+
     hasCustomKeybinds() {
         return !(
             this.meta === this.originalCombo.meta &&
@@ -200,10 +219,20 @@ class NatsumiKBSManager {
         this.ignoreTimeout = null;
         this.ignoreHandler = null;
         this.filePath = PathUtils.join(PathUtils.profileDir, "natsumi-shortcuts.json");
+        this.newShortcutsHandler = false; // Default to false for now
+        this.customKeys = null;
+
+        try {
+            this.customKeys = CustomKeys;
+        } catch(e) {
+            console.warn("Failed to get internal shortcuts manager, using fallback implementation")
+            this.newShortcutsHandler = false;
+        }
 
         // Shortcuts
         this.shortcuts = {
             "copyCurrentUrl": new NatsumiKeyboardShortcut(false, true, false, true, "c", 0, true),
+            "copyCurrentUrlMarkdown": new NatsumiKeyboardShortcut(false, true, true, true, "c", 0, true),
             "toggleBrowserLayout": new NatsumiKeyboardShortcut(false, true, true, false, "l", 0, true),
             "toggleVerticalTabs": new NatsumiKeyboardShortcut(false, true, true, false, "v", 0, true),
             "toggleCompactMode": new NatsumiKeyboardShortcut(false, true, false, true, "s", 0, true),
@@ -228,10 +257,11 @@ class NatsumiKBSManager {
             "natsumiSelectTab6": new NatsumiKeyboardShortcut(false, true, false, false, "6", 3, true),
             "natsumiSelectTab7": new NatsumiKeyboardShortcut(false, true, false, false, "7", 3, true),
             "natsumiSelectTab8": new NatsumiKeyboardShortcut(false, true, false, false, "8", 3, true),
-            "natsumiSelectTabLast": new NatsumiKeyboardShortcut(false, true, false, false, "9", 3, true)
+            "natsumiSelectTabLast": new NatsumiKeyboardShortcut(false, true, false, false, "9", 3, true),
         };
         this.shortcutActions = {
             "copyCurrentUrl": NatsumiShortcutActions.copyCurrentUrl,
+            "copyCurrentUrlMarkdown": NatsumiShortcutActions.copyCurrentUrlMarkdown,
             "toggleBrowserLayout": NatsumiShortcutActions.toggleBrowserLayout,
             "toggleVerticalTabs": NatsumiShortcutActions.toggleVerticalTabs,
             "toggleCompactMode": NatsumiShortcutActions.toggleCompactMode,
@@ -256,7 +286,7 @@ class NatsumiKBSManager {
             "natsumiSelectTab6": () => {NatsumiShortcutActions.selectTab(5)},
             "natsumiSelectTab7": () => {NatsumiShortcutActions.selectTab(6)},
             "natsumiSelectTab8": () => {NatsumiShortcutActions.selectTab(7)},
-            "natsumiSelectTabLast": () => {NatsumiShortcutActions.selectTab(8)}
+            "natsumiSelectTabLast": () => {NatsumiShortcutActions.selectTab(8)},
         };
         this.shortcutsPending = {};
         this.shortcutCustomizationData = {};
@@ -297,7 +327,7 @@ class NatsumiKBSManager {
                 "ctrl": Services.appinfo.OS.toLowerCase() !== "darwin",
                 "alt": true,
                 "shift": true,
-                "key": "c",
+                "key": "p",
                 "unregistered": false,
                 "shortcutMode": 3
             },
@@ -334,8 +364,10 @@ class NatsumiKBSManager {
         if (browserType === "floorp") {
             this.shortcuts["cycleWorkspaces"] = new NatsumiKeyboardShortcut(false, true, true, false, "right", 3, false);
             this.shortcuts["cycleWorkspacesReverse"] = new NatsumiKeyboardShortcut(false, true, true, false, "left", 3, false);
+            this.shortcuts["showCommandPalette"] = new NatsumiKeyboardShortcut(false, true, true, true, "p", 3, true);
             this.shortcutActions["cycleWorkspaces"] = NatsumiShortcutActions.cycleWorkspaces;
             this.shortcutActions["cycleWorkspacesReverse"] = () => { NatsumiShortcutActions.cycleWorkspaces(true); };
+            this.shortcutActions["showCommandPalette"] = () => { NatsumiShortcutActions.showCommandPalette(); };
         }
 
         // Add native shortcuts
@@ -440,6 +472,12 @@ class NatsumiKBSManager {
         key.setAttribute("command", `NatsumiKBS:${shortcutName}`);
 
         if (shortcut instanceof NatsumiNativeKeyboardShortcut) {
+            if (this.newShortcutsHandler) {
+                // This is for fallback implementation only, so don't create a key here
+                key.remove();
+                return;
+            }
+
             key.id = `natsumiCustomized_${shortcutName}`;
             key.setAttribute("command", `NatsumiKBSNative:${shortcutName}`);
         }
@@ -517,6 +555,8 @@ class NatsumiKBSManager {
             if (event.target.id.startsWith("NatsumiKBS:")) {
                 this.nativeHandleKeyboardShortcuts(event.target.id.replace("NatsumiKBS:", ""));
             } else if (event.target.id.startsWith("NatsumiKBSNative:")) {
+                // This is only for fallback implementations, when using the new implementation
+                // this should not execute.
                 let originalNodeId = event.target.id.replace("NatsumiKBSNative:", "");
                 let originalNode = document.getElementById(originalNodeId);
                 if (originalNode) {
@@ -605,17 +645,34 @@ class NatsumiKBSManager {
             }
 
             if (shortcutObject instanceof NatsumiNativeKeyboardShortcut) {
-                keyElement = this.createKeyNode(shortcutName, shortcutObject);
                 let originalKeyNode = document.getElementById(shortcutName);
-                let existingKeyNode = document.getElementById(`natsumiCustomized_${shortcutName}`);
 
-                if (existingKeyNode) {
-                    existingKeyNode.replaceWith(keyElement);
+                if (this.newShortcutsHandler) {
+                    let modifierString = shortcutObject.getModifierString();
+                    let key = shortcutObject.key;
+                    let keyCode = null;
+
+                    if (key.length > 1) {
+                        // Assume this is a key we need to convert back to keycode
+                        keyCode = "VK_" + key.toUpperCase();
+                        key = null;
+                    }
+
+                    console.log(modifierString);
+
+                    this.customKeys.changeKey(shortcutName, {"modifiers": modifierString, "key": key, "keyCode": keyCode});
                 } else {
-                    if (shortcutObject.isDevSet) {
-                        document.getElementById("devtoolsKeyset").appendChild(keyElement);
+                    keyElement = this.createKeyNode(shortcutName, shortcutObject);
+                    let existingKeyNode = document.getElementById(`natsumiCustomized_${shortcutName}`);
+
+                    if (existingKeyNode) {
+                        existingKeyNode.replaceWith(keyElement);
                     } else {
-                        document.getElementById("mainKeyset").appendChild(keyElement);
+                        if (shortcutObject.isDevSet) {
+                            document.getElementById("devtoolsKeyset").appendChild(keyElement);
+                        } else {
+                            document.getElementById("mainKeyset").appendChild(keyElement);
+                        }
                     }
                 }
 
@@ -626,9 +683,6 @@ class NatsumiKBSManager {
                     shortcutObject.unregistered || shortcutObject.shortcutMode === 2 ||
                     shortcutObject.shortcutMode === 0 || shortcutObject.interceptedBy
                 ) {
-                    keyElement.setAttribute("disabled", "true");
-                    originalKeyNode.setAttribute("disabled", "true");
-
                     if (shortcutObject.interceptedBy) {
                         // Apply custom shortcut to the intercepting Natsumi shortcut
                         let interceptingShortcut = this.shortcuts[shortcutObject.interceptedBy];
@@ -684,12 +738,19 @@ class NatsumiKBSManager {
                             interceptingShortcut.setShortcutMode(shortcutObject.shortcutMode);
                         }
                     }
+
+                    if (this.newShortcutsHandler) {
+                        this.customKeys.clearKey(shortcutName);
+                    } else {
+                        keyElement.setAttribute("disabled", "true");
+                        originalKeyNode.setAttribute("disabled", "true");
+                    }
                 } else {
                     keyElement.removeAttribute("disabled");
 
-                    if (shortcutObject.hasCustomKeybinds()) {
+                    if (shortcutObject.hasCustomKeybinds() && !this.newShortcutsHandler) {
                         originalKeyNode.setAttribute("disabled", "true");
-                    } else {
+                    } else if (!this.newShortcutsHandler) {
                         originalKeyNode.removeAttribute("disabled");
                     }
                 }
@@ -1026,11 +1087,12 @@ class NatsumiKBSManager {
         }
     }
 
-    ignoreShortcutHandling(duration) {
+    ignoreShortcutHandling(duration, ignoreHandler = null) {
         if (this.ignoreTimeout) {
             clearTimeout(this.ignoreTimeout);
         }
         this.ignoreShortcuts = true;
+        this.ignoreHandler = ignoreHandler;
         this.ignoreTimeout = setTimeout(() => {
             this.resetIgnore();
         }, duration);
@@ -1192,6 +1254,10 @@ class NatsumiKBSManager {
             let keyElement = document.getElementById(selectedShortcutName);
             keyElement.doCommand();
         }
+    }
+
+    getShortcut(name) {
+        return this.shortcuts[name];
     }
 }
 

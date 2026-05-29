@@ -53,8 +53,11 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/compact-mode.css";
 @import "modules/glimpse.css";
 @import "modules/welcome.css";
+@import "modules/updater.css";
 @import "modules/customize.css";
+@import "modules/toolbars.css";
 @import "modules/experiments.css";
+@import "modules/nova-patches.css";
 @import "modules/icons.css";
 
 /* Floorp-specific modules */
@@ -68,6 +71,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/floorp/miniplayer.css";
 @import "modules/floorp/right-sidebar.css";
 @import "modules/floorp/webapps.css";
+@import "modules/floorp/command-palette.css";
 
 /* Waterfox-specific modules */
 @import "modules/waterfox/base.css";

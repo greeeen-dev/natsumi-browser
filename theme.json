@@ -4,10 +4,11 @@
   "author": "greeeen-dev",
   "name": "Natsumi Browser",
   "description": "A skin for Firefox and its forks that makes things flow.",
-  "version": "6.2.0",
+  "version": "6.6.2",
   "createdAt": "2024-12-06T10:19:47Z",
+  "ai": "no",
   "readme": "https://raw.githubusercontent.com/greeeen-dev/natsumi-browser/main/README.md",
-  "image": "https://github.com/greeeen-dev/natsumi-browser/raw/dev/images/main-backgroundless.png",
+  "image": "https://github.com/greeeen-dev/natsumi-browser/raw/main/images/natsumi-preview.webp",
   "style": {
     "chrome": "userChrome.css",
     "content": "userContent.css"
@@ -39,10 +40,11 @@
           "chrome://browser/content/browser.xhtml"
         ]
       },
-      "statusbar-in-sidebar.uc.mjs": {
-        "loadOrder": 11,
+      "tab-animations.uc.mjs": {},
+      "addons.uc.mjs": {
+        "loadOrder": 10,
         "include": [
-          "chrome://browser/content/browser.xhtml"
+          "about:addons*"
         ]
       },
       "pip.uc.mjs": {
@@ -56,6 +58,13 @@
         ]
       },
       "notifications.sys.mjs": {},
+      "preferences-sidebar.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "about:preferences*",
+          "about:settings*"
+        ]
+      },
       "sidebar-actions.uc.mjs": {
         "loadOrder": 12,
         "include": [
@@ -101,6 +110,11 @@
           "chrome://browser/content/browser.xhtml"
         ]
       },
+      "browser-separation.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
       "urlbar.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
@@ -113,8 +127,24 @@
           "about:settings*"
         ]
       },
+      "css-injector.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "floorp-gestures.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
       "pinned-tabs-icon.uc.mjs": {
         "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "updater.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
         ]
@@ -122,6 +152,15 @@
       "postload.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "files.sys.mjs": {},
+      "fonts.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml",
+          "chrome://global/content/pictureinpicture/player.xhtml*",
+          "about:preferences*",
+          "about:settings*"
         ]
       },
       "reset-tab-style.sys.mjs": {},
@@ -142,7 +181,6 @@
         ]
       },
       "shortcut-actions.sys.mjs": {},
-      "single-toolbar-customization.sys.mjs": {},
       "glimpse.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
@@ -154,6 +192,11 @@
         ]
       },
       "patches.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "web.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
         ]

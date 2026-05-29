@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -41,6 +41,10 @@ SOFTWARE.
         .tab-context-line, .tab-group-line {
           display: none !important;
         }
+
+        @media -moz-pref("browser.nova.enabled") {
+          background: none !important;
+        }
       }
 
       & > .tab-stack > .tab-content {
@@ -80,7 +84,7 @@ SOFTWARE.
       &[selected], &[visuallyselected], &[natsumi-glimpse-selected] {
         & > .tab-stack > .tab-background {
           box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
-          border: var(--natsumi-mat-hz-border);
+          border: var(--natsumi-mat-hz-border) !important;
           background-color: var(--natsumi-mat-hz-background) !important;
           backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
         }
@@ -107,6 +111,8 @@ SOFTWARE.
     .tab-background {
       border-radius: var(--natsumi-tab-border-radius) !important;
       transition: background-color 0.2s ease;
+      background-image: none !important;
+      border: none !important;
     }
 
     .tabbrowser-tab {

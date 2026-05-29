@@ -1,0 +1,72 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Floorp Command Palette ==== */
+
+@keyframes palette-overlay-appear {
+  0% {
+    background-color: transparent;
+  }
+
+  100% {
+    background-color: rgba(0, 0, 0, 0.48);
+  }
+}
+
+@keyframes palette-appear {
+  0% {
+    scale: 0.95;
+    opacity: 0;
+    backdrop-filter: saturate(1) contrast(1) blur(0);
+  }
+
+  100% {
+    scale: 1;
+    opacity: 1;
+    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+  }
+}
+
+@media -moz-pref("natsumi.browser.type", "floorp") {
+  #command-palette-overlay {
+    animation: palette-overlay-appear 0.2s ease;
+  }
+
+  #command-palette-container {
+    background-color: var(--natsumi-mat-th-background) !important;
+    animation: palette-appear 0.2s ease;
+    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+    border: var(--natsumi-mat-hz-border-thin) !important;
+
+    .command-palette-search-wrapper {
+      border-bottom: var(--natsumi-mat-hz-border-thin) !important;
+    }
+
+    .command-palette-item[aria-selected="true"] {
+      border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+    }
+  }
+}

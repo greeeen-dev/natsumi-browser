@@ -34,7 +34,51 @@ SOFTWARE.
 @import url("tabs/material.css");
 @import url("tabs/hexagonal.css");
 @import url("tabs/bubble.css");
+@import url("tabs/clicky.css");
+@import url("tabs/neutron.css");
 @import url("tabs/classic.css");
+
+@keyframes natsumi-tab-appear {
+  from {
+    opacity: 0;
+    scale: 0;
+    translate: -50% 0;
+    width: 0;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0;
+    width: var(--natsumi-animation–width);
+  }
+}
+
+@keyframes natsumi-tab-appear-vertical {
+  from {
+    opacity: 0;
+    scale: 0;
+    translate: 0 -50%;
+    height: 0;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0;
+    height: var(--natsumi-animation–height);
+  }
+}
+
+@keyframes natsumi-tab-appear-blur {
+  from {
+    filter: blur(24px);
+  }
+
+  to {
+    filter: blur(0);
+  }
+}
 
 /* Global tweaks for tabs */
 .tabbrowser-tab {
@@ -47,6 +91,22 @@ SOFTWARE.
 }
 
 #tabbrowser-arrowscrollbox .tabbrowser-tab {
+  &[natsumi-animation]:not([pending="true"]) {
+    animation: natsumi-tab-appear-blur 0.2s ease;
+    min-width: unset !important;
+    min-height: unset !important;
+
+    .tab-stack {
+      animation: natsumi-tab-appear 0.2s ease;
+      animation-fill-mode: forwards;
+
+      @media -moz-pref("sidebar.verticalTabs") {
+        animation: natsumi-tab-appear-vertical 0.2s ease;
+        animation-fill-mode: forwards;
+      }
+    }
+  }
+
   &[natsumi-glimpse-selected] {
     .tab-label-container {
       opacity: 1 !important;

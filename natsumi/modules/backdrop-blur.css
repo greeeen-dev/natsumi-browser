@@ -29,7 +29,7 @@ SOFTWARE.
 :has(
   #urlbar[open], #fullscreen-warning:not([hidden]), #pointerlock-warning:not([hidden]),
   .natsumi-notification, #natsumi-glimpse-launcher[open],
-  #natsumi-glimpse-chainer-indicator[chaining]
+  #natsumi-glimpse-chainer-indicator[chaining], #command-palette-overlay
 ) {
   .deck-selected browser, .browserSidebarContainer[split] browser {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);

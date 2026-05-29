@@ -31,13 +31,110 @@ SOFTWARE.
 
 */
 
+import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+
 let version;
 let branch;
 let codename;
 
+let categoryNode = document.getElementById("categories");
+const hasRedesign = categoryNode.nodeName === "html:moz-page-nav";
+const hasRedesignV2 = document.getElementById("category-general").getAttribute("hidden") && hasRedesign;
+
+// Get correct header
+let categoryHeader = "h1";
+
+if (hasRedesignV2) {
+    categoryHeader = "h2"
+}
+
+let hasUpdate = false;
+
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
     return window.MozXULElement.parseXULToFragment(node);
+}
+
+function updateBrowser() {
+    // Get recently focused document
+    const lastFocusedWindow = ucApi.Windows.getLastFocused();
+    const primaryDocument = lastFocusedWindow.document;
+    const updater = primaryDocument.body.natsumiUpdater;
+
+    if (!updater.updaterAvailable) {
+        // Updater disabled
+        return;
+    }
+    if (!updater.lastAvailableUpdate) {
+        // No updates available
+        return;
+    }
+
+    // Set updater overlay
+    updater.showUpdateOverlay();
+
+    ucApi.Windows.forEach((browserDocument, browserWindow) => {
+        browserDocument.body.natsumiUpdater.showUpdateOverlay(false);
+    });
+
+    // Run updater
+    updater.userUpdate(updater.lastAvailableUpdate);
+}
+
+function checkForUpdates() {
+    if (hasUpdate) {
+        return;
+    }
+
+    // Get recently focused document
+    const lastFocusedWindow = ucApi.Windows.getLastFocused();
+    const primaryDocument = lastFocusedWindow.document;
+    const updater = primaryDocument.body.natsumiUpdater;
+
+    // Get updater button
+    const updaterContainer = document.getElementById("natsumi-about-updater");
+    const updaterStatus = document.getElementById("natsumi-about-updater-status");
+    const updaterButton = document.getElementById("natsumi-about-updater-button");
+
+    updaterContainer.removeAttribute("natsumi-update-failed");
+    updaterContainer.setAttribute("natsumi-update-checking", "");
+    updaterStatus.textContent = "Checking for updates...";
+
+    // Induce artificial delay then check for updates
+    // This is so that the updater doesn't look like it's broken
+    setTimeout(() => {
+        updater.checkForUpdates().then((data) => {
+            updaterContainer.removeAttribute("natsumi-update-checking");
+
+            if (!data.available) {
+                hasUpdate = false;
+                updaterStatus.textContent = "You're up to date!";
+                return;
+            }
+
+            hasUpdate = true;
+            updaterContainer.setAttribute("natsumi-update-available", "");
+            updaterButton.textContent = `Update to ${data.data["version"]}`;
+        }).catch((e) => {
+            console.error("Failed to check for updates:", e);
+            updaterContainer.removeAttribute("natsumi-update-checking");
+            updaterContainer.setAttribute("natsumi-update-failed", "");
+            updaterStatus.textContent = "Update check failed."
+        });
+    }, 100);
+}
+
+function setUpdaterUnavailable(catastrophic = false) {
+    const updaterContainer = document.getElementById("natsumi-about-updater");
+    const updaterStatus = document.getElementById("natsumi-about-updater-status");
+
+    updaterContainer.setAttribute("natsumi-update-disabled", "");
+
+    if (catastrophic) {
+        updaterStatus.textContent = "Updater is unavailable";
+    } else {
+        updaterStatus.textContent = "Updates are disabled or externally managed";
+    }
 }
 
 function addAboutPane() {
@@ -48,7 +145,7 @@ function addAboutPane() {
     const isStardust = branch === "alpha" || branch === "beta";
     let browserName = AppConstants.MOZ_APP_BASENAME;
     const forkedFox = browserName.toLowerCase() !== "firefox";
-    let browserVersion = Services.appinfo.version;
+    let browserVersion = Services.appinfo.platformVersion ?? Services.appinfo.version;
     let forkedVersion = AppConstants.MOZ_APP_VERSION_DISPLAY;
     let isTor = false;
 
@@ -71,7 +168,7 @@ function addAboutPane() {
 
     let nodeString = `
         <hbox id="natsumiAboutCategory" class="subcategory" data-category="paneNatsumiAbout" hidden="true">
-            <html:h1>About Natsumi</html:h1>
+            <html:${categoryHeader}>About Natsumi</html:${categoryHeader}>
         </hbox>
         <groupbox id="natsumiAboutExperimentalWarning" data-category="paneNatsumiAbout" hidden="true">
             <div class="natsumi-settings-info warning">
@@ -102,6 +199,11 @@ function addAboutPane() {
                     <div id="natsumi-about-icon"></div>
                     <div id="natsumi-about-info-container">
                         <div id="natsumi-about-name"></div>
+                        <div id="natsumi-about-updater">
+                            <div id="natsumi-about-updater-icon"></div>
+                            <div id="natsumi-about-updater-status">You're up to date!</div>
+                            <div id="natsumi-about-updater-button">Check for updates</div>
+                        </div>
                         <div id="natsumi-about-version-container">
                             <div id="natsumi-about-version"></div>
                             <div id="natsumi-about-stability-badge"></div>
@@ -147,6 +249,32 @@ function addAboutPane() {
     let torWarning = document.getElementById("natsumiTorWarning");
     if (!isTor) {
         torWarning.style.display = "none";
+    }
+
+    // Set updater
+    let updaterButton = document.getElementById("natsumi-about-updater-button");
+    updaterButton.addEventListener("click", () => {
+        if (hasUpdate) {
+            updateBrowser();
+        } else {
+            checkForUpdates();
+        }
+    })
+
+    // Run initial check
+    const lastFocusedWindow = ucApi.Windows.getLastFocused();
+    const primaryDocument = lastFocusedWindow.document;
+    const updater = primaryDocument.body.natsumiUpdater;
+
+    if (!updater) {
+        setUpdaterUnavailable(true);
+        return;
+    }
+
+    if (updater.updaterAvailable) {
+        checkForUpdates();
+    } else {
+        setUpdaterUnavailable();
     }
 }
 

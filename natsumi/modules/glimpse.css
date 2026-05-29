@@ -352,6 +352,13 @@
     }
   }
 
+  .natsumi-glimpse-multi-controls {
+    z-index: -1;
+    transition: width 0.3s ease, left 0.3s ease;
+    width: 100% !important;
+    left: 0 !important;
+  }
+
   .natsumi-glimpse-indicator {
     transition: top 0.3s ease;
     top: 46px !important;

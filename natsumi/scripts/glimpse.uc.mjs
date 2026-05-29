@@ -32,6 +32,17 @@ SOFTWARE.
 import { NatsumiActorWrapper } from "./actors/js-actors.js";
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
+let searchService = Services.search;
+if (searchService === undefined) {
+    // Get search service
+    const lazy = {};
+    ChromeUtils.defineESModuleGetters(lazy, {
+        SearchService: "moz-src:///toolkit/components/search/SearchService.sys.mjs",
+    });
+    searchService = lazy.SearchService;
+}
+
+
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
     return window.MozXULElement.parseXULToFragment(node);
@@ -42,7 +53,6 @@ class NatsumiGlimpse {
         this.glimpse = {};
         this.glimpseTabs = []; // Array to quickly check if a tab is a glimpse tab
         this.currentGlimpseTab = null;
-        this.glimpseInterval = null;
         this.multiGlimpse = false;
         this.chainingGlimpse = false;
     }
@@ -105,6 +115,8 @@ class NatsumiGlimpse {
 
         this.currentGlimpseTab.linkedBrowser.browsingContext.isActive = true;
         this.currentGlimpseTab.linkedBrowser.renderLayers = true;
+
+        // We can reuse the rendering function here
 
         requestAnimationFrame(() => {
             this.ensureGlimpseParentRender();
@@ -430,7 +442,7 @@ class NatsumiGlimpse {
         let isGlimpseTab = this.glimpseTabs.includes(currentTabId);
 
         if ((isGlimpseParent || isGlimpseTab) && !this.multiGlimpse) {
-            // Do not activate if multi-glimpse is disabled, but open tab anyways
+            // Do not activate if multi-glimpse is disabled, but open tab anyway
             if (!launcher) {
                 gBrowser.addTab(link, {
                     skipAnimation: true,
@@ -1057,11 +1069,16 @@ class NatsumiGlimpseLauncher {
     }
 
     getDefaultSearchUrl(query) {
-        return Services.search.defaultEngine.getSubmission(query).uri.spec;
+        return searchService.defaultEngine.getSubmission(query).uri.spec;
     }
 
     getSearchUrl(searchEngine, query) {
-        return searchEngine._urls[0].getSubmission(query, "UTF-8")._uri.spec;
+        if (searchEngine._urls[0].getSubmission(query, "UTF-8")._uri === undefined) {
+            return searchEngine._urls[0].getSubmission(query, "UTF-8").uri.spec;
+        } else {
+            // Legacy behavior
+            return searchEngine._urls[0].getSubmission(query, "UTF-8")._uri.spec;
+        }
     }
 
     isUrl(input, ignoreProtocol = false) {
@@ -1120,7 +1137,7 @@ class NatsumiGlimpseLauncher {
             return;
         }
 
-        const searchEngines = await Services.search.getVisibleEngines();
+        const searchEngines = await searchService.getVisibleEngines();
         let selectedEngine = null;
         let selectedAlias = null;
 

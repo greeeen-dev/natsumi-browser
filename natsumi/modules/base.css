@@ -50,10 +50,14 @@ SOFTWARE.
   border: none !important;
 }
 
+body > * {
+  font-family: var(--natsumi-custom-font) !important;
+}
+
 :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
   #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
-    margin-right: var(--natsumi-browser-separation) !important;
-    margin-bottom: var(--natsumi-browser-separation) !important;
+    margin-right: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
+    margin-bottom: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
     box-shadow: none !important;
     outline: none !important;
 
@@ -144,6 +148,7 @@ SOFTWARE.
 
 #sidebar-splitter {
   width: var(--natsumi-browser-separation) !important;
+  margin-inline: 0 !important;
 }
 
 #vertical-spacer {
@@ -162,7 +167,39 @@ SOFTWARE.
   margin-inline: var(--natsumi-browser-separation);
 }
 
+#nav-bar-customization-target, #PanelUI-button {
+  & > toolbarbutton, & > toolbaritem {
+    &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
+      padding-inline: 4px !important;
+
+      &:first-child {
+        padding-left: 8px !important;
+      }
+    }
+  }
+}
+
 #nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {
+  & > toolbarbutton, & > toolbaritem {
+    &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
+      padding-inline: 4px !important;
+    }
+  }
+
+  #PanelUI-menu-button {
+    padding-inline: 4px 8px !important;
+  }
+
+  & > toolbaritem toolbarbutton {
+    padding-inline: 0 !important;
+  }
+
+  @media -moz-pref("natsumi.theme.single-toolbar") {
+    &#nav-bar-customization-target {
+      padding-left: 4px !important;
+    }
+  }
+
   toolbarbutton {
     --toolbarbutton-outer-padding: 4px;
     max-height: 40px !important;
@@ -253,6 +290,11 @@ SOFTWARE.
     .toolbarbutton-badge-stack {
       padding: 6px !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 4px !important;
+
+      @media (-moz-mac-tahoe-theme) {
+        border-radius: 8px !important;
+      }
     }
 
     &:hover .toolbarbutton-badge-stack {
@@ -586,6 +628,41 @@ SOFTWARE.
 
     &:not([scrolledtostart]):not([scrolledtoend]) {
       background-image: var(--natsumi-overflow-both-gradient) !important;
+    }
+  }
+}
+
+splitter:hover {
+  background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+}
+
+/* Add soft glow to web page */
+@media -moz-pref("natsumi.theme.soft-glow") {
+  #tabbrowser-tabpanels .deck-selected {
+    box-shadow: 0px 0px 30px var(--tab-selected-bgcolor) !important;
+  }
+}
+
+:root[sidebar-expand-on-hover] {
+  #sidebar-main {
+    background: transparent !important;
+  }
+
+  &:has(#sidebar-box[hidden]) #tabbrowser-tabbox, #sidebar-box {
+    &[sidebar-ongoing-animations] {
+      &[sidebar-launcher-expanded] {
+        animation: sidebar-hover-tabbox-extend 0.4s ease;
+        animation-fill-mode: forwards;
+      }
+
+      &:not([sidebar-launcher-expanded]) {
+        animation: sidebar-hover-tabbox-collapse 0.4s ease;
+        animation-fill-mode: forwards;
+      }
+    }
+
+    &:not([sidebar-ongoing-animations])[sidebar-launcher-expanded] {
+      margin-inline-start: var(--natsumi-sidebar-width) !important;
     }
   }
 }

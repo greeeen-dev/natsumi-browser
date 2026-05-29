@@ -27,13 +27,51 @@ SOFTWARE.
 import {NatsumiNotification} from "./notifications.sys.mjs";
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
+const urlCleaner = Cc["@mozilla.org/url-query-string-stripper;1"].createInstance(Ci.nsIURLQueryStringStripper);
+
+function getCurrentUrl() {
+    let copyCleanIfPossible = false;
+    if (ucApi.Prefs.get("natsumi.browser.copy-clean-link").exists()) {
+        copyCleanIfPossible = ucApi.Prefs.get("natsumi.browser.copy-clean-link").value;
+    }
+
+    let currentUrl = gBrowser.currentURI.spec;
+
+    if (copyCleanIfPossible) {
+        // Get clean URL
+        let cleanedLink;
+
+        try {
+            cleanedLink = urlCleaner.stripForCopyOrShare(gBrowser.currentURI);
+        } catch(e) {
+            console.warn("Failed to get clean URL, falling back to current URL:", e);
+        }
+
+        if (cleanedLink) {
+            currentUrl = Services.io.createExposableURI(cleanedLink)?.displaySpec ?? gBrowser.currentURI.spec;
+        }
+    }
+
+    return currentUrl;
+}
+
 export class NatsumiShortcutActions {
     static copyCurrentUrl() {
-        let currentUrl = gBrowser.currentURI.spec;
+        let currentUrl = getCurrentUrl();
         navigator.clipboard.writeText(currentUrl);
 
         // Add to notifications
         let notificationObject = new NatsumiNotification("Copied URL to clipboard!", null, "chrome://natsumi/content/icons/lucide/copy.svg")
+        notificationObject.addToContainer();
+    }
+
+    static copyCurrentUrlMarkdown() {
+        const currentUrl = getCurrentUrl();
+        const currentTabName = gBrowser.selectedTab.label;
+        navigator.clipboard.writeText(`[${currentTabName}](${currentUrl})`);
+
+        // Add to notifications
+        let notificationObject = new NatsumiNotification("Copied URL as Markdown to clipboard!", null, "chrome://natsumi/content/icons/lucide/copy.svg")
         notificationObject.addToContainer();
     }
 
@@ -230,8 +268,21 @@ export class NatsumiShortcutActions {
     }
 
     static splitTabs() {
-        // Firefox can't split more than 2 tabs yet
-        if (gBrowser.multiSelectedTabsCount > 2) {
+        // Check if we can use extended split view limit
+        let extendedSplitView = false;
+        if (document.getElementById("floorp-split-view-styles") != null) {
+            extendedSplitView = true;
+        }
+
+        // The split view limit for Firefox is 2
+        let splitViewLimit = 2;
+        if (extendedSplitView) {
+            // For Floorp, the split view limit is 4 tabs (for now)
+            splitViewLimit = 4;
+        }
+
+        // Enforce split view limit
+        if (gBrowser.multiSelectedTabsCount > splitViewLimit) {
             return;
         }
 
@@ -239,10 +290,17 @@ export class NatsumiShortcutActions {
         let unpinnedTabsNode = document.getElementById("tabbrowser-arrowscrollbox");
         let unpinnedTabs = Array.from(unpinnedTabsNode.querySelectorAll(".tabbrowser-tab:not([hidden])"));
         let firstTab = selectedTabs[0];
-        let secondTab;
+        let toSplitTabs = [firstTab];
         let insertBefore = gBrowser.selectedTab;
 
+        if (firstTab.hasAttribute("natsumi-glimpse-tab")) {
+            // We can't split this
+            return;
+        }
+
         if (selectedTabs.length === 1) {
+            let secondTab;
+
             // Get tab index
             let tabIndex = unpinnedTabs.indexOf(firstTab);
 
@@ -251,14 +309,24 @@ export class NatsumiShortcutActions {
                 secondTab = unpinnedTabs[tabIndex - 1];
             } else {
                 // Split with next tab
-                secondTab = unpinnedTabs[tabIndex + 1];
+                while (tabIndex < unpinnedTabs.length) {
+                    // Ensure our tab isn't a Glimpse tab
+                    secondTab = unpinnedTabs[tabIndex + 1];
+                    if (!secondTab.hasAttribute("natsumi-glimpse-tab")) {
+                        break;
+                    }
+                }
             }
+
+            toSplitTabs.push(secondTab)
         } else {
-            secondTab = selectedTabs[1];
+            for (let i = 0; i < selectedTabs.length - 1; i++) {
+                toSplitTabs.push(selectedTabs[i + 1]);
+            }
         }
 
         // Check that tabs are not pinned and not in split view
-        for (let tab of [firstTab, secondTab]) {
+        for (let tab of selectedTabs) {
             if (tab.pinned || tab.splitview) {
                 return;
             }
@@ -269,7 +337,7 @@ export class NatsumiShortcutActions {
             additionalData = {insertBefore};
         }
 
-        gBrowser.addTabSplitView([firstTab, secondTab], additionalData);
+        gBrowser.addTabSplitView(toSplitTabs, additionalData);
     }
 
     static unsplitTabs() {
@@ -277,7 +345,11 @@ export class NatsumiShortcutActions {
         let selectedTab = gBrowser.selectedTab;
 
         if (selectedTab.splitview) {
-            gBrowser.unsplitTabs(selectedTab.splitview);
+            if (gBrowser.unsplitTabs !== undefined) {
+                gBrowser.unsplitTabs(selectedTab.splitview);
+            } else {
+                selectedTab.splitview.unsplitTabs();
+            }
         }
     }
 
@@ -316,5 +388,13 @@ export class NatsumiShortcutActions {
 
         // Select tab
         gBrowser.selectedTab = allTabs[index];
+    }
+
+    static showCommandPalette() {
+        if (!document.body.natsumiGesturesWrapper) {
+            return;
+        }
+
+        document.body.natsumiGesturesWrapper.executeAction("floorp-toggle-command-palette");
     }
 }

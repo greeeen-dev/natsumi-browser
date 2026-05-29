@@ -87,12 +87,20 @@ SOFTWARE.
       }
     }
 
+    body[style*="--natsumi-custom-font"] * {
+      font-family: var(--natsumi-custom-font) !important;
+    }
+
     html {
       animation: pip-fadein-html 0.5s ease !important;
     }
 
     body[natsumi-scrolling] {
       cursor: none !important;
+
+      * {
+        cursor: none !important;
+      }
     }
 
     .player-holder {

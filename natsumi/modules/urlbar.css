@@ -97,6 +97,8 @@ SOFTWARE.
     }
 
     &:not([open]) {
+      top: unset !important;
+
       @media (not -moz-pref("natsumi.theme.single-toolbar")) or (not -moz-pref("sidebar.verticalTabs")) {
         border-radius: 16px !important;
         border: 1px solid light-dark(var(--natsumi-colors-border-alt), var(--natsumi-button-active-color)) !important;
@@ -367,7 +369,7 @@ SOFTWARE.
         }
 
         #urlbar-background, .urlbar-background {
-          background-color: light-dark(var(--toolbar-field-background-color), color-mix(in srgb, currentColor 7%, transparent)) !important;
+          background-color: color-mix(in srgb, currentColor 7%, transparent) !important;
           border-radius: var(--natsumi-tab-border-radius) !important;
           transition: background-color 0.2s ease;
         }
@@ -511,6 +513,12 @@ SOFTWARE.
     }
 
     &[open] {
+      --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
+      --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-05)) !important;
+      --toolbar-field-focus-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
+      --urlbarView-highlight-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
+      color-scheme: unset !important;
+
       @media -moz-pref("natsumi.urlbar.do-not-float") {
         .urlbar-input-container {
           padding-block: 5px !important;
@@ -539,8 +547,12 @@ SOFTWARE.
           font-size: 18px !important;
         }
 
-        #tracking-protection-icon-container, #identity-box, #page-action-buttons {
-          display: none;
+        #tracking-protection-icon-container, #identity-box, #page-action-buttons, #trust-icon-container {
+          display: none !important;
+        }
+
+        .urlbar-input-box {
+          margin-left: 0 !important;
         }
 
         .urlbar-input-container {
@@ -600,6 +612,7 @@ SOFTWARE.
           height: 24px !important;
           margin-top: auto !important;
           margin-bottom: auto !important;
+          margin-right: var(--identity-box-margin-inline) !important;
           border-radius: 12px !important;
           padding-right: 0 !important;
           background: var(--natsumi-urlbar-search-engine-color) !important;
@@ -609,6 +622,14 @@ SOFTWARE.
             width: 12px !important;
             height: 12px !important;
             border-radius: 12px !important;
+          }
+        }
+
+        moz-button.searchmode-switcher {
+          margin-right: 4px !important;
+
+          .searchmode-switcher-close {
+            margin-inline: -4px !important;
           }
         }
 
@@ -624,37 +645,37 @@ SOFTWARE.
           /* Search engine colors */
           --natsumi-urlbar-search-engine-color: var(--natsumi-primary-color);
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Google"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Google"]) {
             --natsumi-urlbar-search-engine-color: #36aeff;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="DuckDuckGo"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="DuckDuckGo"]) {
             --natsumi-urlbar-search-engine-color: #ed8332;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Bing"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Bing"]) {
             --natsumi-urlbar-search-engine-color: #10e0eb;
             --natsumi-urlbar-search-engine-text: black;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Startpage"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Startpage"]) {
             --natsumi-urlbar-search-engine-color: #7a21ff;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="YouTube"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="YouTube"]) {
             --natsumi-urlbar-search-engine-color: #ff6e6e;
             --natsumi-urlbar-search-engine-text: black;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="Ecosia"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="Ecosia"]) {
             --natsumi-urlbar-search-engine-color: #09870e;
             --natsumi-urlbar-search-engine-text: white;
           }
 
-          &:has(#urlbar-searchmode-switcher[data-l10n-args*="GitHub"]) {
+          &:has(.searchmode-switcher[data-l10n-args*="GitHub"]) {
             --natsumi-urlbar-search-engine-color: #878787;
             --natsumi-urlbar-search-engine-text: white;
           }
@@ -882,6 +903,12 @@ SOFTWARE.
       @media -moz-pref("natsumi.urlbar.do-not-float") and -moz-pref("natsumi.theme.single-toolbar") {
         width: 45% !important;
       }
+    }
+  }
+
+  &[customizing]:not([taskbartab]) #urlbar:not([open]) {
+    @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
+      height: 32px !important;
     }
   }
 

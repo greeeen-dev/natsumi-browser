@@ -30,11 +30,6 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
-import {
-    customizationFilePath,
-    enableCustomizableToolbar,
-    resetCustomizableToolbar
-} from "./single-toolbar-customization.sys.mjs";
 
 class NatsumiSingleToolbarManager {
     constructor() {
@@ -43,34 +38,14 @@ class NatsumiSingleToolbarManager {
     }
 
     init() {
-        this.detectBookmarkHover();
+        // Set up window control buttons
+        let bookmarksToolbar = document.getElementById("PersonalToolbar");
+        let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
+        let windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
+        bookmarksToolbar.appendChild(windowButtonsContainer);
 
-        // Check if single toolbar is active
-        let singleToolbarEnabled = false;
-        if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-            singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-        }
-
-        if (singleToolbarEnabled) {
-            // Check if customization file exists
-            IOUtils.exists(customizationFilePath).then((exists) => {
-                if (!exists) {
-                    enableCustomizableToolbar();
-                }
-            });
-        }
-
-        // Create observer for single toolbar pref
-        Services.prefs.addObserver("natsumi.theme.single-toolbar", async () => {
-            // Since the pref already exists, we don't need to check for its existence
-            let singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-
-            if (singleToolbarEnabled) {
-                await enableCustomizableToolbar();
-            } else {
-                await resetCustomizableToolbar();
-            }
-        });
+        this.setupDetectBookmarkHover();
+        this.extendBookmarksIfNeeded();
 
         // Create observer for vertical tabs pref
         Services.prefs.addObserver("sidebar.verticalTabs", () => {
@@ -82,34 +57,103 @@ class NatsumiSingleToolbarManager {
             }
         });
 
-        // Add event listeners for customization
-        window.gNavToolbox.addEventListener("aftercustomization", () => {
+        let sidebarNode = document.getElementById("sidebar-main");
+        if (!sidebarNode.hasAttribute("sidebar-launcher-expanded")) {
+            ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
+        }
+
+        // Create observer for sidebar
+        const sidebarObserver = new MutationObserver(() => {
+            let sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");
+
+            // Check if single toolbar is active
             let singleToolbarEnabled = false;
             if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
                 singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
             }
 
-            if (!singleToolbarEnabled) {
-                return;
+            if (!sidebarExpanded && singleToolbarEnabled) {
+                // Although re-expanding the sidebar would be best here, it may conflict with ongoing animations
+                ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
             }
-
-            enableCustomizableToolbar();
-        })
-        window.gNavToolbox.addEventListener("customizationready", () => {
-            let singleToolbarEnabled = false;
-            if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-                singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-            }
-
-            if (!singleToolbarEnabled) {
-                return;
-            }
-
-            resetCustomizableToolbar();
         });
+        sidebarObserver.observe(sidebarNode, {attributes: true, attributeFilter: ["sidebar-launcher-expanded"]});
+
+        Services.prefs.addObserver("natsumi.theme.single-toolbar", () => {
+            let singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+            let sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");
+
+            if (singleToolbarEnabled && !sidebarExpanded) {
+                // Expand sidebar
+                SidebarController.handleToolbarButtonClick();
+            }
+        });
+
+        // Create observer for bookmarks bar hover pref
+        Services.prefs.addObserver("natsumi.theme.show-bookmarks-on-hover", () => {
+            this.extendBookmarksIfNeeded();
+        });
+        Services.prefs.addObserver("natsumi.theme.force-window-controls-to-left", () => {
+            this.extendBookmarksIfNeeded();
+        });
+        Services.prefs.addObserver("sidebar.position_start", () => {
+            this.extendBookmarksIfNeeded();
+        });
+
+        // Create event listeners for window
+        window.addEventListener("willenterfullscreen", () => {
+            this.extendBookmarksIfNeeded(true);
+        })
+        window.addEventListener("willexitfullscreen", () => {
+            this.extendBookmarksIfNeeded(false);
+        })
+    }
+
+    extendBookmarksIfNeeded(isFullScreen = null) {
+        let hoverableBookmarksEnabled = false;
+        let controlsInSidebar = false;
+        const sidebarOnLeft = ucApi.Prefs.get("sidebar.position_start").value;
+        const isMac = Services.appinfo.OS.toLowerCase() === "darwin";
+
+        if (isFullScreen === null) {
+            isFullScreen = document.documentElement.hasAttribute("inFullscreen");
+        }
+
+        if (ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").exists()) {
+            hoverableBookmarksEnabled = ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").value;
+        }
+        if (ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").exists()) {
+            controlsInSidebar = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
+        }
+
+        if (hoverableBookmarksEnabled) {
+            document.body.removeAttribute("natsumi-bookmarks-extend");
+            return;
+        }
+
+        if (isMac && !sidebarOnLeft && !controlsInSidebar && !isFullScreen) {
+            document.body.setAttribute("natsumi-bookmarks-extend", "");
+        } else if (!isMac && sidebarOnLeft && !controlsInSidebar) {
+            document.body.setAttribute("natsumi-bookmarks-extend", "");
+        } else {
+            document.body.removeAttribute("natsumi-bookmarks-extend");
+        }
+    }
+
+    canUseHoverable() {
+        if (ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").exists()) {
+            return ucApi.Prefs.get("natsumi.theme.show-bookmarks-on-hover").value;
+        }
+
+        return false;
     }
 
     setHover(isWindowButton = false) {
+        if (!this.canUseHoverable()) {
+            this.removeHover();
+            return;
+        }
+
         let singleToolbarEnabled = false;
         if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
             singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
@@ -172,6 +216,10 @@ class NatsumiSingleToolbarManager {
             return;
         } else if (this.hoveredElements < 0) {
             this.hoveredElements = 0;
+
+            if (!this.canUseHoverable()) {
+                return;
+            }
         }
 
         this.hoverTimeout = setTimeout(() => {
@@ -179,15 +227,9 @@ class NatsumiSingleToolbarManager {
         }, 1000);
     }
 
-    detectBookmarkHover() {
+    setupDetectBookmarkHover() {
         let bookmarksToolbar = document.getElementById("PersonalToolbar");
         let windowButtonsContainer = document.querySelector("#PersonalToolbar .titlebar-buttonbox-container");
-
-        if (!windowButtonsContainer) {
-            let originalWindowButtonsContainer = document.querySelector(".titlebar-buttonbox-container");
-            windowButtonsContainer = originalWindowButtonsContainer.cloneNode(true);
-            bookmarksToolbar.appendChild(windowButtonsContainer);
-        }
 
         if (bookmarksToolbar) {
             bookmarksToolbar.addEventListener("mouseover", (event) => {
@@ -200,7 +242,6 @@ class NatsumiSingleToolbarManager {
 
         if (windowButtonsContainer) {
             windowButtonsContainer.addEventListener("mouseover", (event) => {
-                console.log(event);
                 this.setHover(true);
             });
             windowButtonsContainer.addEventListener("mouseout", (event) => {

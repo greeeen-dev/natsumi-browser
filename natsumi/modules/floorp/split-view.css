@@ -1,0 +1,203 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Floorp Split View ==== */
+
+@media -moz-pref("natsumi.browser.type", "floorp") {
+  :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
+    #browser:not([data-is-child="true"]) {
+      .floorp-grid-handle, .floorp-split-handle {
+        &::after {
+          background: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        }
+
+        &[data-orientation*="-col"], &[data-orientation="horizontal"] {
+          width: var(--natsumi-browser-separation) !important;
+        }
+
+        &[data-orientation*="-row"], &[data-orientation="vertical"] {
+          height: var(--natsumi-browser-separation) !important;
+        }
+
+        &[data-orientation="horizontal"] {
+          &::after {
+            translate: -25% 0;
+          }
+        }
+
+        &[data-orientation="vertical"] {
+          &::after {
+            translate: 0 -25%;
+          }
+        }
+      }
+
+      #tabbrowser-tabbox {
+        #tabbrowser-tabpanels {
+          &[data-floorp-split="true"] {
+            margin: calc(var(--natsumi-browser-separation) / -2 + 1px) !important;
+
+            .browserSidebarContainer.split-view-panel {
+              margin: calc(var(--natsumi-browser-separation) / 2 - 1px) !important;
+
+              .floorp-pane-drag-grip {
+                opacity: 0 !important;
+                transform: translateX(-50%) !important;
+                border-color: color-mix(
+                        in srgb,
+                        light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) 24%,
+                        transparent
+                ) !important;
+              }
+
+              &:hover {
+                .floorp-pane-drag-grip {
+                  opacity: 1 !important;
+                }
+              }
+            }
+
+            &[split-view-layout*="grid"] {
+              margin: calc(var(--natsumi-browser-separation) / -2) !important;
+
+              .browserSidebarContainer.split-view-panel {
+                margin: calc(var(--natsumi-browser-separation) / 2) !important;
+              }
+            }
+          }
+
+          &[data-floorp-dragging="pane-reorder"] {
+            cursor: -moz-grabbing !important;
+
+            .split-view-panel {
+              transition: background-color 0.2s ease !important;
+
+              &::after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: var(--natsumi-primary-color) !important;
+                z-index: 999;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+              }
+            }
+
+            .split-view-panel[data-floorp-drag-source="true"] {
+              transition: opacity 0.2s ease !important;
+              opacity: 0.5 !important;
+
+              .floorp-pane-drag-grip {
+                opacity: 1 !important;
+              }
+            }
+
+            .split-view-panel:not([data-floorp-drag-source="true"])[data-floorp-drop-target="true"] {
+              opacity: 1 !important;
+
+              &::after {
+                opacity: 0.4;
+              }
+
+              .floorp-pane-drag-grip {
+                opacity: 0 !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    tab-split-view-wrapper {
+      @media -moz-pref("natsumi.tabs.show-split-as-list") and -moz-pref("sidebar.verticalTabs") {
+        display: block !important;
+        padding-top: 28px !important;
+
+        &::before {
+          content: "";
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          top: 6px;
+          left: var(--space-medium);
+          opacity: 0.5;
+          -moz-context-properties: stroke, fill;
+          stroke: currentColor;
+          background-image: url("../../icons/lucide/split-view.svg");
+          background-size: 16px;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+
+        &::after {
+          content: "Split view";
+          position: absolute;
+          top: 14px;
+          left: calc(var(--space-medium) + 20px);
+          font-weight: bold;
+          opacity: 0.5;
+          translate: 0 -50%;
+        }
+      }
+
+      @media not -moz-pref("natsumi.tabs.show-split-as-list") {
+        display: flex !important;
+        overflow-x: scroll;
+
+        .tabbrowser-tab {
+          flex: 1 !important;
+          min-width: calc(var(--floorp-tab-min-height, var(--tab-min-height)) - 4px) !important;
+
+          &[selected] {
+            .tab-icon-stack {
+              display: none !important;
+            }
+
+            .tab-close-button {
+              order: -1 !important;
+              margin-inline: calc(var(--tab-inline-padding) / -2) 1px !important;
+            }
+          }
+
+          @media -moz-pref("sidebar.verticalTabs") {
+            &[selected], &:hover {
+              .tab-icon-stack {
+                display: none !important;
+              }
+
+              .tab-close-button {
+                order: -1 !important;
+                margin-inline: -3px 3px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

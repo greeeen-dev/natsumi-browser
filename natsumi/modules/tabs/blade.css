@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -97,6 +97,7 @@ SOFTWARE.
         display: grid;
         grid-template-columns: 1fr;
         backdrop-filter: saturate(1) contrast(1);
+        border: none !important;
 
         .tab-context-line {
           display: none !important;
@@ -120,6 +121,10 @@ SOFTWARE.
           mask-image: linear-gradient(to right, black, transparent 30%);
           transition: width 0.2s ease, opacity 0.2s ease, background-color 0.2s ease, border 0.2s ease;
 
+          @media -moz-pref("natsumi.theme.buggy-scaling") {
+            height: calc(100% - 3.5px);
+          }
+
           @media -moz-pref("natsumi.browser.type-firedragon") {
             height: 100%;
           }
@@ -139,6 +144,7 @@ SOFTWARE.
         /*noinspection CssInvalidFunction*/
         & > .tab-stack > .tab-background {
           box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+          background-image: none !important;
           background-color: var(--natsumi-mat-hz-background) !important;
           animation: backdrop-fadein 0.2s ease;
 
@@ -181,6 +187,7 @@ SOFTWARE.
     --tab-height-with-margin-padding: calc(41px + (2 * var(--tab-block-margin)));
 
     .tab-background {
+      border: none !important;
       border-radius: var(--natsumi-tab-border-radius) !important;
       transition: background-color 0.2s ease;
     }

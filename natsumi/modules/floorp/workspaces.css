@@ -1,6 +1,6 @@
 /*
 
-Natsumi Browser - A userchrome for Firefox and more that makes things flow.
+Natsumi Browser - Welcome to your personal internet.
 
 Copyright (c) 2024-present Green (@greeeen-dev)
 
@@ -276,7 +276,7 @@ SOFTWARE.
   }
 
   /* Workspaces indicator */
-  @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") {
+  @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") or (not -moz-pref("floorp.workspaces.enabled")) {
     #natsumi-workspace-indicator {
       display: none !important;
     }

@@ -48,6 +48,10 @@ SOFTWARE.
     @media -moz-pref("natsumi.theme.use-legacy-translucency") {
       appearance: -moz-window-titlebar;
     }
+
+    @media (-moz-platform: linux) {
+      background-color: transparent !important;
+    }
   }
 }
 
@@ -56,9 +60,13 @@ SOFTWARE.
   --natsumi-theme-color-opacity: 0.5;
   --natsumi-theme-gradient-opacity: 0.5;
 
+  /* Set rounded corners on Linux (with 5px fallback) */
   @media (-moz-platform: linux) {
-    &::after, #browser::before {
-      border-radius: 5px !important;
+    :root:not([gtktiledwindow="true"]):not([sizemode="maximized"]) & {
+      &::after,
+      &::before {
+        border-radius: env(-moz-gtk-csd-titlebar-radius, 5px);
+      }
     }
   }
 
@@ -145,14 +153,25 @@ SOFTWARE.
 /* Theme colors */
 :root[windowtype*="navigator:browser"] {
   /* Use theme color if possible */
-  &[style*="--lwt"] body::after {
+  &[style*="--lwt"] html:not([ai-window]) body::after {
     background-color: var(--lwt-accent-color);
+  }
+
+  /* Use theme images in solid color layer if possible */
+  &[lwtheme]:not([lwtheme-image-y-align]) html:not([ai-window]) body {
+    background-image: none !important;
+
+    &::after {
+      background-image: var(--lwt-additional-images);
+      background-repeat: var(--lwt-background-tiling);
+      background-position: var(--lwt-background-alignment);
+    }
   }
 }
 
 /* Override accent color if theme color is set */
 @media not -moz-pref("natsumi.theme.force-natsumi-color") {
-  :root[style*="--lwt"] {
+  :root[style*="--lwt"] html:not([ai-window]) {
     * {
       --natsumi-primary-color: var(--lwt-accent-color) !important;
 
@@ -161,6 +180,12 @@ SOFTWARE.
           --natsumi-primary-color: var(--lwt-tab-line-color) !important;
         }
       }
+    }
+  }
+
+  html[ai-window] {
+    * {
+      --natsumi-primary-color: var(--color-violet-20) !important;
     }
   }
 }
@@ -180,7 +205,7 @@ SOFTWARE.
 
 /* Add background on fullscreen hover (macOS) */
 * {
-  --natsumi-toolbox-color: var(--lwt-accent-color, var(--toolbox-bgcolor));
+  --natsumi-toolbox-color: var(--lwt-accent-color, var(--toolbox-bgcolor, light-dark(#ebebeb, #171717)));
   --natsumi-toolbox-color-inactive: var(--lwt-accent-color, var(--toolbox-bgcolor-inactive));
 
   @media (-moz-platform: windows) {
@@ -189,14 +214,37 @@ SOFTWARE.
   }
 }
 
-#navigator-toolbox {
-  transition: background-color 0.3s ease;
+@media not -moz-pref("natsumi.theme.single-toolbar") {
+  #navigator-toolbox {
+    transition: background-color 0.3s ease;
 
-  &.fullscreen-with-menubar {
-    background-color: var(--natsumi-toolbox-color) !important;
+    &.fullscreen-with-menubar, &.fullscreen-floating-toolbox {
+      background-color: var(--natsumi-toolbox-color) !important;
 
-    &:-moz-window-inactive {
-      background-color: var(--natsumi-toolbox-color-inactive) !important;
+      &:-moz-window-inactive {
+        background-color: var(--natsumi-toolbox-color-inactive) !important;
+      }
     }
+  }
+}
+
+@media -moz-pref("natsumi.theme.single-toolbar") {
+  #navigator-toolbox {
+    box-shadow: none !important;
+  }
+}
+
+@media -moz-pref("browser.theme.native-theme") {
+  body::after {
+    z-index: -3 !important;
+    appearance: none !important;
+  }
+
+  #browser::before {
+    z-index: -2 !important;
+  }
+
+  #browser::after {
+    z-index: -1 !important;
   }
 }

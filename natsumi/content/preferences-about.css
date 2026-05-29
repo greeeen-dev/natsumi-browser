@@ -26,11 +26,38 @@ SOFTWARE.
 
 /* ==== Preferences: About ==== */
 
+@keyframes natsumi-loading {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
   #natsumi-about .category-icon {
     list-style-image: url("../icons/lucide/info.svg");
     -moz-context-properties: stroke, stroke-opacity !important;
     stroke: currentColor;
+  }
+
+  button:has(.page-nav-icon[src*="lucide/info.svg"]) {
+    img {
+      display: none !important;
+    }
+
+    &::after {
+      content: "";
+      background: currentColor;
+      width: 16px;
+      height: 16px;
+      order: -1;
+      mask-image: url("../icons/custom/natsumi-mask.png");
+      mask-size: 18px;
+      mask-position: center;
+    }
   }
 
   #natsumi-about-container {
@@ -51,15 +78,18 @@ SOFTWARE.
   #natsumi-about-info-container {
     flex-direction: column;
     gap: 5px;
-    margin-block: auto;
+    margin-block: 12px;
   }
 
   #natsumi-about-icon {
     width: 128px;
     height: 128px;
-    background-image: url("../icons/natsumi-glass.png") !important;
+    background-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
     background-size: 128px;
-    margin-block: auto;
+
+    @media -moz-pref("natsumi.theme.pride") {
+      background-image: url("../icons/natsumi-pride.png");
+    }
   }
 
   #natsumi-about-container[stardust="true"] #natsumi-about-icon {
@@ -125,5 +155,70 @@ SOFTWARE.
 
   #natsumi-about-links-container {
     gap: 10px;
+  }
+
+  #natsumi-about-updater {
+    align-items: center;
+    min-height: 32px;
+    gap: 6px;
+    user-select: none !important;
+
+    #natsumi-about-updater-icon {
+      width: 20px;
+      height: 20px;
+      background-image: url("../icons/lucide/check.svg");
+      background-size: 20px;
+      -moz-context-properties: stroke, stroke-opacity !important;
+      stroke: light-dark(black, white);
+      margin-right: -2px !important;
+    }
+
+    #natsumi-about-updater-button {
+      --natsumi-content-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      height: 32px;
+      align-items: center;
+      border-radius: 16px;
+      background-color: var(--natsumi-content-color);
+      padding-inline: 12px;
+      color: light-dark(white, black);
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: color-mix(in srgb, var(--natsumi-content-color) 70%, transparent);
+      }
+
+      &:active {
+        background-color: color-mix(in srgb, var(--natsumi-content-color) 50%, transparent);
+      }
+    }
+
+    &[natsumi-update-available] {
+      #natsumi-about-updater-icon, #natsumi-about-updater-status {
+        display: none;
+      }
+    }
+
+    &[natsumi-update-checking] {
+      #natsumi-about-updater-button {
+        display: none;
+      }
+
+      #natsumi-about-updater-icon {
+        background-image: url("../icons/lucide/loading.svg") !important;
+        animation: natsumi-loading 1s linear infinite;
+      }
+    }
+
+    &[natsumi-update-disabled] {
+      #natsumi-about-updater-icon, #natsumi-about-updater-button {
+        display: none;
+      }
+    }
+
+    &[natsumi-update-failed] {
+      #natsumi-about-updater-icon {
+        background-image: url("../icons/lucide/close.svg") !important;
+      }
+    }
   }
 }
