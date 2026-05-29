@@ -175,17 +175,17 @@ function movePictureInPicture(event) {
     const movedY = Math.round(event.wheelDeltaY * movementMultiplier);
 
     // Calculate new positions for window
-    const newX = Math.min(
+    const newX = Math.floor(Math.min(
         Math.max(currentX + movedX, 0), movableX + minimumX
-    );
-    const newY = Math.min(
+    ));
+    const newY = Math.floor(Math.min(
         Math.max(currentY + movedY, 0), movableY + minimumY
-    );
+    ));
 
     // Calculate new positions for mouse
     const nativePixelRatio = window.devicePixelRatio || 1;
-    const nativeNewX = newX * nativePixelRatio + (mouseRelativeX * nativePixelRatio);
-    let nativeNewY = newY * nativePixelRatio + (mouseRelativeY * nativePixelRatio);
+    const nativeNewX = (event.screenX + newX - currentX) * nativePixelRatio;
+    let nativeNewY = (event.screenY + newY - currentY) * nativePixelRatio;
 
     // Move PiP window and mouse
     window.moveTo(newX, newY);
