@@ -84,6 +84,7 @@ class NatsumiStaticTabsManager {
         this.usesWorkspaces = false;
         this.staticTabsNode = null;
         this.tabDragOverUnpinned = false;
+        this.draggingTabs = [];
     }
 
     init() {
@@ -127,7 +128,6 @@ class NatsumiStaticTabsManager {
         // Intercept events for tab dragging
         let unpinnedTabsContainer = document.getElementById("tabbrowser-arrowscrollbox");
         unpinnedTabsContainer.addEventListener("dragover", (event) => {
-            console.log(event);
             if (gBrowser.selectedTab.hasAttribute("natsumi-static-tab")) {
                 // Prevent dragging
                 this.tabDragOverUnpinned = true;
@@ -136,7 +136,6 @@ class NatsumiStaticTabsManager {
             }
         }, true);
         unpinnedTabsContainer.addEventListener("drop", (event) => {
-            console.log(event);
             if (this.tabDragOverUnpinned) {
                 this.tabDragOverUnpinned = false;
                 event.preventDefault();
@@ -146,7 +145,10 @@ class NatsumiStaticTabsManager {
                 this.removeMultipleFromStaticTabs(gBrowser.selectedTabs);
             }
         });
-        document.addEventListener("dragover", (event) => {
+        document.addEventListener("dragstart", (event) => {
+            console.log(event);
+        });
+        document.addEventListener("drop", (event) => {
             console.log(event);
         });
         this.staticTabsNode.addEventListener("drop", (event) => {
@@ -177,7 +179,61 @@ class NatsumiStaticTabsManager {
             for (let tab of this.staticTabsNode.querySelectorAll("tab")) {
                 tab.setAttribute("style", "");
             }
-        })
+        });
+
+        // Listen for added tabs
+        let staticTabsMutationObserver = new MutationObserver((mutations) => {
+            for (let mutation of mutations) {
+                for (let addedTab of mutation.addedNodes) {
+                    if (!addedTab.hasAttribute("natsumi-static-tab")) {
+                        continue;
+                    }
+
+                    // Add event listeners
+                    addedTab.addEventListener("mousedown", () => {
+                        if (!addedTab.hasAttribute("natsumi-static-tab")) {
+                            addedTab.removeAttribute("natsumi-static-hold", "");
+                            return;
+                        }
+
+                        addedTab.setAttribute("natsumi-static-hold", "");
+                    });
+                    addedTab.addEventListener("dragstart", (event) => {
+                        if (!addedTab.hasAttribute("natsumi-static-tab")) {
+                            addedTab.removeAttribute("natsumi-static-hold", "");
+                            return;
+                        }
+
+                        if (!addedTab.hasAttribute("natsumi-static-hold")) {
+                            return;
+                        }
+
+                        // Prevent dragging
+                        event.preventDefault();
+                        event.stopImmediatePropagation();
+                        console.log(event);
+                    });
+                    addedTab.addEventListener("mousemove", (event) => {
+                        if (!addedTab.hasAttribute("natsumi-static-tab")) {
+                            addedTab.removeAttribute("natsumi-static-hold");
+                            return;
+                        }
+
+                        if (!addedTab.hasAttribute("natsumi-static-hold")) {
+                            return;
+                        }
+
+                        // Handle event
+                        console.log(event);
+                    });
+                    addedTab.addEventListener("mouseup", () => {
+                        console.log("Removing hold:", addedTab);
+                        addedTab.removeAttribute("natsumi-static-hold");
+                    });
+                }
+            }
+        });
+        staticTabsMutationObserver.observe(this.staticTabsNode, {childList: true});
     }
 
     determineInsertIndex(tabs, event) {
@@ -395,6 +451,11 @@ class NatsumiStaticTabsManager {
         }
         if (tab.hasAttribute("natsumi-static-tab") && updateTabOnly) {
             return;
+        }
+
+        // Unpin tab if needed
+        if (tab.hasAttribute("pinned")) {
+            gBrowser.unpinTab(tab);
         }
 
         // Move tab to static tabs container
