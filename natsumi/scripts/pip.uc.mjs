@@ -36,12 +36,20 @@ const movementMultiplier = 0.7;
 const zoomMultiplier = 8;
 
 let wheelTimeout = null;
+
+// Window and mouse tracking for window scaling
 let originalWidth;
 let originalHeight;
 let originalMouseX;
 let originalMouseY;
 let originalMouseRelativeX;
 let originalMouseRelativeY;
+
+// Mouse tracking for window movement
+let reportedMouseX = null;
+let reportedMouseY = null;
+let reportedRelativeMouseX = null;
+let reportedRelativeMouseY = null;
 
 function setScrollAttribute(timeout = 100) {
     document.body.setAttribute("natsumi-scrolling", "true");
@@ -52,6 +60,12 @@ function setScrollAttribute(timeout = 100) {
 
     wheelTimeout = setTimeout(() => {
         document.body.removeAttribute("natsumi-scrolling");
+
+        // Reset movement data
+        reportedMouseX = null;
+        reportedMouseY = null;
+        reportedRelativeMouseX = null;
+        reportedRelativeMouseY = null;
     }, timeout);
 }
 
@@ -160,6 +174,10 @@ function movePictureInPicture(event) {
     const currentX = screenX;
     const currentY = screenY;
 
+    // Get current mouse position
+    const currentMouseX = event.screenX;
+    const currentMouseY = event.screenY;
+
     // Get relative position of mouse within window
     const mouseRelativeX = event.pageX;
     const mouseRelativeY = event.pageY;
@@ -182,30 +200,52 @@ function movePictureInPicture(event) {
         Math.max(currentY + movedY, 0), movableY + minimumY
     ));
 
-    // Calculate new positions for mouse
-    const nativePixelRatio = window.devicePixelRatio || 1;
-    const nativeNewX = (event.screenX + newX - currentX) * nativePixelRatio;
-    let nativeNewY = (event.screenY + newY - currentY) * nativePixelRatio;
-
     // Move PiP window and mouse
     window.moveTo(newX, newY);
 
-    // Ensure the new Y position has been applied correctly
-    // Otherwise, move mouse based on that (this often happens due to certain OS behaviors)
-    if (newY !== screenY) {
-        nativeNewY = screenY * nativePixelRatio + (mouseRelativeY * nativePixelRatio);
+    // Calculate new positions for mouse
+    const nativePixelRatio = window.devicePixelRatio || 1;
+    const nativeNewX = (currentMouseX * nativePixelRatio) + ((screenX - currentX) * nativePixelRatio);
+    let nativeNewY = (currentMouseY * nativePixelRatio) + ((screenY - currentY) * nativePixelRatio);
+
+    // Store reported and relative positions if not set
+    if (reportedMouseX === null || reportedMouseY === null) {
+        reportedMouseX = currentMouseX;
+        reportedMouseY = currentMouseY;
+        reportedRelativeMouseX = mouseRelativeX;
+        reportedRelativeMouseY = mouseRelativeY;
     }
 
-    // Move mouse position to allow further scrolling
-    if (!(currentX === screenX && currentY === screenY)) {
-        window.windowUtils.sendNativeMouseEvent(nativeNewX, nativeNewY, 3, 0, 0, null);
+    // Did the mouse move on the previous movement as expected?
+    let relativeDifferenceX = 0;
+    let relativeDifferenceY = 0;
+    if (reportedRelativeMouseX !== mouseRelativeX) {
+        relativeDifferenceX = (reportedRelativeMouseX - mouseRelativeX) * nativePixelRatio;
     }
+    if (reportedRelativeMouseY !== mouseRelativeY) {
+        relativeDifferenceY = (reportedRelativeMouseY - mouseRelativeY) * nativePixelRatio;
+    }
+
+    // Ensure relative positions are sane
+    let brokenRelative = (
+        mouseRelativeX < 0 || mouseRelativeX > window.innerWidth ||
+        mouseRelativeY < 0 || mouseRelativeY > window.innerHeight
+    );
+
+    // Move mouse position to allow further scrolling
+    if (!(currentX === screenX && currentY === screenY) && !brokenRelative) {
+        window.windowUtils.sendNativeMouseEvent(nativeNewX + relativeDifferenceX, nativeNewY + relativeDifferenceY, 3, 0, 0, null);
+    }
+
+    // Store current mouse data
+    reportedMouseX = currentMouseX;
+    reportedMouseY = currentMouseY;
 
     setScrollAttribute();
 }
 
 document.addEventListener("wheel", function (e) {
-    if (window.fullScreen) {
+    if (window.windowState === window.STATE_FULLSCREEN) {
         // Do not move or resize in fullscreen
         return;
     }
