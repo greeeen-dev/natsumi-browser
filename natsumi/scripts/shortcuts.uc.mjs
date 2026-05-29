@@ -1087,11 +1087,12 @@ class NatsumiKBSManager {
         }
     }
 
-    ignoreShortcutHandling(duration) {
+    ignoreShortcutHandling(duration, ignoreHandler = null) {
         if (this.ignoreTimeout) {
             clearTimeout(this.ignoreTimeout);
         }
         this.ignoreShortcuts = true;
+        this.ignoreHandler = ignoreHandler;
         this.ignoreTimeout = setTimeout(() => {
             this.resetIgnore();
         }, duration);
