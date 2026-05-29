@@ -47,12 +47,6 @@ class NatsumiSingleToolbarManager {
         this.setupDetectBookmarkHover();
         this.extendBookmarksIfNeeded();
 
-        // Check if single toolbar is active
-        let singleToolbarEnabled = false;
-        if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
-            singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
-        }
-
         // Create observer for vertical tabs pref
         Services.prefs.addObserver("sidebar.verticalTabs", () => {
             let verticalTabsEnabled = ucApi.Prefs.get("sidebar.verticalTabs").value;
@@ -60,6 +54,38 @@ class NatsumiSingleToolbarManager {
             // Deactivate single toolbar for horizontal tabs
             if (!verticalTabsEnabled) {
                 ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
+            }
+        });
+
+        let sidebarNode = document.getElementById("sidebar-main");
+        if (!sidebarNode.hasAttribute("sidebar-launcher-expanded")) {
+            ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
+        }
+
+        // Create observer for sidebar
+        const sidebarObserver = new MutationObserver(() => {
+            let sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");
+
+            // Check if single toolbar is active
+            let singleToolbarEnabled = false;
+            if (ucApi.Prefs.get("natsumi.theme.single-toolbar").exists()) {
+                singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+            }
+
+            if (!sidebarExpanded && singleToolbarEnabled) {
+                // Although re-expanding the sidebar would be best here, it may conflict with ongoing animations
+                ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
+            }
+        });
+        sidebarObserver.observe(sidebarNode, {attributes: true, attributeFilter: ["sidebar-launcher-expanded"]});
+
+        Services.prefs.addObserver("natsumi.theme.single-toolbar", () => {
+            let singleToolbarEnabled = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
+            let sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");
+
+            if (singleToolbarEnabled && !sidebarExpanded) {
+                // Expand sidebar
+                SidebarController.handleToolbarButtonClick();
             }
         });
 
