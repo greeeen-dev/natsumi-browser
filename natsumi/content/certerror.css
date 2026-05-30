@@ -35,6 +35,9 @@ SOFTWARE.
     @media (prefers-color-scheme: dark) {
       background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%) !important;
     }
+    @media (prefers-color-scheme: light) {
+      background-color: #fefefe !important;
+    }
   }
 
   .container {
