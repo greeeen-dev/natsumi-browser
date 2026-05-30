@@ -2502,7 +2502,7 @@ const tabDesigns = {
     "hexagonal": new MCChoice(
         "hexagonal",
         "Hexagonal",
-        "Inspired by Floorp",
+        "Inspired by Floorp's logo",
         `
             <div id='tab-hexagonal' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>

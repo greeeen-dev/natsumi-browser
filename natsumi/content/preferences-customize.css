@@ -294,6 +294,7 @@ SOFTWARE.
     .natsumi-mc-choice-label {
       margin-inline: auto;
       font-size: 15px;
+      cursor: default;
     }
 
     .natsumi-mc-choice-description {
@@ -301,6 +302,7 @@ SOFTWARE.
       margin-top: var(--space-xsmall);
       font-size: 0.867rem;
       color: color-mix(in srgb, currentColor 69%, transparent);
+      cursor: default;
     }
   }
 
