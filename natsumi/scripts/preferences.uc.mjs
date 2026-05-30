@@ -2016,6 +2016,13 @@ class MCChoice {
             choiceButton.classList.add("selected");
         }
 
+        if (this.description !== null) {
+            let descriptionNode = document.createElement("div");
+            descriptionNode.classList.add("natsumi-mc-choice-description");
+            descriptionNode.textContent = this.description;
+            choiceButton.appendChild(descriptionNode);
+        }
+
         return node;
     }
 }
@@ -2111,13 +2118,13 @@ const layouts = {
     "default": new MCChoice(
         false,
         "Multiple Toolbars",
-        "Keeps both the navbar and sidebar separate.",
+        "Iconic utilitarian design",
         "<div id='multiple-toolbars' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "single": new MCChoice(
         true,
         "Single Toolbar",
-        "Merges everything into the sidebar for simplicity.",
+        "More space for web content",
         "<div id='single-toolbar' class='natsumi-mc-choice-image-browser'></div>"
     )
 }
@@ -2126,67 +2133,67 @@ const themes = {
     "default": new MCChoice(
         "default",
         "Default",
-        "No changes, just the default look.",
+        "Just the default look",
         "<div id='default' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "gradient": new MCChoice(
         "gradient",
         "Gradient",
-        "A light gradient of your accent color.",
+        "Light and simple",
         "<div id='gradient' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "gradient-complementary": new MCChoice(
         "gradient-complementary",
-        "Complementary Gradient",
-        "A gradient of the accent color and its opposite color.",
+        "Complementary",
+        "Combo of two opposites",
         "<div id='gradient-complementary' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "colorful": new MCChoice(
         "colorful",
-        "Colorful Solid",
-        "A solid color with a tint of the accent color.",
+        "Colorful",
+        "Straightforward yet colorful",
         "<div id='colorful' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "playful": new MCChoice(
         "playful",
-        "Playful Solid",
-        "A higher contrast version of Colorful Solid.",
+        "Playful",
+        "Vibrant, popping colors",
         "<div id='playful' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "lucid": new MCChoice(
         "lucid",
         "Lucid",
-        "A recreation of the Zen Dream and Zen Galaxy themes.",
+        "Dreamy and serene",
         "<div id='lucid' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "frutiger-aero": new MCChoice(
         "frutiger-aero",
-        "Frutiger Aero",
-        "A Windows Vista/7-like design.",
+        "Aero",
+        "Bright and nostalgic",
         "<div id='frutiger-aero' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "oled": new MCChoice(
         "oled",
         "OLED",
-        "A completely black and white theme for the minimalists.",
+        "Black and white",
         "<div id='oled' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "lgbtq": new MCChoice(
         "lgbtq",
         "LGBTQ+",
-        "Browsing with pride!",
+        "Browsing with pride 🏳️‍🌈",
         "<div id='lgbtq' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "transgender": new MCChoice(
         "transgender",
         "Transgender",
-        "Trans rights are human rights!",
+        "Trans rights 🏳️‍⚧️",
         "<div id='transgender' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "custom": new MCChoice(
         "custom",
         "Custom",
-        "Make your own theme!",
+        "Build your own",
         "<div id='custom' class='natsumi-mc-choice-image-browser'></div>"
     )
 }
@@ -2231,13 +2238,13 @@ const materials = {
     "haze": new MCChoice(
         "default",
         "Haze",
-        "",
+        null,
         "<div id='mat-hz' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "tinted-haze": new MCChoice(
         "tinted-haze",
         "Tinted Haze",
-        "",
+        null,
         "<div id='mat-hz-tinted' class='natsumi-mc-choice-image-browser'></div>"
     )
 }
@@ -2246,84 +2253,84 @@ const colors = {
     "default": new MCChoice(
         "default",
         "Light Green",
-        "",
+        null,
         "",
         "#a0d490"
     ),
     "sky-blue": new MCChoice(
         "sky-blue",
         "Sky Blue",
-        "",
+        null,
         "",
         "#aac7ff"
     ),
     "turquoise": new MCChoice(
         "turquoise",
         "Turquoise",
-        "",
+        null,
         "",
         "#74d7cb"
     ),
     "yellow": new MCChoice(
         "yellow",
         "Yellow",
-        "",
+        null,
         "",
         "#dec663"
     ),
     "peach-orange": new MCChoice(
         "peach-orange",
         "Peach Orange",
-        "",
+        null,
         "",
         "#ffb787"
     ),
     "warmer-pink": new MCChoice(
         "warmer-pink",
         "Warmer Pink",
-        "",
+        null,
         "",
         "#ff9eb3"
     ),
     "beige": new MCChoice(
         "beige",
         "Beige",
-        "",
+        null,
         "",
         "#dec1b1"
     ),
     "light-red": new MCChoice(
         "light-red",
         "Light Red",
-        "",
+        null,
         "",
         "#ffb1c0"
     ),
     "muted-pink": new MCChoice(
         "muted-pink",
         "Muted Pink",
-        "",
+        null,
         "",
         "#ddbcf3"
     ),
     "pink": new MCChoice(
         "pink",
         "Pink",
-        "",
+        null,
         "",
         "#f6b0ea"
     ),
     "lavender-purple": new MCChoice(
         "lavender-purple",
         "Lavender Purple",
-        "",
+        null,
         "",
         "#d4bbff"
     ),
     "system": new MCChoice(
         "system",
         "System Accent",
-        "Uses the system accent color.",
+        null,
         "",
         "oklch(from AccentColor 0.825 0.1 h)"
     ),
@@ -2339,7 +2346,7 @@ const icons = {
     "default": new MCChoice(
         "default",
         "Firefox default",
-        "The base icons bundled with Firefox.",
+        "Standard Firefox icons",
         `
             <div id='icons-default' class='natsumi-mc-choice-image-browser'>
                 <div class="natsumi-mc-choice-icon icon-sidebar"></div>
@@ -2352,7 +2359,7 @@ const icons = {
     "lucide": new MCChoice(
         "lucide",
         "Lucide",
-        "An icon pack based on Lucide.",
+        "Based on Lucide",
         `
             <div id='icons-lucide' class='natsumi-mc-choice-image-browser'>
                 <div class="natsumi-mc-choice-icon icon-sidebar"></div>
@@ -2365,7 +2372,7 @@ const icons = {
     "fluent": new MCChoice(
         "fluent",
         "Fluent",
-        "An icon pack based on Microsoft Fluent UI icons.",
+        "Based on Microsoft Fluent UI",
         `
             <div id='icons-fluent' class='natsumi-mc-choice-image-browser'>
                 <div class="natsumi-mc-choice-icon icon-sidebar"></div>
@@ -2381,19 +2388,19 @@ const compactStyles = {
     "default": new MCChoice(
         "default",
         "Hide both",
-        "Hides both the toolbar and sidebar.",
+        null,
         "<div id='compact-both' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "toolbar": new MCChoice(
         "toolbar",
         "Hide toolbar",
-        "Hides the toolbar only.",
+        null,
         "<div id='compact-toolbar' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "sidebar": new MCChoice(
         "sidebar",
         "Hide sidebar",
-        "Hides the sidebar only.",
+        null,
         "<div id='compact-sidebar' class='natsumi-mc-choice-image-browser'></div>"
     )
 }
@@ -2430,7 +2437,7 @@ const tabDesigns = {
     "default": new MCChoice(
         "default",
         "Blade",
-        "A modern and sleek, yet dynamic tab design.",
+        "Modern, sleek and dynamic",
         `
             <div id='tab-blade' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2443,7 +2450,7 @@ const tabDesigns = {
     "origin": new MCChoice(
         "origin",
         "Origin",
-        "A box-like design inspired by Natsumi v1.",
+        "Box-like design",
         `
             <div id='tab-origin' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2456,7 +2463,7 @@ const tabDesigns = {
     "curve": new MCChoice(
         "curve",
         "Curve",
-        "A curve-like design inspired by Natsumi v2.",
+        "Curve-like design",
         `
             <div id='tab-curve' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2469,7 +2476,7 @@ const tabDesigns = {
     "fusion": new MCChoice(
         "fusion",
         "Fusion",
-        "A Lepton-like design that 'combines' tab and web content.",
+        "'Combines' tab and web content",
         `
             <div id='tab-fusion' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2482,7 +2489,7 @@ const tabDesigns = {
     "material": new MCChoice(
         "material",
         "Material",
-        "A Zen alpha-inspired design with a material-like look.",
+        "Solid colors",
         `
             <div id='tab-material' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2495,7 +2502,7 @@ const tabDesigns = {
     "hexagonal": new MCChoice(
         "hexagonal",
         "Hexagonal",
-        "A tab design inspired by Floorp's hexagonal branding.",
+        "Inspired by Floorp",
         `
             <div id='tab-hexagonal' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2508,7 +2515,7 @@ const tabDesigns = {
     "bubble": new MCChoice(
         "bubble",
         "Bubble",
-        "A tab bringing the Natsumi SDL2 design to tabs.",
+        "Glassmorphism for tabs",
         `
             <div id='tab-bubble' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2521,7 +2528,7 @@ const tabDesigns = {
     "clicky": new MCChoice(
         "clicky",
         "Clicky",
-        "Click that tab",
+        "Playful and interactive",
         `
             <div id='tab-clicky' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2534,7 +2541,7 @@ const tabDesigns = {
     "neutron": new MCChoice(
         "neutron",
         "Neutron",
-        "A Proton-like design for Firefox Nova.",
+        "Proton design for Nova",
         `
             <div id='tab-neutron' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2547,7 +2554,7 @@ const tabDesigns = {
     "classic": new MCChoice(
         "classic",
         "Classic",
-        "Just the standard Firefox look.",
+        "Standard Firefox tabs",
         `
             <div id='tab-classic' class='natsumi-mc-choice-image-browser'>
                 <div class='natsumi-mc-tab'>
@@ -2563,13 +2570,13 @@ const urlbarLayouts = {
     "floating": new MCChoice(
         false,
         "Floating",
-        "Lets the URL bar float above the browser window.",
+        "Floats on web content",
         "<div id='urlbar-floating' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "classic": new MCChoice(
         true,
         "Classic",
-        "Keeps the URL bar on the navbar.",
+        "Anchored to navigation bar",
         "<div id='urlbar-classic' class='natsumi-mc-choice-image-browser'></div>"
     )
 }
@@ -2578,13 +2585,13 @@ const miniplayerLayouts = {
     "stacked": new MCChoice(
         false,
         "Stacked",
-        "Places miniplayers on top of each other.",
+        "List-like layout",
         "<div id='miniplayer-stacked' class='natsumi-mc-choice-image-browser'></div>"
     ),
     "side-by-side": new MCChoice(
         true,
         "Side-by-side",
-        "Places miniplayers next to each other.",
+        "Scrollable compact layout",
         "<div id='miniplayer-side-by-side' class='natsumi-mc-choice-image-browser'></div>"
     )
 }
