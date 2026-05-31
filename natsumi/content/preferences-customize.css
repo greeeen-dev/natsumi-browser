@@ -55,24 +55,45 @@ SOFTWARE.
   }
 
   .natsumi-mc-choice {
-    border: 2px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-    border-radius: 12px;
-    width: 200px;
-    height: 140px;
+    border: 1px solid light-dark(var(--color-gray-60), var(--color-gray-50));
+    margin: 2px;
+    border-radius: 8px;
+    min-width: 200px;
     display: flex;
+    box-sizing: content-box;
+    flex: 1;
     flex-direction: column;
+    padding-bottom: var(--space-medium);
 
     &:hover {
-      background-color: var(--natsumi-button-hover-color);
+      background-color: color-mix(in srgb, currentColor 14%, transparent);
+
+      @media -moz-pref("browser.nova.enabled") {
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent);
+      }
+    }
+
+    &:active {
+      background-color: color-mix(in srgb, currentColor 21%, transparent);
+
+      @media -moz-pref("browser.nova.enabled") {
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+      }
     }
 
     &.selected {
+      margin: 0;
       border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-      background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+      border-width: 3px;
+
+      @media -moz-pref("natsumi.theme.classic-preferences") {
+        border-color: var(--color-accent-primary);
+      }
     }
 
     .natsumi-mc-choice-image-container {
       flex: 1;
+      min-height: 98px;
 
       .natsumi-mc-choice-image-browser {
         &::before {
@@ -92,11 +113,12 @@ SOFTWARE.
       }
 
       .natsumi-mc-choice-image-browser {
-        width: 100%;
-        margin: 10px 35px;
+        width: 126px;
+        margin: var(--space-medium) auto var(--space-small);
         border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
         border-radius: 5px;
         overflow: hidden;
+        box-shadow: var(--box-shadow-level-2);
 
         .natsumi-mc-choice-image-browser-additional {
           width: 100%;
@@ -278,18 +300,32 @@ SOFTWARE.
     }
 
     .natsumi-mc-choice-label {
-      padding: 10px;
+      margin-inline: auto;
+      font-size: 15px;
+      cursor: default;
+    }
+
+    .natsumi-mc-choice-description {
+      margin-inline: auto;
+      margin-top: var(--space-xsmall);
+      font-size: 0.867rem;
+      color: color-mix(in srgb, currentColor 69%, transparent);
+      cursor: default;
     }
   }
 
   #natsumiColorsGroup {
     .natsumi-mc-choice {
-      width: 102px;
-      height: 104px;
+      width: 100px;
+      min-width: 100px;
+      min-height: 100px;
+      flex: 0;
+      padding-bottom: 0;
 
       .natsumi-mc-choice-image-container {
         width: 80px;
         height: 80px;
+        min-height: 80px;
         margin: 10px;
         border-radius: 40px;
         background-color: var(--natsumi-primary-color);
