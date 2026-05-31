@@ -127,6 +127,9 @@ let shortcutsMap = {
             "copyCurrentUrl": {
                 "name": "Copy Current URL"
             },
+            "copyCurrentUrlMarkdown": {
+                "name": "Copy Current URL as Markdown"
+            },
             "printKb": {
                 "name": "Print"
             },
@@ -848,8 +851,18 @@ class NatsumiShortcutsPrefPane {
 
             this.editing = true;
             shortcutElement.setAttribute("editing", "");
+
+            // Run initial ignore
+            browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.ignoreShortcutHandling(
+                1100, (event) => {this.onKeyDown(event)}
+            );
+
+            // Keep "pinging" the shortcuts handler to ignore shortcuts during customization
             this.editInterval = setInterval(() => {
-                browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.ignoreShortcutHandling(1100);
+                console.log("Shortcut handling ignored");
+                browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.ignoreShortcutHandling(
+                    1100, (event) => {this.onKeyDown(event)}
+                );
             }, 1000);
             this.updateShortcutKeybindsDisplay(this.selected, false, false, false, false, "");
         }
@@ -910,6 +923,27 @@ class NatsumiShortcutsPrefPane {
                     "chrome://natsumi/content/icons/lucide/warning.svg",
                     10000,
                     "warning"
+                )
+                notificationObject.addButton(
+                    "Unregister this shortcut",
+                    () => {
+                        let conflictShortcutObject = browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcuts[conflictShortcut];
+                        let conflictCustomizationData = {
+                            "customKeybinds": false,
+                            "unregistered": true,
+                            "shortcutMode": conflictShortcutObject.shortcutMode
+                        }
+                        let neverSaved = true;
+                        ucApi.Windows.forEach((browserDocument) => {
+                            if (browserDocument.body.natsumiKBSManager) {
+                                browserDocument.body.natsumiKBSManager.updateShortcut(conflictShortcut, conflictCustomizationData, true, neverSaved);
+                            }
+                            neverSaved = false;
+                        });
+                        this.updateShortcutKeybindsDisplay(document.getElementById(conflictShortcut));
+                    },
+                    null,
+                    true
                 )
                 notificationObject.addToContainer();
                 this.toggleShortcutEdit(this.selected);

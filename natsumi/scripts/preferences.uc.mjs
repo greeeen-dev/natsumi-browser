@@ -4407,9 +4407,23 @@ function addPipBehaviorPane() {
         "natsumi.pip.disable-scroll-to-move",
         "natsumiPipScrollToMove",
         "Scroll-to-move",
-        "Scroll-to-move allows you to move the Picture-in-Picture window by scrolling on it.",
+        "Scroll-to-move allows you to move and resize the Picture-in-Picture window with mouse/trackpad scrolling.",
         true
     ));
+
+    let scrollToMoveSubgroup = new OptionsGroup(
+        "natsumiPiPScrollToMoveOptions",
+        "",
+        ""
+    );
+
+    scrollToMoveSubgroup.registerOption("natsumiPiPCenterScale", new CheckboxChoice(
+        "natsumi.pip.center-scale",
+        "natsumiPiPCenterScale",
+        "Keep PiP window centered relative to original position on resize"
+    ));
+
+    pipBehaviorGroup.registerOption("natsumiPiPScrollToMoveOptions", scrollToMoveSubgroup);
 
     pipBehaviorGroup.registerOption("natsumiPipLegacyStyle", new CheckboxChoice(
         "natsumi.pip.legacy-style",
@@ -4420,6 +4434,12 @@ function addPipBehaviorPane() {
 
     let pipBehaviorNode = pipBehaviorGroup.generateNode();
 
+    let centerScaleCheckbox = pipBehaviorNode.querySelector("#natsumiPiPCenterScale");
+
+    if (ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").exists()) {
+        toggleDisabled(centerScaleCheckbox, ucApi.Prefs.get("natsumi.pip.disable-scroll-to-move").value);
+    }
+
     // Set listeners for each checkbox
     let checkboxes = pipBehaviorNode.querySelectorAll("checkbox");
     checkboxes.forEach(checkbox => {
@@ -4429,6 +4449,10 @@ function addPipBehaviorPane() {
 
             if (checkbox.getAttribute("opposite") === "true") {
                 isChecked = !isChecked;
+            }
+
+            if (checkbox.id === "natsumiPipScrollToMove") {
+                toggleDisabled(centerScaleCheckbox, isChecked);
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
@@ -4644,6 +4668,12 @@ function addMiscPreferencesPane() {
         "natsumi.theme.preferences-hide-subcategories",
         "natsumiMiscPreferencesHideSubcategory",
         "Hide subcategories list"
+    ));
+
+    miscPreferencesGroup.registerOption("natsumiMiscCopyCleanUrl", new CheckboxChoice(
+        "natsumi.browser.copy-clean-link",
+        "natsumiMiscCopyCleanUrl",
+        "Copy clean URL with shortcut where possible"
     ));
 
     let miscPreferencesNode = miscPreferencesGroup.generateNode();

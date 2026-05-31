@@ -201,7 +201,7 @@ SOFTWARE.
   }
 }
 
-body:has(#PersonalToolbar:not([collapsed])) {
+body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) {
   &:not([natsumi-compact-mode]) {
     #natsumi-pinned-toolbar {
       @media not -moz-pref("natsumi.theme.single-toolbar") {

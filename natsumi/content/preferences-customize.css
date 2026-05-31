@@ -664,7 +664,8 @@ SOFTWARE.
         @media -moz-pref("browser.nova.enabled") {
           border-radius: 8px;
           border: 1px solid transparent;
-          background: linear-gradient(light-dark(rgb(255, 255, 255), #252428)) padding-box, linear-gradient(96deg, #b89cff 20.68%, #ff9565 79.34%) border-box !important;
+          background: linear-gradient(light-dark(rgb(255, 255, 255), #252428)) padding-box,
+                      linear-gradient(96deg, #b89cff 20.68%, light-dark(#ff9565, #764edd) 79.34%) border-box !important;
         }
       }
     }

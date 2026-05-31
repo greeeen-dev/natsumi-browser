@@ -45,6 +45,22 @@ function convertToXUL(node) {
 function waitForAudioLoad(audio) {
     return new Promise((resolve, reject) => {
         const onLoad = () => {
+            audio.removeEventListener('canplaythrough', onLoad);
+            resolve();
+        };
+        const onError = (e) => {
+            audio.removeEventListener('error', onError);
+            reject(e);
+        };
+
+        audio.addEventListener('canplaythrough', onLoad);
+        audio.addEventListener('error', onError);
+    });
+}
+
+function waitForAudioPlay(audio) {
+    return new Promise((resolve, reject) => {
+        const onLoad = () => {
             audio.removeEventListener('playing', onLoad);
             resolve();
         };
@@ -208,7 +224,7 @@ class NatsumiWelcome {
                 this.completeOnboarding();
             });
 
-            waitForAudioLoad(this.drumrollAudio).then(() => {
+            waitForAudioPlay(this.drumrollAudio).then(() => {
                 this.completeOnboarding();
             });
             return;
@@ -277,6 +293,7 @@ class NatsumiWelcome {
 
         this.hasCompletedOnboarding = true;
         document.body.setAttribute("natsumi-welcome-complete", "");
+        document.body.removeAttribute("natsumi-welcome");
 
         setTimeout(() => {
             // Show welcome complete drumroll
@@ -290,7 +307,6 @@ class NatsumiWelcome {
 
         setTimeout(() => {
             // We're finally through with the welcome
-            document.body.removeAttribute("natsumi-welcome");
             document.body.removeAttribute("natsumi-welcome-complete");
             document.body.removeAttribute("natsumi-welcome-drumroll-complete");
             document.body.removeAttribute("natsumi-welcome-complete-full");
@@ -302,6 +318,9 @@ class NatsumiWelcome {
                 "chrome://natsumi/content/icons/lucide/party.svg",
                 10000
             )
+            notificationObject.addButton("Open settings", () => {
+                window.openPreferences();
+            }, null, true);
             notificationObject.addToContainer();
 
             if (tabStyleReset) {
@@ -992,12 +1011,12 @@ if (!cssEnabled || !settingsEnabled) {
     let audio = new Audio(welcomeAudioUrl);
     audio.load();
     audio.volume = 0.5;
-    audio.play().catch((error) => {
-        console.warn("Failed to play audio:", error);
-    });
 
     // Start welcomer
     waitForAudioLoad(audio).then(() => {
+        audio.play().catch((error) => {
+            console.warn("Failed to play audio:", error);
+        });
         natsumiWelcomeObject.start();
     }).catch((error) => {
         console.warn("Audio failed to load:", error);

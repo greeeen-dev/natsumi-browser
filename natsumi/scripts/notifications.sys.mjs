@@ -39,11 +39,15 @@ export class NatsumiNotification {
         this.document = null;
         this.type = type ?? "info";
 
-        ucApi.Windows.forEach((browserDocument, browserWindow) => {
-            if (browserDocument.hasFocus()) {
-                this.document = browserDocument;
-            }
-        });
+        const lastFocused = ucApi.Windows.getLastFocused();
+        if (lastFocused) {
+            this.document = lastFocused.document;
+        }
+
+        if (!this.document) {
+            const allWindows = ucApi.Windows.getAll(true);
+            this.document = allWindows[0].document;
+        }
 
         // Create notification element
         this.notificationElement = this.document.createElement("div");
@@ -70,8 +74,64 @@ export class NatsumiNotification {
             bodyElement.appendChild(subtextElement);
         }
 
+        // Add button container
+        this.buttonContainer = this.document.createElement("div");
+        this.buttonContainer.classList.add("natsumi-notification-buttons");
+        bodyElement.appendChild(this.buttonContainer);
+
         // Append body to notification element
         this.notificationElement.appendChild(bodyElement);
+    }
+
+    createDismissButton() {
+        let notificationButton = this.document.createElement("div");
+        notificationButton.classList.add("natsumi-notification-button");
+        notificationButton.classList.add("natsumi-notification-dismiss");
+
+        // Create label
+        let notificationButtonLabel = this.document.createElement("div");
+        notificationButtonLabel.classList.add("natsumi-notification-button-label");
+        notificationButtonLabel.textContent = "Dismiss";
+        notificationButton.appendChild(notificationButtonLabel);
+
+        // Append button to container
+        this.buttonContainer.appendChild(notificationButton);
+    }
+
+    addButton(label, callback, icon = null, dismissOnClick = false) {
+        // Create button
+        let notificationButton = this.document.createElement("div");
+        notificationButton.classList.add("natsumi-notification-button");
+
+        if (dismissOnClick) {
+            notificationButton.setAttribute("natsumi-dismiss-on-click", "");
+        }
+
+        if (icon) {
+            // Create icon
+            let notificationButtonIcon = this.document.createElement("div");
+            notificationButtonIcon.classList.add("natsumi-notification-button-icon");
+            notificationButtonIcon.style.setProperty("--natsumi-button-icon", `url(${icon})`);
+            notificationButton.appendChild(notificationButtonIcon);
+        }
+
+        // Create label
+        let notificationButtonLabel = this.document.createElement("div");
+        notificationButtonLabel.classList.add("natsumi-notification-button-label");
+        notificationButtonLabel.textContent = `${label}`;
+        notificationButton.appendChild(notificationButtonLabel);
+
+        // Add event listener
+        notificationButton.addEventListener("click", callback);
+
+        // Append button to container
+        this.buttonContainer.appendChild(notificationButton);
+
+        // Create dismiss button if missing
+        if (!this.notificationElement.hasAttribute("natsumi-notification-buttons")) {
+            this.notificationElement.setAttribute("natsumi-notification-buttons", "");
+            this.createDismissButton();
+        }
     }
 
     addToContainer() {
