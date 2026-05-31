@@ -67,10 +67,18 @@ SOFTWARE.
 
     &:hover {
       background-color: color-mix(in srgb, currentColor 14%, transparent);
+
+      @media -moz-pref("browser.nova.enabled") {
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent);
+      }
     }
 
     &:active {
       background-color: color-mix(in srgb, currentColor 21%, transparent);
+
+      @media -moz-pref("browser.nova.enabled") {
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+      }
     }
 
     &.selected {
