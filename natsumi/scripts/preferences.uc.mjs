@@ -2345,7 +2345,7 @@ const colors = {
 const icons = {
     "default": new MCChoice(
         "default",
-        "Firefox default",
+        "Acorn",
         "Standard Firefox icons",
         `
             <div id='icons-default' class='natsumi-mc-choice-image-browser'>
