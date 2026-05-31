@@ -354,7 +354,7 @@ export class NatsumiShortcutActions {
     }
 
     static selectTab(index, useAbsolute = false) {
-        let pinnedTabsNode = document.getElementById("pinned-tabs-container");
+        let pinnedTabsNode = document.getElementById("pinned-tabs-container") ?? document.getElementById("vertical-pinned-tabs-container");
         let unpinnedTabsNode = document.getElementById("tabbrowser-arrowscrollbox");
 
         // Set tab selector condition
