@@ -4849,8 +4849,43 @@ function addHideFloorpWarnings() {
     });
 }
 
+function goodGirlBoyEnby() {
+    // :3
+    let goodGirl = false;
+    let goodBoy = false;
+    let goodEnby = false;
+    if (ucApi.Prefs.get("natsumi.theme.good-girl").exists()) {
+        goodGirl = ucApi.Prefs.get("natsumi.theme.good-girl").value;
+    }
+    if (ucApi.Prefs.get("natsumi.theme.good-boy").exists()) {
+        goodBoy = ucApi.Prefs.get("natsumi.theme.good-boy").value;
+    }
+    if (ucApi.Prefs.get("natsumi.theme.good-enby").exists()) {
+        goodEnby = ucApi.Prefs.get("natsumi.theme.good-enby").value;
+    }
+
+    let browserName = AppConstants.MOZ_APP_BASENAME;
+
+    if (browserName.toLowerCase() === "mullvadbrowser") {
+        browserName = AppConstants.MOZ_APP_DISPLAYNAME_DO_NOT_USE;
+    } else if (browserName.toLowerCase() === "glide") {
+        browserName = AppConstants.MOZ_APP_DISPLAYNAME_DO_NOT_USE;
+    }
+
+    let defaultBrowser = document.getElementById("isDefaultPane");
+
+    if (goodGirl) {
+        defaultBrowser.setAttribute("message", `${browserName} is your default browser. Good girl :3`);
+    } else if (goodBoy) {
+        defaultBrowser.setAttribute("message", `${browserName} is your default browser. Good boy :3`);
+    } else if (goodEnby) {
+        defaultBrowser.setAttribute("message", `${browserName} is your default browser. Good enby :3`);
+    }
+}
+
 console.log("Loading prefs panes...");
 addOptionStyles();
 addToSidebar();
 addPreferencesPanes();
 addHideFloorpWarnings();
+goodGirlBoyEnby();
