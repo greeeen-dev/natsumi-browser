@@ -70,6 +70,7 @@ SOFTWARE.
         window, html, body {
           /* Share same radius as macOS for the sake of simplicity later */
           border-radius: 9px !important;
+          background: transparent !important;
         }
       }
     }
