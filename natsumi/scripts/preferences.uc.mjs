@@ -4874,6 +4874,10 @@ function goodGirlBoyEnby() {
 
     let defaultBrowser = document.getElementById("isDefaultPane");
 
+    if (!defaultBrowser) {
+        return;
+    }
+
     if (goodGirl) {
         defaultBrowser.setAttribute("message", `${browserName} is your default browser. Good girl :3`);
     } else if (goodBoy) {
