@@ -144,7 +144,7 @@ You can get this file from the `Installers` folder in this repo.
 > [!WARNING]
 > Installing via Sine is supported but not recommended.
 
-You can install the CSS-only version of Natsumi through [Sine](https://github.com/CosmoCreeper/Sine).
+You can install Natsumi and Natsumi Append through [Sine](https://github.com/CosmoCreeper/Sine).
 
 ### Manual install
 Remember to take backups of your userChrome.css and userContent.css files before proceeding!
