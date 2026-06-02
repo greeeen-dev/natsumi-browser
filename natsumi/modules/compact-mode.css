@@ -41,17 +41,34 @@ SOFTWARE.
     ) or -moz-pref("natsumi.theme.single-toolbar") {
       margin-left: var(--natsumi-browser-separation) !important;
     }
+  }
 
-    @media -moz-pref("natsumi.theme.compact-marginless") {
-      &:not(:has(#tabbrowser-tabpanels[split-view="true"])) {
-        margin: 0 !important;
-        margin-top: var(--natsumi-marginless-override, 0) !important;
+  @media -moz-pref("natsumi.theme.compact-marginless") {
+    #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+      margin: 0 !important;
+      margin-top: var(--natsumi-marginless-override, 0) !important;
 
-        .browserSidebarContainer {
-          border: none !important;
-          border-radius: 0 !important;
-        }
+      .browserSidebarContainer {
+        border: none !important;
+        border-radius: 0 !important;
       }
+    }
+
+    #sidebar-box {
+      --natsumi-sidebar-margin-override: 0;
+      margin: 0 !important;
+      margin-top: var(--natsumi-marginless-override, 0) !important;
+      border: none !important;
+      border-radius: 0 !important;
+
+      #sidebar {
+        border-radius: 0 !important;
+      }
+    }
+
+    #sidebar-splitter {
+      --natsumi-sidebar-margin-override: 0;
+      margin-block: 0 !important;
     }
   }
 
@@ -69,18 +86,21 @@ SOFTWARE.
     }
   }
 
-  #sidebar-launcher-splitter, #panel-sidebar-select-box {
+  #sidebar-launcher-splitter {
     display: none !important;
   }
 
   @media -moz-pref("sidebar.position_start") {
     #sidebar-box {
-      margin-left: var(--natsumi-browser-separation) !important;
       margin-right: 0 !important;
 
-      @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
-        margin-right: var(--natsumi-browser-separation) !important;
-        margin-left: 0 !important;
+      @media not -moz-pref("natsumi.theme.compact-marginless") {
+        margin-left: var(--natsumi-browser-separation) !important;
+
+        @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
+          margin-right: var(--natsumi-browser-separation) !important;
+          margin-left: 0 !important;
+        }
       }
     }
   }

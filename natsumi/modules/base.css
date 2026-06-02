@@ -147,8 +147,9 @@ body > * {
 }
 
 #sidebar-splitter {
-  width: var(--natsumi-browser-separation) !important;
-  margin-inline: 0 !important;
+  width: 4px !important;
+  border: none !important;
+  margin-inline: calc(calc(var(--natsumi-browser-separation) - 4px) / 2) !important;
 }
 
 #vertical-spacer {

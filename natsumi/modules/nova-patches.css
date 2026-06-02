@@ -51,15 +51,6 @@ SOFTWARE.
       background-color: transparent !important;
     }
 
-    #sidebar-splitter {
-      margin-inline: calc(var(--natsumi-browser-separation) / 2 - 2px) !important;
-      max-width: 4px !important;
-    }
-
-    #sidebar-splitter {
-      margin-inline: 0 !important;
-    }
-
     #sidebar-launcher-splitter {
       margin-inline: -6px 0 !important;
     }

@@ -27,10 +27,14 @@ SOFTWARE.
 /* ==== Floorp panel sidebar ==== */
 
 @media -moz-pref("natsumi.browser.type", "floorp") {
+  body[natsumi-panel-sidebar-on-right] #sidebar-splitter {
+    order: 2 !important;
+  }
+
   #panel-sidebar-splitter {
-    background-color: transparent !important;
-    border-color: transparent !important;
-    min-width: var(--natsumi-browser-separation) !important;
+    margin-inline: calc(calc(var(--natsumi-browser-separation) - 4px) / 2) !important;
+    min-width: 4px !important;
+    transition: background-color 0.5s ease-in-out;
   }
 
   #panel-sidebar-box {

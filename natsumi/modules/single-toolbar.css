@@ -28,6 +28,7 @@ SOFTWARE.
 @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
   :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) {
     #navigator-toolbox {
+      position: absolute;
       width: var(--natsumi-sidebar-width) !important;
       min-height: 85px !important;
       z-index: 1 !important;
@@ -252,11 +253,11 @@ SOFTWARE.
     }
 
     #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
-      margin-top: var(--natsumi-browser-separation) !important;
+      margin-top: var(--natsumi-sidebar-margin-override, var(--natsumi-browser-separation)) !important;
       transition: margin-top 0.2s ease !important;
 
       @media (-moz-platform: windows) {
-        margin-top: calc(var(--natsumi-browser-separation) + 2px) !important;
+        margin-top: var(--natsumi-sidebar-margin-override, calc(var(--natsumi-browser-separation) + 2px)) !important;
       }
     }
 
