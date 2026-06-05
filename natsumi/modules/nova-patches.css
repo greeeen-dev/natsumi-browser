@@ -263,6 +263,10 @@ SOFTWARE.
     max-height: 40px !important;
   }
 
+  .urlbar-input-container {
+    outline: none !important;
+  }
+
   #urlbar:not([open]) {
     .urlbar-input-container {
       border: 1px solid transparent !important;

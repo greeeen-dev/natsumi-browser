@@ -567,7 +567,7 @@ SOFTWARE.
             background-image: url("chrome://browser/skin/preferences/category-search.svg");
             background-size: 16px;
             margin-left: 12px !important;
-            margin-top: 10px !important;
+            margin-block: auto !important;
             margin-right: 16px !important;
           }
         }
@@ -627,6 +627,7 @@ SOFTWARE.
 
         moz-button.searchmode-switcher {
           margin-right: 4px !important;
+          height: 36px !important;
 
           .searchmode-switcher-close {
             margin-inline: -4px !important;
