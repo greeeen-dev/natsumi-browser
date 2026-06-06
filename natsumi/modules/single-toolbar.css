@@ -147,8 +147,8 @@ SOFTWARE.
       padding-inline: 0 !important;
       padding-top: 6px !important;
       padding-bottom: 6px !important;
-      translate: 0 calc(calc(var(--natsumi-browser-separation) - 6px) / 2) !important;
-      margin-top: -41px !important;
+      translate: 0 var(--natsumi-bookmarks-translate-override, calc(calc(var(--natsumi-browser-separation) - 6px) / 2)) !important;
+      margin-top: var(--natsumi-bookmarks-margin-override, -41px) !important;
       overflow: visible !important;
       transition: min-height 0s ease, visibility 0s ease, background-color 0.2s ease;
       min-height: 40px !important;
@@ -215,7 +215,7 @@ SOFTWARE.
           }
 
           #PersonalToolbar .titlebar-buttonbox {
-            margin-inline: var(--natsumi-browser-separation) 6px !important;
+            margin-inline: var(--natsumi-buttonbox-override, var(--natsumi-browser-separation)) 6px !important;
           }
 
           body[natsumi-compact-mode] #PersonalToolbar .titlebar-buttonbox {
