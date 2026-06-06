@@ -62,7 +62,6 @@ body > * {
     outline: none !important;
 
     .browserSidebarContainer {
-      --natsumi-browser-border-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
       border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color) !important;
       border-radius: var(--natsumi-browser-border-radius) !important;
       margin: 0 !important;
@@ -142,7 +141,7 @@ body > * {
 #sidebar-box {
   padding: 0 !important;
   margin-bottom: var(--natsumi-browser-separation) !important;
-  border: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
+  border: 1px solid var(--natsumi-browser-border-color) !important;
   border-radius: var(--natsumi-browser-border-radius) !important;
 }
 
