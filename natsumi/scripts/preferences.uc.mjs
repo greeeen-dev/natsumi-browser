@@ -4878,13 +4878,20 @@ function goodGirlBoyEnby() {
         return;
     }
 
+    let currentMessage = defaultBrowser.getAttribute("message");
+
     if (goodGirl) {
-        defaultBrowser.setAttribute("message", `${browserName} is your default browser. Good girl :3`);
+        currentMessage = currentMessage.replace("Good choice.", "Good girl :3");
     } else if (goodBoy) {
-        defaultBrowser.setAttribute("message", `${browserName} is your default browser. Good boy :3`);
+        currentMessage = currentMessage.replace("Good choice.", "Good boy :3");
     } else if (goodEnby) {
-        defaultBrowser.setAttribute("message", `${browserName} is your default browser. Good enby :3`);
+        currentMessage = currentMessage.replace("Good choice.", "Good enby :3");
+    } else {
+        // Easter egg is off
+        return;
     }
+
+    defaultBrowser.setAttribute("message", currentMessage);
 }
 
 console.log("Loading prefs panes...");
