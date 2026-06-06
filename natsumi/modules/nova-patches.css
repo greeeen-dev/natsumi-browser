@@ -333,6 +333,10 @@ SOFTWARE.
     padding-top: calc(7px - var(--space-xxsmall)) !important;
   }
 
+  .urlbar-input-container::before {
+    --natsumi-search-icon-margin-offset: 1px;
+  }
+
   .urlbarView-row {
     border: none !important;
     --urlbarview-text-color-selected: currentColor;

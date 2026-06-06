@@ -566,9 +566,9 @@ SOFTWARE.
             height: 16px;
             background-image: url("chrome://browser/skin/preferences/category-search.svg");
             background-size: 16px;
-            margin-left: 12px !important;
+            margin-left: calc(12px - var(--natsumi-search-icon-margin-offset, 0px)) !important;
             margin-block: auto !important;
-            margin-right: 16px !important;
+            margin-right: calc(16px - var(--natsumi-search-icon-margin-offset, 0px));
           }
         }
 
