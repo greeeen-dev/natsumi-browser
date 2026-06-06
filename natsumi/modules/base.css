@@ -639,7 +639,7 @@ splitter:hover {
 /* Add soft glow to web page */
 @media -moz-pref("natsumi.theme.soft-glow") {
   #tabbrowser-tabpanels .deck-selected {
-    box-shadow: 0px 0px 30px var(--tab-selected-bgcolor) !important;
+    box-shadow: 0px 0px 30px light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
   }
 }
 
