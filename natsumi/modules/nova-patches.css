@@ -30,6 +30,8 @@ SOFTWARE.
   /* Standard mode */
   @media not -moz-pref("natsumi.theme.islands") {
     #navigator-toolbox {
+      margin-block-end: unset !important;
+
       @media -moz-pref("sidebar.position_start") {
         margin: 0 !important;
       }

@@ -35,17 +35,81 @@ import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 class NatsumiPanelSidebarHandler {
     constructor() {
         this.wasDisabled = false;
+        this.hasPanelSidebarObserver = false;
     }
 
     init() {
         let browser = document.getElementById("browser");
         if (browser) {
             Services.prefs.addObserver("floorp.panelSidebar.enabled", this.getPanelSidebarPosition.bind(this));
+            Services.prefs.addObserver("floorp.panelSidebar.enabled", this.getPanelSidebarEnabled.bind(this));
             Services.prefs.addObserver("floorp.panelSidebar.config", this.getPanelSidebarPosition.bind(this));
         }
 
         this.updateSidebarRemoved();
         this.getPanelSidebarPosition();
+        this.getPanelSidebarEnabled();
+
+        // Set listener for panel sidebar
+        let rootObserver = new MutationObserver(() => {
+            this.getPanelSidebarState();
+        })
+        rootObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["style"]});
+    }
+
+    getPanelSidebarState() {
+        let panelSidebarState = document.documentElement.style.getPropertyValue("--panel-sidebar-display");
+
+        if (!panelSidebarState) {
+            return;
+        }
+
+        if (panelSidebarState === "flex") {
+            let panelSidebar = document.getElementById("panel-sidebar-box");
+
+            if (!this.hasPanelSidebarObserver) {
+                // Create observer
+                let panelSidebarObserver = new MutationObserver(() => {
+                    this.getPanelSidebarState();
+                });
+                panelSidebarObserver.observe(panelSidebar, {attributes: true, attributeFilter: ["data-floating"]});
+                this.hasPanelSidebarObserver = true;
+            }
+
+            // Get floating status
+            const isFloating = panelSidebar.getAttribute("data-floating") === "true";
+
+            document.body.setAttribute("natsumi-panel-sidebar-active", "");
+
+            if (isFloating) {
+                document.body.setAttribute("natsumi-panel-sidebar-floating", "");
+            } else {
+                document.body.removeAttribute("natsumi-panel-sidebar-floating");
+            }
+        } else {
+            document.body.removeAttribute("natsumi-panel-sidebar-active");
+            document.body.removeAttribute("natsumi-panel-sidebar-floating");
+        }
+    }
+
+    getPanelSidebarEnabled() {
+        let isEnabled = false;
+
+        if (!this.wasDisabled) {
+            if (ucApi.Prefs.get("floorp.panelSidebar.config").exists()) {
+                if (ucApi.Prefs.get("floorp.panelSidebar.enabled").exists()) {
+                    isEnabled = ucApi.Prefs.get("floorp.panelSidebar.enabled").value;
+                } else {
+                    isEnabled = true;
+                }
+            }
+        }
+
+        if (isEnabled) {
+            document.body.setAttribute("natsumi-panel-sidebar-enabled", "");
+        } else {
+            document.body.removeAttribute("natsumi-panel-sidebar-enabled");
+        }
     }
 
     getPanelSidebarPosition() {

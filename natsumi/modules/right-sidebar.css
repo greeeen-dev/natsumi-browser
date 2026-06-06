@@ -49,7 +49,7 @@ SOFTWARE.
 
     body[natsumi-compact-mode] #browser:not([data-is-child="true"]) {
       #tabbrowser-tabbox {
-        margin-right: var(--natsumi-browser-separation) !important;
+        margin-right: var(--natsumi-right-sidebar-margin-override, var(--natsumi-browser-separation)) !important;
 
         @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
           margin-right: 0 !important;
@@ -65,7 +65,7 @@ SOFTWARE.
       }
 
       body[natsumi-compact-mode] #PersonalToolbar {
-        margin-left: calc(-100vw + calc(var(--natsumi-browser-separation) * 2)) !important;
+        margin-left: calc(-100vw + 12px) !important;
       }
     }
 

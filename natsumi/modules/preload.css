@@ -55,7 +55,7 @@ SOFTWARE.
   --natsumi-ff-background: color-mix(in srgb, var(--natsumi-ff-background-color) 40%, transparent);
 
   --natsumi-browser-separation: 6px;
-  --natsumi-browser-border-radius: 8px;
+  --natsumi-browser-base-border-radius: 8px;
   --natsumi-border-width: 1px;
   --natsumi-tab-border-radius: 8px;
 
@@ -65,8 +65,10 @@ SOFTWARE.
 
   /* macOS 26 border radius */
   @media (-moz-mac-tahoe-theme) {
-    --natsumi-browser-border-radius: 12px;
+    --natsumi-browser-base-border-radius: 12px;
   }
+
+  --natsumi-browser-border-radius: max(calc(var(--natsumi-browser-base-border-radius) - calc(var(--natsumi-browser-separation) - 6px)), 8px);
 }
 
 .tabbrowser-tab {

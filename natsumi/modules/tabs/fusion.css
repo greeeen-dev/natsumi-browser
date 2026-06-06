@@ -110,7 +110,7 @@ SOFTWARE.
       }
 
       @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
-        &:has(#panel-sidebar-select-box):not(:has(#panel-sidebar-box[style*="; width:"]:not([data-floating="true"]))) {
+        &:has(#panel-sidebar-select-box):not([natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating])) {
           @media -moz-pref("sidebar.position_start") {
             #tabbrowser-tabbox::before {
               left: var(--natsumi-browser-separation);
@@ -139,7 +139,7 @@ SOFTWARE.
         }
       }
 
-      &:has(#panel-sidebar-box[style*="; width:"]:not([data-floating="true"])) {
+      &[natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating])) {
         #tabbrowser-tabbox {
           padding: 0 !important;
 

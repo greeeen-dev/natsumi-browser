@@ -58,9 +58,15 @@ class NatsumiSingleToolbarManager {
         });
 
         let sidebarNode = document.getElementById("sidebar-main");
-        if (!sidebarNode.hasAttribute("sidebar-launcher-expanded")) {
-            ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
-        }
+
+        // Check if sidebar is expanded
+        // We'll add a 100ms delay so Firefox has time to load
+        setTimeout(() => {
+            let sidebarNode = document.getElementById("sidebar-main");
+            if (!sidebarNode.hasAttribute("sidebar-launcher-expanded")) {
+                ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
+            }
+        }, 100);
 
         // Create observer for sidebar
         const sidebarObserver = new MutationObserver(() => {

@@ -28,7 +28,6 @@ SOFTWARE.
 @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
   :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) {
     #navigator-toolbox {
-      position: absolute;
       width: var(--natsumi-sidebar-width) !important;
       min-height: 85px !important;
       z-index: 1 !important;
@@ -142,11 +141,13 @@ SOFTWARE.
 
     #PersonalToolbar {
       --natsumi-bookmarks-width: calc(100vw - var(--natsumi-sidebar-width));
+      --natsumi-bookmarks-separation: calc(calc(var(--natsumi-browser-separation) - 6px) * 2);
       width: var(--natsumi-bookmarks-width) !important;
-      margin-left: var(--natsumi-bookmarks-override, var(--natsumi-sidebar-width)) !important;
+      margin-left: calc(var(--natsumi-bookmarks-override, var(--natsumi-sidebar-width)) + var(--natsumi-bookmarks-separation)) !important;
       padding-inline: 0 !important;
       padding-top: 6px !important;
       padding-bottom: 6px !important;
+      translate: 0 calc(calc(var(--natsumi-browser-separation) - 6px) / 2) !important;
       margin-top: -41px !important;
       overflow: visible !important;
       transition: min-height 0s ease, visibility 0s ease, background-color 0.2s ease;
@@ -214,7 +215,11 @@ SOFTWARE.
           }
 
           #PersonalToolbar .titlebar-buttonbox {
-            margin-left: var(--natsumi-browser-separation) !important;
+            margin-inline: var(--natsumi-browser-separation) 6px !important;
+          }
+
+          body[natsumi-compact-mode] #PersonalToolbar .titlebar-buttonbox {
+            margin-inline: 0 6px !important;
           }
         }
 
