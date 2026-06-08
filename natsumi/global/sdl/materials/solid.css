@@ -27,13 +27,18 @@ their author(s) have been provided above the used code.
 
 */
 
-/* ==== Design: SDL (Starlight Design Language) ==== */
-/* Acts as the core of Natsumi's Starlight Design Language. */
+/* ==== Material: Solid ==== */
 
-/* Import materials */
-@import "materials/haze.css";
-@import "materials/tinted-haze.css";
-@import "materials/solid.css";
+/*
+Solid is a simple opaque material.
+*/
+* {
+  --natsumi-mat-sd-background: color-mix(in srgb, var(--natsumi-primary-color) 10%, white 90%);
+  --natsumi-mat-sd-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  --natsumi-mat-sd-border: 1px solid rgba(20, 20, 20, 0.4);
 
-/* Import components */
-@import "components/buttons.css";
+  @media (prefers-color-scheme: dark) {
+    --natsumi-mat-sd-background: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%);
+    --natsumi-mat-sd-border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
