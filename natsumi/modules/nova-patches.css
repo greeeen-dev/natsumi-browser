@@ -283,6 +283,10 @@ SOFTWARE.
     }
   }
 
+  #sidebar-box {
+    background-color: transparent !important;
+  }
+
   #urlbar-container {
     max-height: 40px !important;
   }
@@ -377,5 +381,7 @@ SOFTWARE.
     --toolbarbutton-icon-fill: light-dark(var(--color-gray-70), var(--color-gray-05));
     --chrome-block-radius: var(--natsumi-browser-border-radius) !important;
     --tab-background-color-hover: color-mix(currentColor 11%, transparent);
+    --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
+    --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-05));
   }
 }
