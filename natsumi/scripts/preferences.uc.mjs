@@ -2991,6 +2991,12 @@ function addLayoutPane() {
         "This will change the layout to look closer to the Firefox Nova design."
     );
 
+    let noGapsCheckbox = new CheckboxChoice(
+        "natsumi.theme.no-margin",
+        "natsumiNoGapsButton",
+        "Remove browser separation where possible"
+    );
+
     let menuButtonCheckbox = new CheckboxChoice(
         "natsumi.theme.single-toolbar-show-menu-button",
         "natsumiShowMenuButton",
@@ -3019,11 +3025,22 @@ function addLayoutPane() {
         windowControlsDescription
     );
 
+    let separationSlider = new SliderChoice(
+        "6",
+        "30",
+        "6",
+        "Browser Separation",
+        "Change the separation of the web page",
+        "natsumi.theme.browser-separation",
+    )
+
     layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
+    layoutSelection.registerExtras("natsumiNoGapsButtonBox", noGapsCheckbox);
     layoutSelection.registerExtras("natsumiShowMenuButtonBox", menuButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowBookmarksOnHoverBox", bookmarksOnHoverCheckbox);
     layoutSelection.registerExtras("natsumiForceWinControlsToLeftBox", windowControlsCheckbox);
+    layoutSelection.registerExtras("natsumiBrowserSeparationSlider", separationSlider);
 
     for (let layout in layouts) {
         layoutSelection.registerOption(layout, layouts[layout]);
@@ -3109,22 +3126,12 @@ function addThemesPane() {
         "Gray out background when the browser window is inactive"
     )
 
-    let separationSlider = new SliderChoice(
-            "6",
-            "30",
-            "6",
-            "Browser Separation",
-            "Change the separation of the web page",
-            "natsumi.theme.browser-separation",
-        )
-
     let customThemePickerUi = new CustomThemePicker("natsumiCustomThemePicker", customThemeLoader, applyCustomTheme, "natsumi.theme.custom-theme-data");
 
     themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
     themeSelection.registerExtras("softGlowBox", softGlowCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
-    themeSelection.registerExtras("separationSlider", separationSlider);
 
     for (let theme in themes) {
         themeSelection.registerOption(theme, themes[theme]);
@@ -4864,34 +4871,24 @@ function goodGirlBoyEnby() {
         goodEnby = ucApi.Prefs.get("natsumi.theme.good-enby").value;
     }
 
-    let browserName = AppConstants.MOZ_APP_BASENAME;
+    let defaultBrowserNodes = document.querySelectorAll("#isDefaultPane");
 
-    if (browserName.toLowerCase() === "mullvadbrowser") {
-        browserName = AppConstants.MOZ_APP_DISPLAYNAME_DO_NOT_USE;
-    } else if (browserName.toLowerCase() === "glide") {
-        browserName = AppConstants.MOZ_APP_DISPLAYNAME_DO_NOT_USE;
+    for (let defaultBrowser of defaultBrowserNodes) {
+        let currentMessage = defaultBrowser.getAttribute("message");
+
+        if (goodGirl) {
+            currentMessage = currentMessage.replace("Good choice.", "Good girl :3");
+        } else if (goodBoy) {
+            currentMessage = currentMessage.replace("Good choice.", "Good boy :3");
+        } else if (goodEnby) {
+            currentMessage = currentMessage.replace("Good choice.", "Good enby :3");
+        } else {
+            // Easter egg is off
+            return;
+        }
+
+        defaultBrowser.setAttribute("message", currentMessage);
     }
-
-    let defaultBrowser = document.getElementById("isDefaultPane");
-
-    if (!defaultBrowser) {
-        return;
-    }
-
-    let currentMessage = defaultBrowser.getAttribute("message");
-
-    if (goodGirl) {
-        currentMessage = currentMessage.replace("Good choice.", "Good girl :3");
-    } else if (goodBoy) {
-        currentMessage = currentMessage.replace("Good choice.", "Good boy :3");
-    } else if (goodEnby) {
-        currentMessage = currentMessage.replace("Good choice.", "Good enby :3");
-    } else {
-        // Easter egg is off
-        return;
-    }
-
-    defaultBrowser.setAttribute("message", currentMessage);
 }
 
 console.log("Loading prefs panes...");

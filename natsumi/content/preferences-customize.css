@@ -1776,6 +1776,12 @@ SOFTWARE.
     }
   }
 
+  @media -moz-pref("natsumi.theme.islands") {
+    #natsumiNoGapsButtonBox {
+      display: none !important;
+    }
+  }
+
   .natsumi-settings-info {
     --natsumi-info-color: #00aaff;
     padding: 10px;
