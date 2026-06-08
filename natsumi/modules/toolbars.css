@@ -131,6 +131,10 @@ SOFTWARE.
   }
 }
 
+body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
+  --natsumi-toolbar-separation: 0px !important;
+}
+
 #vertical-pinned-tabs-splitter {
   margin-top: calc(var(--natsumi-pinned-toolbar-height, -8px) + 8px);
 

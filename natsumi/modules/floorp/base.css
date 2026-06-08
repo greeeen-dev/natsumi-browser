@@ -49,11 +49,6 @@ SOFTWARE.
     }
   }
 
-  .browserContainer {
-    border: none !important;
-    border-radius: 0 !important;
-  }
-
   body[natsumi-panel-sidebar-on-right] #sidebar-box {
     order: 2 !important;
   }

@@ -111,12 +111,13 @@ SOFTWARE.
     --panel-sidebar-width: calc(var(--panel-sidebar-panel-size) + calc(var(--natsumi-panel-item-separation) * 2)) !important;
     margin: var(--natsumi-browser-separation) !important;
     background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
-    border-radius: 8px;
+    border-radius: var(--natsumi-browser-border-radius);
 
     .panel-sidebar-panel {
       margin: var(--natsumi-panel-item-separation) !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
       box-shadow: none !important;
+      border-radius: calc(var(--natsumi-browser-border-radius) - 4px) !important;
 
       &:hover {
         background-color: var(--natsumi-button-hover-color) !important;

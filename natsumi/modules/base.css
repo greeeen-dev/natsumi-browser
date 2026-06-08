@@ -26,26 +26,6 @@ SOFTWARE.
 
 /* ==== Base theme ==== */
 
-@keyframes dialog-stack-fadein {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes dialog-popup {
-  0% {
-    translate: 0 15px;
-  }
-
-  100% {
-    translate: 0;
-  }
-}
-
 #nav-bar {
   border: none !important;
 }
@@ -62,13 +42,15 @@ body > * {
     outline: none !important;
 
     .browserSidebarContainer {
-      border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color) !important;
-      border-radius: var(--natsumi-browser-border-radius) !important;
+      border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color);
+      border-radius: var(--natsumi-browser-border-radius-override, var(--natsumi-browser-border-radius)) !important;
       margin: 0 !important;
       overflow: hidden;
 
       .browserContainer {
         background-color: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
       }
 
       .browserStack {
@@ -125,6 +107,106 @@ body > * {
     #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
       margin-left: var(--natsumi-browser-separation) !important;
       margin-right: var(--natsumi-browser-separation) !important;
+    }
+  }
+
+  @media -moz-pref("natsumi.theme.no-margin") and (not -moz-pref("natsumi.theme.islands")) {
+    body:not([natsumi-panel-sidebar-active]):not([natsumi-compact-mode]), body[natsumi-panel-sidebar-floating]:not([natsumi-compact-mode]) {
+      @media -moz-pref("sidebar.position_start") {
+        &:is(:not([natsumi-panel-sidebar-on-right]), :not([natsumi-panel-sidebar-enabled])) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
+          --natsumi-tabbox-margin-override: 0;
+
+          .browserSidebarContainer {
+            border-right: none !important;
+            border-bottom: none !important;
+            --natsumi-browser-border-radius-override: var(--natsumi-browser-border-radius) 0 0 0;
+          }
+
+          @media -moz-pref("natsumi.theme.single-toolbar") {
+            --natsumi-sidebar-margin-override: -1px;
+
+            .browserSidebarContainer {
+              --natsumi-browser-border-radius-override: 0;
+            }
+          }
+        }
+
+        &[natsumi-panel-sidebar-on-right] #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
+          @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+            --natsumi-tabbox-margin-override: 0;
+
+            .browserSidebarContainer {
+              border-right: none !important;
+              border-bottom: none !important;
+              --natsumi-browser-border-radius-override: var(--natsumi-browser-border-radius) 0 0 0;
+            }
+
+            @media -moz-pref("natsumi.theme.single-toolbar") {
+              --natsumi-sidebar-margin-override: -1px;
+
+              .browserSidebarContainer {
+                --natsumi-browser-border-radius-override: 0;
+              }
+            }
+          }
+        }
+      }
+
+      @media not -moz-pref("sidebar.position_start") {
+        &:is([natsumi-panel-sidebar-on-right], :not([natsumi-panel-sidebar-enabled])) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
+          --natsumi-tabbox-margin-override: 0;
+
+          .browserSidebarContainer {
+            border-left: none !important;
+            border-bottom: none !important;
+            --natsumi-browser-border-radius-override: 0 var(--natsumi-browser-border-radius) 0 0;
+          }
+
+          @media -moz-pref("natsumi.theme.single-toolbar") {
+            --natsumi-sidebar-margin-override: -1px;
+
+            .browserSidebarContainer {
+              --natsumi-browser-border-radius-override: 0;
+            }
+          }
+        }
+
+        &:not([natsumi-panel-sidebar-on-right]) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
+          @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+            --natsumi-tabbox-margin-override: 0;
+
+            .browserSidebarContainer {
+              border-left: none !important;
+              border-bottom: none !important;
+              --natsumi-browser-border-radius-override: 0 var(--natsumi-browser-border-radius) 0 0;
+            }
+
+            @media -moz-pref("natsumi.theme.single-toolbar") {
+              --natsumi-sidebar-margin-override: -1px;
+
+              .browserSidebarContainer {
+                --natsumi-browser-border-radius-override: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      body:not([natsumi-panel-sidebar-enabled]):not([natsumi-compact-mode]), body[natsumi-panel-sidebar-floating]:not([natsumi-compact-mode]) {
+        &:has(#sidebar-main[hidden]) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
+          --natsumi-tabbox-margin-override: 0;
+          --natsumi-browser-separation: 0 !important;
+
+          .browserSidebarContainer {
+            border-left: none !important;
+            border-right: none !important;
+            border-bottom: none !important;
+            --natsumi-browser-border-radius-override: 0;
+          }
+        }
+      }
     }
   }
 }
@@ -500,15 +582,6 @@ body > * {
 
   #tabbrowser-tabs::after {
     border-color: transparent !important;
-  }
-}
-
-/* Dialogs */
-.dialogStack:not([hidden]) {
-  animation: dialog-stack-fadein 0.3s ease;
-
-  .dialogBox {
-    animation: dialog-popup 0.3s ease;
   }
 }
 
