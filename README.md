@@ -521,7 +521,7 @@ licenses are listed below.
 > For icon packs attribution, please check the README and LICENSE files in the icons folder for the
 > respective icon pack.
 
-- [MX-Linux/mx-sound-theme-borealis](https://github.com/MX-Linux/mx-sound-theme-borealis)
+- [MX-Linux/mx-sound-theme-borealis](https://github.com/MX-Linux/mx-sound-theme-borealis)/[Borealis](https://ico.bukvic.net/main/borealis/)
   
   License: GPLv3
   
