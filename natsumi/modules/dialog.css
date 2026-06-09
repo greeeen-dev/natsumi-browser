@@ -119,41 +119,6 @@ window:has(dialog) {
   background-color: transparent !important;
 }
 
-@-moz-document url-prefix("chrome://browser/content/browser.xhtml") {
-  button[part="dialog-button"] {
-    border: var(--natsumi-sdl2-button-idle-border) !important;
-    border-radius: 24px !important;
-    background-color: var(--natsumi-sdl2-button-idle-color) !important;
-    color: light-dark(black, white) !important;
-    transition: background-color 0.2s ease, border 0.2s ease, color 0.2s ease, outline 0.2s ease;
-    outline: 2px solid transparent !important;
-    outline-offset: var(--focus-outline-offset) !important;
-    font-weight: normal !important;
-
-    &[default] {
-      background-color: var(--natsumi-sdl2-button-highlight-color) !important;
-      font-weight: bold !important;
-      color: light-dark(white, black) !important;
-    }
-
-    &:hover, &:focus {
-      background-color: var(--natsumi-sdl2-button-hover-color) !important;
-      border: var(--natsumi-sdl2-button-hover-border) !important;
-      color: light-dark(white, black) !important;
-    }
-
-    &:focus {
-      outline-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
-    }
-
-    &:active {
-      background-color: var(--natsumi-sdl2-button-active-color) !important;
-      border: var(--natsumi-sdl2-button-active-border) !important;
-      color: light-dark(white, black) !important;
-    }
-  }
-}
-
 /* Web content dialogs */
 .browserSidebarContainer .dialogTemplate {
   .dialogBox {
