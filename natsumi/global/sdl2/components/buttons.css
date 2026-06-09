@@ -1,8 +1,7 @@
 * {
   --natsumi-sdl2-button-idle-color: var(--natsumi-button-idle-color);
-  --natsumi-sdl2-button-hover-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-  --natsumi-sdl2-button-active-color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 80%, black),
-  color-mix(in srgb, var(--natsumi-primary-color) 80%, white));
+  --natsumi-sdl2-button-hover-color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 80%, black), color-mix(in srgb, var(--natsumi-primary-color) 80%, white));
+  --natsumi-sdl2-button-active-color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 70%, black), color-mix(in srgb, var(--natsumi-primary-color) 70%, white));
   --natsumi-sdl2-button-idle-text-color: light-dark(black, white);
   --natsumi-sdl2-button-hover-text-color: light-dark(white, black);
   --natsumi-sdl2-button-active-text-color: light-dark(white, black);

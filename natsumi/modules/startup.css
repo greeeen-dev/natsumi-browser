@@ -1,0 +1,298 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Startup animations ==== */
+
+@keyframes natsumi-startup-icon-reveal {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7) rotate(90deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes natsumi-startup-xp-fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes natsumi-startup-xp-loading {
+  0% {
+    left: -62px;
+  }
+  20% {
+    left: -62px;
+  }
+  100% {
+    left: calc(100% + 2px);
+  }
+}
+
+#natsumi-startup {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998 !important;
+  transition: opacity 0.2s ease;
+
+  &[natsumi-startup-xp] {
+    background-color: black;
+  }
+
+  #natsumi-startup-icon {
+    width: 30vh;
+    height: 30vh;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
+    background-size: 30vh;
+
+    @media -moz-pref("natsumi.theme.pride") {
+      background-image: url("../icons/natsumi-pride.png");
+    }
+  }
+
+  #natsumi-startup-quote {
+    position: absolute;
+    height: fit-content;
+    bottom: 10% !important;
+    left: 50%;
+    translate: -50% 0;
+    max-width: 70vw;
+    color: light-dark(black, white);
+
+    #natsumi-startup-quote-text {
+      font-size: medium;
+      text-align: center;
+    }
+
+    #natsumi-startup-quote-author {
+      font-size: small;
+      font-style: italic;
+      text-align: center;
+      opacity: 0.8;
+    }
+  }
+
+  #natsumi-startup-xp-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    transition: opacity 2s linear;
+
+    #natsumi-startup-xp-icon {
+      width: 210px;
+      height: 210px;
+      background-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
+      background-size: 210px;
+      rotate: 10deg;
+      margin-inline: auto 16px;
+
+      @media -moz-pref("natsumi.theme.pride") {
+        background-image: url("../icons/natsumi-pride.png");
+      }
+    }
+
+    #natsumi-startup-xp-text-container {
+      display: flex;
+      flex-direction: row;
+      width: fit-content;
+      margin-inline: auto;
+      color: white;
+
+      #natsumi-startup-xp-text-1 {
+        margin-top: 4px;
+        font-weight: bold;
+        font-size: xxx-large;
+      }
+
+      #natsumi-startup-xp-text-2 {
+        font-weight: bold;
+        font-size: xx-large;
+        color: var(--natsumi-primary-color);
+      }
+    }
+  }
+
+  #natsumi-startup-xp-loading {
+    position: absolute;
+    width: 300px;
+    height: 16px;
+    border: 2px solid black;
+    outline: 2px solid white;
+    border-radius: 4px;
+    left: 50%;
+    bottom: 15%;
+    translate: -50%;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 60px;
+      height: 16px;
+      border-radius: 2px;
+      background-color: var(--natsumi-primary-color);
+      animation: natsumi-startup-xp-loading 2.5s linear infinite;
+    }
+  }
+
+  #natsumi-startup-xp-welcome {
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    top: 10%;
+    align-content: center;
+    background-color: hsl(from var(--natsumi-primary-color) h 70 80);
+    color: white;
+    --natsumi-empty-color-1: hsl(from var(--natsumi-primary-color) h 70 70);
+    --natsumi-empty-color-2: hsl(from var(--natsumi-primary-color) h 60 28);
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      top: 0;
+      background: linear-gradient(90deg, var(--natsumi-empty-color-1), white 45%, var(--natsumi-empty-color-1) 90%);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      bottom: 0;
+      background: linear-gradient(90deg, var(--natsumi-empty-color-2), #ffb787 40%, var(--natsumi-empty-color-2) 80%);
+    }
+
+    #natsumi-startup-xp-welcome-text {
+      width: fit-content;
+      margin-inline: auto 20%;
+      font-size: xxx-large;
+      font-weight: bold;
+      font-style: italic;
+      text-shadow: 3px 3px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  &:not([natsumi-startup-animation-play]) {
+    #natsumi-startup-icon, #natsumi-startup-quote, #natsumi-startup-xp-logo, #natsumi-startup-xp-loading {
+      opacity: 0;
+    }
+
+    #natsumi-startup-xp-loading::before {
+      display: none;
+    }
+  }
+
+  &:not([natsumi-startup-xp-welcome]) {
+    #natsumi-startup-xp-welcome {
+      display: none;
+    }
+  }
+
+  &[natsumi-startup-animation-play] {
+    #natsumi-startup-icon {
+      animation: natsumi-startup-icon-reveal 0.7s cubic-bezier(0, 1, 0.34, 1);
+    }
+
+    #natsumi-startup-quote {
+      opacity: 1;
+    }
+
+    #natsumi-startup-xp-logo, #natsumi-startup-xp-loading {
+      animation: natsumi-startup-xp-fadein 2s linear;
+    }
+  }
+
+  &[natsumi-startup-xp-welcome] {
+    background-color: hsl(from var(--natsumi-primary-color) h 40 40);
+
+    #natsumi-startup-xp-logo, #natsumi-startup-xp-loading {
+      display: none;
+    }
+  }
+}
+
+body[natsumi-startup-animation] {
+  #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button,
+  #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
+  #panel-sidebar-select-box, #notifications-toolbar {
+    opacity: 0;
+    transition: opacity 0.2s ease !important;
+    pointer-events: none !important;
+  }
+
+  #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
+  #natsumi-pinned-toolbar {
+    opacity: 0;
+    transition: opacity 0.2s ease !important;
+    pointer-events: none !important;
+  }
+
+  @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+    #navigator-toolbox {
+      opacity: 0;
+      transition: opacity 0.2s ease !important;
+      pointer-events: none !important;
+    }
+  }
+
+  &[natsumi-startup-animation-reveal] {
+    #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button,
+    #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
+    #panel-sidebar-select-box, #notifications-toolbar {
+      opacity: 1;
+    }
+
+    #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
+    #natsumi-pinned-toolbar {
+      opacity: 1;
+    }
+
+    @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+      #navigator-toolbox {
+        opacity: 1;
+      }
+    }
+
+    #natsumi-startup {
+      opacity: 0;
+    }
+  }
+}
