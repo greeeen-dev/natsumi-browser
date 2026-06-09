@@ -389,7 +389,8 @@ class NatsumiDefaultStartupAnimation extends NatsumiBaseStartupAnimation {
             ["Have you riced your browser today?", null],
             ["nya :3", null],
             ["stay hydrated!!!1", null],
-            ["quotes? in my browser???", null]
+            ["quotes? in my browser???", null],
+            ["Eat ice cream for a huge buff.", "@therealconfused"]
         ]
 
         // Pick a random quote
@@ -414,8 +415,8 @@ class NatsumiDefaultStartupAnimation extends NatsumiBaseStartupAnimation {
 
         if (quoteAuthor) {
             let quoteAuthorContainer = document.createElement("div");
-            quoteAuthorContainer.id = "natsumi-startup-quote-text";
-            quoteTextContainer.textContent = `- ${quoteAuthor}`;
+            quoteAuthorContainer.id = "natsumi-startup-quote-author";
+            quoteAuthorContainer.textContent = `- ${quoteAuthor}`;
             quoteContainer.appendChild(quoteAuthorContainer);
         }
 
