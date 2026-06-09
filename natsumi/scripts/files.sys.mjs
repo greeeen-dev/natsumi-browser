@@ -24,7 +24,8 @@ SOFTWARE.
 
 */
 
-const allowedFileTypes = ["image"]
+const allowedFileTypes = ["image", "audio"];
+const whitelistedFileTypes = ["application/ogg"];
 const uploadsPath = PathUtils.join(PathUtils.profileDir, "natsumi-uploads");
 
 export class NatsumiFile {
@@ -56,7 +57,17 @@ function getFileData(file) {
             }
 
             if (!hasAllowedType) {
-                reject("Filetype not allowed");
+                // Try to check if we have a whitelisted file type
+                for (const whitelistedType of whitelistedFileTypes) {
+                    if (reader.result.startsWith(`data:${whitelistedType};`)) {
+                        hasAllowedType = true;
+                        break;
+                    }
+                }
+
+                if (!hasAllowedType) {
+                    reject("Filetype not allowed");
+                }
             }
 
             resolve(reader.result);

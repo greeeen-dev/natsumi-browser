@@ -26,16 +26,16 @@ SOFTWARE.
 
 /* ==== Preferences ==== */
 
-@keyframes tool-fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 @-moz-document url-prefix(about:settings), url-prefix(about:preferences) {
+  @keyframes tool-fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   #natsumi-settings .category-icon {
     list-style-image: url("../icons/lucide/paintbrush.svg");
     -moz-context-properties: stroke, stroke-opacity !important;
@@ -55,24 +55,45 @@ SOFTWARE.
   }
 
   .natsumi-mc-choice {
-    border: 2px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-    border-radius: 12px;
-    width: 200px;
-    height: 140px;
+    border: 1px solid light-dark(var(--color-gray-60), var(--color-gray-50));
+    margin: 2px;
+    border-radius: 8px;
+    min-width: 200px;
     display: flex;
+    box-sizing: content-box;
+    flex: 1;
     flex-direction: column;
+    padding-bottom: var(--space-medium);
 
     &:hover {
-      background-color: var(--natsumi-button-hover-color);
+      background-color: color-mix(in srgb, currentColor 14%, transparent);
+
+      @media -moz-pref("browser.nova.enabled") {
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent);
+      }
+    }
+
+    &:active {
+      background-color: color-mix(in srgb, currentColor 21%, transparent);
+
+      @media -moz-pref("browser.nova.enabled") {
+        background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+      }
     }
 
     &.selected {
+      margin: 0;
       border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-      background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+      border-width: 3px;
+
+      @media -moz-pref("natsumi.theme.classic-preferences") {
+        border-color: var(--color-accent-primary);
+      }
     }
 
     .natsumi-mc-choice-image-container {
       flex: 1;
+      min-height: 98px;
 
       .natsumi-mc-choice-image-browser {
         &::before {
@@ -92,11 +113,12 @@ SOFTWARE.
       }
 
       .natsumi-mc-choice-image-browser {
-        width: 100%;
-        margin: 10px 35px;
+        width: 126px;
+        margin: var(--space-medium) auto var(--space-small);
         border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
         border-radius: 5px;
         overflow: hidden;
+        box-shadow: var(--box-shadow-level-2);
 
         .natsumi-mc-choice-image-browser-additional {
           width: 100%;
@@ -278,18 +300,32 @@ SOFTWARE.
     }
 
     .natsumi-mc-choice-label {
-      padding: 10px;
+      margin-inline: auto;
+      font-size: 15px;
+      cursor: default;
+    }
+
+    .natsumi-mc-choice-description {
+      margin-inline: auto;
+      margin-top: var(--space-xsmall);
+      font-size: 0.867rem;
+      color: color-mix(in srgb, currentColor 69%, transparent);
+      cursor: default;
     }
   }
 
   #natsumiColorsGroup {
     .natsumi-mc-choice {
-      width: 102px;
-      height: 104px;
+      width: 100px;
+      min-width: 100px;
+      min-height: 100px;
+      flex: 0;
+      padding-bottom: 0;
 
       .natsumi-mc-choice-image-container {
         width: 80px;
         height: 80px;
+        min-height: 80px;
         margin: 10px;
         border-radius: 40px;
         background-color: var(--natsumi-primary-color);
@@ -957,6 +993,52 @@ SOFTWARE.
     }
   }
 
+  #natsumiStartupAnimationGroup {
+    .natsumi-mc-choice-image-browser {
+      background-size: 24px;
+      background-position: center;
+      background-repeat: no-repeat;
+      -moz-context-properties: stroke, stroke-opacity !important;
+      stroke: light-dark(black, white);
+
+      &::before {
+        display: none;
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+
+    #startup-none {
+      background-image: url("../icons/lucide/close.svg");
+    }
+
+    #startup-simple {
+      background-size: 32px;
+      background-image: url("../icons/natsumi-glass.png");
+    }
+
+    #startup-nostalgic {
+      background-color: black;
+      background-size: 32px;
+      background-image: url("../icons/natsumi-glass.png");
+
+      &::after {
+        content: "";
+        display: flex;
+        width: 50px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--natsumi-primary-color) 30%, transparent 30%);
+        margin-block: auto 10px;
+        margin-inline: auto;
+        outline: 1px solid white;
+        border-radius: 1px;
+        border: 1px solid black;
+      }
+    }
+  }
+
   .natsumi-custom-theme-picker {
     padding: 20px;
     background-color: light-dark(white, #222);
@@ -1286,61 +1368,8 @@ SOFTWARE.
           display: block;
         }
 
-        .natsumi-image-container {
-          height: 44px !important;
-          align-items: center;
-          margin-bottom: 10px !important;
-          gap: 8px;
-          border-radius: 10px;
-          background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
-        }
-
         .natsumi-image-blur {
           display: block;
-        }
-
-        .natsumi-image-current {
-          display: block;
-          flex: 1;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          margin-left: 12px !important;
-        }
-
-        .natsumi-image-remove, .natsumi-image-submit {
-          min-width: 36px !important;
-          min-height: 36px !important;
-          margin-block: 4px !important;
-          transition: background-color 0.2s ease, box-shadow 0.2s ease;
-          border-radius: 6px;
-          -moz-context-properties: stroke, stroke-opacity;
-          stroke: light-dark(black, white);
-          background-size: 20px;
-          background-repeat: no-repeat;
-          background-position: center;
-
-          &[hidden] {
-            display: none;
-          }
-
-          &:hover {
-            background-color: var(--natsumi-button-hover-color);
-          }
-
-          &:active {
-            background-color: var(--natsumi-button-active-color);
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-          }
-        }
-
-        .natsumi-image-remove {
-          background-image: url("../icons/lucide/close.svg");
-        }
-
-        .natsumi-image-submit {
-          background-image: url("../icons/lucide/upload-image.svg");
-          margin-right: 4px !important;
         }
       }
 
@@ -1740,6 +1769,18 @@ SOFTWARE.
     }
   }
 
+  @media -moz-pref("natsumi.theme.islands") {
+    #natsumiNoGapsButtonBox {
+      display: none !important;
+    }
+  }
+
+  @media not -moz-pref("natsumi.startup.sound", "custom") {
+    #natsumiSoundPicker {
+      display: none !important;
+    }
+  }
+
   .natsumi-settings-info {
     --natsumi-info-color: #00aaff;
     padding: 10px;
@@ -1782,6 +1823,66 @@ SOFTWARE.
 
       .natsumi-settings-info-icon {
         background-image: url("../icons/lucide/caution.svg");
+      }
+    }
+  }
+
+  .natsumi-file-selector {
+    height: 44px !important;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+
+    &#natsumi-custom-theme-image-upload {
+      margin-bottom: 10px !important;
+    }
+
+    .natsumi-file-current {
+      display: block;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-left: 12px !important;
+    }
+
+    .natsumi-file-remove, .natsumi-file-submit {
+      min-width: 36px !important;
+      min-height: 36px !important;
+      margin-block: 4px !important;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 6px;
+      -moz-context-properties: stroke, stroke-opacity;
+      stroke: light-dark(black, white);
+      background-size: 20px;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &[hidden] {
+        display: none;
+      }
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color);
+      }
+
+      &:active {
+        background-color: var(--natsumi-button-active-color);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .natsumi-file-remove {
+      background-image: url("../icons/lucide/close.svg");
+    }
+
+    .natsumi-file-submit {
+      background-image: url("../icons/lucide/upload-file.svg");
+      margin-right: 4px !important;
+
+      &[image] {
+        background-image: url("../icons/lucide/upload-image.svg");
       }
     }
   }

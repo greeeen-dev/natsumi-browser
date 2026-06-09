@@ -1,0 +1,143 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Browser dialogs ==== */
+
+@keyframes dialog-stack-fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-popup {
+  0% {
+    translate: 0 15px;
+  }
+
+  100% {
+    translate: 0;
+  }
+}
+
+/* Browser dialogs */
+#window-modal-dialog {
+  top: 50%;
+  translate: 0 -50%;
+
+  &[open], &[open]::backdrop {
+    animation: dialog-stack-fadein 0.3s ease !important;
+  }
+
+  .dialogTemplate {
+    animation: dialog-popup 0.3s ease !important;
+  }
+
+  .dialogBox {
+    margin-top: 0 !important;
+    background-color: var(--natsumi-mat-sd-background);
+    border: var(--natsumi-mat-sd-border) !important;
+    box-shadow: var(--natsumi-mat-sd-box-shadow) !important;
+    background-clip: unset !important;
+    padding: 10px 12px !important;
+  }
+}
+
+window > dialog {
+  .titleIcon {
+    background-color: transparent !important;
+  }
+
+  .checkbox-check {
+    appearance: none !important;
+    border: 1px solid light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+    border-radius: 4px;
+    transition: border 0.3s ease, background-color 0.3s ease;
+
+    &[checked]:not([checked="false"]) {
+      border: none;
+      background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      -moz-context-properties: stroke;
+      stroke: light-dark(white, black);
+      background-size: 14px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url("../icons/lucide/check.svg");
+
+      &[disabled="true"] {
+        filter: grayscale(1);
+      }
+    }
+
+    &[disabled="true"] {
+      opacity: 0.5;
+    }
+  }
+
+  @media -moz-pref("browser.nova.enabled") {
+    menulist {
+      --natsumi-content-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      --natsumi-hover-color: color-mix(in srgb, var(--color-accent-primary) 85%, black);
+      --natsumi-active-color: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+      --button-border: 1px solid var(--natsumi-content-color) !important;
+      --button-border-color-hover: var(--natsumi-content-color) !important;
+      --button-border-color-active: var(--natsumi-content-color) !important;
+      --button-border-color-disabled: var(--natsumi-content-color) !important;
+      --button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
+      --button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent) !important;
+    }
+  }
+}
+
+window:has(dialog) {
+  background-color: transparent !important;
+}
+
+/* Web content dialogs */
+.browserSidebarContainer .dialogTemplate {
+  .dialogBox {
+    margin-top: 0 !important;
+    background-color: var(--natsumi-mat-sd-background);
+    border: var(--natsumi-mat-sd-border) !important;
+    box-shadow: var(--natsumi-mat-sd-box-shadow) !important;
+    background-clip: unset !important;
+
+    &.printDialogBox {
+      margin-block: auto !important;
+    }
+  }
+}
+
+.dialogStack:not([hidden]) {
+  animation: dialog-stack-fadein 0.3s ease;
+
+  .dialogBox {
+    animation: dialog-popup 0.3s ease;
+  }
+}

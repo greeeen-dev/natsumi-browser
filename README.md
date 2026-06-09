@@ -393,10 +393,6 @@ address these changes, so that once Firefox Nova is complete and rolled out, Nat
 **Firefox Nova-ready from day one** while being fully backwards compatible with the old Proton design
 for older supported versions.
 
-### "Can I use other userchromes with Natsumi?"
-Sure! Just paste it right below the Natsumi Browser loader (userChrome.css) and you can use your own
-userchrome alongside Natsumi Browser.
-
 ### "Can I disable individual features?"
 You can disable some features using the configuration options.
 
@@ -410,33 +406,12 @@ you will need to keep certain files (preload, postload, natsumi-config) for Nats
 > If you installed Natsumi as part of another skin, your installation may be considered modified.
 > Please check with the skin's developer for assistance in this case.
 
-### "Is Natsumi compatible with Zen Browser?"
-As of Natsumi v4, Natsumi has dropped all support for Zen Browser. I have no plans to continue
-support whatsoever due to the browser's main developer's stance on personalization, as well as
-various other reasons.
+### "Why is Natsumi not compatible with Zen Browser or Midori Browser?"
+Zen Browser and Midori Browser are not supported due to a hostile stance on personalization (among
+some other issues) and ethical issues respectively.
 
-Additionally, it'd be a hassle to make things compatible with Zen, mainly because it is just so
-heavily modified from the original Firefox that I may end up building a whole new skin just for
-compatibility unintentionally.
-
-**Please do not try to port Natsumi to Zen.** I have my reasons why I left it, and I would
-really appreciate it if you respected my decision.
-
-### "Is Natsumi compatible with Midori?"
-Natsumi does not support Midori and will not do so for the foreseeable future due to ethical
-concerns. Please note that this is in no way related to Zen Browser being unsupported.
-
-For more information, refer to this [blog
-article](https://www.greeeen.dev/natsumi-midori-support.html).
-
-### "When does Natsumi update?"
-There is no fixed schedule for updates, it all happens randomly.
-
-### "Is Natsumi compatible with non-Firefox-based browsers (Chrome, Arc, etc.)?"
-No. Natsumi is made on top of Firefox, so it only supports Firefox and (most of) its forks.
-
-If you try to apply Natsumi on Chrome/Chromium-based browsers like Arc, you can't apply
-userchrome CSS files, making Natsumi completely incompatible with those browsers.
+**Please do not try to port Natsumi to either of these browsers.** I have my reasons why I left
+these browsers unsupported, so I would really appreciate it if you respected my decision.
 
 ### "I don't like the design, please change it!"
 Although Natsumi is designed to be as customizable as possible, there may be some opinionated
@@ -447,9 +422,12 @@ and I will consider it.
 
 ### "Can I use your code for my browser?"
 If your browser is open-source and licensed under the GPLv3 or later (or AGPLv3 or later), then yes.
-Otherwise, please contact me so I can grant you permission.
+Otherwise, please contact me.
 
 ### "Why is userChrome.css so empty?"
+Some browser mods may put all of their CSS code in one giant userChrome.css file. However, Natsumi
+does not use this approach to separate code into separate files for the sake of organization.
+
 Natsumi Browser uses a system where the userChrome.css file acts as a loader that loads the skin,
 instead of being the file that contains all rules. This way, it's easier for users to quickly enable
 and disable custom CSS.
@@ -478,6 +456,9 @@ This may be because you do not have the Proton design (i.e. the default Firefox 
 only supports Proton and does not support other designs such as Lepton or Fluerial.
 
 You can fix this by going to Floorp Hub => Tab & Appearance in Floorp or Look & Feel in Waterfox.
+
+If you have Natsumi Append installed, Natsumi will automatically reset your tab design to Proton if
+you're on Floorp.
 
 ### "I can't use custom skin X with Natsumi, please add support for it!"
 This is not something I am able to help with. Natsumi is not tested with other themes in mind, so it is
@@ -540,11 +521,11 @@ licenses are listed below.
 > For icon packs attribution, please check the README and LICENSE files in the icons folder for the
 > respective icon pack.
 
-- [MX-Linux/mx-sound-theme-borealis](https://github.com/MX-Linux/mx-sound-theme-borealis)
+- [MX-Linux/mx-sound-theme-borealis](https://github.com/MX-Linux/mx-sound-theme-borealis)/[Borealis](https://ico.bukvic.net/main/borealis/)
   
   License: GPLv3
   
-  File used: `Borealis/stereo/desktop-login.ogg`, `Borealis/stereo/K3b_success.ogg`
+  File used: `Borealis/stereo/desktop-login.ogg`, `Borealis/stereo/Exit1_2.ogg`, `Borealis/stereo/K3b_success.ogg`
   
   Changes made: none
   

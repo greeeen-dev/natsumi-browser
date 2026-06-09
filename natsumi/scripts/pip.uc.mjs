@@ -244,6 +244,14 @@ function movePictureInPicture(event) {
     setScrollAttribute();
 }
 
+function addLiveIndicator() {
+    let startControls = document.querySelector(".start-controls");
+    let liveIndicator = document.createElement("div");
+    liveIndicator.id = "natsumi-live-indicator";
+    liveIndicator.textContent = "LIVE";
+    startControls.appendChild(liveIndicator);
+}
+
 document.addEventListener("wheel", function (e) {
     if (window.windowState === window.STATE_FULLSCREEN) {
         // Do not move or resize in fullscreen
@@ -258,3 +266,5 @@ document.addEventListener("wheel", function (e) {
         movePictureInPicture(e);
     }
 });
+
+addLiveIndicator();

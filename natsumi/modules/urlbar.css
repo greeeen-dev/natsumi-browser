@@ -61,6 +61,12 @@ SOFTWARE.
     --natsumi-urlbar-search-engine-text: light-dark(black, white);
     transition: backdrop-filter 0.2s ease;
 
+    &:not([breakout]) {
+      @media -moz-pref("natsumi.theme.single-toolbar") {
+        margin-top: -4px !important;
+      }
+    }
+
     .urlbar-page-action, .urlbar-revert-button {
       border-radius: 14px !important;
       width: 26px !important;
@@ -529,6 +535,7 @@ SOFTWARE.
         top: 25vh !important;
         width: 60% !important;
         left: 50% !important;
+        max-width: 900px !important;
         translate: -50% 0 !important;
         opacity: 1 !important;
         border-radius: 12px !important;
@@ -566,9 +573,9 @@ SOFTWARE.
             height: 16px;
             background-image: url("chrome://browser/skin/preferences/category-search.svg");
             background-size: 16px;
-            margin-left: 12px !important;
-            margin-top: 10px !important;
-            margin-right: 16px !important;
+            margin-left: calc(12px - var(--natsumi-search-icon-margin-offset, 0px)) !important;
+            margin-block: auto !important;
+            margin-right: calc(16px - var(--natsumi-search-icon-margin-offset, 0px));
           }
         }
 
@@ -627,6 +634,7 @@ SOFTWARE.
 
         moz-button.searchmode-switcher {
           margin-right: 4px !important;
+          height: 36px !important;
 
           .searchmode-switcher-close {
             margin-inline: -4px !important;
