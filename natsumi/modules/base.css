@@ -35,7 +35,7 @@ body > * {
 }
 
 :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
-  #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+  &[chromehidden=""] #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     margin-right: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
     margin-bottom: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
     box-shadow: none !important;
@@ -103,7 +103,7 @@ body > * {
     }
   }
 
-  &:has(#sidebar-main[hidden]) {
+  &[chromehidden=""]:has(#sidebar-main[hidden]) {
     #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
       margin-left: var(--natsumi-browser-separation) !important;
       margin-right: var(--natsumi-browser-separation) !important;

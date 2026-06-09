@@ -272,6 +272,9 @@ class NatsumiSingleToolbarManager {
 }
 
 if (!document.body.natsumiSingleToolbarManager) {
-    document.body.natsumiSingleToolbarManager = new NatsumiSingleToolbarManager();
-    document.body.natsumiSingleToolbarManager.init();
+    const isBrowser = (document.documentElement.getAttribute("chromehidden") ?? "") === "";
+    if (isBrowser) {
+        document.body.natsumiSingleToolbarManager = new NatsumiSingleToolbarManager();
+        document.body.natsumiSingleToolbarManager.init();
+    }
 }
