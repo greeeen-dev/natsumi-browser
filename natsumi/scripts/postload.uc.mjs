@@ -17,6 +17,11 @@ class NatsumiPostloadManager {
     }
 
     init() {
+        const hasRecursion = this.checkRecursion();
+        if (hasRecursion) {
+            return;
+        }
+
         this.postLoadTimeout = setTimeout(() => {
             this.checkPostLoad();
         }, 1000);
@@ -28,7 +33,21 @@ class NatsumiPostloadManager {
             return;
         }
 
-        console.error("Natsumi CSS loading doesn't seem to have completed. Expect absolutely everything to go south from here, good luck.");
+        // Check if we have a recursive browser situation
+        const computedStyle = window.getComputedStyle(document.body);
+        const recursiveValue = computedStyle.getPropertyValue("--natsumi-recursive-browser");
+
+        let recursiveBrowser = null;
+
+        if (recursiveValue) {
+            recursiveBrowser = true;
+        }
+
+        if (recursiveBrowser) {
+            console.error("why would you do that.");
+        } else {
+            console.error("Natsumi CSS loading doesn't seem to have completed. Expect absolutely everything to go south from here, good luck.");
+        }
 
         const natsumiWarningPermanentCss = `
             #natsumi-glimpse-launcher, #natsumi-glimpse-chainer-indicator, #natsumi-workspace-indicator, #natsumi-tabs-clearer,
@@ -160,6 +179,8 @@ class NatsumiPostloadManager {
         let warningHeader = document.getElementById("natsumi-css-warning-header");
         let warningBody = document.getElementById("natsumi-css-warning-body-1");
         let warningBody2 = document.getElementById("natsumi-css-warning-body-2");
+        let hideButton = document.getElementById("natsumi-css-warning-hide");
+        let restartButton = document.getElementById("natsumi-css-warning-restart");
 
         if (isCatastrophic && isReallyCatastrophic) {
             warningBody.textContent = "Your browser could not load Natsumi's CSS properly. A lot of things (possibly everything) may not work as expected.";
@@ -174,8 +195,15 @@ class NatsumiPostloadManager {
             warningBody2.textContent = "Please check if Natsumi has been installed correctly.";
         }
 
+        if (recursiveBrowser) {
+            warningHeader.textContent = "why would you do that";
+            warningBody.textContent = "did you seriously open a browser window INSIDE A BROWSER WINDOW??????";
+            warningBody2.textContent = "just...close this tab and don't reopen it so you dont mess anything up";
+            hideButton.setAttribute("hidden", "");
+            restartButton.setAttribute("hidden", "");
+        }
+
         // Set up buttons
-        let hideButton = document.getElementById("natsumi-css-warning-hide");
         hideButton.addEventListener("click", () => {
             let warningElement = document.getElementById("natsumi-css-warning");
             warningElement.remove();
@@ -185,7 +213,6 @@ class NatsumiPostloadManager {
 
             ucApi.Prefs.set("natsumi.theme.ignore-css-issues", true);
         })
-        let restartButton = document.getElementById("natsumi-css-warning-restart");
         restartButton.addEventListener("click", () => {
             Services.appinfo.invalidateCachesOnRestart();
             Services.startup.quit(
@@ -202,6 +229,20 @@ class NatsumiPostloadManager {
         if (!this.hasPostLoad) {
             this.showPostLoadWarning(!preLoadValue);
         }
+    }
+
+    checkRecursion() {
+        // Check if we have a recursive browser situation
+        const computedStyle = window.getComputedStyle(document.body);
+        const recursiveValue = computedStyle.getPropertyValue("--natsumi-recursive-browser");
+
+        if (recursiveValue) {
+            // oh no.
+            this.showPostLoadWarning(true);
+            return true;
+        }
+
+        return false;
     }
 }
 
