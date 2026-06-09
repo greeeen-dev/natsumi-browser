@@ -17,11 +17,6 @@ class NatsumiPostloadManager {
     }
 
     init() {
-        const hasRecursion = this.checkRecursion();
-        if (hasRecursion) {
-            return;
-        }
-
         this.postLoadTimeout = setTimeout(() => {
             this.checkPostLoad();
         }, 1000);
@@ -230,20 +225,6 @@ class NatsumiPostloadManager {
         if (!this.hasPostLoad) {
             this.showPostLoadWarning(!preLoadValue);
         }
-    }
-
-    checkRecursion() {
-        // Check if we have a recursive browser situation
-        const computedStyle = window.getComputedStyle(document.body);
-        const recursiveValue = computedStyle.getPropertyValue("--natsumi-recursive-browser");
-
-        if (recursiveValue) {
-            // oh no.
-            this.showPostLoadWarning(true);
-            return true;
-        }
-
-        return false;
     }
 }
 
