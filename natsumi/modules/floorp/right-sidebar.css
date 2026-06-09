@@ -30,11 +30,14 @@ SOFTWARE.
   @media not -moz-pref("sidebar.position_start") {
     #sidebar-box {
       order: 4 !important;
-      margin-left: var(--natsumi-browser-separation) !important;
     }
 
     #sidebar-splitter {
-      display: none !important;
+      order: 3 !important;
+    }
+
+    #tabbrowser-tabbox {
+      order: 2 !important;
     }
 
     #nora-statusbar[style*="display:none;"] {

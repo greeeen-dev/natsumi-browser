@@ -280,6 +280,12 @@ SOFTWARE.
     list-style-image: url("../../../icons/fluent/globe.svg") !important;
   }
 
+  #urlbar[open] .urlbar-input-container::before {
+    background-size: 18px !important;
+    background-position: center !important;
+    background-image: url("../../../icons/fluent/search.svg") !important;
+  }
+
   /* Permissions icons */
 
   #permissions-granted-icon, #identity-permission-box .sharing-icon, #blocked-permissions-container > .blocked-permission-icon {

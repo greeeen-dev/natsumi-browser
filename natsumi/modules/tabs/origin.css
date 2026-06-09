@@ -52,7 +52,7 @@ SOFTWARE.
 
     &[selected], &[visuallyselected], &[natsumi-glimpse-selected], &[multiselected] {
       & > .tab-stack > .tab-background {
-        background-color: light-dark(var(--tab-selected-bgcolor), rgba(255, 255, 255, 0.17)) !important;
+        background-color: light-dark(rgb(255, 255, 255), rgba(255, 255, 255, 0.17)) !important;
         border-top: 1px solid light-dark(#8888882d, #ffffff2d) !important;
         border-bottom: 1px solid #0000002d !important;
       }

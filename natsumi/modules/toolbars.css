@@ -29,11 +29,12 @@ SOFTWARE.
 #natsumi-pinned-toolbar {
   --natsumi-toolbar-margin: calc(var(--space-small) + var(--space-xsmall));
   --natsumi-toolbar-offset: var(--natsumi-toolbar-override, 0px);
+  --natsumi-toolbar-separation: calc(var(--natsumi-browser-separation) - 6px);
   display: flex !important;
   position: absolute;
   width: calc(var(--natsumi-sidebar-width) - calc(2 * var(--natsumi-toolbar-margin)));
   margin-inline: var(--natsumi-toolbar-margin);
-  top: calc(45px + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset));
+  top: calc(45px + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset) + var(--natsumi-toolbar-separation));
   flex-wrap: wrap;
   gap: 5px;
   min-height: 0 !important;
@@ -48,7 +49,7 @@ SOFTWARE.
   }
 
   @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
-    top: calc(45px + var(--natsumi-toolbar-offset));
+    top: calc(45px + var(--natsumi-toolbar-offset) + var(--natsumi-toolbar-separation));
   }
 
   & > toolbarbutton, & > toolbaritem {
@@ -128,6 +129,10 @@ SOFTWARE.
     max-width: 100%;
     flex: 1 !important;
   }
+}
+
+body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
+  --natsumi-toolbar-separation: 0px !important;
 }
 
 #vertical-pinned-tabs-splitter {
@@ -218,10 +223,10 @@ body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"])
 :root:not([customizing]) {
   #natsumi-pinned-toolbar {
     @media -moz-pref("natsumi.theme.single-toolbar") {
-      top: calc(86px + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset));
+      top: calc(86px + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset) + var(--natsumi-toolbar-separation));
 
       @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
-        top: calc(86px + var(--natsumi-toolbar-offset));
+        top: calc(86px + var(--natsumi-toolbar-offset) + var(--natsumi-toolbar-separation));
       }
     }
   }

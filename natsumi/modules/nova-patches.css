@@ -30,6 +30,8 @@ SOFTWARE.
   /* Standard mode */
   @media not -moz-pref("natsumi.theme.islands") {
     #navigator-toolbox {
+      margin-block-end: unset !important;
+
       @media -moz-pref("sidebar.position_start") {
         margin: 0 !important;
       }
@@ -49,15 +51,6 @@ SOFTWARE.
       border: 0 !important;
       border-radius: 0 !important;
       background-color: transparent !important;
-    }
-
-    #sidebar-splitter {
-      margin-inline: calc(var(--natsumi-browser-separation) / 2 - 2px) !important;
-      max-width: 4px !important;
-    }
-
-    #sidebar-splitter {
-      margin-inline: 0 !important;
     }
 
     #sidebar-launcher-splitter {
@@ -89,12 +82,24 @@ SOFTWARE.
         background-image: none !important;
       }
     }
+
+    @media -moz-pref("natsumi.theme.single-toolbar") {
+      body:not([natsumi-compact-mode]) #PersonalToolbar {
+        --natsumi-bookmarks-separation: 0px !important;
+        max-width: calc(var(--natsumi-bookmarks-width) - var(--natsumi-browser-separation)) !important;
+
+        @media not -moz-pref("sidebar.position_start") {
+          --natsumi-bookmarks-override: calc(var(--natsumi-sidebar-width) + var(--natsumi-browser-separation));
+        }
+      }
+    }
   }
 
   /* Islands mode */
   @media -moz-pref("natsumi.theme.islands") {
     * {
       --chrome-window-gap: var(--natsumi-browser-separation);
+      --natsumi-browser-border-color: var(--chrome-content-separator-color) !important;
     }
 
     #navigator-toolbox {
@@ -217,12 +222,6 @@ SOFTWARE.
       }
     }
 
-    #tabbrowser-tabbox {
-      .browserSidebarContainer {
-        --natsumi-browser-border-color: var(--chrome-content-separator-color) !important;
-      }
-    }
-
     @media -moz-pref("natsumi.theme.single-toolbar") {
       body:not([natsumi-compact-mode]) {
         #PersonalToolbar {
@@ -237,6 +236,18 @@ SOFTWARE.
       #navigator-toolbox {
         background: transparent !important;
         border: none !important;
+        padding-inline: 1px;
+
+        #urlbar-container {
+          max-width: calc(var(--natsumi-sidebar-width) - calc(var(--space-medium) * 2) - 2px) !important
+        }
+      }
+
+      body:not([natsumi-compact-mode]) #PersonalToolbar {
+        --natsumi-bookmarks-separation: 0px !important;
+        --natsumi-bookmarks-translate-override: 0 !important;
+        --natsumi-bookmarks-margin-override: -47px !important;
+        max-width: calc(var(--natsumi-bookmarks-width) - calc(var(--natsumi-browser-separation) * 3)) !important;
       }
     }
   }
@@ -256,6 +267,10 @@ SOFTWARE.
       background-image: none !important;
       translate: 0 !important;
     }
+
+    #PersonalToolbar .titlebar-buttonbox {
+      --natsumi-buttonbox-override: 0;
+    }
   }
 
   @media not -moz-pref("natsumi.theme.single-toolbar") {
@@ -268,8 +283,16 @@ SOFTWARE.
     }
   }
 
+  #sidebar-box {
+    background-color: transparent !important;
+  }
+
   #urlbar-container {
     max-height: 40px !important;
+  }
+
+  .urlbar-input-container {
+    outline: none !important;
   }
 
   #urlbar:not([open]) {
@@ -307,6 +330,15 @@ SOFTWARE.
 
   .urlbarView {
     margin-inline: 7px !important;
+    margin-block: 0 7px !important;
+  }
+
+  #urlbar-results {
+    padding-top: calc(7px - var(--space-xxsmall)) !important;
+  }
+
+  .urlbar-input-container::before {
+    --natsumi-search-icon-margin-offset: 1px;
   }
 
   .urlbarView-row {
@@ -332,6 +364,10 @@ SOFTWARE.
     overflow: visible !important;
   }
 
+  #PersonalToolbar {
+    border-top: none !important;
+  }
+
   .browserContainer {
     border-radius: 0 !important;
     border: none !important;
@@ -345,5 +381,7 @@ SOFTWARE.
     --toolbarbutton-icon-fill: light-dark(var(--color-gray-70), var(--color-gray-05));
     --chrome-block-radius: var(--natsumi-browser-border-radius) !important;
     --tab-background-color-hover: color-mix(currentColor 11%, transparent);
+    --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
+    --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-05));
   }
 }

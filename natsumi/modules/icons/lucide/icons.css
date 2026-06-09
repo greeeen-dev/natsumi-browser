@@ -277,6 +277,12 @@ SOFTWARE.
     list-style-image: url("../../../icons/lucide/globe.svg") !important;
   }
 
+  #urlbar[open] .urlbar-input-container::before {
+    fill: unset !important;
+    stroke: light-dark(black, white);
+    background-image: url("../../../icons/lucide/search.svg") !important;
+  }
+
   /* Permissions icons */
 
   #permissions-granted-icon, #identity-permission-box .sharing-icon, #blocked-permissions-container > .blocked-permission-icon {
