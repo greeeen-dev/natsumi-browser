@@ -99,6 +99,7 @@ class NatsumiPostloadManager {
                 width: 100vw;
                 height: 100vh;
                 z-index: 998 !important;
+                color: light-dark(black, white);
             
                 #natsumi-css-warning-content {
                     flex-direction: column;
