@@ -198,7 +198,7 @@ class NatsumiPostloadManager {
         if (recursiveBrowser) {
             warningHeader.textContent = "why would you do that";
             warningBody.textContent = "did you seriously open a browser window INSIDE A BROWSER WINDOW??????";
-            warningBody2.textContent = "just...close this tab and don't reopen it so you dont mess anything up";
+            warningBody2.textContent = "just...close this tab and don't reopen it so you don't mess anything up";
             hideButton.setAttribute("hidden", "");
             restartButton.setAttribute("hidden", "");
         }
