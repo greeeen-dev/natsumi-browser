@@ -173,6 +173,7 @@ SOFTWARE.
   display: grid;
   width: 100vw;
   height: 100vh;
+  color: light-dark(black, white);
   z-index: 998 !important;
 
   &:not(:has(#natsumi-welcome-content:hover)) {
