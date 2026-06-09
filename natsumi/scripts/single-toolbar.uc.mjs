@@ -109,10 +109,16 @@ class NatsumiSingleToolbarManager {
         // Create event listeners for window
         window.addEventListener("willenterfullscreen", () => {
             this.extendBookmarksIfNeeded(true);
-        })
+        });
         window.addEventListener("willexitfullscreen", () => {
             this.extendBookmarksIfNeeded(false);
+        });
+
+        // Create observer for title bar
+        let titleBarObserver = new MutationObserver(() => {
+            this.extendBookmarksIfNeeded();
         })
+        titleBarObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["customtitlebar"]});
     }
 
     extendBookmarksIfNeeded(isFullScreen = null) {
@@ -120,6 +126,7 @@ class NatsumiSingleToolbarManager {
         let controlsInSidebar = false;
         const sidebarOnLeft = ucApi.Prefs.get("sidebar.position_start").value;
         const isMac = Services.appinfo.OS.toLowerCase() === "darwin";
+        const isCustomTitlebar = document.documentElement.hasAttribute("customtitlebar");
 
         if (isFullScreen === null) {
             isFullScreen = document.documentElement.hasAttribute("inFullscreen");
@@ -132,7 +139,14 @@ class NatsumiSingleToolbarManager {
             controlsInSidebar = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
         }
 
+        if (isCustomTitlebar) {
+            // Custom titlebar, window controls should not be in the bookmarks bar whatsoever
+            document.body.removeAttribute("natsumi-bookmarks-extend");
+            return;
+        }
+
         if (hoverableBookmarksEnabled) {
+            // Bookmarks bar is hoverable
             document.body.removeAttribute("natsumi-bookmarks-extend");
             return;
         }
