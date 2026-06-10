@@ -26,7 +26,7 @@ SOFTWARE.
 
 /* ==== Single toolbar view ==== */
 @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
-  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) {
+  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded])[chromehidden=""] {
     #navigator-toolbox {
       width: var(--natsumi-sidebar-width) !important;
       min-height: 85px !important;
@@ -311,7 +311,11 @@ SOFTWARE.
         body:not([natsumi-bookmarks-hover]):not([natsumi-bookmarks-extend]), body[natsumi-compact-sidebar-hover], body[natsumi-compact-sidebar-extend] {
           #PersonalToolbar {
             -moz-window-dragging: no-drag !important;
-            translate: 0 calc(-34px + var(--natsumi-browser-separation));
+            translate: 0 calc(-34px + var(--natsumi-browser-separation)) !important;
+
+            @media -moz-pref("natsumi.theme.compact-marginless") {
+              translate: 0 calc(-28px) !important;
+            }
           }
         }
 
