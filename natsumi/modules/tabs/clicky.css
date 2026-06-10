@@ -123,4 +123,15 @@ SOFTWARE.
   .tabbrowser-tab[selected]:active .tab-background {
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1) !important;
   }
+
+  /* Unloaded Tabs */
+  @media -moz-pref("natsumi.tabs.grayout-unloaded") {
+    .tabbrowser-tab[pending="true"] {
+    opacity: 0.5 !important;
+    filter: grayscale(0.5) !important;
+      @media -moz-pref("natsumi.tabs.crossout-title") {
+    text-decoration: line-through !important;
+      }
+    }
+  }
 }
