@@ -328,7 +328,7 @@ class NatsumiStatusBarHandler {
 
 class NatsumiButtonsManager {
     constructor() {
-        this.fixableButtons = ["alltabs-button", "downloads-button", "library-button"];
+        this.fixableButtons = ["alltabs-button", "downloads-button", "library-button", "firefox-view-button"];
         this.badToolbars = ["nora-statusbar", "status-bar", "natsumi-pinned-toolbar"];
         this.toolbarObserver = new MutationObserver((mutations) => {
             for (let mutation of mutations) {
@@ -367,6 +367,14 @@ class NatsumiButtonsManager {
     }
 
     registerToolbarListener(toolbar) {
+        // Patch existing buttons
+        let toolbarButtons = toolbar.querySelectorAll("toolbarbutton");
+        for (let toolbarButton of toolbarButtons) {
+            if (this.fixableButtons.includes(toolbarButton.id)) {
+                this.addButtonPatch(toolbarButton);
+            }
+        }
+
         this.toolbarObserver.observe(toolbar, {childList: true});
     }
 
@@ -386,6 +394,11 @@ class NatsumiButtonsManager {
             }
 
             switch (button.id) {
+                // These cases are taken from navigator-toolbox.js
+                // Some are omitted as they cannot be triggered outside the navbar
+                case "firefox-view-button":
+                    FirefoxViewHandler.openToolbarMouseEvent(event);
+                    break;
                 case "alltabs-button":
                     gTabsPanel.showAllTabsPanel(event, "alltabs-button");
                     break;
