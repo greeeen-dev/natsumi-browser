@@ -3715,7 +3715,7 @@ function addSidebarTabsPane() {
     tabGrayoutSubgroup.registerOption("natsumiTabsCrossout", new CheckboxChoice(
         "natsumi.tabs.disable-crossout-title",
         "natsumiTabsCrossout",
-        "Also cross out labels for unloaded tabs",
+        "Cross out labels for unloaded tabs",
         "",
         true
     ));
