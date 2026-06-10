@@ -27,7 +27,7 @@ SOFTWARE.
 /* ==== Floorp Compact Mode ==== */
 
 @media -moz-pref("natsumi.browser.type", "floorp") {
-  :root:not([inDOMFullscreen="true"]) body[natsumi-compact-mode] {
+  :root:not([inDOMFullscreen="true"])[chromehidden=""] body[natsumi-compact-mode] {
     #panel-sidebar-select-box {
       margin-top: var(--natsumi-browser-separation) !important;
       top: 0;

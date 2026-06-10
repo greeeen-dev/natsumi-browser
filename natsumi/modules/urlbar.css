@@ -791,6 +791,12 @@ SOFTWARE.
           overflow: visible !important;
         }
 
+        &[noresults] {
+          .urlbarView {
+            display: none !important;
+          }
+        }
+
         .urlbarView-row {
           background: none !important;
 
