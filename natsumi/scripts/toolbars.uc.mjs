@@ -329,7 +329,7 @@ class NatsumiStatusBarHandler {
 class NatsumiButtonsManager {
     constructor() {
         this.fixableButtons = ["alltabs-button", "downloads-button", "library-button", "firefox-view-button"];
-        this.badToolbars = ["nora-statusbar", "status-bar", "natsumi-pinned-toolbar"];
+        this.badToolbars = ["nora-statusbar", "natsumi-pinned-toolbar"];
         this.toolbarObserver = new MutationObserver((mutations) => {
             for (let mutation of mutations) {
                 const addedNodes = mutation.addedNodes;
@@ -367,6 +367,11 @@ class NatsumiButtonsManager {
     }
 
     registerToolbarListener(toolbar) {
+        if (!this.badToolbars.includes(toolbar.id)) {
+            // This toolbar is fine
+            return;
+        }
+
         // Patch existing buttons
         let toolbarButtons = toolbar.querySelectorAll("toolbarbutton");
         for (let toolbarButton of toolbarButtons) {
