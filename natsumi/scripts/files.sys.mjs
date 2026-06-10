@@ -26,6 +26,7 @@ SOFTWARE.
 
 const allowedFileTypes = ["image", "audio"];
 const whitelistedFileTypes = ["application/ogg"];
+const blacklistedFileTypes = ["audio/flac"];
 const uploadsPath = PathUtils.join(PathUtils.profileDir, "natsumi-uploads");
 
 export class NatsumiFile {
@@ -48,6 +49,14 @@ function getFileData(file) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
         reader.addEventListener("load", () => {
+            // Check if filetype is blacklisted
+            for (const blacklistedType of blacklistedFileTypes) {
+                if (reader.result.startsWith(`data:${blacklistedType};`)) {
+                    reject("Filetype not allowed");
+                    return;
+                }
+            }
+
             let hasAllowedType = false;
             for (const allowedType of allowedFileTypes) {
                 if (reader.result.startsWith(`data:${allowedType}/`)) {

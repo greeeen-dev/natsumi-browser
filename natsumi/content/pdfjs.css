@@ -43,7 +43,9 @@ SOFTWARE.
 @media not -moz-pref("natsumi.pdfjs.disabled") {
   html[mozdisallowselectionprint] {
     &:has(head link:nth-of-type(1)[href^="resource://pdf.js"]) {
-      position: fixed !important;
+      #outerContainer {
+        position: fixed !important;
+      }
 
       /* Set material */
       * {

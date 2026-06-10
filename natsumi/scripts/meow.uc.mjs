@@ -79,6 +79,12 @@ function makeCatNoisesAndDoSomeVeryCuteInitialSetupBecauseIFeltVeryCuteWhenWriti
         ucApi.Prefs.get("natsumi.theme.addons-style-unsupported").reset();
     }
 
+    // Detect browser window
+    const isBrowser = (document.documentElement.getAttribute("chromehidden") ?? "") === "";
+    if (!isBrowser) {
+        document.body.setAttribute("natsumi-not-browser", "");
+    }
+
     // communicate in the average transfemme communication language (i.e. make cat noises) >:3333
     const catNoises = [
         "meow",

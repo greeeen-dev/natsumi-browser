@@ -274,6 +274,10 @@ SOFTWARE.
   #natsumi-welcome-button-next {
     min-width: 66px !important;
     min-height: 40px !important;
+    padding-inline: 20px;
+    text-align: center;
+    color: black;
+    align-items: center;
     font-size: 14px;
     font-weight: bold;
     border-radius: 4px;
@@ -290,6 +294,10 @@ SOFTWARE.
     &:hover {
       background-color: color-mix(in srgb, var(--natsumi-primary-color) 90%, black) !important;
     }
+
+    &[natsumi-welcome-complete] {
+      background-image: none !important;
+    }
   }
 
   #natsumi-welcome-title {
@@ -300,6 +308,24 @@ SOFTWARE.
 
   .natsumi-welcome-paragraph {
     font-size: medium;
+  }
+
+  #natsumi-welcome-complete {
+    width: 100%;
+
+    #natsumi-welcome-title, .natsumi-welcome-paragraph {
+      margin-inline: auto !important;
+    }
+
+    .natsumi-welcome-kawaii {
+      height: 100%;
+      max-height: 25vh;
+      margin-block: auto;
+      background-image: url("../icons/natsumi-kawaii.png");
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
   }
 
   &.natsumi-welcome-initial-animation {
@@ -315,13 +341,12 @@ SOFTWARE.
 
     #natsumi-welcome-button-next {
       animation: button-fadein 0.2s ease;
-      animation-delay: calc(var(--natsumi-global-delay) + 4.5s);
+      animation-delay: calc(var(--natsumi-global-delay) + 4.7s);
       animation-fill-mode: forwards;
     }
 
     #natsumi-corner-icon {
-      transition-delay: 4.5s;
-      transition-delay: calc(var(--natsumi-global-delay) + 4.5s);
+      transition-delay: calc(var(--natsumi-global-delay) + 4.7s);
       opacity: 1;
     }
 
@@ -336,7 +361,7 @@ SOFTWARE.
     }
 
     #natsumi-slogan-2 {
-      animation-delay: calc(var(--natsumi-global-delay) + 4s);
+      animation-delay: calc(var(--natsumi-global-delay) + 4.1s);
 
       span {
         background: linear-gradient(135deg, #ff9393, #ffb78b, #ffe88c, #5ce4a2, #97a6ff, #be9dff);
@@ -353,7 +378,7 @@ SOFTWARE.
 
     #natsumi-welcome-content {
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
-      transition-delay: calc(var(--natsumi-global-delay) + 4.5s);
+      transition-delay: calc(var(--natsumi-global-delay) + 4.7s);
       background-color: light-dark(white, #222);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
     }
