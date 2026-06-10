@@ -219,3 +219,14 @@ tab-split-view-wrapper {
 tab[natsumi-workspace-hidden] {
   display: none !important;
 }
+
+  /* Unloaded Tabs */
+  @media not -moz-pref("natsumi.tabs.grayout-unloaded") {
+    .tabbrowser-tab[pending="true"] {
+    opacity: 0.5 !important;
+    filter: grayscale(0.5) !important;
+      @media not -moz-pref("natsumi.tabs.crossout-title") {
+    text-decoration: line-through !important;
+      }
+    }
+  }

@@ -145,15 +145,4 @@ SOFTWARE.
       }
     }
   }
-
-  /* Unloaded Tabs */
-  @media -moz-pref("natsumi.tabs.grayout-unloaded") {
-    .tabbrowser-tab[pending="true"] {
-    opacity: 0.5 !important;
-    filter: grayscale(0.5) !important;
-      @media -moz-pref("natsumi.tabs.crossout-title") {
-    text-decoration: line-through !important;
-      }
-    }
-  }
 }
