@@ -237,6 +237,10 @@ body > * {
   display: none !important;
 }
 
+:root[customizing] #sidebar-main:not([sidebar-launcher-expanded]) #vertical-tabs {
+  min-width: unset !important;
+}
+
 #vertical-tabs {
   -moz-window-dragging: drag;
 
