@@ -219,3 +219,10 @@ tab-split-view-wrapper {
 tab[natsumi-workspace-hidden] {
   display: none !important;
 }
+
+/* Gray-out Unloaded Tabs */
+.tabbrowser-tab[pending="true"] {
+  opacity: 0.5;
+  filter: grayscale(0.5);
+  text-decoration: line-through;
+}
