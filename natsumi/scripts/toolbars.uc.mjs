@@ -231,10 +231,8 @@ class NatsumiStatusBarHandler {
 
             this.statusBarObserver.observe(this.statusBarNode, {attributes: true, childList: true, subtree: true});
 
-            // Also initialize status bar in compact mode manager
-            if (document.body.natsumiCompactModeManager) {
-                document.body.natsumiCompactModeManager.initStatusbar();
-            }
+            // Add observer for status bar
+            document.body.natsumiButtonsManager.registerToolbarListener(this.statusBarNode);
         }
     }
 
@@ -328,9 +326,90 @@ class NatsumiStatusBarHandler {
     }
 }
 
+class NatsumiButtonsManager {
+    constructor() {
+        this.fixableButtons = ["alltabs-button", "downloads-button", "library-button"];
+        this.badToolbars = ["nora-statusbar", "status-bar", "natsumi-pinned-toolbar"];
+        this.toolbarObserver = new MutationObserver((mutations) => {
+            for (let mutation of mutations) {
+                const addedNodes = mutation.addedNodes;
+                for (let addedNode of addedNodes) {
+                    if (addedNode.nodeName === "toolbarpaletteitem") {
+                        addedNode = addedNode.querySelector("toolbarbutton");
+                    }
+
+                    if (this.fixableButtons.includes(addedNode.id)) {
+                        this.addButtonPatch(addedNode);
+                    }
+                }
+            }
+        });
+    }
+
+    init() {
+        for (let fixableButton of this.fixableButtons) {
+            let buttonNode = document.getElementById(fixableButton);
+
+            if (!buttonNode) {
+                continue;
+            }
+
+            this.addButtonPatch(buttonNode);
+        }
+
+        // Observe pinned toolbar
+        let pinnedToolbar = document.getElementById("natsumi-pinned-toolbar");
+        this.registerToolbarListener(pinnedToolbar);
+    }
+
+    getParentToolbar(node) {
+        return node.parentElement.id;
+    }
+
+    registerToolbarListener(toolbar) {
+        this.toolbarObserver.observe(toolbar, {childList: true});
+    }
+
+    addButtonPatch(button) {
+        if (button.hasAttribute("natsumi-toolbar-patched")) {
+            // Already patched
+            return;
+        }
+
+        button.addEventListener("mousedown", (event) => {
+            if (!this.badToolbars.includes(this.getParentToolbar(button))) {
+                return;
+            }
+
+            if (button.hasAttribute("open")) {
+                return;
+            }
+
+            switch (button.id) {
+                case "alltabs-button":
+                    gTabsPanel.showAllTabsPanel(event, "alltabs-button");
+                    break;
+                case "downloads-button":
+                    DownloadsIndicatorView.onCommand(event);
+                    break;
+                case "library-button":
+                    PanelUI.showSubView("appMenu-libraryView", button, event);
+                    break;
+            }
+        });
+
+        button.setAttribute("natsumi-toolbar-patched", "");
+    }
+}
+
 if (!document.body.natsumiToolbarManager) {
     document.body.natsumiToolbarManager = new NatsumiToolbarManager();
     document.body.natsumiToolbarManager.init();
+}
+
+if (!document.body.natsumiButtonsManager) {
+    document.body.natsumiButtonsManager = new NatsumiButtonsManager();
+    document.body.natsumiButtonsManager.init();
 }
 
 let sidebar = document.querySelector("#sidebar-main");
