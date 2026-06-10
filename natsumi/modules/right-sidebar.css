@@ -31,7 +31,7 @@ SOFTWARE.
     margin-right: 0 !important;
   }
 
-  :root:not([inDOMFullscreen="true"]) body[natsumi-compact-mode] #sidebar-box {
+  :root:not([inDOMFullscreen="true"])[chromehidden=""] body[natsumi-compact-mode] #sidebar-box {
     margin-left: 0 !important;
 
     @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
