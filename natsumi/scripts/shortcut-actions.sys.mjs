@@ -27,7 +27,7 @@ SOFTWARE.
 import {NatsumiNotification} from "./notifications.sys.mjs";
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
-const urlCleaner = Cc["@mozilla.org/url-query-string-stripper;1"].createInstance(Ci.nsIURLQueryStringStripper);
+let urlCleaner;
 
 function getCurrentUrl() {
     let copyCleanIfPossible = false;
@@ -40,6 +40,10 @@ function getCurrentUrl() {
     if (copyCleanIfPossible) {
         // Get clean URL
         let cleanedLink;
+
+        if (!urlCleaner) {
+            urlCleaner = Cc["@mozilla.org/url-query-string-stripper;1"].createInstance(Ci.nsIURLQueryStringStripper);
+        }
 
         try {
             cleanedLink = urlCleaner.stripForCopyOrShare(gBrowser.currentURI);
