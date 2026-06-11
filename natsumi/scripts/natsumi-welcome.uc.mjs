@@ -31,6 +31,7 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+import {getFile} from "./files.sys.mjs";
 import {NatsumiNotification} from "./notifications.sys.mjs";
 import {resetTabStyleIfNeeded} from "./reset-tab-style.sys.mjs";
 
@@ -103,6 +104,10 @@ class NatsumiWelcome {
             <div id="natsumi-welcome">
                 <image id="natsumi-icon"></image>
                 <div id="natsumi-welcome-content">
+                    <div id="natsumi-welcome-progress-container">
+                        <div id="natsumi-welcome-progress-icon"></div>
+                        <div id="natsumi-welcome-progress-bar" hidden=""></div>
+                    </div>
                     <div id="natsumi-welcome-content-container">
                         <div id="natsumi-welcome-content-body">
                             <div id="natsumi-welcome-initial" class="natsumi-welcome-pane">
@@ -180,6 +185,16 @@ class NatsumiWelcome {
 
     addPane(pane) {
         this.panes.push(pane);
+
+        // Add progress node
+        let progressContainer = document.getElementById("natsumi-welcome-progress-bar");
+        let progressNode = document.createElement("div");
+        let progressLabelNode = document.createElement("div");
+        progressNode.classList.add("natsumi-welcome-progress");
+        progressLabelNode.classList.add("natsumi-welcome-progress-label");
+        progressLabelNode.textContent = `${this.panes.length}`;
+        progressNode.appendChild(progressLabelNode);
+        progressContainer.appendChild(progressNode);
     }
 
     handleSelection(selectionObject, nonDefaultDependency) {
@@ -238,12 +253,31 @@ class NatsumiWelcome {
         if (this.step === this.panes.length) {
             paneNode = convertToXUL(`
                 <div id="natsumi-welcome-complete" class="natsumi-welcome-pane">
-                    <div id="natsumi-welcome-title">That's it!</div>
-                    <div class="natsumi-welcome-paragraph">Thank you for installing Natsumi. Enjoy your new customized browser!</div>
+                    <div id="natsumi-welcome-title">Ready to browse?</div>
+                    <div class="natsumi-welcome-paragraph">Natsumi is ready to rock and roll. Have fun browsing!</div>
+                    <div class="natsumi-welcome-kawaii"></div>
                 </div>
-            `)
+            `);
+            let nextButton = this.node.querySelector("#natsumi-welcome-button-next");
+            nextButton.textContent = "Let's go!";
+            nextButton.setAttribute("natsumi-welcome-complete", "");
+
+            let progressContainer = document.getElementById("natsumi-welcome-progress-bar");
+            progressContainer.setAttribute("hidden", "");
         } else {
             paneNode = this.panes[this.step].generateNode();
+
+            let progressContainer = document.getElementById("natsumi-welcome-progress-bar");
+            let progressNodes = Array.from(progressContainer.querySelectorAll(".natsumi-welcome-progress"));
+            progressContainer.removeAttribute("hidden");
+
+            for (let i = 0; i < progressNodes.length; i++) {
+                if (i === this.step) {
+                    progressNodes[i].setAttribute("highlighted", "");
+                } else if (i < this.step) {
+                    progressNodes[i].setAttribute("completed", "");
+                }
+            }
         }
 
         bodyContainer.appendChild(paneNode);
@@ -333,6 +367,191 @@ class NatsumiWelcome {
                 tabStyleResetObject.addToContainer();
             }
         }, 4800);
+    }
+}
+
+class NatsumiBaseStartupAnimation {
+    constructor() {
+        this.startupNode = convertToXUL(`
+            <div id="natsumi-startup">
+            </div>
+        `);
+        this.audio = null;
+    }
+
+    init() {
+        document.body.appendChild(this.startupNode);
+        document.body.setAttribute("natsumi-startup-animation", "");
+
+        // Refetch startup node
+        this.startupNode = document.getElementById("natsumi-startup");
+    }
+
+    prepareAudio(audioUrl) {
+        this.audio = new Audio(audioUrl);
+        this.audio.load();
+        this.audio.volume = 0.5;
+    }
+
+    revealStartup() {
+        this.startupNode.setAttribute("natsumi-startup-animation-play", "");
+    }
+
+    revealBrowser() {
+        document.body.setAttribute("natsumi-startup-animation-reveal", "");
+    }
+
+    completeAnimation() {
+        document.body.removeAttribute("natsumi-startup-animation");
+        document.body.removeAttribute("natsumi-startup-animation-reveal");
+
+        // Destroy startup animation node
+        this.startupNode.remove();
+    }
+
+    async play() {
+        console.error("Animation not implemented");
+    }
+}
+
+class NatsumiDefaultStartupAnimation extends NatsumiBaseStartupAnimation {
+    async play() {
+        const quotes = [
+            ["when the natsumi is browser", null],
+            ["Welcome to your personal internet.", null],
+            ["Have you riced your browser today?", null],
+            ["nya :3", null],
+            ["stay hydrated!!!1", null],
+            ["quotes? in my browser???", null],
+            ["Eat ice cream for a huge buff.", "@therealconfused"]
+        ]
+
+        // Pick a random quote
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        const quoteText = randomQuote[0];
+        const quoteAuthor = randomQuote[1];
+
+        // Add icon
+        let iconContainer = document.createElement("div");
+        iconContainer.id = "natsumi-startup-icon";
+        this.startupNode.appendChild(iconContainer);
+
+        // Add quote
+        let quoteContainer = document.createElement("div");
+        quoteContainer.id = "natsumi-startup-quote";
+        this.startupNode.appendChild(quoteContainer);
+
+        let quoteTextContainer = document.createElement("div");
+        quoteTextContainer.id = "natsumi-startup-quote-text";
+        quoteTextContainer.textContent = quoteText;
+        quoteContainer.appendChild(quoteTextContainer);
+
+        if (quoteAuthor) {
+            let quoteAuthorContainer = document.createElement("div");
+            quoteAuthorContainer.id = "natsumi-startup-quote-author";
+            quoteAuthorContainer.textContent = `- ${quoteAuthor}`;
+            quoteContainer.appendChild(quoteAuthorContainer);
+        }
+
+        this.audio.addEventListener("play", () => {console.log("play", Date.now())});
+        this.audio.addEventListener("playing", () => {console.log("playing", Date.now())});
+
+        // Play startup sound
+        if (this.audio) {
+            let audioPromise = waitForAudioPlay(this.audio);
+            try {
+                await this.audio.play();
+                await audioPromise;
+            } catch(e) {
+                console.error("Failed to play startup audio:", e);
+            }
+        }
+
+        console.log("start", Date.now());
+
+        this.revealStartup();
+
+        setTimeout(() => {
+            this.revealBrowser();
+        }, 1000);
+
+        setTimeout(() => {
+            this.completeAnimation();
+        }, 1200);
+    }
+}
+
+class NatsumiXPStartupAnimation extends NatsumiBaseStartupAnimation {
+    async playAudio() {
+        if (!this.audio) {
+            return;
+        }
+
+        let audioPromise = waitForAudioPlay(this.audio);
+
+        try {
+            await this.audio.play();
+            await audioPromise;
+        } catch(e) {
+            console.error("Failed to play startup audio:", e);
+        }
+
+        this.startupNode.setAttribute("natsumi-startup-xp-welcome", "");
+
+        setTimeout(() => {
+            this.completeAnimation();
+        }, 2000);
+    }
+
+    async play() {
+        this.startupNode.setAttribute("natsumi-startup-xp", "");
+
+        // Add logo container
+        let xpLogoContainer = document.createElement("div");
+        xpLogoContainer.id = "natsumi-startup-xp-logo";
+        this.startupNode.appendChild(xpLogoContainer);
+
+        // Add icon
+        let iconContainer = document.createElement("div");
+        iconContainer.id = "natsumi-startup-xp-icon";
+        xpLogoContainer.appendChild(iconContainer);
+
+        // Add text
+        let xpTextContainer = document.createElement("div");
+        xpTextContainer.id = "natsumi-startup-xp-text-container";
+        xpLogoContainer.appendChild(xpTextContainer);
+
+        let text1 = document.createElement("div");
+        text1.id = "natsumi-startup-xp-text-1";
+        text1.textContent = "Natsumi";
+        xpTextContainer.appendChild(text1);
+
+        let text2 = document.createElement("div");
+        text2.id = "natsumi-startup-xp-text-2";
+        text2.textContent = "browser";
+        xpTextContainer.appendChild(text2);
+
+        // Add loading bar
+        let loadingBar = document.createElement("div");
+        loadingBar.id = "natsumi-startup-xp-loading";
+        this.startupNode.appendChild(loadingBar);
+
+        // Create welcome container
+        let welcomeContainer = document.createElement("div");
+        welcomeContainer.id = "natsumi-startup-xp-welcome";
+        this.startupNode.appendChild(welcomeContainer);
+
+        let welcomeText = document.createElement("div");
+        welcomeText.id = "natsumi-startup-xp-welcome-text";
+        welcomeText.textContent = "welcome";
+        welcomeContainer.appendChild(welcomeText);
+
+        this.revealStartup();
+
+        // Play startup sound
+        setTimeout(() => {
+            this.playAudio()
+        }, 6000);
     }
 }
 
@@ -516,7 +735,7 @@ function createIconsPane() {
                 <div class="natsumi-welcome-selection-icon icon-reload"></div>
             </div>
             <div class="natsumi-welcome-selection-label">
-                Firefox default
+                Acorn
             </div>
         </div>
         <div class="natsumi-welcome-selection" pref="natsumi.theme.icons" type="string" value="lucide">
@@ -665,7 +884,7 @@ function createTabsPane() {
 
     let themesPane = new NatsumiWelcomePane(
         "natsumi-welcome-tabs",
-        "Choose your tab design",
+        "Fresh look for your tabs",
         `
             <div class="natsumi-welcome-paragraph">
                 You can choose from a variety of tab designs to suit your style.
@@ -699,7 +918,7 @@ function createURLbarPane() {
 
     let themesPane = new NatsumiWelcomePane(
         "natsumi-welcome-urlbar",
-        "Choose your URL bar style",
+        "Floating or not floating?",
         `
             <div class="natsumi-welcome-paragraph">
                 You can choose to make your URL bar float or keep the original design.
@@ -954,6 +1173,62 @@ function setupInitialConfig() {
     );
 }
 
+async function runStartupAnimation() {
+    const startupAnimations = {
+        "simple": new NatsumiDefaultStartupAnimation(),
+        "nostalgic": new NatsumiXPStartupAnimation()
+    };
+    const startupSounds = {
+        "default": null,
+        "borealis": "chrome://natsumi/content/sounds/startup.ogg"
+    }
+
+    let startupAnimation = "default";
+    if (ucApi.Prefs.get("natsumi.startup.type").exists()) {
+        startupAnimation = ucApi.Prefs.get("natsumi.startup.type").value;
+    }
+
+    if (!startupAnimation in startupAnimations) {
+        return;
+    }
+
+    let startupSound = "default";
+    if (ucApi.Prefs.get("natsumi.startup.sound").exists()) {
+        startupSound = ucApi.Prefs.get("natsumi.startup.sound").value;
+    }
+
+    if (!startupSound in startupSounds && startupSound !== "custom") {
+        startupSound = "default";
+    }
+
+    let startupSoundUrl = null;
+
+    // Get sound URL
+    if (startupSound === "custom" && ucApi.Prefs.get("natsumi.startup.custom-sound-id").exists()) {
+        try {
+            const startupSoundFile = await getFile(ucApi.Prefs.get("natsumi.startup.custom-sound-id").value);
+            startupSoundUrl = startupSoundFile.data;
+        } catch(e) {
+            console.error("Failed to get sound file:", e);
+        }
+    } else {
+        startupSoundUrl = startupSounds[startupSound];
+    }
+
+    const startupAnimationObject = startupAnimations[startupAnimation];
+    startupAnimationObject.init();
+
+    // Load sound
+    startupAnimationObject.prepareAudio(startupSoundUrl);
+
+    // Start with a slight delay to allow window to load into view
+    setTimeout(() => {
+        startupAnimationObject.play().catch((error) => {
+            console.error("Startup animation failed to play:", error);
+        });
+    }, 100);
+}
+
 const welcomeAudioUrl = "chrome://natsumi/content/sounds/welcome.ogg";
 
 let welcomeViewed = false;
@@ -961,6 +1236,9 @@ let tabStyleReset = false;
 if (ucApi.Prefs.get("natsumi.welcome.viewed").exists()) {
     welcomeViewed = ucApi.Prefs.get("natsumi.welcome.viewed").value;
 }
+
+// Check if the window is an actual browser window
+const isBrowser = (document.documentElement.getAttribute("chromehidden") ?? "") === "";
 
 // Errors (blocks onboarding)
 let browserName = AppConstants.MOZ_APP_NAME.toLowerCase();
@@ -989,6 +1267,7 @@ if (torBrowsers.includes(browserName)) {
 
 const cssEnabled = ucApi.Prefs.get("toolkit.legacyUserProfileCustomizations.stylesheets").value;
 
+let earlyBlockProgress = false;
 let settingsEnabled = false;
 if (ucApi.Prefs.get("userChromeJS.persistent_domcontent_callback").exists()) {
     settingsEnabled = ucApi.Prefs.get("userChromeJS.persistent_domcontent_callback").value;
@@ -997,7 +1276,8 @@ if (ucApi.Prefs.get("userChromeJS.persistent_domcontent_callback").exists()) {
 if (!cssEnabled || !settingsEnabled) {
     console.log("Configuring browser...");
     setupInitialConfig();
-} else if (!welcomeViewed && !blockOnboarding) {
+    earlyBlockProgress = true;
+} else if (!welcomeViewed && !blockOnboarding && isBrowser) {
     // Set up welcomer
     setupWelcome();
     createLayoutPane();
@@ -1012,12 +1292,19 @@ if (!cssEnabled || !settingsEnabled) {
     audio.load();
     audio.volume = 0.5;
 
+    audio.addEventListener("play", () => {console.log("play", Date.now())});
+    audio.addEventListener("playing", () => {console.log("playing", Date.now())});
+
     // Start welcomer
-    waitForAudioLoad(audio).then(() => {
-        audio.play().catch((error) => {
-            console.warn("Failed to play audio:", error);
-        });
+    waitForAudioPlay(audio).then(() => {
+        console.log("start", Date.now());
         natsumiWelcomeObject.start();
+    }).catch((error) => {
+        console.warn("Failed to play audio:", error);
+        natsumiWelcomeObject.start();
+    });
+    waitForAudioLoad(audio).then(() => {
+        audio.play();
     }).catch((error) => {
         console.warn("Audio failed to load:", error);
         natsumiWelcomeObject.start();
@@ -1036,6 +1323,8 @@ if (!cssEnabled || !settingsEnabled) {
     if (isFloorp) {
         tabStyleReset = resetTabStyleIfNeeded();
     }
+
+    earlyBlockProgress = true;
 }
 
 // Show compatibility warning on unsupported browsers
@@ -1043,13 +1332,26 @@ const potentialIssueBrowsers = [
     "zen", // Zen Browser (unsupported), reason: see README FAQ
     "torbrowser", // Tor Browser (supported), reason: project recommends against installing plugins
     "mullvadbrowser" // Mullvad Browser (supported), reason: based on Tor Browser, see above
-]
+];
+const blockProgress = potentialIssueBrowsers.includes(browserName) || isOutdated();
 
 try {
-    if (potentialIssueBrowsers.includes(browserName) || isOutdated()) {
+    if (blockProgress) {
         createCompatibilityWarning();
     }
 } catch (e) {
     // Forego compatibility check (for the sake of reliability)
     console.error("Compatibility check failed: ", e);
+}
+
+// Play startup animation
+let startupEnabled = false;
+if (ucApi.Prefs.get("natsumi.startup.type").exists()) {
+    startupEnabled = ucApi.Prefs.get("natsumi.startup.tyoe").value !== "default";
+}
+
+if (!blockProgress && !earlyBlockProgress && startupEnabled && isBrowser) {
+    runStartupAnimation().catch((error) => {
+        console.error("Failed to run startup animation:", error);
+    });
 }

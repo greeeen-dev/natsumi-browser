@@ -36,7 +36,6 @@ SOFTWARE.
 
     &:not([inDOMFullscreen="true"]):not([drawtitle]) body:not([natsumi-compact-mode]) {
       #navigator-toolbox {
-        --natsumi-browser-border-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
         transition: none !important;
         border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color) !important;
         border-bottom: none !important;

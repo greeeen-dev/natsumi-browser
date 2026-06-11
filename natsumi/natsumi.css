@@ -40,6 +40,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 /* Base modules */
 @import "modules/themer.css";
 @import "modules/base.css";
+@import "modules/dialog.css";
 @import "modules/backdrop-blur.css";
 @import "modules/single-toolbar.css";
 @import "modules/tabs.css";
@@ -53,6 +54,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/compact-mode.css";
 @import "modules/glimpse.css";
 @import "modules/welcome.css";
+@import "modules/startup.css";
 @import "modules/updater.css";
 @import "modules/customize.css";
 @import "modules/toolbars.css";
@@ -70,6 +72,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "modules/floorp/workspaces.css";
 @import "modules/floorp/miniplayer.css";
 @import "modules/floorp/right-sidebar.css";
+@import "modules/floorp/compact-mode.css";
 @import "modules/floorp/webapps.css";
 @import "modules/floorp/command-palette.css";
 

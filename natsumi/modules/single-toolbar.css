@@ -26,7 +26,7 @@ SOFTWARE.
 
 /* ==== Single toolbar view ==== */
 @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
-  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) {
+  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded])[chromehidden=""] {
     #navigator-toolbox {
       width: var(--natsumi-sidebar-width) !important;
       min-height: 85px !important;
@@ -141,12 +141,14 @@ SOFTWARE.
 
     #PersonalToolbar {
       --natsumi-bookmarks-width: calc(100vw - var(--natsumi-sidebar-width));
+      --natsumi-bookmarks-separation: calc(calc(var(--natsumi-browser-separation) - 6px) * 2);
       width: var(--natsumi-bookmarks-width) !important;
-      margin-left: var(--natsumi-bookmarks-override, var(--natsumi-sidebar-width)) !important;
+      margin-left: calc(var(--natsumi-bookmarks-override, var(--natsumi-sidebar-width)) + var(--natsumi-bookmarks-separation)) !important;
       padding-inline: 0 !important;
       padding-top: 6px !important;
       padding-bottom: 6px !important;
-      margin-top: -41px !important;
+      translate: 0 var(--natsumi-bookmarks-translate-override, calc(calc(var(--natsumi-browser-separation) - 6px) / 2)) !important;
+      margin-top: var(--natsumi-bookmarks-margin-override, -41px) !important;
       overflow: visible !important;
       transition: min-height 0s ease, visibility 0s ease, background-color 0.2s ease;
       min-height: 40px !important;
@@ -213,7 +215,11 @@ SOFTWARE.
           }
 
           #PersonalToolbar .titlebar-buttonbox {
-            margin-left: var(--natsumi-browser-separation) !important;
+            margin-inline: var(--natsumi-buttonbox-override, var(--natsumi-browser-separation)) 6px !important;
+          }
+
+          body[natsumi-compact-mode] #PersonalToolbar .titlebar-buttonbox {
+            margin-inline: 0 6px !important;
           }
         }
 
@@ -252,11 +258,11 @@ SOFTWARE.
     }
 
     #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
-      margin-top: var(--natsumi-browser-separation) !important;
+      margin-top: var(--natsumi-sidebar-margin-override, var(--natsumi-browser-separation)) !important;
       transition: margin-top 0.2s ease !important;
 
       @media (-moz-platform: windows) {
-        margin-top: calc(var(--natsumi-browser-separation) + 2px) !important;
+        margin-top: var(--natsumi-sidebar-margin-override, calc(var(--natsumi-browser-separation) + 2px)) !important;
       }
     }
 
@@ -305,7 +311,11 @@ SOFTWARE.
         body:not([natsumi-bookmarks-hover]):not([natsumi-bookmarks-extend]), body[natsumi-compact-sidebar-hover], body[natsumi-compact-sidebar-extend] {
           #PersonalToolbar {
             -moz-window-dragging: no-drag !important;
-            translate: 0 calc(-34px + var(--natsumi-browser-separation));
+            translate: 0 calc(-34px + var(--natsumi-browser-separation)) !important;
+
+            @media -moz-pref("natsumi.theme.compact-marginless") {
+              translate: 0 calc(-28px) !important;
+            }
           }
         }
 

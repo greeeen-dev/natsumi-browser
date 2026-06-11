@@ -1,26 +1,21 @@
 * {
   --natsumi-sdl2-button-idle-color: var(--natsumi-button-idle-color);
-  --natsumi-sdl2-button-hover-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-  --natsumi-sdl2-button-active-color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 80%, black),
-                                                 color-mix(in srgb, var(--natsumi-primary-color) 80%, white));
+  --natsumi-sdl2-button-hover-color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 80%, black), color-mix(in srgb, var(--natsumi-primary-color) 80%, white));
+  --natsumi-sdl2-button-active-color: light-dark(color-mix(in srgb, var(--natsumi-colors-primary) 70%, black), color-mix(in srgb, var(--natsumi-primary-color) 70%, white));
   --natsumi-sdl2-button-idle-text-color: light-dark(black, white);
   --natsumi-sdl2-button-hover-text-color: light-dark(white, black);
   --natsumi-sdl2-button-active-text-color: light-dark(white, black);
 
   /* Highlighted button */
-  --natsumi-sdl2-button-highlight-color: light-dark(var(--natsumi-primary-color), var(--natsumi-colors-primary));
+  --natsumi-sdl2-button-highlight-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
 
   /* Borders */
-  --natsumi-sdl2-button-idle-border: 2px solid var(--natsumi-sdl2-button-highlight-color);
-  --natsumi-sdl2-button-hover-border: 2px solid var(--natsumi-sdl2-button-hover-color);
-  --natsumi-sdl2-button-active-border: 2px solid var(--natsumi-sdl2-button-active-color);
+  --natsumi-sdl2-button-idle-border: 1px solid var(--natsumi-sdl2-button-highlight-color);
+  --natsumi-sdl2-button-hover-border: 1px solid var(--natsumi-sdl2-button-hover-color);
+  --natsumi-sdl2-button-active-border: 1px solid var(--natsumi-sdl2-button-active-color);
 
   /* Shadow (some buttons may only have this for active state) */
   --natsumi-sdl2-button-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-
-  @media (prefers-color-scheme: dark) {
-
-  }
 
   /* Haze button colors */
   --natsumi-sdl2-haze-button-idle-color: color-mix(in srgb, var(--natsumi-sdl2-haze-button-context-color, white) 50%, transparent);

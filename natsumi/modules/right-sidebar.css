@@ -31,7 +31,7 @@ SOFTWARE.
     margin-right: 0 !important;
   }
 
-  :root:not([inDOMFullscreen="true"]) body[natsumi-compact-mode] #sidebar-box {
+  :root:not([inDOMFullscreen="true"])[chromehidden=""] body[natsumi-compact-mode] #sidebar-box {
     margin-left: 0 !important;
 
     @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
@@ -39,7 +39,7 @@ SOFTWARE.
     }
   }
 
-  :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
+  :root:not([inDOMFullscreen="true"])[chromehidden=""]:not([drawtitle]) {
     #browser:not([data-is-child="true"]) {
       #tabbrowser-tabbox {
         margin-left: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
@@ -49,7 +49,7 @@ SOFTWARE.
 
     body[natsumi-compact-mode] #browser:not([data-is-child="true"]) {
       #tabbrowser-tabbox {
-        margin-right: var(--natsumi-browser-separation) !important;
+        margin-right: var(--natsumi-right-sidebar-margin-override, var(--natsumi-browser-separation)) !important;
 
         @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
           margin-right: 0 !important;
@@ -59,13 +59,13 @@ SOFTWARE.
   }
 
   @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
-    :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) {
+    :root:not([customizing])[chromehidden=""]:has(#sidebar-main[sidebar-launcher-expanded]) {
       #PersonalToolbar {
         margin-left: calc(-100vw + var(--natsumi-bookmarks-override, var(--natsumi-sidebar-width))) !important;
       }
 
       body[natsumi-compact-mode] #PersonalToolbar {
-        margin-left: calc(-100vw + calc(var(--natsumi-browser-separation) * 2)) !important;
+        margin-left: calc(-100vw + 12px) !important;
       }
     }
 

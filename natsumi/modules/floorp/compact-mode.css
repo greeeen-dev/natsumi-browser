@@ -1,0 +1,97 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Floorp Compact Mode ==== */
+
+@media -moz-pref("natsumi.browser.type", "floorp") {
+  :root:not([inDOMFullscreen="true"])[chromehidden=""] body[natsumi-compact-mode] {
+    #panel-sidebar-select-box {
+      margin-top: var(--natsumi-browser-separation) !important;
+      top: 0;
+    }
+
+    @media -moz-pref("natsumi.theme.compact-marginless") {
+      #panel-sidebar-box:not([data-floating="true"]) {
+        --natsumi-sidebar-margin-override: 0;
+        border: none !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+      }
+
+      @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+        #panel-sidebar-select-box {
+          margin: 0 !important;
+          border-radius: 0 !important;
+          height: 100vh !important;
+        }
+      }
+    }
+
+    @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+      @media -moz-pref("sidebar.position_start") {
+        &:not([natsumi-panel-sidebar-on-right]):has(#panel-sidebar-select-box) {
+          #sidebar-box, #tabbrowser-tabbox {
+            margin-left: 0 !important;
+          }
+        }
+      }
+    }
+
+    @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+      @media not -moz-pref("natsumi.theme.compact-mode") {
+        #panel-sidebar-select-box {
+          height: calc(100vh - calc(var(--natsumi-browser-separation) * 2) - var(--natsumi-panel-sidebar-bookmarks-offset)) !important;
+          transition: right 0.2s ease, top 0.1s ease, opacity 0.2s ease, height 0.1s ease, margin-top 0.2s ease !important;
+        }
+      }
+
+      &[natsumi-compact-navbar-hover],
+      &[natsumi-compact-navbar-extend],
+      &:has(#navigator-toolbox.fullscreen-with-menubar),
+      &:has(#navigator-toolbox.fullscreen-floating-toolbox),
+      &:has(#navigator-toolbox toolbarbutton[open], #navigator-toolbox #urlbar[focused]) {
+        #panel-sidebar-select-box {
+          height: calc(100vh - calc(var(--natsumi-browser-separation) * 2) - 40px - var(--natsumi-panel-sidebar-bookmarks-offset)) !important;
+          top: calc(40px + var(--natsumi-panel-sidebar-bookmarks-offset));
+        }
+      }
+
+      @media (not -moz-pref("natsumi.theme.compact-style", "toolbar")) or -moz-pref("natsumi.theme.single-toolbar") {
+        @media -moz-pref("sidebar.position_start") {
+          &:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-select-box {
+            display: none !important;
+          }
+        }
+
+        @media not -moz-pref("sidebar.position_start") {
+          &[natsumi-panel-sidebar-on-right] #panel-sidebar-select-box {
+            display: none !important;
+          }
+        }
+      }
+    }
+  }
+}

@@ -92,6 +92,148 @@ function setStringPreference(preference, value) {
     ucApi.Prefs.set(preference, value);
 }
 
+class FileUpload {
+    constructor(id, fileType) {
+        this.id = id;
+        this.callback = null;
+        this.fileType = fileType;
+        this.currentFile = null;
+        this.node = null;
+    }
+
+    generateNode() {
+        const fileSelectorNode = convertToXUL(`
+            <div class="natsumi-file-selector">
+                <div class="natsumi-file-current">No image uploaded</div>
+                <div class="natsumi-file-remove" hidden=""></div>
+                <div class="natsumi-file-submit"></div>
+            </div>
+        `);
+
+        // Get node
+        this.node = fileSelectorNode.querySelector(".natsumi-file-selector");
+        this.node.id = this.id;
+
+        // Set current file text
+        const currentNode = this.node.querySelector(".natsumi-file-current");
+        currentNode.textContent = `No ${this.fileType} selected`;
+
+        if (this.fileType === "image") {
+            // Use image icon
+            const submitNode = this.node.querySelector(".natsumi-file-submit");
+            submitNode.setAttribute("image", "");
+        }
+
+        // Add event listeners
+        const submitNode = this.node.querySelector(".natsumi-file-submit");
+        const removeNode = this.node.querySelector(".natsumi-file-remove");
+
+        submitNode.addEventListener("click", () => {
+            this.requestUpload();
+        })
+        removeNode.addEventListener("click", () => {
+            this.removeFile();
+        })
+
+        return this.node;
+    }
+
+    setUploadCallback(callback) {
+        this.callback = callback;
+    }
+
+    async requestUpload() {
+        let uploadNode = document.createElement("input");
+        uploadNode.type = "file";
+        uploadNode.accept = `${this.fileType}/*`;
+        uploadNode.style.display = "none";
+        uploadNode.setAttribute("moz-accept", `${this.fileType}/*`);
+        uploadNode.setAttribute("accept", `${this.fileType}/*`);
+        uploadNode.click();
+
+        let uploadTimeout;
+
+        const filePromise = new Promise((resolve, reject) => {
+            uploadNode.onchange = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+
+                const file = uploadNode.files[0];
+                if (!file) {
+                    reject("No file selected.");
+                    return;
+                }
+
+                resolve(file);
+            };
+
+            uploadNode.onabort = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+                reject("User aborted import.");
+            }
+
+            uploadTimeout = setTimeout(() => {
+                reject("Upload timed out.");
+            }, 120000);
+        });
+
+        try {
+            const uploadedFile = await filePromise;
+            await this.uploadFile(uploadedFile);
+        } catch(e) {
+            console.error("Upload failed:", e);
+        }
+    }
+
+    async uploadFile(file) {
+        if (this.currentFile) {
+            try {
+                await deleteFile(this.currentFile);
+            } catch(e) {
+                console.warn("Failed to delete existing file:", e);
+            }
+        }
+
+        const newFileId = await uploadFile(file);
+        await this.setFile(newFileId);
+        this.callback();
+    }
+
+    async setFile(fileId) {
+        const uploadedFile = await getFile(fileId);
+        this.currentFile = fileId;
+
+        // Set node text
+        const currentNode = this.node.querySelector(".natsumi-file-current");
+        currentNode.textContent = uploadedFile.name;
+
+        // Show remove button
+        const removeNode = this.node.querySelector(".natsumi-file-remove");
+        removeNode.removeAttribute("hidden");
+    }
+
+    resetFile() {
+        this.currentFile = null;
+
+        // Set node text
+        const currentNode = this.node.querySelector(".natsumi-file-current");
+        currentNode.textContent = `No ${this.fileType} selected`;
+
+        // Hide remove button
+        const removeNode = this.node.querySelector(".natsumi-file-remove");
+        removeNode.setAttribute("hidden", "");
+    }
+
+    async removeFile() {
+        await deleteFile(this.currentFile);
+        this.resetFile();
+        this.callback();
+    }
+}
+
 class CustomThemePicker {
     constructor(id, loaderMethod, applyMethod, legacyTargetPref, singleColor = false, allowOpacity = true) {
         this.id = id;
@@ -117,6 +259,7 @@ class CustomThemePicker {
         this.data = {"light": {"0": {}, "1": {}}, "dark": {"0": {}, "1": {}}}
         this.node = null;
         this.workspace = null;
+        this.fileUpload = new FileUpload("natsumi-custom-theme-image-upload", "image");
 
         // Configs
         this.availableLayers = 2;
@@ -182,6 +325,20 @@ class CustomThemePicker {
         if (!this.allowOpacity) {
             node.setAttribute("natsumi-no-opacity", "");
         }
+
+        // Set up image upload
+        this.fileUpload.setUploadCallback(() => {
+            const fileId = this.fileUpload.currentFile;
+
+            if (fileId) {
+                this.setImage(fileId);
+            } else {
+                this.resetImage();
+            }
+        });
+        const fileUploadNode = this.fileUpload.generateNode();
+        const imageContainer = this.node.querySelector(".natsumi-custom-theme-image .natsumi-custom-theme-tool-container");
+        imageContainer.insertBefore(fileUploadNode, imageContainer.firstChild);
 
         // Load theme data
         await this.changeWorkspace(this.workspace);
@@ -263,8 +420,6 @@ class CustomThemePicker {
         let colorPositionButton = this.node.querySelector(".natsumi-position-button");
         let resetButton = this.node.querySelector(".natsumi-reset-button");
         let hexInput = this.node.querySelector(".natsumi-hex-input");
-        let imageInput = this.node.querySelector(".natsumi-image-submit");
-        let imageRemove = this.node.querySelector(".natsumi-image-remove");
         let imageBlurOptions = this.node.querySelectorAll(".natsumi-image-blur-choice");
         let toolsButton = this.node.querySelector(".natsumi-tools-button");
         let hexButton = this.node.querySelector(".natsumi-custom-theme-hex-input .natsumi-custom-theme-tool-button");
@@ -343,16 +498,6 @@ class CustomThemePicker {
                 this.node.querySelector(".natsumi-hex-input").value = "";
             }
         });
-
-        imageInput.addEventListener("click", () => {
-            this.uploadImage().catch((e) => {
-                console.error(e);
-            });
-        })
-
-        imageRemove.addEventListener("click", () => {
-            this.removeImage();
-        })
 
         grainButton.addEventListener("click", () => {
             let grainSliderContainer = this.node.querySelector(".natsumi-custom-theme-grain .natsumi-custom-theme-tool-container");
@@ -892,11 +1037,6 @@ class CustomThemePicker {
                                 </div>
                             </div>
                             <div class="natsumi-custom-theme-tool-container" hidden="">
-                                <div class="natsumi-image-container">
-                                    <div class="natsumi-image-current"></div>
-                                    <div class="natsumi-image-remove"></div>
-                                    <div class="natsumi-image-submit"></div>
-                                </div>
                                 <div class="natsumi-custom-theme-slider natsumi-color-slider-image-opacity">
                                     <div class="natsumi-custom-theme-slider-icon-1"></div>
                                     <div class="natsumi-custom-theme-slider-icon-0"></div>
@@ -1660,21 +1800,15 @@ class CustomThemePicker {
         }
     }
 
-    renderMisc() {
-        let imageDisplay = this.node.querySelector(".natsumi-image-current");
-        let imageRemove = this.node.querySelector(".natsumi-image-remove");
+    renderMisc(ignoreFileUpload = false) {
         let imageBlurOptions = this.node.querySelectorAll(".natsumi-image-blur-choice");
 
-        if (this.customImage) {
-            getFile(this.customImage).then((fileObject) => {
-                imageDisplay.textContent = fileObject.name;
-                imageRemove.removeAttribute("hidden");
-            }).catch((e) => {
-                console.error("Could not get image:", e);
-            });
-        } else {
-            imageDisplay.textContent = "No image uploaded";
-            imageRemove.setAttribute("hidden", "");
+        if (!ignoreFileUpload) {
+            if (this.customImage) {
+                this.fileUpload.setFile(this.customImage);
+            } else {
+                this.fileUpload.resetFile();
+            }
         }
 
         imageBlurOptions.forEach((btn) => {
@@ -1844,76 +1978,23 @@ class CustomThemePicker {
         }
     }
 
-    async uploadImage() {
-        let uploadNode = document.createElement("input");
-        uploadNode.type = "file";
-        uploadNode.accept = "image/*";
-        uploadNode.style.display = "none";
-        uploadNode.setAttribute("moz-accept", "image/*");
-        uploadNode.setAttribute("accept", "image/*");
-        uploadNode.click();
+    async setImage(fileId) {
+        this.customImage = fileId;
 
-        let uploadTimeout;
-
-        const filePromise = new Promise((resolve, reject) => {
-            uploadNode.onchange = () => {
-                if (uploadTimeout) {
-                    clearTimeout(uploadTimeout);
-                }
-
-                const file = uploadNode.files[0];
-                if (!file) {
-                    reject("No file selected.");
-                    return;
-                }
-
-                resolve(file);
-            };
-
-            uploadNode.onabort = () => {
-                if (uploadTimeout) {
-                    clearTimeout(uploadTimeout);
-                }
-                reject("User aborted import.");
-            }
-
-            uploadTimeout = setTimeout(() => {
-                reject("Upload timed out.");
-            }, 120000);
-        });
-
-        try {
-            const uploadedFile = await filePromise;
-            await this.uploadSelectedImage(uploadedFile);
-        } catch(e) {
-            console.error("Upload failed:", e);
-            return;
-        }
-
-        this.renderMisc();
-        this.saveLayer();
+        this.renderMisc(true);
+        await this.saveLayer();
     }
 
-    async uploadSelectedImage(file) {
-        const newFileId = await uploadFile(file);
+    async resetImage() {
+        this.customImage = null;
 
-        if (this.customImage) {
-            await this.removeImage();
-        }
-
-        this.customImage = newFileId;
+        this.renderMisc(true);
+        this.saveLayer();
     }
 
     async removeImage() {
-        try {
-            await deleteFile(this.customImage);
-        } catch(e) {
-            console.warn("Failed to delete file:", e);
-        }
-        this.customImage = null;
-
-        this.renderMisc();
-        this.saveLayer();
+        await this.fileUpload.removeFile();
+        await this.resetImage();
     }
 
     setImageOpacity(opacity) {
@@ -2596,6 +2677,45 @@ const miniplayerLayouts = {
     )
 }
 
+const startupAnimations = {
+    "default": new MCChoice(
+        "default",
+        "Disabled",
+        null,
+        "<div id='startup-none' class='natsumi-mc-choice-image-browser'></div>"
+    ),
+    "simple": new MCChoice(
+        "simple",
+        "Simple",
+        null,
+        "<div id='startup-simple' class='natsumi-mc-choice-image-browser'></div>"
+    ),
+    "nostalgic": new MCChoice(
+        "nostalgic",
+        "Nostalgic",
+        null,
+        "<div id='startup-nostalgic' class='natsumi-mc-choice-image-browser'></div>"
+    )
+}
+
+const startupSounds = {
+    "default": new RadioChoice(
+        "default",
+        "None",
+        ""
+    ),
+    "borealis": new RadioChoice(
+        "borealis",
+        "Borealis",
+        ""
+    ),
+    "custom": new RadioChoice(
+        "custom",
+        "Custom",
+        ""
+    )
+}
+
 class OptionsGroup {
     constructor(id, label, description) {
         this.id = id;
@@ -2696,6 +2816,11 @@ class MultipleChoicePreference {
         let groupNode = node.querySelector(`#${this.id}Group`);
 
         for (let extra in this.extras) {
+            if (this.extras[extra] instanceof OptionsGroup) {
+                groupNode.appendChild(this.extras[extra].generateNode(true));
+                continue;
+            }
+
             let extraNode = convertToXUL(`<vbox id="${extra}"></vbox>`)
             let extraBox = extraNode.querySelector(`#${extra}`);
             extraBox.appendChild(this.extras[extra].generateNode());
@@ -2991,6 +3116,12 @@ function addLayoutPane() {
         "This will change the layout to look closer to the Firefox Nova design."
     );
 
+    let noGapsCheckbox = new CheckboxChoice(
+        "natsumi.theme.no-margin",
+        "natsumiNoGapsButton",
+        "Remove browser separation where possible"
+    );
+
     let menuButtonCheckbox = new CheckboxChoice(
         "natsumi.theme.single-toolbar-show-menu-button",
         "natsumiShowMenuButton",
@@ -3019,11 +3150,22 @@ function addLayoutPane() {
         windowControlsDescription
     );
 
+    let separationSlider = new SliderChoice(
+        "6",
+        "30",
+        "6",
+        "Browser Separation",
+        "Change the separation of the web page",
+        "natsumi.theme.browser-separation",
+    )
+
     layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
+    layoutSelection.registerExtras("natsumiNoGapsButtonBox", noGapsCheckbox);
     layoutSelection.registerExtras("natsumiShowMenuButtonBox", menuButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowBookmarksOnHoverBox", bookmarksOnHoverCheckbox);
     layoutSelection.registerExtras("natsumiForceWinControlsToLeftBox", windowControlsCheckbox);
+    layoutSelection.registerExtras("natsumiBrowserSeparationSlider", separationSlider);
 
     for (let layout in layouts) {
         layoutSelection.registerOption(layout, layouts[layout]);
@@ -3109,22 +3251,12 @@ function addThemesPane() {
         "Gray out background when the browser window is inactive"
     )
 
-    let separationSlider = new SliderChoice(
-            "6",
-            "30",
-            "6",
-            "Browser Separation",
-            "Change the separation of the web page",
-            "natsumi.theme.browser-separation",
-        )
-
     let customThemePickerUi = new CustomThemePicker("natsumiCustomThemePicker", customThemeLoader, applyCustomTheme, "natsumi.theme.custom-theme-data");
 
     themeSelection.registerExtras("natsumiCustomThemePickerBox", customThemePickerUi);
     themeSelection.registerExtras("natsumiTranslucencyBox", translucencyCheckbox);
     themeSelection.registerExtras("softGlowBox", softGlowCheckbox);
     themeSelection.registerExtras("natsumiInactiveBox", grayOutCheckbox);
-    themeSelection.registerExtras("separationSlider", separationSlider);
 
     for (let theme in themes) {
         themeSelection.registerOption(theme, themes[theme]);
@@ -3199,7 +3331,9 @@ function addThemesPane() {
     });
 
     prefsView.insertBefore(themeNode, homePane);
-    customThemePickerUi.init();
+    customThemePickerUi.init().catch((error) => {
+        console.error(error);
+    });
 }
 
 function addWindowMaterialPane() {
@@ -3563,6 +3697,31 @@ function addSidebarTabsPane() {
         "This will make tabs have a similar design to toolbar buttons."
     ));
 
+    // Global tab options
+    tabDesignSelection.registerExtras("natsumiTabGrayout", new CheckboxChoice(
+        "natsumi.tabs.disable-grayout-unloaded",
+        "natsumiTabGrayout",
+        "Gray out unloaded tabs",
+        "",
+        true
+    ));
+
+    let tabGrayoutSubgroup = new OptionsGroup(
+        "natsumiTabGrayoutOptions",
+        "",
+        ""
+    );
+
+    tabGrayoutSubgroup.registerOption("natsumiTabsCrossout", new CheckboxChoice(
+        "natsumi.tabs.disable-crossout-title",
+        "natsumiTabsCrossout",
+        "Cross out labels for unloaded tabs",
+        "",
+        true
+    ));
+
+    tabDesignSelection.registerExtras("natsumiTabGrayoutOptions", tabGrayoutSubgroup);
+
     let tabDesignNode = tabDesignSelection.generateNode();
 
     // Set listeners for each button
@@ -3608,6 +3767,10 @@ function addSidebarTabsPane() {
 
     // Set listeners for each checkbox
     let checkboxes = tabDesignNode.querySelectorAll("checkbox");
+    let crossoutCheckbox = tabDesignNode.getElementById("natsumiTabsCrossout");
+    if (ucApi.Prefs.get("natsumi.tabs.disable-grayout-unloaded").exists()) {
+        toggleDisabled(crossoutCheckbox, ucApi.Prefs.get("natsumi.tabs.disable-grayout-unloaded").value);
+    }
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
@@ -3618,6 +3781,10 @@ function addSidebarTabsPane() {
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            if (checkbox.id === "natsumiTabGrayout") {
+                toggleDisabled(crossoutCheckbox, isChecked);
+            }
 
             // noinspection JSUnresolvedReference
             ucApi.Prefs.set(prefName, isChecked);
@@ -4653,6 +4820,107 @@ function addURLbarBehaviorPane() {
     prefsView.insertBefore(behaviorNode, homePane);
 }
 
+function addStartupAnimationsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create theme selection
+    let startupSelection = new MultipleChoicePreference(
+        "natsumiStartupAnimation",
+        "natsumi.startup.type",
+        "Animation",
+        "Choose the startup animation you want to be played when you open your browser."
+    );
+
+    for (let startupAnimation in startupAnimations) {
+        startupSelection.registerOption(startupAnimation, startupAnimations[startupAnimation]);
+    }
+
+    let startupNode = startupSelection.generateNode();
+
+    // Set listeners for each button
+    let startupButtons = startupNode.querySelectorAll(".natsumi-mc-choice");
+    startupButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            let selectedValue = button.getAttribute("value");
+            console.log("Changing animation:", selectedValue);
+            setStringPreference("natsumi.startup.type", selectedValue);
+            startupButtons.forEach(btn => btn.classList.remove("selected"));
+            button.classList.add("selected");
+        });
+    });
+
+    prefsView.insertBefore(startupNode, homePane);
+}
+
+function addStartupSoundsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Check if glimpse key exists
+    let defaultOverride = null;
+    if (ucApi.Prefs.get("natsumi.startup.sound").exists()) {
+        defaultOverride = ucApi.Prefs.get("natsumi.startup.sound").value;
+    }
+
+    // Create theme selection
+    let startupSoundSelection = new RadioPreference(
+        "natsumiStartupSound",
+        "natsumi.startup.sound",
+        "Startup sound",
+        "Choose the sound to play for startup.",
+        defaultOverride
+    );
+
+    for (let startupSound in startupSounds) {
+        startupSoundSelection.registerOption(startupSound, startupSounds[startupSound]);
+    }
+
+    let startupSoundNode = startupSoundSelection.generateNode();
+
+    // Set listeners for each button
+    let startupSoundButtons = startupSoundNode.querySelectorAll(".natsumi-radio-choice");
+    startupSoundButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            let selectedValue = button.getAttribute("value");
+            console.log("Changing sound:", selectedValue);
+            setStringPreference("natsumi.startup.sound", selectedValue);
+            startupSoundButtons.forEach((btn) => {
+                btn.removeAttribute("selected")
+                let radioCheck = btn.querySelector(".radio-check");
+                radioCheck.removeAttribute("selected");
+            });
+            button.setAttribute("selected", "true");
+            let radioCheck = button.querySelector(".radio-check");
+            radioCheck.setAttribute("selected", "true");
+        });
+    });
+
+    prefsView.insertBefore(startupSoundNode, homePane);
+
+    // Create sound picker
+    let customSoundPicker = new FileUpload("natsumiSoundPicker", "audio");
+    customSoundPicker.setUploadCallback(() => {
+        // Get sound file ID
+        const fileId = customSoundPicker.currentFile;
+
+        // Store as config
+        if (fileId) {
+            setStringPreference("natsumi.startup.custom-sound-id", fileId);
+        } else {
+            ucApi.Prefs.get("natsumi.startup.custom-sound-id").reset();
+        }
+    });
+    let customSoundPickerNode = customSoundPicker.generateNode();
+    let startupSoundParent = prefsView.querySelector("#natsumiStartupSoundSettings");
+    startupSoundParent.appendChild(customSoundPickerNode);
+
+    // Set existing file
+    if (ucApi.Prefs.get("natsumi.startup.custom-sound-id").exists) {
+        customSoundPicker.setFile(ucApi.Prefs.get("natsumi.startup.custom-sound-id").value);
+    }
+}
+
 function addMiscPreferencesPane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
@@ -4748,6 +5016,11 @@ function addPreferencesPanes() {
             <html:${categoryHeader}>URL Bar</html:${categoryHeader}>
         </hbox>
     `);
+    let startupNode = convertToXUL(`
+        <hbox id="natsumiStartupCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
+            <html:${categoryHeader}>Startup</html:${categoryHeader}>
+        </hbox>
+    `);
     let miscNode = convertToXUL(`
         <hbox id="natsumiMiscCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
             <html:${categoryHeader}>Miscellaneous</html:${categoryHeader}>
@@ -4814,6 +5087,10 @@ function addPreferencesPanes() {
         addURLbarBehaviorPane();
     }
 
+    prefsView.insertBefore(startupNode, homePane);
+    addStartupAnimationsPane();
+    addStartupSoundsPane();
+
     prefsView.insertBefore(miscNode, homePane);
     addMiscPreferencesPane();
 }
@@ -4849,8 +5126,49 @@ function addHideFloorpWarnings() {
     });
 }
 
+function goodGirlBoyEnby() {
+    // :3
+    let goodGirl = false;
+    let goodBoy = false;
+    let goodEnby = false;
+    if (ucApi.Prefs.get("natsumi.theme.good-girl").exists()) {
+        goodGirl = ucApi.Prefs.get("natsumi.theme.good-girl").value;
+    }
+    if (ucApi.Prefs.get("natsumi.theme.good-boy").exists()) {
+        goodBoy = ucApi.Prefs.get("natsumi.theme.good-boy").value;
+    }
+    if (ucApi.Prefs.get("natsumi.theme.good-enby").exists()) {
+        goodEnby = ucApi.Prefs.get("natsumi.theme.good-enby").value;
+    }
+
+    let defaultBrowserNodes = document.querySelectorAll("#isDefaultPane");
+
+    for (let defaultBrowser of defaultBrowserNodes) {
+        let currentMessage = defaultBrowser.getAttribute("message");
+
+        if (goodGirl) {
+            currentMessage = currentMessage.replace("Good choice.", "Good girl :3");
+        } else if (goodBoy) {
+            currentMessage = currentMessage.replace("Good choice.", "Good boy :3");
+        } else if (goodEnby) {
+            currentMessage = currentMessage.replace("Good choice.", "Good enby :3");
+        } else {
+            // Easter egg is off
+            return;
+        }
+
+        defaultBrowser.setAttribute("message", currentMessage);
+    }
+}
+
 console.log("Loading prefs panes...");
-addOptionStyles();
-addToSidebar();
-addPreferencesPanes();
-addHideFloorpWarnings();
+
+try {
+    addOptionStyles();
+    addToSidebar();
+    addPreferencesPanes();
+    addHideFloorpWarnings();
+    goodGirlBoyEnby();
+} catch(e) {
+    console.error(e);
+}

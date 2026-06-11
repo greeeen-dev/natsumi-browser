@@ -31,22 +31,37 @@ SOFTWARE.
 
 // CSS injector for styles that need inline injection
 
+const dialogUrls = [
+    "chrome://global/content/commonDialog.xhtml",
+    "chrome://browser/content/sanitize_v2.xhtml"
+]
+
 class NatsumiCSSInjector {
-    constructor() {
+    constructor(targetDoc = null) {
         this.injected = new Map();
+        this.targetDoc = targetDoc ?? document;
     }
 
-    inject(filepath) {
+    inject(filepath, target) {
         if (this.injected.has(filepath)) {
             console.error(`Style already exists for ${filepath}`);
             return;
         }
 
-        const injectedStyle = document.createElement("link");
+        if (!target) {
+            target = this.targetDoc.head;
+
+            if (!target) {
+                target = this.targetDoc.documentElement;
+            }
+        }
+
+        const injectedStyle = this.targetDoc.createElement("link");
         injectedStyle.rel = "stylesheet"
         injectedStyle.href = `chrome://natsumi/content/modules/injected/${filepath}`;
-        document.head.appendChild(injectedStyle);
+        target.appendChild(injectedStyle);
         this.injected.set(filepath, injectedStyle);
+        console.log(`Injected ${filepath}`, injectedStyle);
     }
 
     remove(filepath) {
@@ -60,8 +75,25 @@ class NatsumiCSSInjector {
     }
 }
 
-if (!document.body.natsumiCSSInjector) {
-    document.body.natsumiCSSInjector = new NatsumiCSSInjector();
-    document.body.natsumiCSSInjector.inject("linux-border-radius.css")
-    document.body.natsumiCSSInjector.inject("macos-menus.css")
+if (!window.natsumiCSSInjector) {
+    try {
+        window.natsumiCSSInjector = new NatsumiCSSInjector();
+        window.natsumiCSSInjector.inject("linux-border-radius.css");
+        window.natsumiCSSInjector.inject("macos-menus.css");
+
+        window.addEventListener("DOMContentLoaded", (event) => {
+            let targetDoc = event.target;
+            console.log(dialogUrls, targetDoc.URL, dialogUrls.includes(targetDoc.URL));
+            if (dialogUrls.includes(targetDoc.URL)) {
+                console.log(`Creating injector for ${targetDoc.URL}`);
+                targetDoc.natsumiCSSInjector = new NatsumiCSSInjector(targetDoc);
+
+                // Add style
+                let dialogSR = targetDoc.querySelector("dialog").shadowRoot;
+                targetDoc.natsumiCSSInjector.inject("dialog-buttons.css", dialogSR);
+            }
+        });
+    } catch(e) {
+        console.error(e);
+    }
 }
