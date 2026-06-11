@@ -226,8 +226,10 @@ SOFTWARE.
     width: 60%;
     height: 60%;
     border-radius: 15px;
+    border: 1px solid transparent;
     margin: auto !important;
     flex-direction: column;
+    box-sizing: content-box;
 
     #natsumi-welcome-progress-container {
       margin: 30px 6% 0px;
@@ -436,9 +438,10 @@ SOFTWARE.
     }
 
     #natsumi-welcome-content {
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
       transition-delay: calc(var(--natsumi-global-delay) + 4.7s);
-      background-color: light-dark(white, #222);
+      background-color: var(--natsumi-mat-sd-background);
+      border: var(--natsumi-mat-sd-border);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
     }
 
@@ -459,7 +462,8 @@ SOFTWARE.
     }
 
     #natsumi-welcome-content {
-      background-color: light-dark(white, #222);
+      background-color: var(--natsumi-mat-sd-background);
+      border: var(--natsumi-mat-sd-border);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
     }
 
