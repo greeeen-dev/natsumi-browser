@@ -80,8 +80,8 @@ we acknowledge the potential benefits of AI, we value genuine, high-quality cont
 to accept low-quality AI-generated submissions, even if they are made in good faith.
 
 Therefore, for every submission, we will enforce the following:
-- Any use of AI for writing code is **strictly prohibited** while any other use **must be declared** regardless of extent or
-  intent
+- Any use of AI for writing content is **strictly prohibited** while any other use **must be declared** regardless of extent
+  or intent
 - All contributions will be subject to strict quality control by Maintainers to combat low quality submissions and forms of
   "vibe coding"
 - All contributions must have a description on a **per-file basis** describing the changes and the purpose of the changes in
