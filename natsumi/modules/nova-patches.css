@@ -313,7 +313,7 @@ SOFTWARE.
 
     @media -moz-pref("natsumi.theme.single-toolbar") {
       &[focused] {
-        top: 20px !important;
+        top: 36px !important;
       }
     }
   }
