@@ -104,6 +104,10 @@ class NatsumiWelcome {
             <div id="natsumi-welcome">
                 <image id="natsumi-icon"></image>
                 <div id="natsumi-welcome-content">
+                    <div id="natsumi-welcome-progress-container">
+                        <div id="natsumi-welcome-progress-icon"></div>
+                        <div id="natsumi-welcome-progress-bar" hidden=""></div>
+                    </div>
                     <div id="natsumi-welcome-content-container">
                         <div id="natsumi-welcome-content-body">
                             <div id="natsumi-welcome-initial" class="natsumi-welcome-pane">
@@ -181,6 +185,16 @@ class NatsumiWelcome {
 
     addPane(pane) {
         this.panes.push(pane);
+
+        // Add progress node
+        let progressContainer = document.getElementById("natsumi-welcome-progress-bar");
+        let progressNode = document.createElement("div");
+        let progressLabelNode = document.createElement("div");
+        progressNode.classList.add("natsumi-welcome-progress");
+        progressLabelNode.classList.add("natsumi-welcome-progress-label");
+        progressLabelNode.textContent = `${this.panes.length}`;
+        progressNode.appendChild(progressLabelNode);
+        progressContainer.appendChild(progressNode);
     }
 
     handleSelection(selectionObject, nonDefaultDependency) {
@@ -247,8 +261,23 @@ class NatsumiWelcome {
             let nextButton = this.node.querySelector("#natsumi-welcome-button-next");
             nextButton.textContent = "Let's go!";
             nextButton.setAttribute("natsumi-welcome-complete", "");
+
+            let progressContainer = document.getElementById("natsumi-welcome-progress-bar");
+            progressContainer.setAttribute("hidden", "");
         } else {
             paneNode = this.panes[this.step].generateNode();
+
+            let progressContainer = document.getElementById("natsumi-welcome-progress-bar");
+            let progressNodes = Array.from(progressContainer.querySelectorAll(".natsumi-welcome-progress"));
+            progressContainer.removeAttribute("hidden");
+
+            for (let i = 0; i < progressNodes.length; i++) {
+                if (i === this.step) {
+                    progressNodes[i].setAttribute("highlighted", "");
+                } else if (i < this.step) {
+                    progressNodes[i].setAttribute("completed", "");
+                }
+            }
         }
 
         bodyContainer.appendChild(paneNode);
@@ -855,7 +884,7 @@ function createTabsPane() {
 
     let themesPane = new NatsumiWelcomePane(
         "natsumi-welcome-tabs",
-        "Choose your tab design",
+        "Fresh look for your tabs",
         `
             <div class="natsumi-welcome-paragraph">
                 You can choose from a variety of tab designs to suit your style.
@@ -889,7 +918,7 @@ function createURLbarPane() {
 
     let themesPane = new NatsumiWelcomePane(
         "natsumi-welcome-urlbar",
-        "Choose your URL bar style",
+        "Floating or not floating?",
         `
             <div class="natsumi-welcome-paragraph">
                 You can choose to make your URL bar float or keep the original design.
