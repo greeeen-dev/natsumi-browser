@@ -26,7 +26,7 @@ SOFTWARE.
 
 /* ==== Natsumi Compact Mode ==== */
 
-:root:not([inDOMFullscreen="true"]) body[natsumi-compact-mode] {
+:root:not([inDOMFullscreen="true"])[chromehidden=""] body[natsumi-compact-mode] {
   --natsumi-compact-hoverable: 12px;
 
   #tabbrowser-tabbox {
@@ -169,12 +169,20 @@ SOFTWARE.
       @media -moz-pref("sidebar.position_start") {
         margin: var(--natsumi-browser-separation) 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation) !important;
         left: calc(var(--natsumi-compact-offset) * -1) !important;
+
+        @media -moz-pref("natsumi.theme.compact-marginless") {
+          left: calc(calc(var(--natsumi-compact-offset) * -1) - var(--natsumi-browser-separation) + 6px) !important;
+        }
       }
 
       @media not -moz-pref("sidebar.position_start") {
         margin: var(--natsumi-browser-separation) var(--natsumi-browser-separation) 0 var(--natsumi-browser-separation) !important;
         right: calc(var(--natsumi-compact-offset) * -1) !important;
         left: unset !important;
+
+        @media -moz-pref("natsumi.theme.compact-marginless") {
+          right: calc(calc(var(--natsumi-compact-offset) * -1) - var(--natsumi-browser-separation) + 6px) !important;
+        }
       }
 
       @media (-moz-pref("natsumi.theme.compact-style", "sidebar")) and (not -moz-pref("natsumi.theme.single-toolbar")) {

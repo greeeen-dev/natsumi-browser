@@ -62,15 +62,14 @@ class NatsumiSingleToolbarManager {
         // Check if sidebar is expanded
         // We'll add a 100ms delay so Firefox has time to load
         setTimeout(() => {
-            let sidebarNode = document.getElementById("sidebar-main");
-            if (!sidebarNode.hasAttribute("sidebar-launcher-expanded")) {
+            if (!SidebarController.getUIState().launcherExpanded) {
                 ucApi.Prefs.set("natsumi.theme.single-toolbar", false);
             }
         }, 100);
 
         // Create observer for sidebar
         const sidebarObserver = new MutationObserver(() => {
-            let sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");
+            let sidebarExpanded = SidebarController.getUIState().launcherExpanded;
 
             // Check if single toolbar is active
             let singleToolbarEnabled = false;
@@ -139,8 +138,8 @@ class NatsumiSingleToolbarManager {
             controlsInSidebar = ucApi.Prefs.get("natsumi.theme.force-window-controls-to-left").value;
         }
 
-        if (isCustomTitlebar) {
-            // Custom titlebar, window controls should not be in the bookmarks bar whatsoever
+        if (!isCustomTitlebar) {
+            // Window controls should not be in the bookmarks bar whatsoever
             document.body.removeAttribute("natsumi-bookmarks-extend");
             return;
         }
@@ -272,6 +271,9 @@ class NatsumiSingleToolbarManager {
 }
 
 if (!document.body.natsumiSingleToolbarManager) {
-    document.body.natsumiSingleToolbarManager = new NatsumiSingleToolbarManager();
-    document.body.natsumiSingleToolbarManager.init();
+    const isBrowser = (document.documentElement.getAttribute("chromehidden") ?? "") === "";
+    if (isBrowser) {
+        document.body.natsumiSingleToolbarManager = new NatsumiSingleToolbarManager();
+        document.body.natsumiSingleToolbarManager.init();
+    }
 }

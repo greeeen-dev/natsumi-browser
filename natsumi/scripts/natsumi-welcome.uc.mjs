@@ -239,10 +239,14 @@ class NatsumiWelcome {
         if (this.step === this.panes.length) {
             paneNode = convertToXUL(`
                 <div id="natsumi-welcome-complete" class="natsumi-welcome-pane">
-                    <div id="natsumi-welcome-title">That's it!</div>
-                    <div class="natsumi-welcome-paragraph">Thank you for installing Natsumi. Enjoy your new customized browser!</div>
+                    <div id="natsumi-welcome-title">Ready to browse?</div>
+                    <div class="natsumi-welcome-paragraph">Natsumi is ready to rock and roll. Have fun browsing!</div>
+                    <div class="natsumi-welcome-kawaii"></div>
                 </div>
-            `)
+            `);
+            let nextButton = this.node.querySelector("#natsumi-welcome-button-next");
+            nextButton.textContent = "Let's go!";
+            nextButton.setAttribute("natsumi-welcome-complete", "");
         } else {
             paneNode = this.panes[this.step].generateNode();
         }
@@ -389,7 +393,8 @@ class NatsumiDefaultStartupAnimation extends NatsumiBaseStartupAnimation {
             ["Have you riced your browser today?", null],
             ["nya :3", null],
             ["stay hydrated!!!1", null],
-            ["quotes? in my browser???", null]
+            ["quotes? in my browser???", null],
+            ["Eat ice cream for a huge buff.", "@therealconfused"]
         ]
 
         // Pick a random quote
@@ -414,8 +419,8 @@ class NatsumiDefaultStartupAnimation extends NatsumiBaseStartupAnimation {
 
         if (quoteAuthor) {
             let quoteAuthorContainer = document.createElement("div");
-            quoteAuthorContainer.id = "natsumi-startup-quote-text";
-            quoteTextContainer.textContent = `- ${quoteAuthor}`;
+            quoteAuthorContainer.id = "natsumi-startup-quote-author";
+            quoteAuthorContainer.textContent = `- ${quoteAuthor}`;
             quoteContainer.appendChild(quoteAuthorContainer);
         }
 

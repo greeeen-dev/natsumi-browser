@@ -178,6 +178,12 @@ class NatsumiCompactModeManager {
                 }
             });
         }
+
+        // Add sidebar observer
+        const sidebarObserver = new MutationObserver(() => {
+            this.handleSidebarResize();
+        });
+        sidebarObserver.observe(sidebarNode, {attributes: true, attributeFilter: ["style"]});
     }
 
     registerDeferrable(elementId) {
@@ -383,6 +389,28 @@ class NatsumiCompactModeManager {
         }
 
         this.sidebarHovered = 0;
+    }
+
+    handleSidebarResize() {
+        let sidebarNode = document.getElementById("sidebar-main");
+
+        // Get sidebar state
+        const sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");
+
+        // Is the sidebar width as expected?
+        const sidebarWidth = sidebarNode.style.width;
+
+        if (sidebarWidth !== "0px" || sidebarWidth === "") {
+            // No issues
+            return;
+        }
+
+        // Copy sidebar width
+        if (sidebarExpanded) {
+            sidebarNode.style.width = `${SidebarController.getUIState().expandedLauncherWidth}px`;
+        } else {
+            sidebarNode.style.removeProperty("width");
+        }
     }
 }
 
