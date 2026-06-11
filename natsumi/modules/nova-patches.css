@@ -310,12 +310,6 @@ SOFTWARE.
     &[breakout-extend] {
       outline: 2px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
     }
-
-    @media -moz-pref("natsumi.theme.single-toolbar") {
-      &[focused] {
-        top: 40px !important;
-      }
-    }
   }
 
   #urlbar[open] {
