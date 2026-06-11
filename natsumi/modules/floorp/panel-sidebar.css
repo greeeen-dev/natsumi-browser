@@ -45,7 +45,7 @@ SOFTWARE.
         }
       }
 
-      #sidebar-main {
+      #sidebar-main, #sidebar-container {
         order: 7 !important;
       }
     }

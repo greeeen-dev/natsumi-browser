@@ -103,7 +103,7 @@ body > * {
     }
   }
 
-  &[chromehidden=""]:has(#sidebar-main[hidden]) {
+  &[chromehidden=""]:has(#sidebar-main[hidden], #sidebar-container[hidden]) {
     #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
       margin-left: var(--natsumi-browser-separation) !important;
       margin-right: var(--natsumi-browser-separation) !important;
@@ -195,7 +195,7 @@ body > * {
 
     @media not -moz-pref("sidebar.verticalTabs") {
       body:not([natsumi-panel-sidebar-enabled]):not([natsumi-compact-mode]), body[natsumi-panel-sidebar-floating]:not([natsumi-compact-mode]) {
-        &:has(#sidebar-main[hidden]) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
+        &:has(#sidebar-main[hidden], #sidebar-container[hidden]) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
           --natsumi-tabbox-margin-override: 0;
           --natsumi-browser-separation: 0 !important;
 
@@ -237,8 +237,10 @@ body > * {
   display: none !important;
 }
 
-:root[customizing] #sidebar-main:not([sidebar-launcher-expanded]) #vertical-tabs {
-  min-width: unset !important;
+:root[customizing] #sidebar-main:not([sidebar-launcher-expanded]), :root[customizing] #sidebar-container:not([sidebar-launcher-expanded]) {
+  #vertical-tabs {
+    min-width: unset !important;
+  }
 }
 
 #vertical-tabs {
@@ -721,7 +723,7 @@ splitter:hover {
 }
 
 :root[sidebar-expand-on-hover] {
-  #sidebar-main {
+  #sidebar-main, #sidebar-container {
     background: transparent !important;
   }
 

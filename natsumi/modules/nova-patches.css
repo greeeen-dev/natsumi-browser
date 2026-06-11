@@ -47,7 +47,7 @@ SOFTWARE.
       gap: 0 !important;
     }
 
-    #sidebar-main {
+    #sidebar-main, #sidebar-container {
       border: 0 !important;
       border-radius: 0 !important;
       background-color: transparent !important;
@@ -63,7 +63,7 @@ SOFTWARE.
         background-image: none !important;
       }
 
-      #sidebar-main {
+      #sidebar-main, #sidebar-container {
         @media -moz-pref("sidebar.position_start") {
           margin-right: 2px !important;
         }
@@ -183,7 +183,7 @@ SOFTWARE.
       @media (
         not -moz-pref("natsumi.theme.compact-style", "toolbar")
       ) or -moz-pref("natsumi.theme.single-toolbar") {
-        #sidebar-main {
+        #sidebar-main, #sidebar-container {
           --natsumi-sidebar-height-override: calc(42px + var(--natsumi-browser-separation)) !important;
           --natsumi-compact-sidebar-offset: 1px;
         }
@@ -205,7 +205,7 @@ SOFTWARE.
       }
 
       @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
-        #sidebar-main {
+        #sidebar-main, #sidebar-container {
           margin-top: var(--natsumi-browser-separation) !important;
           margin-left: var(--natsumi-browser-separation) !important;
         }
@@ -229,7 +229,7 @@ SOFTWARE.
         }
       }
 
-      #sidebar-main {
+      #sidebar-main, #sidebar-container {
         margin-top: var(--natsumi-browser-separation);
       }
 

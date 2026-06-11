@@ -66,7 +66,7 @@ SOFTWARE.
       display: none !important;
     }
 
-    #sidebar-main[style*="--natsumi-workspace-name"] {
+    #sidebar-main[style*="--natsumi-workspace-name"], #sidebar-container[style*="--natsumi-workspace-name"] {
       #tabbrowser-arrowscrollbox {
         &::before {
           content: var(--natsumi-workspace-name);

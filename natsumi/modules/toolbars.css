@@ -178,7 +178,7 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
   }
 }
 
-&:has(#sidebar-main:not([sidebar-launcher-expanded])) {
+&:has(#sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded])) {
   #natsumi-pinned-toolbar {
     flex-wrap: nowrap;
     flex-direction: column;
@@ -242,7 +242,7 @@ body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"])
     border: light-dark(black, white) 1px dashed !important;
   }
 
-  &:has(#sidebar-main:not([sidebar-launcher-expanded])) #natsumi-pinned-toolbar {
+  &:has(#sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded])) #natsumi-pinned-toolbar {
     min-width: 32px !important;
   }
 

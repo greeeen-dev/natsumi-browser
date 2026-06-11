@@ -118,7 +118,7 @@ SOFTWARE.
   @media (
     not -moz-pref("natsumi.theme.compact-style", "toolbar")
   ) or -moz-pref("natsumi.theme.single-toolbar") {
-    #sidebar-main {
+    #sidebar-main, #sidebar-container {
       position: absolute;
       z-index: 998 !important;
       transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease, top 0.1s ease, height 0.1s ease !important;
@@ -216,16 +216,18 @@ SOFTWARE.
       }
     }
 
-    &[natsumi-custom-theme-has-image] #sidebar-main {
-      @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
-        background: light-dark(#ebebeb, #171717) !important;
+    &[natsumi-custom-theme-has-image] {
+      #sidebar-main, #sidebar-container {
+        @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
+          background: light-dark(#ebebeb, #171717) !important;
+        }
       }
     }
   }
 
   &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend],
-  &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &:has(#sidebar-main #tabbrowser-tabs[movingtab]) {
-    #sidebar-main {
+  &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &:has(#sidebar-main #tabbrowser-tabs[movingtab], #sidebar-container #tabbrowser-tabs[movingtab]) {
+    #sidebar-main, #sidebar-container {
       opacity: 1 !important;
 
       @media -moz-pref("sidebar.position_start") {
@@ -290,7 +292,7 @@ SOFTWARE.
         }
       }
 
-      &:has(#sidebar-main:not([sidebar-launcher-expanded])) {
+      &:has(#sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded])) {
         #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
           --natsumi-compact-offset: calc(50px - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation)) !important;
         }
@@ -299,8 +301,8 @@ SOFTWARE.
 
     &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend],
     &:has(#nora-statusbar.hidden toolbarbutton[open], #nora-statusbar[style*="display:none"] toolbarbutton[open], #nora-statusbar[style*="display: none"] toolbarbutton[open], #status-bar[collapsed="true"] toolbarbutton[open]),
-    &:has(#natsumi-pinned-toolbar toolbarbutton[open]) &:has(#sidebar-main #tabbrowser-tabs[movingtab]) {
-      #sidebar-main {
+    &:has(#natsumi-pinned-toolbar toolbarbutton[open]) &:has(#sidebar-main #tabbrowser-tabs[movingtab], #sidebar-container #tabbrowser-tabs[movingtab]) {
+      #sidebar-main, #sidebar-container {
         opacity: 1 !important;
 
         @media -moz-pref("sidebar.position_start") {
@@ -443,15 +445,17 @@ SOFTWARE.
       &:has(#navigator-toolbox.fullscreen-floating-toolbar),
       &:has(#navigator-toolbox toolbarbutton[open], #urlbar[focused]) {
         @media not -moz-pref("natsumi.theme.compact-smaller-sidebar") {
-          #sidebar-main {
+          #sidebar-main, #sidebar-container {
             --natsumi-toolbar-height: 40px;
             top: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
             --natsumi-sidebar-height-offset: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
           }
 
-          &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) #sidebar-main {
-            top: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
-            --natsumi-sidebar-height-offset: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
+          &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) {
+            #sidebar-main, #sidebar-container {
+              top: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
+              --natsumi-sidebar-height-offset: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
+            }
           }
 
           @media (not -moz-pref("natsumi.theme.compact-style", "toolbar")) or -moz-pref("natsumi.theme.single-toolbar") {
@@ -467,21 +471,23 @@ SOFTWARE.
       }
 
       @media not -moz-pref("sidebar.verticalTabs") {
-        #sidebar-main {
+        #sidebar-main, #sidebar-container {
           --natsumi-toolbar-height: 84px !important;
         }
 
         #navigator-toolbox[movingtab] {
           @media not -moz-pref("natsumi.theme.compact-smaller-sidebar") {
-            #sidebar-main {
+            #sidebar-main, #sidebar-container {
               --natsumi-toolbar-height: 40px;
               top: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
               --natsumi-sidebar-height-offset: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
             }
 
-            &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) #sidebar-main {
-              top: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
-              --natsumi-sidebar-height-offset: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
+            &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) {
+              #sidebar-main, #sidebar-container {
+                top: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
+                --natsumi-sidebar-height-offset: calc(var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) + 28px) !important;
+              }
             }
 
             @media (not -moz-pref("natsumi.theme.compact-style", "toolbar")) or -moz-pref("natsumi.theme.single-toolbar") {
@@ -501,7 +507,7 @@ SOFTWARE.
 }
 
 @media -moz-pref("natsumi.theme.single-toolbar") {
-  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) body[natsumi-compact-mode] {
+  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded], #sidebar-container[sidebar-launcher-expanded]) body[natsumi-compact-mode] {
     #navigator-toolbox {
       position: absolute !important;
       z-index: 999 !important;
@@ -540,7 +546,7 @@ SOFTWARE.
     }
 
     &:has(toolbarbutton[open]), &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend] {
-      #sidebar-main {
+      #sidebar-main, #sidebar-container {
         opacity: 1 !important;
 
         @media -moz-pref("sidebar.position_start") {
@@ -553,7 +559,7 @@ SOFTWARE.
       }
 
       &[natsumi-bookmarks-hover], &[natsumi-bookmarks-extend] {
-        #sidebar-main {
+        #sidebar-main, #sidebar-container {
           top: 28px !important;
           --natsumi-sidebar-height-offset: 28px !important;
         }
@@ -608,7 +614,7 @@ SOFTWARE.
   }
 
   body[natsumi-compact-mode] {
-    #sidebar-main {
+    #sidebar-main, #sidebar-container {
       padding-top: 0 !important;
     }
   }
