@@ -558,6 +558,11 @@ SOFTWARE.
           display: none !important;
         }
 
+        #urlbar-results {
+          padding: 0 !important;
+          padding-top: 0.5rem !important;
+        }
+
         .urlbar-input-box {
           margin-left: 0 !important;
         }

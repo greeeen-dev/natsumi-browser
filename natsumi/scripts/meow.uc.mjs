@@ -79,6 +79,26 @@ function makeCatNoisesAndDoSomeVeryCuteInitialSetupBecauseIFeltVeryCuteWhenWriti
         ucApi.Prefs.get("natsumi.theme.addons-style-unsupported").reset();
     }
 
+    // Remove compact density if on Nightly
+    if (ucApi.Prefs.get("natsumi.browser.patch-nightly-compact").exists()) {
+        if (ucApi.Prefs.get("natsumi.browser.patch-nightly-compact").value) {
+            if (browserVersion.endsWith("a1")) {
+                console.warn("Forcibly disabling compact density. This may break some things.");
+                document.documentElement.removeAttribute("uidensity");
+
+                let documentObserver = new MutationObserver(() => {
+                    if (!document.documentElement.hasAttribute("uidensity")) {
+                        return;
+                    }
+
+                    document.documentElement.removeAttribute("uidensity");
+                });
+
+                documentObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["uidensity"]});
+            }
+        }
+    }
+
     // Detect browser window
     const isBrowser = (document.documentElement.getAttribute("chromehidden") ?? "") === "";
     if (!isBrowser) {
