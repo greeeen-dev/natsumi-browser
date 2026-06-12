@@ -52,6 +52,10 @@ SOFTWARE.
     top: calc(45px + var(--natsumi-toolbar-offset) + var(--natsumi-toolbar-separation));
   }
 
+  & > * {
+    --toolbarbutton-padding-inner: 8px;
+  }
+
   & > toolbarbutton, & > toolbaritem {
     width: unset !important;
     min-width: 36px;

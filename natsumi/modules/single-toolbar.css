@@ -109,6 +109,10 @@ SOFTWARE.
         .searchmode-switcher {
           display: none !important;
         }
+
+        .urlbar-input-box {
+          margin-left: 4px;
+        }
       }
     }
 
