@@ -329,6 +329,13 @@ class NatsumiWelcome {
         document.body.setAttribute("natsumi-welcome-complete", "");
         document.body.removeAttribute("natsumi-welcome");
 
+        // Set username (if logged in)
+        const uiState = UIState.get();
+        if (uiState.status === UIState.STATUS_SIGNED_IN && uiState.displayName) {
+            const drumrollCompleteText = this.node.querySelector("#natsumi-welcome-drumroll-complete .natsumi-welcome-drumroll-text");
+            drumrollCompleteText.textContent = `Welcome to Natsumi, ${uiState.displayName}`
+        }
+
         setTimeout(() => {
             // Show welcome complete drumroll
             document.body.setAttribute("natsumi-welcome-drumroll-complete", "");
