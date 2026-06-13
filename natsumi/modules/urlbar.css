@@ -794,6 +794,12 @@ SOFTWARE.
 
         .urlbarView {
           overflow: visible !important;
+          margin-inline: 7px !important;
+          margin-block: 0 7px !important;
+
+          &[noresults] {
+            display: none !important;
+          }
         }
 
         &[noresults] {

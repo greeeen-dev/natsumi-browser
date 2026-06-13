@@ -26,6 +26,30 @@ SOFTWARE.
 
 /* ==== Floorp panel sidebar ==== */
 
+@keyframes natsumi-panel-sidebar-overlay {
+  from {
+    opacity: 0;
+    translate: 20px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+
+@keyframes natsumi-panel-sidebar-overlay-left {
+  from {
+    opacity: 0;
+    translate: -20px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+
 @media -moz-pref("natsumi.browser.type", "floorp") {
   body[natsumi-panel-sidebar-on-right] {
     @media -moz-pref("sidebar.position_start") {
@@ -45,7 +69,7 @@ SOFTWARE.
         }
       }
 
-      #sidebar-main, #sidebar-container {
+      #sidebar-main, #sidebar-container7 {
         order: 7 !important;
       }
     }
@@ -146,7 +170,7 @@ SOFTWARE.
 
   body[natsumi-compact-mode]:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-box {
     @media not (-moz-pref("natsumi.theme.compact-style", "toolbar")) {
-      @media -moz-pref("sidebar.position_start") {
+      @media -moz-pref("sidebar.position_start") and -moz-pref("natsumi.sidebar.floorp-floating-panel") {
         margin-left: var(--natsumi-browser-separation) !important;
       }
     }
@@ -172,7 +196,7 @@ SOFTWARE.
     margin-left: 0 !important;
   }
 
-  body[natsumi-panel-sidebar-on-right][natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+  :root[chromehidden=""] body[natsumi-panel-sidebar-on-right][natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     --natsumi-right-sidebar-margin-override: 0 !important;
     margin-right: 0 !important;
   }
@@ -304,6 +328,50 @@ SOFTWARE.
           transition: right 0.2s ease, opacity 0.2s ease !important;
           right: 0;
         }
+      }
+    }
+  }
+
+  @media -moz-pref("natsumi.sidebar.floorp-overlay-panel") {
+    #tabbrowser-tabpanels {
+      transition: scale 0.3s ease, opacity 0.3s ease;
+    }
+
+    body[natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) {
+      #panel-sidebar-box {
+        z-index: 10;
+      }
+
+      #panel-sidebar-splitter {
+        z-index: 999;
+        margin-left: calc(calc(var(--natsumi-panel-sidebar-width) + var(--natsumi-browser-separation)) * -1) !important;
+      }
+
+      &:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-splitter {
+        margin-left: unset !important;
+        margin-right: calc(calc(var(--natsumi-panel-sidebar-width) + 4px) * -1) !important;
+      }
+
+      #tabbrowser-tabpanels {
+        opacity: 0.5;
+        scale: 98%;
+        pointer-events: none;
+      }
+    }
+
+    body[natsumi-panel-sidebar-active] {
+      #panel-sidebar-box {
+        animation: natsumi-panel-sidebar-overlay 0.3s ease;
+      }
+
+      &:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-box {
+        animation: natsumi-panel-sidebar-overlay-left 0.3s ease;
+      }
+    }
+
+    body[natsumi-panel-sidebar-floating] {
+      #panel-sidebar-box {
+        animation-duration: 0s;
       }
     }
   }

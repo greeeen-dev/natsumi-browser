@@ -3925,6 +3925,19 @@ function addSidebarPanelSidebarPane() {
         "When enabled, the Panel Sidebar selection box will hide and float over the browser similarly to the main sidebar in Compact Mode.",
     ));
 
+    panelSidebarGroup.registerOption("natsumiSidebarOverlayPanelSidebar", new CheckboxChoice(
+        "natsumi.sidebar.floorp-overlay-panel",
+        "natsumiSidebarOverlayPanelSidebar",
+        "Overlay Panel Sidebar on top of web content",
+        "When enabled, the Panel Sidebar box will overlay on top of web content.",
+    ));
+
+    panelSidebarGroup.registerOption("natsumiSidebarEscapePanelSidebar", new CheckboxChoice(
+        "natsumi.sidebar.floorp-escape-panel",
+        "natsumiSidebarEscapePanelSidebar",
+        "Use Escape key to close Panel Sidebar"
+    ));
+
     let panelSidebarNode = panelSidebarGroup.generateNode();
 
     // Add notice if Panel Sidebar is disabled
