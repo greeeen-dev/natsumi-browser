@@ -3264,6 +3264,18 @@ function addThemesPane() {
 
     let themeNode = themeSelection.generateNode();
 
+    let unfortunateTypo = false;
+    if (ucApi.Prefs.get("natsumi.theme.vowels-empty").exists()) {
+        unfortunateTypo = ucApi.Prefs.get("natsumi.theme.vowels-empty").value;
+    }
+
+    if (unfortunateTypo) {
+        // i'm sorry. (thankfully i took EXTRA CAUTION to avoid this typo)
+        console.warn("Vowel movement...");
+        const playfulDesc = themeNode.querySelector(`.natsumi-mc-choice[value="playful"] .natsumi-mc-choice-description`);
+        playfulDesc.textContent = playfulDesc.textContent.replace("op", "oo");
+    }
+
     // Set listeners for each button
     let themeButtons = themeNode.querySelectorAll(".natsumi-mc-choice");
     themeButtons.forEach(button => {
