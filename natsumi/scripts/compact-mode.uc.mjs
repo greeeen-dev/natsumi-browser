@@ -45,7 +45,7 @@ class NatsumiCompactModeManager {
     }
 
     init() {
-        let sidebarNode = document.getElementById("sidebar-main");
+        let sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
         let navigatorToolboxNode = document.getElementById("navigator-toolbox");
         let navbarNode = document.getElementById("nav-bar");
 
@@ -249,7 +249,7 @@ class NatsumiCompactModeManager {
             }
         }
 
-        if ((event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
+        if ((event.target.id === "sidebar-container" || event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
             if (this.sidebarTimeout) {
                 clearTimeout(this.sidebarTimeout);
                 this.sidebarTimeout = null;
@@ -324,7 +324,7 @@ class NatsumiCompactModeManager {
             }
         }
 
-        if ((event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
+        if ((event.target.id === "sidebar-container" || event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
             this.sidebarHovered--;
             sidebarInteracted = true;
         } else if ((
@@ -392,7 +392,7 @@ class NatsumiCompactModeManager {
     }
 
     handleSidebarResize() {
-        let sidebarNode = document.getElementById("sidebar-main");
+        let sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
 
         // Get sidebar state
         const sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");

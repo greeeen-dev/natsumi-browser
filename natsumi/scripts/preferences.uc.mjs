@@ -2816,6 +2816,11 @@ class MultipleChoicePreference {
         let groupNode = node.querySelector(`#${this.id}Group`);
 
         for (let extra in this.extras) {
+            if (this.extras[extra] instanceof OptionsGroup) {
+                groupNode.appendChild(this.extras[extra].generateNode(true));
+                continue;
+            }
+
             let extraNode = convertToXUL(`<vbox id="${extra}"></vbox>`)
             let extraBox = extraNode.querySelector(`#${extra}`);
             extraBox.appendChild(this.extras[extra].generateNode());
@@ -3692,6 +3697,31 @@ function addSidebarTabsPane() {
         "This will make tabs have a similar design to toolbar buttons."
     ));
 
+    // Global tab options
+    tabDesignSelection.registerExtras("natsumiTabGrayout", new CheckboxChoice(
+        "natsumi.tabs.disable-grayout-unloaded",
+        "natsumiTabGrayout",
+        "Gray out unloaded tabs",
+        "",
+        true
+    ));
+
+    let tabGrayoutSubgroup = new OptionsGroup(
+        "natsumiTabGrayoutOptions",
+        "",
+        ""
+    );
+
+    tabGrayoutSubgroup.registerOption("natsumiTabsCrossout", new CheckboxChoice(
+        "natsumi.tabs.disable-crossout-title",
+        "natsumiTabsCrossout",
+        "Cross out labels for unloaded tabs",
+        "",
+        true
+    ));
+
+    tabDesignSelection.registerExtras("natsumiTabGrayoutOptions", tabGrayoutSubgroup);
+
     let tabDesignNode = tabDesignSelection.generateNode();
 
     // Set listeners for each button
@@ -3737,6 +3767,10 @@ function addSidebarTabsPane() {
 
     // Set listeners for each checkbox
     let checkboxes = tabDesignNode.querySelectorAll("checkbox");
+    let crossoutCheckbox = tabDesignNode.getElementById("natsumiTabsCrossout");
+    if (ucApi.Prefs.get("natsumi.tabs.disable-grayout-unloaded").exists()) {
+        toggleDisabled(crossoutCheckbox, ucApi.Prefs.get("natsumi.tabs.disable-grayout-unloaded").value);
+    }
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("command", () => {
             let prefName = checkbox.getAttribute("preference");
@@ -3747,6 +3781,10 @@ function addSidebarTabsPane() {
             }
 
             console.log(`Checkbox ${prefName} changed to ${isChecked}`);
+
+            if (checkbox.id === "natsumiTabGrayout") {
+                toggleDisabled(crossoutCheckbox, isChecked);
+            }
 
             // noinspection JSUnresolvedReference
             ucApi.Prefs.set(prefName, isChecked);
@@ -3885,6 +3923,19 @@ function addSidebarPanelSidebarPane() {
         "natsumiSidebarFloatingPanelSidebar",
         "Floating Panel Sidebar",
         "When enabled, the Panel Sidebar selection box will hide and float over the browser similarly to the main sidebar in Compact Mode.",
+    ));
+
+    panelSidebarGroup.registerOption("natsumiSidebarOverlayPanelSidebar", new CheckboxChoice(
+        "natsumi.sidebar.floorp-overlay-panel",
+        "natsumiSidebarOverlayPanelSidebar",
+        "Overlay Panel Sidebar on top of web content",
+        "When enabled, the Panel Sidebar box will overlay on top of web content.",
+    ));
+
+    panelSidebarGroup.registerOption("natsumiSidebarEscapePanelSidebar", new CheckboxChoice(
+        "natsumi.sidebar.floorp-escape-panel",
+        "natsumiSidebarEscapePanelSidebar",
+        "Use Escape key to close Panel Sidebar"
     ));
 
     let panelSidebarNode = panelSidebarGroup.generateNode();

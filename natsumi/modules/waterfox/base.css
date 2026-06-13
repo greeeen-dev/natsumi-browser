@@ -84,7 +84,7 @@ SOFTWARE.
       }
     }
 
-    &:has(#sidebar-main[hidden]) #status-bar[collapsed="true"] {
+    &:has(#sidebar-main[hidden], #sidebar-container[hidden]) #status-bar[collapsed="true"] {
       display: none !important;
     }
 

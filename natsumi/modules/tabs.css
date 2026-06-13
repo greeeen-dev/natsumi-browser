@@ -80,6 +80,12 @@ SOFTWARE.
   }
 }
 
+* {
+  --tab-inner-inline-margin: var(--space-medium);
+  --tab-collapsed-width: calc(var(--tab-collapsed-background-width) + 2 * var(--space-medium)) !important;
+  --tab-inline-padding: calc((var(--tab-collapsed-width) - var(--icon-size)) / 2);
+}
+
 /* Global tweaks for tabs */
 .tabbrowser-tab {
   --attention-dot-color: transparent !important;
@@ -218,4 +224,16 @@ tab-split-view-wrapper {
 
 tab[natsumi-workspace-hidden] {
   display: none !important;
+}
+
+/* Unloaded Tabs */
+@media not -moz-pref("natsumi.tabs.disable-grayout-unloaded") {
+  .tabbrowser-tab[pending="true"] {
+    opacity: 0.5 !important;
+    filter: grayscale(0.5) !important;
+
+    @media not -moz-pref("natsumi.tabs.disable-crossout-title") {
+      text-decoration: line-through !important;
+    }
+  }
 }

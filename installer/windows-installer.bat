@@ -1,6 +1,13 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+:: --- ELEVATION CATCH ---
+:: If re-launched as Admin, load saved variables and jump straight to Step 6
+if "%~1"=="ELEVATED" (
+    if exist "%TEMP%\natsumi_state.cmd" call "%TEMP%\natsumi_state.cmd"
+    goto :STEP6
+)
+
 :: ============================================================================
 :: Natsumi Browser Installer - Specific File Map
 :: ============================================================================
@@ -12,16 +19,6 @@ set "PF86=%ProgramFiles(x86)%"
 set "PF64=%ProgramFiles%"
 set "L_APP=%LOCALAPPDATA%"
 set "L_PROGS=%LOCALAPPDATA%\Programs"
-
-:: --- STEP 0: ADMIN CHECK ---
-net session >nul 2>&1
-if %errorLevel% == 0 (
-    echo [INFO] Running with Administrative privileges.
-) else (
-    echo [WARN] Requesting Administrative privileges...
-    powershell -Command "Start-Process cmd -ArgumentList '/c, \"\"%~f0\"\"' -Verb RunAs"
-    exit /b
-)
 
 :: --- STEP 0.5: GIT CHECK ---
 where git >nul 2>&1
@@ -38,7 +35,7 @@ mkdir "%TEMP_DIR%"
 
 echo.
 echo ==================================================
-echo       NATSUMI BROWSER INSTALLER (WINDOWS)
+echo        NATSUMI BROWSER INSTALLER (WINDOWS)
 echo ==================================================
 echo.
 
@@ -259,6 +256,44 @@ if exist "%TEMP_DIR%\fx-autoconfig\profile\chrome\utils" (
     xcopy /E /I /Y /Q "%TEMP_DIR%\fx-autoconfig\profile\chrome\utils" "%CHROME_DIR%\utils" >nul
 )
 
+:: --- MANIFEST GENERATION ---
+echo.
+echo [INFO] Generating chrome.manifest in utils...
+(
+echo content userchromejs ./
+echo content userscripts ../natsumi/scripts/
+echo skin userstyles classic/1.0 ../CSS/
+echo content userchrome ../resources/
+echo content natsumi ../natsumi/
+echo content natsumi-icons ../natsumi/icons/
+) > "%CHROME_DIR%\utils\chrome.manifest"
+
+
+:: ============================================================================
+:: ELEVATION HANDLER FOR SYSTEM FILES
+:: ============================================================================
+
+:: Save state so the elevated prompt remembers our variables
+(
+echo set "FINAL_INSTALL_PATH=%FINAL_INSTALL_PATH%"
+echo set "TEMP_DIR=%TEMP_DIR%"
+echo set "SELECTION=%SELECTION%"
+echo set "PROFILE_ROOT_PATH=%PROFILE_ROOT_PATH%"
+echo set "EXE_NAME=%EXE_NAME%"
+echo set "BROWSER_NAME=%BROWSER_NAME%"
+) > "%TEMP%\natsumi_state.cmd"
+
+:: Admin Check
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    echo [INFO] Running with Administrative privileges.
+) else (
+    echo [WARN] Requesting Administrative privileges to write to system directories...
+    powershell -Command "Start-Process cmd -ArgumentList '/c, \"\"%~f0\"\" ELEVATED' -Verb RunAs"
+    goto :FINISH_NON_ADMIN
+)
+
+:STEP6
 :: --- STEP 6: PROGRAM INSTALL ---
 echo.
 echo [STEP 6] Installing Program Files...
@@ -278,18 +313,18 @@ if %errorlevel% neq 0 (
     echo.
     pause
 )
-:: Rename config.js for LibreWolf
+:: Rename config.js for LibreWolf (copy directly to new name)
 if "%SELECTION%"=="4" (
-    copy /y "%TEMP_DIR%\fx-autoconfig\program\config.js" "%PROFILE_ROOT_PATH%\"
-    rename-item  "%PROFILE_ROOT_PATH%\config.js" -newName "librewolf.overrides.cfg"
+    copy /y "%TEMP_DIR%\fx-autoconfig\program\config.js" "%PROFILE_ROOT_PATH%\librewolf.overrides.cfg" >nul
 )
 
 :: defaults folder
 echo.
 echo    [COPY] Attempting to copy defaults folder...
 :: Create paths if they do not exist yet
-New-Item -Path "%FINAL_INSTALL_PATH%\defaults" -ItemType Directory -ErrorAction Ignore
-New-Item -Path "%FINAL_INSTALL_PATH%\defaults\pref" -ItemType Directory -ErrorAction Ignore
+if not exist "%FINAL_INSTALL_PATH%\defaults" mkdir "%FINAL_INSTALL_PATH%\defaults"
+if not exist "%FINAL_INSTALL_PATH%\defaults\pref" mkdir "%FINAL_INSTALL_PATH%\defaults\pref"
+
 :: Use LibreWolf-friendly prefs file if needed
 if "%SELECTION%"=="4" (
     set "PREFS_FILE=config-prefs-librewolf.js"
@@ -306,27 +341,21 @@ if %errorlevel% neq 0 (
     echo.
     pause
 )
-:: --- MANIFEST GENERATION ---
-echo.
-echo [INFO] Generating chrome.manifest in utils...
-(
-echo content userchromejs ./
-echo content userscripts ../natsumi/scripts/
-echo skin userstyles classic/1.0 ../CSS/
-echo content userchrome ../resources/
-echo content natsumi ../natsumi/
-echo content natsumi-icons ../natsumi/icons/
-) > "%CHROME_DIR%\utils\chrome.manifest"
 
 :: --- FINISH ---
 cd /d "%USERPROFILE%"
 rd /s /q "%TEMP_DIR%"
+if exist "%TEMP%\natsumi_state.cmd" del /q "%TEMP%\natsumi_state.cmd"
 echo.
 echo ==================================================
-echo           INSTALLATION COMPLETE
+echo            INSTALLATION COMPLETE
 echo ==================================================
 echo Please restart %BROWSER_NAME%.
 pause
+exit /b
+
+:FINISH_NON_ADMIN
+:: This block simply closes the initial window after the Admin window takes over
 exit /b
 
 :: ============================================================================

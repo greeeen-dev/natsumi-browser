@@ -337,7 +337,7 @@ SOFTWARE.
         padding: var(--space-xlarge);
 
         @media -moz-pref("browser.nova.enabled") {
-          background-color: light-dark(#fff, #252428);
+          background-color: var(--background-color-box, light-dark(#fff, #252428));
         }
 
         @media (prefers-color-scheme: dark) {

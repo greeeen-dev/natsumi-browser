@@ -77,7 +77,7 @@ class NatsumiToolbarManager {
         }
 
         // Create observer for sidebar
-        let sidebar = document.querySelector("#sidebar-main");
+        let sidebar = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
 
         this.sidebarObserver = new MutationObserver(() => {
             this.copyPinnedTabsHeight();
@@ -199,7 +199,7 @@ class NatsumiStatusBarHandler {
             this.disableStatusBar = true;
         }
 
-        this.sidebarNode = document.getElementById("sidebar-main");
+        this.sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
         this.sidebarObserver = new MutationObserver(() => {
             this.copySidebarWidth();
             this.copyStatusBarHeight();
@@ -242,7 +242,7 @@ class NatsumiStatusBarHandler {
             return;
         }
 
-        let sidebar = document.querySelector("#sidebar-main");
+        let sidebar = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
 
         // Usually the sidebar should always exist, but if it doesn't, we can just return
         if (!sidebar) {
@@ -260,7 +260,7 @@ class NatsumiStatusBarHandler {
 
     copySidebarOptionsHeight() {
         // The buttons strip is in a shadow root, so we'll need to do some more work here
-        let sidebarNode = document.querySelector("#sidebar-main").querySelector("sidebar-main");
+        let sidebarNode = (document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main")).querySelector("sidebar-main");
         let sidebarNodeSR = sidebarNode.shadowRoot;
 
         if (!sidebarNodeSR) {
@@ -287,7 +287,7 @@ class NatsumiStatusBarHandler {
             return;
         }
 
-        let sidebarNode = document.querySelector("#sidebar-main");
+        let sidebarNode = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
 
         if (!this.statusBarNode) {
             if (this.isWaterfox) {
@@ -430,7 +430,7 @@ if (!document.body.natsumiButtonsManager) {
     document.body.natsumiButtonsManager.init();
 }
 
-let sidebar = document.querySelector("#sidebar-main");
+let sidebar = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
 let isFloorp = false;
 let isWaterfox = false;
 
@@ -447,7 +447,7 @@ if (!document.body.natsumiStatusBarHandler) {
 if (!sidebar) {
     console.warn("Sidebar not found, trying to find it...");
     for (let i = 0; i < 10; i++) {
-        sidebar = document.querySelector("#sidebar-main");
+        sidebar = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
 
         // If the sidebar exists, we can stop searching
         if (sidebar) {

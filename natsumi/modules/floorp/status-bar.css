@@ -81,7 +81,7 @@ SOFTWARE.
       }
     }
 
-    &:has(#sidebar-main[hidden]) {
+    &:has(#sidebar-main[hidden], #sidebar-container[hidden]) {
       #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display:none"] {
         display: none !important;
       }
