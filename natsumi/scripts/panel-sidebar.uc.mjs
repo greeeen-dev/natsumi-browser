@@ -57,9 +57,11 @@ class NatsumiPanelSidebarHandler {
         })
         rootObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["style"]});
 
-        // Add event listener for web content
+        // Add event listener for web content and sidebar
         let browserBox = document.getElementById("tabbrowser-tabbox");
+        let sidebarBox = document.getElementById("sidebar-box");
         browserBox.addEventListener("click", () => {this.handleBrowserClick()});
+        sidebarBox.addEventListener("click", () => {this.handleBrowserClick()});
 
         // Add event listener for escape key press
         window.addEventListener("keydown", (event) => {

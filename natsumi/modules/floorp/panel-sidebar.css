@@ -337,6 +337,10 @@ SOFTWARE.
       transition: scale 0.3s ease, opacity 0.3s ease;
     }
 
+    #sidebar-box {
+      transition: scale 0.3s ease, opacity 0.3s ease, translate 0.3s ease;
+    }
+
     body[natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) {
       #panel-sidebar-box {
         z-index: 10;
@@ -355,6 +359,16 @@ SOFTWARE.
       #tabbrowser-tabpanels {
         opacity: 0.5;
         scale: 98%;
+        pointer-events: none;
+      }
+
+      #sidebar-box {
+        opacity: 0.5;
+        scale: 98%;
+        translate: 1% 1% !important;
+      }
+
+      #sidebar-box .sidebar-browser-stack, #sidebar-splitter {
         pointer-events: none;
       }
     }
