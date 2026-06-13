@@ -81,7 +81,7 @@ to accept low-quality AI-generated submissions, even if they are made in good fa
 
 Therefore, for every submission, we will enforce the following:
 - Any use of AI for writing content is **strictly prohibited** while any other use **must be declared** regardless of extent
-  or intent
+  or intent (see 5.1 for declaring AI usage)
 - All contributions will be subject to strict quality control by Maintainers to combat low quality submissions and forms of
   "vibe coding"
 - All contributions must have a description on a **per-file basis** describing the changes and the purpose of the changes in
@@ -89,7 +89,21 @@ Therefore, for every submission, we will enforce the following:
 - All contributions should not add features that focus on or incorporate AI, regardless of whether it uses on-device or
   on-cloud models, unless the contributions are limited to styling (CSS) only
 
-### 5.1. AI policy violations
+### 5.1. Declaring AI usage
+All contributions are expected to declare AI usage to maintain traceable receipts of AI usage throughout development. When
+declaring AI usage extent, you may choose between:
+- **AI tools were used to create the majority of this contribution**: Self-explanatory. AI tools were significantly used
+  throughout development or were used to write content. 
+- **AI tools were partially used to assist with this contribution**: This may involve things like using AI for research or
+  preliminary code review. You should not have used AI tools to write content.
+- **No AI tools whatsoever were used to create this contribution**: Absolutely no AI tools were used for development.
+
+If any AI was used for the contribution regardless of extent (i.e. you've declared partial or significant AI use), you are
+expected to also provide a description of how and where AI was used to create your contribution.
+
+If your contribution inherits works where the authors have declared AI usage, you must declare its extent as well.
+
+### 5.2. AI policy violations
 The Natsumi Project takes violations of this policy very seriously and will take action to enforce the policy to the greatest
 extent possible within the Project. If you are found to have intentionally violated this policy, your contributions will be
 removed or replaced and you will be permanently restricted from making any further contributions.
