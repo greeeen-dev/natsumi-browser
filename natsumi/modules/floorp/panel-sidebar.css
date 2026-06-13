@@ -365,7 +365,7 @@ SOFTWARE.
       }
 
       &:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-box {
-        animation: natsumi-panel-sidebar-overlay-left 0.3s ease;
+        animation-name: natsumi-panel-sidebar-overlay-left;
       }
     }
 
