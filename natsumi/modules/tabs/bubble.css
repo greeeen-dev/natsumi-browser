@@ -304,7 +304,7 @@ SOFTWARE.
     }
   }
 
-  #sidebar-main:not([sidebar-launcher-expanded]) {
+  #sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded]) {
     .tabbrowser-tab {
       min-width: var(--floorp-tab-min-height, var(--tab-min-height)) !important;
 

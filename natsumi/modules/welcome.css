@@ -214,18 +214,78 @@ SOFTWARE.
     margin-top: 10px !important;
   }
 
+  &:not(.natsumi-welcome-ready) {
+    #natsumi-welcome-progress-container {
+      opacity: 0;
+    }
+  }
+
   #natsumi-welcome-content {
     grid-row-start: 1;
     grid-column-start: 1;
     width: 60%;
     height: 60%;
     border-radius: 15px;
+    border: 1px solid transparent;
     margin: auto !important;
+    flex-direction: column;
+    box-sizing: content-box;
+
+    #natsumi-welcome-progress-container {
+      margin: 30px 6% 0px;
+      height: 40px;
+      justify-content: space-between;
+      align-items: center;
+      transition: opacity 0.2s ease;
+
+      #natsumi-welcome-progress-icon {
+        min-width: 40px;
+        height: 40px;
+        background-image: url("../icons/natsumi-glass.png");
+        background-size: 40px;
+      }
+
+      #natsumi-welcome-progress-bar {
+        gap: 6px;
+
+        .natsumi-welcome-progress {
+          min-width: 32px;
+          height: 32px;
+          border-radius: 16px;
+          align-content: center;
+          text-align: center;
+          font-size: small;
+          color: light-dark(black, white);
+          transition: background-color 0.2s ease, color 0.2s ease;
+
+          &[highlighted], &[completed] {
+            color: light-dark(white, black);
+            background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+          }
+
+          &[completed] {
+            transition: none;
+            color: transparent;
+            -moz-context-properties: stroke, stroke-opacity !important;
+            stroke: light-dark(white, black);
+            background-image: url("../icons/lucide/check.svg");
+            background-size: 20px;
+            background-position: center;
+            background-repeat: no-repeat;
+          }
+        }
+      }
+
+      &:has(#natsumi-welcome-progress-bar[hidden]) {
+        justify-content: center;
+      }
+    }
 
     #natsumi-welcome-content-container {
       flex-direction: column;
       flex: 1;
-      padding: 10% 6% !important;
+      padding: 10px 6% 80px !important;
+      max-height: calc(60vh - 70px);
     }
 
     #natsumi-welcome-content-preview {
@@ -234,6 +294,7 @@ SOFTWARE.
 
     .natsumi-welcome-pane {
       flex-direction: column;
+      width: -moz-available;
 
       &#natsumi-welcome-initial {
         justify-content: center;
@@ -377,9 +438,10 @@ SOFTWARE.
     }
 
     #natsumi-welcome-content {
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
       transition-delay: calc(var(--natsumi-global-delay) + 4.7s);
-      background-color: light-dark(white, #222);
+      background-color: var(--natsumi-mat-sd-background);
+      border: var(--natsumi-mat-sd-border);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
     }
 
@@ -400,7 +462,8 @@ SOFTWARE.
     }
 
     #natsumi-welcome-content {
-      background-color: light-dark(white, #222);
+      background-color: var(--natsumi-mat-sd-background);
+      border: var(--natsumi-mat-sd-border);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
     }
 
@@ -437,26 +500,50 @@ SOFTWARE.
     }
 
     .natsumi-welcome-selection {
-      border-radius: 5px;
+      border-radius: 8px;
       flex-direction: column;
-      border: 2px solid light-dark(#ccc, #777) !important;
+      border: 1px solid light-dark(var(--color-gray-60), var(--color-gray-50));
       padding: 10px !important;
+      box-sizing: content-box;
+      padding-bottom: var(--space-medium) !important;
+      margin: 2px;
+
+      &:not([pref="natsumi.theme.accent-color"]):not([pref="natsumi.theme.type"]) {
+        flex: 1;
+        min-width: 164px;
+      }
 
       &:hover {
-        background-color: var(--natsumi-button-hover-color);
+        background-color: color-mix(in srgb, currentColor 14%, transparent);
+
+        @media -moz-pref("browser.nova.enabled") {
+          background-color: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent);
+        }
+      }
+
+      &:active {
+        background-color: color-mix(in srgb, currentColor 21%, transparent);
+
+        @media -moz-pref("browser.nova.enabled") {
+          background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+        }
       }
 
       &.selected {
-        border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+        border-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        border-width: 3px;
         background-color: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+        margin: 0;
       }
 
       .natsumi-welcome-selection-label {
-        font-size: 12px !important;
+        margin-inline: auto;
+        font-size: 15px;
       }
 
       .natsumi-welcome-selection-preview {
         margin-bottom: 10px !important;
+        margin-inline: auto;
       }
     }
 
@@ -1070,7 +1157,7 @@ body[natsumi-welcome-complete] {
   #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
   #panel-sidebar-select-box, #notifications-toolbar, #sidebar-main,
   #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar {
+  #natsumi-pinned-toolbar, #sidebar-container {
     opacity: 0;
     transition: opacity 0.3s ease !important;
     pointer-events: none !important;
@@ -1108,7 +1195,7 @@ body[natsumi-welcome-drumroll-complete] {
   }
 
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar {
+  #natsumi-pinned-toolbar, #sidebar-container {
     opacity: 0.5;
   }
 
@@ -1140,7 +1227,7 @@ body[natsumi-welcome-complete-full] {
   }
 
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar {
+  #natsumi-pinned-toolbar, #sidebar-container {
     opacity: 1;
   }
 
@@ -1175,7 +1262,7 @@ body[natsumi-welcome] {
   }
 
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar {
+  #natsumi-pinned-toolbar, #sidebar-container {
     opacity: 0;
     pointer-events: none !important;
   }
@@ -1197,7 +1284,7 @@ body[natsumi-welcome] {
   }
 }
 
-:root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded]) body[natsumi-welcome] {
+:root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded], #sidebar-container[sidebar-launcher-expanded]) body[natsumi-welcome] {
   @media not (-moz-platform: macos) {
     #navigator-toolbox {
       z-index: 999 !important;

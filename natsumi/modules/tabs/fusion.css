@@ -288,7 +288,7 @@ SOFTWARE.
     }
   }
 
-  #sidebar-main[sidebar-launcher-expanded] {
+  #sidebar-main[sidebar-launcher-expanded], #sidebar-container[sidebar-launcher-expanded] {
     tab-split-view-wrapper {
       margin-right: 0 !important;
       border-radius: 4px 0 0 4px !important;
@@ -307,7 +307,7 @@ SOFTWARE.
     }
   }
 
-  #sidebar-main:not([sidebar-launcher-expanded]) {
+  #sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded]) {
     #tabbrowser-arrowscrollbox {
       .tabbrowser-tab > .tab-stack > .tab-background {
         width: calc(var(--tab-collapsed-background-width) + var(--tab-inner-inline-margin)) !important;
