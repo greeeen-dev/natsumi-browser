@@ -36,6 +36,10 @@ class NatsumiPanelSidebarHandler {
     constructor() {
         this.wasDisabled = false;
         this.hasPanelSidebarObserver = false;
+        this.panelSidebarObserver = new MutationObserver(() => {
+            this.getPanelSidebarState();
+            this.copyPanelSidebarWidth();
+        });
     }
 
     init() {
@@ -57,9 +61,11 @@ class NatsumiPanelSidebarHandler {
         })
         rootObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["style"]});
 
-        // Add event listener for web content
+        // Add event listener for web content and sidebar
         let browserBox = document.getElementById("tabbrowser-tabbox");
+        let sidebarBox = document.getElementById("sidebar-box");
         browserBox.addEventListener("click", () => {this.handleBrowserClick()});
+        sidebarBox.addEventListener("click", () => {this.handleBrowserClick()});
 
         // Add event listener for escape key press
         window.addEventListener("keydown", (event) => {
@@ -81,11 +87,7 @@ class NatsumiPanelSidebarHandler {
 
             if (!this.hasPanelSidebarObserver) {
                 // Create observer
-                let panelSidebarObserver = new MutationObserver(() => {
-                    this.getPanelSidebarState();
-                    this.copyPanelSidebarWidth();
-                });
-                panelSidebarObserver.observe(panelSidebar, {attributes: true, attributeFilter: ["style", "data-floating"]});
+                this.panelSidebarObserver.observe(panelSidebar, {attributes: true, attributeFilter: ["style", "data-floating"]});
                 this.hasPanelSidebarObserver = true;
             }
 
@@ -122,6 +124,7 @@ class NatsumiPanelSidebarHandler {
             document.body.setAttribute("natsumi-panel-sidebar-enabled", "");
         } else {
             document.body.removeAttribute("natsumi-panel-sidebar-enabled");
+            this.hasPanelSidebarObserver = false;
         }
     }
 

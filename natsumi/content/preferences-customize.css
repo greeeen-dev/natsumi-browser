@@ -1410,18 +1410,24 @@ SOFTWARE.
         width: 36px;
         height: 36px;
         border-radius: 5px;
+        -moz-context-properties: stroke, stroke-opacity !important;
+        stroke: light-dark(black, white);
+        background-position: center;
+        background-repeat: no-repeat;
         transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
         &::before {
           content: "";
           display: flex;
-          width: 24px;
-          height: 24px;
+          width: 12px;
+          height: 12px;
           margin: auto;
           align-items: center;
           justify-content: center;
           font-weight: bold;
-          font-size: 20px;
+          font-size: 10px;
+          margin-top: 23px;
+          margin-left: 23px;
         }
 
         &:hover {
@@ -1441,6 +1447,14 @@ SOFTWARE.
           content: "2";
         }
 
+        &.natsumi-custom-layer-1 {
+          background-image: url("../icons/custom/layer-1.svg");
+        }
+
+        &.natsumi-custom-layer-2 {
+          background-image: url("../icons/custom/layer-2.svg");
+        }
+
         &.natsumi-custom-mode-light {
           background-image: url("../icons/lucide/luminosity-1.svg");
         }
@@ -1455,13 +1469,6 @@ SOFTWARE.
 
         &.natsumi-custom-export {
           background-image: url("../icons/lucide/upload.svg");
-        }
-
-        &.natsumi-custom-mode-light, &.natsumi-custom-mode-dark, &.natsumi-custom-import, &.natsumi-custom-export {
-          -moz-context-properties: stroke, stroke-opacity !important;
-          stroke: light-dark(black, white);
-          background-position: center;
-          background-repeat: no-repeat;
         }
       }
     }
