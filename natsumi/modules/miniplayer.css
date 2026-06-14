@@ -56,8 +56,11 @@ SOFTWARE.
 
 #natsumi-miniplayer-container {
   -moz-window-dragging: no-drag;
-  margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
   flex-direction: row;
+
+  &:not([hide-margin]) {
+    margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
+  }
 
   @media -moz-pref("sidebar.verticalTabs") {
     order: 1;
@@ -76,6 +79,28 @@ SOFTWARE.
 
     &:not([hide-margin]) {
       margin-top: calc(var(--tab-block-margin) + 1px) !important;
+    }
+  }
+
+  @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
+    &:not([hide-margin]) {
+      margin-bottom: var(--natsumi-browser-separation) !important;
+    }
+  }
+}
+
+@media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
+  @media -moz-pref("natsumi.sidebar.autohide-bottom-toolbar") {
+    #sidebar-container, #sidebar-main {
+      &:not([natsumi-bottom-toolbar-empty]) #natsumi-miniplayer-container:not([hide-margin]) {
+        margin-bottom: var(--natsumi-browser-separation) !important;
+      }
+    }
+  }
+
+  @media not -moz-pref("natsumi.sidebar.autohide-bottom-toolbar") {
+    #natsumi-miniplayer-container:not([hide-margin]) {
+      margin-bottom: 0 !important;
     }
   }
 }
@@ -610,11 +635,5 @@ SOFTWARE.
     &[active] {
       opacity: 1;
     }
-  }
-}
-
-@media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
-  #natsumi-miniplayer-container:not([hide-margin]) {
-    margin-bottom: var(--natsumi-browser-separation) !important;
   }
 }

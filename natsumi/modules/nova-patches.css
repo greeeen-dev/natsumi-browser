@@ -30,6 +30,7 @@ SOFTWARE.
   /* Standard mode */
   @media not -moz-pref("natsumi.theme.islands") {
     #navigator-toolbox {
+      margin-left: unset !important;
       margin-block-end: unset !important;
 
       @media -moz-pref("sidebar.position_start") {
@@ -173,6 +174,10 @@ SOFTWARE.
           }
         }
       }
+
+      #natsumi-bottom-toolbar {
+        translate: var(--natsumi-browser-separation) calc(var(--natsumi-browser-separation) * -1);
+      }
     }
 
     body[natsumi-compact-mode] {
@@ -202,6 +207,14 @@ SOFTWARE.
             margin: 0 !important;
           }
         }
+
+        #natsumi-bottom-toolbar {
+          translate: var(--natsumi-browser-separation) calc(var(--natsumi-browser-separation) * -1);
+        }
+
+        #sidebar-container, #sidebar-main {
+          margin-bottom: var(--natsumi-browser-separation) !important;
+        }
       }
 
       @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
@@ -211,7 +224,7 @@ SOFTWARE.
         }
 
         #natsumi-pinned-toolbar {
-          translate: var(--natsumi-browser-separation) var(--natsumi-browser-separation) !important;
+          translate: var(--natsumi-browser-separation) 4px !important;
         }
       }
 

@@ -225,6 +225,29 @@ SOFTWARE.
           opacity: 0.5;
         }
       }
+
+      &[beta="true"] {
+        .checkbox-label {
+          width: fit-content;
+
+          &::after {
+            content: "BETA";
+            background-color: orange;
+            border-radius: 6px;
+            font-size: small;
+            margin-left: 4px;
+            padding-block: 2px;
+            min-height: 16px;
+            padding-inline: 20px 4px;
+            background-image: url("../icons/lucide/experimental.svg");
+            background-size: 14px;
+            background-repeat: no-repeat;
+            background-position: 3px center;
+            -moz-context-properties: stroke, stroke-opacity !important;
+            stroke: black;
+          }
+        }
+      }
     }
 
     radio {

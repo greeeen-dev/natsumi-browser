@@ -83,7 +83,10 @@ SOFTWARE.
 * {
   --tab-inner-inline-margin: var(--space-medium);
   --tab-collapsed-width: calc(var(--tab-collapsed-background-width) + 2 * var(--space-medium)) !important;
-  --tab-inline-padding: calc((var(--tab-collapsed-width) - var(--icon-size, 16px)) / 2);
+
+  @media -moz-pref("sidebar.verticalTabs") {
+    --tab-inline-padding: calc((var(--tab-collapsed-width) - var(--icon-size, 16px)) / 2);
+  }
 }
 
 /* Global tweaks for tabs */

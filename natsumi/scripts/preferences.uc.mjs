@@ -2007,12 +2007,13 @@ class CustomThemePicker {
 }
 
 class CheckboxChoice {
-    constructor(preference, id, label, description = "", opposite = false) {
+    constructor(preference, id, label, description = "", opposite = false, beta = false) {
         this.preference = preference;
         this.id = id;
         this.label = label;
         this.description = description;
         this.opposite = opposite;
+        this.beta = beta;
     }
 
     getSelected() {
@@ -2049,7 +2050,7 @@ class CheckboxChoice {
         }
 
         let nodeString = `
-            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}"${checkedAttribute} label="${this.label}">
+            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}"${checkedAttribute} label="${this.label}" beta="${this.beta}">
                 <image class="checkbox-check" checked="${selected}"/>
                 <label class="checkbox-label-box" flex="1">
                     <image class="checkbox-icon"/>
@@ -3997,20 +3998,6 @@ function addSidebarButtonsPane() {
         "Tweak the buttons visible in the sidebar."
     );
 
-    if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
-        if (
-            ucApi.Prefs.get("natsumi.browser.type").value === "floorp" ||
-            ucApi.Prefs.get("natsumi.browser.type").value === "waterfox"
-        ) {
-            buttonsGroup.registerOption("natsumiSidebarEnableToolbar", new CheckboxChoice(
-                "natsumi.sidebar.use-statusbar-in-sidebar",
-                "natsumiSidebarEnableToolbar",
-                "Use Status Bar in the Sidebar when the Status Bar is &#34;hidden&#34;",
-                "This will move the Status Bar to the bottom of the sidebar when it is in its hidden state."
-            ));
-        }
-    }
-
     buttonsGroup.registerOption("natsumiSidebarPinnedToolbarTop", new CheckboxChoice(
         "natsumi.theme.pinned-toolbar-on-top",
         "natsumiSidebarPinnedToolbarTop",
@@ -4064,10 +4051,30 @@ function addSidebarButtonsPane() {
         "This will let you open new tabs through the URL bar instead. Warning: This will override browser.urlbar.openintab."
     ));
 
-    buttonsGroup.registerOption("natsumiSidebarHideControls", new CheckboxChoice(
-        "natsumi.sidebar.hide-sidebar-controls",
-        "natsumiSidebarHideControls",
-        "Hide Sidebar controls"
+    if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").exists()) {
+        if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").value) {
+            buttonsGroup.registerOption("natsumiSidebarTopToolbar", new CheckboxChoice(
+                "natsumi.sidebar.top-toolbar",
+                "natsumiSidebarTopToolbar",
+                "Top toolbar",
+                "Creates a new top toolbar in the sidebar.",
+                false,
+                true
+            ));
+        }
+    }
+
+    buttonsGroup.registerOption("natsumiSidebarShowControls", new CheckboxChoice(
+        "natsumi.sidebar.disable-bottom-toolbar",
+        "natsumiSidebarShowControls",
+        "Show Sidebar controls",
+        "This will disable the bottom toolbar."
+    ));
+
+    buttonsGroup.registerOption("natsumiSidebarAutohideBottomToolbar", new CheckboxChoice(
+        "natsumi.sidebar.autohide-bottom-toolbar",
+        "natsumiSidebarAutohideBottomToolbar",
+        "Hide Bottom Toolbar when empty"
     ));
 
     buttonsGroup.registerOption("natsumiSidebarHideNewTab", new CheckboxChoice(

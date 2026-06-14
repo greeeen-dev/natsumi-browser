@@ -41,7 +41,7 @@ SOFTWARE.
   }
 
   #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"],
-  #status-bar[collapsed="true"] {
+  #status-bar[collapsed="true"], #natsumi-bottom-toolbar {
     transition: bottom 0.3s ease, translate 0.3s ease;
     translate: 0 -40vh;
     min-width: 36px !important;

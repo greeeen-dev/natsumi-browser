@@ -145,7 +145,7 @@ SOFTWARE.
         & > .tab-stack > .tab-background {
           box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
           background-image: none !important;
-          background-color: var(--natsumi-mat-hz-background) !important;
+          background: var(--natsumi-mat-hz-background) !important;
           animation: backdrop-fadein 0.2s ease;
 
           @media -moz-pref("natsumi.sidebar.blur-tab-button") {

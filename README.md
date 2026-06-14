@@ -290,9 +290,6 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   the workspaces toolbar button is set to display as an icons strip. **Floorp exclusive.**
 - `natsumi.sidebar.floorp-floating-panel`: Floats the Panel Sidebar similar to Compact Mode. **Floorp
   exclusive.**
-- `natsumi.sidebar.hide-sidebar-controls` (boolean): Hides sidebar controls.
-- `natsumi.sidebar.use-statusbar-in-sidebar` (boolean): Uses Floorp or Waterfox's Status Bar as a toolbar
-  for the sidebar when the Status Bar is "hidden". **Floorp and Waterfox exclusive.**
 - `natsumi.sidebar.hide-workspace-indicator` (boolean): Hides the Floorp Workspace indicator added by
   Natsumi. **Floorp exclusive.**
 - `natsumi.sidebar.legacy-workspace-indicator` (boolean): Uses the legacy Workspace indicator. Use this if

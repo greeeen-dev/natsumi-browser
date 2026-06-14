@@ -267,7 +267,7 @@ body > * {
   }
 }
 
-#nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {
+#nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar, #natsumi-top-toolbar, #natsumi-bottom-toolbar {
   & > toolbarbutton, & > toolbaritem {
     &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
       padding-inline: 4px !important;
@@ -581,7 +581,7 @@ body > * {
   }
 }
 
-@media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+@media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
   #vertical-tabs {
     min-height: 100% !important;
   }

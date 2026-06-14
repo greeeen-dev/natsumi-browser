@@ -269,38 +269,52 @@ SOFTWARE.
       }
     }
 
-    @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
-      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
-        z-index: 999 !important;
-        margin: var(--natsumi-browser-separation) !important;
-        transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease !important;
-        --natsumi-compact-offset: calc(var(--natsumi-sidebar-width) - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation));
+    #natsumi-top-toolbar-container {
+      z-index: 999 !important;
+      margin: var(--natsumi-browser-separation) !important;
+      transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease, top 0.1s ease !important;
+      --natsumi-compact-offset: calc(var(--natsumi-sidebar-width) - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation));
+      left: calc(var(--natsumi-compact-offset) * -1) !important;
+      opacity: 0 !important;
+
+      @media -moz-pref("sidebar.position_start") {
         left: calc(var(--natsumi-compact-offset) * -1) !important;
-        opacity: 0 !important;
-
-        @media -moz-pref("sidebar.position_start") {
-          left: calc(var(--natsumi-compact-offset) * -1) !important;
-        }
-
-        @media not -moz-pref("sidebar.position_start") {
-          right: calc(var(--natsumi-compact-offset) * -1) !important;
-          left: unset !important;
-        }
-
-        @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {
-          bottom: calc(15vh - var(--natsumi-browser-separation)) !important;
-        }
       }
 
-      &:has(#sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded])) {
-        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
-          --natsumi-compact-offset: calc(50px - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation)) !important;
-        }
+      @media not -moz-pref("sidebar.position_start") {
+        right: calc(var(--natsumi-compact-offset) * -1) !important;
+        left: unset !important;
+      }
+
+      @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {
+        top: calc(15vh - var(--natsumi-browser-separation)) !important;
+      }
+    }
+
+    #natsumi-bottom-toolbar {
+      z-index: 999 !important;
+      margin: var(--natsumi-browser-separation) !important;
+      transition: opacity 0.2s ease, left 0.2s ease, right 0.2s ease !important;
+      --natsumi-compact-offset: calc(var(--natsumi-sidebar-width) - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation));
+      left: calc(var(--natsumi-compact-offset) * -1) !important;
+      opacity: 0 !important;
+
+      @media -moz-pref("sidebar.position_start") {
+        left: calc(var(--natsumi-compact-offset) * -1) !important;
+      }
+
+      @media not -moz-pref("sidebar.position_start") {
+        right: calc(var(--natsumi-compact-offset) * -1) !important;
+        left: unset !important;
+      }
+
+      @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {
+        bottom: calc(15vh - var(--natsumi-browser-separation)) !important;
       }
     }
 
     &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend],
-    &:has(#nora-statusbar.hidden toolbarbutton[open], #nora-statusbar[style*="display:none"] toolbarbutton[open], #nora-statusbar[style*="display: none"] toolbarbutton[open], #status-bar[collapsed="true"] toolbarbutton[open]),
+    &:has(#natsumi-top-toolbar toolbarbutton[open]), &:has(#natsumi-bottom-toolbar toolbarbutton[open]),
     &:has(#natsumi-pinned-toolbar toolbarbutton[open]) &:has(#sidebar-main #tabbrowser-tabs[movingtab], #sidebar-container #tabbrowser-tabs[movingtab]) {
       #sidebar-main, #sidebar-container {
         opacity: 1 !important;
@@ -330,7 +344,7 @@ SOFTWARE.
         }
       }
 
-      #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
+      #natsumi-top-toolbar-container, #natsumi-bottom-toolbar {
         opacity: 1 !important;
 
         @media -moz-pref("sidebar.position_start") {
@@ -459,12 +473,14 @@ SOFTWARE.
           }
 
           @media (not -moz-pref("natsumi.theme.compact-style", "toolbar")) or -moz-pref("natsumi.theme.single-toolbar") {
-            #natsumi-pinned-toolbar {
+            #natsumi-pinned-toolbar, #natsumi-top-toolbar-container {
               --natsumi-toolbar-offset: var(--natsumi-toolbar-override, 15px);
             }
 
-            &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) #natsumi-pinned-toolbar {
-              --natsumi-toolbar-offset: calc(var(--natsumi-toolbar-override, 15px) + 28px);
+            &:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]) {
+              #natsumi-pinned-toolbar, #natsumi-top-toolbar-container {
+                --natsumi-toolbar-offset: calc(var(--natsumi-toolbar-override, 15px) + 28px);
+              }
             }
           }
         }
@@ -597,17 +613,15 @@ SOFTWARE.
         opacity: 1 !important;
       }
 
-      @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
-        #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"] {
-          opacity: 1 !important;
+      #natsumi-top-toolbar-container, #natsumi-bottom-toolbar {
+        opacity: 1 !important;
 
-          @media -moz-pref("sidebar.position_start") {
-            left: var(--natsumi-browser-separation) !important;
-          }
+        @media -moz-pref("sidebar.position_start") {
+          left: var(--natsumi-browser-separation) !important;
+        }
 
-          @media not -moz-pref("sidebar.position_start") {
-            right: var(--natsumi-browser-separation) !important;
-          }
+        @media not -moz-pref("sidebar.position_start") {
+          right: var(--natsumi-browser-separation) !important;
         }
       }
     }

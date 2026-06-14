@@ -316,7 +316,8 @@ SOFTWARE.
         border-radius: var(--natsumi-tab-border-radius) !important;
 
         #identity-box {
-          padding: 4px 0 !important;
+          height: 28px !important;
+          padding: 0 !important;
 
           #identity-icon-box {
             border-radius: 8px !important;
@@ -950,10 +951,9 @@ SOFTWARE.
         }
 
         .urlbar-page-action {
-          transition: background-color 0.2s ease, box-shadow 0.2s ease, width 0.2s ease 0.5s, padding 0.2s ease 0.5s, opacity 0.2s ease 0.5s;
-          width: 0 !important;
-          padding: 6px 0 !important;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease, margin-right 0.2s ease 0.5s, opacity 0.2s ease 0.5s;
           opacity: 0;
+          margin-right: -26px !important;
           pointer-events: none !important;
         }
 
