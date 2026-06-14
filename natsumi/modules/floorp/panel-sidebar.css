@@ -79,6 +79,7 @@ SOFTWARE.
     margin-inline: calc(calc(var(--natsumi-browser-separation) - 4px) / 2) !important;
     min-width: 4px !important;
     transition: background-color 0.5s ease-in-out;
+    background: transparent !important;
   }
 
   #panel-sidebar-box {
