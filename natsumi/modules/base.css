@@ -100,6 +100,10 @@ body > * {
           margin: auto 0 !important;
         }
       }
+
+      &:empty {
+        display: none;
+      }
     }
   }
 
@@ -267,7 +271,8 @@ body > * {
   }
 }
 
-#nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar, #natsumi-top-toolbar, #natsumi-bottom-toolbar {
+#nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
+#TabsToolbar-customization-target {
   & > toolbarbutton, & > toolbaritem {
     &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
       padding-inline: 4px !important;
@@ -299,6 +304,8 @@ body > * {
       padding: 6px !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
       border-radius: 4px !important;
+      background: unset !important;
+      border: none !important;
 
       /* Match Firefox's macOS 26 theme */
       @media (-moz-mac-tahoe-theme) {
@@ -325,13 +332,13 @@ body > * {
       &:active, &[open], &[checked] {
         .toolbarbutton-icon {
           background-color: var(--natsumi-button-active-color) !important;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
         }
 
         &:hover {
           .toolbarbutton-icon {
             background-color: var(--natsumi-button-active-color) !important;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
           }
         }
       }
@@ -407,6 +414,10 @@ body > * {
   .avatar-container {
     margin-left: 6px !important;
   }
+}
+
+#TabsToolbar-customization-target toolbarbutton {
+  margin-block: auto !important;
 }
 
 #nav-bar-overflow-button {
@@ -742,6 +753,15 @@ splitter:hover {
 
     &:not([sidebar-ongoing-animations])[sidebar-launcher-expanded] {
       margin-inline-start: var(--natsumi-sidebar-width) !important;
+    }
+  }
+}
+
+@media not -moz-pref("sidebar.verticalTabs") {
+  #tabbrowser-tabs {
+    &::before {
+      margin-top: var(--tab-block-margin, 6px);
+      height: calc(100% - calc(var(--tab-block-margin, 6px) * 2)) !important;
     }
   }
 }
