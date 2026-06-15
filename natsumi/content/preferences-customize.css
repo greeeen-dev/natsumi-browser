@@ -1040,9 +1040,10 @@ SOFTWARE.
   }
 
   .natsumi-custom-theme-picker {
-    padding: 20px;
-    background-color: light-dark(white, #222);
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
+    padding: 19px;
+    background-color: var(--natsumi-mat-sd-background);
+    border: var(--natsumi-mat-sd-border);
+    box-shadow: var(--natsumi-mat-sd-shadow) !important;
     border-radius: 20px !important;
   }
 
