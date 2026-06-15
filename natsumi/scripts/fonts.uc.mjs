@@ -71,6 +71,11 @@ class NatsumiFontManager {
     }
 
     setFontSizeOffset(fontSize) {
+        if (fontSize === null) {
+            document.body.style.removeProperty("--natsumi-font-offset");
+            return;
+        }
+
         document.body.style.setProperty("--natsumi-font-offset", `${fontSize}px`);
     }
 }
