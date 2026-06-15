@@ -773,16 +773,12 @@ splitter:hover {
 
   menuitem:not([image])::after {
     content: "";
+    -moz-context-properties: stroke, fill !important;
     width: 16px;
     height: 16px;
     margin-right: 6px;
     background-size: 16px;
     background-image: var(--natsumi-menu-icon, none);
-    -moz-context-properties: stroke, fill;
     order: -1;
-  }
-
-  menuitem[disabled]::after {
-    opacity: 0.5;
   }
 }

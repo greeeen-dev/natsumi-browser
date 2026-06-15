@@ -25,7 +25,7 @@ SOFTWARE.
 */
 /* ==== Acorn context menu icons ==== */
 
-menuitem .menu-icon {
+menuitem::after {
   fill: currentColor;
 }
 
