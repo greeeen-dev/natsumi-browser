@@ -3516,6 +3516,14 @@ function addIconsPane() {
         "Use alternative Back/Forward icons"
     ));
 
+    // Context menu icons
+    iconSelection.registerExtras("natsumiIconsContextMenu", new CheckboxChoice(
+        "natsumi.theme.context-menu-icons",
+        "natsumiIconsContextMenu",
+        "Show icons in context menu",
+        "This may not show for some operating systems."
+    ));
+
     let iconNode = iconSelection.generateNode();
 
     // Set listeners for each button
