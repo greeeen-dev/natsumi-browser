@@ -89,8 +89,8 @@ and websites. No more being forced to show mercy to websites when shortcuts conf
 #### Get extra features custom-made for specific browsers.
 ![](./images/floorp-features.webp)
 
-Does your browser have Workspaces? Or another toolbar that can be used in the sidebar? Natsumi adds
-extra features to your browser for a more complete experience.
+Natsumi takes advantage of your browser's own features to add extra features on top of them for a
+more complete experience.
 
 ## Full-fledged vs. CSS-only
 Some Natsumi features require JavaScript to work. You can still use Natsumi without JS support at the
@@ -107,7 +107,7 @@ cost of losing some features.
 | Custom themes                      | :white_check_mark:              | :x:                |
 | Single Toolbar                     | :white_check_mark:              | :x:                |
 | Compact Mode                       | :white_check_mark:              | :x:                |
-| Status bar as sidebar toolbar      | :white_check_mark:              | :x:                |
+| Natsumi toolbars                   | :white_check_mark:              | :x:                |
 | Natsumi Shortcuts                  | :white_check_mark:              | :x:                |
 
 
