@@ -1,0 +1,130 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+/* ==== Acorn context menu icons ==== */
+
+menuitem .menu-icon {
+  fill: currentColor;
+}
+
+#context-back {
+  --natsumi-menu-icon: url("chrome://browser/skin/back.svg");
+}
+
+#context-forward {
+  --natsumi-menu-icon: url("chrome://browser/skin/forward.svg");
+}
+
+#context-reload {
+  --natsumi-menu-icon: url("chrome://global/skin/icons/reload.svg");
+}
+
+#context-bookmarkpage {
+  --natsumi-menu-icon: url("chrome://browser/skin/bookmark-hollow.svg");
+}
+
+#context-savepage, #context-savelink {
+  --natsumi-menu-icon: url("chrome://browser/skin/save.svg");
+}
+
+#context-take-screenshot {
+  --natsumi-menu-icon: url("chrome://browser/skin/screenshot.svg");
+}
+
+#context-viewimage {
+  --natsumi-menu-icon: url("chrome://browser/skin/canvas.svg");
+}
+
+#context-copyimage, #context-copyaudiourl, #context-copyvideourl, #context-copylink, #context-stripOnShareLink {
+  --natsumi-menu-icon: url("chrome://global/skin/icons/edit-copy.svg");
+}
+
+#context-sendimage, #context-sendaudio, #context-sendvideo {
+  --natsumi-menu-icon: url("chrome://browser/skin/mail.svg");
+}
+
+#context-cut {
+  --natsumi-menu-icon: url("chrome://browser/skin/edit-cut.svg");
+}
+
+#context-copy {
+  --natsumi-menu-icon: url("chrome://global/skin/icons/edit-copy.svg");
+}
+
+#context-paste {
+  --natsumi-menu-icon: url("chrome://browser/skin/edit-paste.svg");
+}
+
+#context-openlinkintab {
+  --natsumi-menu-icon: url("chrome://browser/skin/new-tab.svg");
+}
+
+#context-openlinkinsplitview {
+  --natsumi-menu-icon: url("chrome://browser/skin/split-view-left-16.svg");
+}
+
+#context-openlink {
+  --natsumi-menu-icon: url("chrome://browser/skin/window.svg");
+}
+
+#context-openlinkprivate {
+  --natsumi-menu-icon: url("chrome://browser/skin/privateBrowsing.svg");
+}
+
+#context-previewlink {
+  --natsumi-menu-icon: url("chrome://global/skin/icons/eye.svg");
+}
+
+#context-bookmarklink {
+  --natsumi-menu-icon: url("chrome://browser/skin/bookmark-hollow.svg");
+}
+
+#context-searchselect {
+  --natsumi-menu-icon: url("chrome://global/skin/icons/search-glass.svg");
+}
+
+#toolbar-context-openANewTab {
+  --natsumi-menu-icon: url("chrome://browser/skin/new-tab.svg");
+}
+
+#toolbar-context-reloadSelectedTab, #toolbar-context-reloadSelectedTabs {
+  --natsumi-menu-icon: url("chrome://global/skin/icons/reload.svg");
+}
+
+#toolbar-context-bookmarkSelectedTab, #toolbar-context-bookmarkSelectedTabs {
+  --natsumi-menu-icon: url("chrome://browser/skin/bookmark-hollow.svg");
+}
+
+#toolbar-context-customize-sidebar {
+  --natsumi-menu-icon: url("chrome://browser/skin/customize.svg");
+}
+
+#toolbar-context-toggle-vertical-tabs {
+  --natsumi-menu-icon: url("chrome://browser/skin/window.svg");
+}
+
+#toolbar-context-full-screen-exit {
+  --natsumi-menu-icon: url("chrome://browser/skin/fullscreen-exit.svg");
+}
