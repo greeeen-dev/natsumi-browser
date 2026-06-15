@@ -3735,6 +3735,18 @@ function addSidebarTabsPane() {
 
     tabDesignSelection.registerExtras("natsumiTabGrayoutOptions", tabGrayoutSubgroup);
 
+    // Tab font size offset slider
+    let fontOffsetSlider = new SliderChoice(
+        "0",
+        "12",
+        "0",
+        "Tab font size offset",
+        "",
+        "natsumi.theme.font-size-offset",
+    )
+
+    tabDesignSelection.registerExtras("natsumiTabFontSizeOffset", fontOffsetSlider);
+
     let tabDesignNode = tabDesignSelection.generateNode();
 
     // Set listeners for each button

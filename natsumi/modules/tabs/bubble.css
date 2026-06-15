@@ -329,7 +329,7 @@ SOFTWARE.
     border-radius: var(--natsumi-tab-border-radius) !important;
 
     .toolbarbutton-text {
-      font-size: 12px;
+      font-size: calc(12px + var(--natsumi-font-offset, 0px)) !important;
     }
 
     .toolbarbutton-icon {

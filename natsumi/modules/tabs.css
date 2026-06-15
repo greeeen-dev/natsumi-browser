@@ -229,6 +229,16 @@ tab[natsumi-workspace-hidden] {
   display: none !important;
 }
 
+.tab-text {
+  font-size: calc(11px + var(--natsumi-font-offset, 0px));
+}
+
+#tabs-newtab-button, #vertical-tabs-newtab-button {
+  .toolbarbutton-text {
+    font-size: calc(11px + var(--natsumi-font-offset, 0px));
+  }
+}
+
 /* Unloaded Tabs */
 @media not -moz-pref("natsumi.tabs.disable-grayout-unloaded") {
   .tabbrowser-tab[pending="true"] {

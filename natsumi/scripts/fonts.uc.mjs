@@ -38,15 +38,27 @@ class NatsumiFontManager {
     constructor() {}
 
     init() {
-        if (ucApi.Prefs.get("natsumi.theme.font").exists()) {
+        if (ucApi.Prefs.get("natsumi.theme.font").exists) {
             this.setFont(ucApi.Prefs.get("natsumi.theme.font").value);
+        }
+        if (ucApi.Prefs.get("natsumi.theme.font-size-offset").exists) {
+            this.setFontSizeOffset(ucApi.Prefs.get("natsumi.theme.font-size-offset").value);
         }
 
         Services.prefs.addObserver("natsumi.theme.font", () => {
-            if (ucApi.Prefs.get("natsumi.theme.font").exists()) {
+            if (ucApi.Prefs.get("natsumi.theme.font").exists) {
                 this.setFont(ucApi.Prefs.get("natsumi.theme.font").value);
+            } else {
+                this.setFont("default");
             }
-        })
+        });
+        Services.prefs.addObserver("natsumi.theme.font-size-offset", () => {
+            if (ucApi.Prefs.get("natsumi.theme.font-size-offset").exists) {
+                this.setFontSizeOffset(ucApi.Prefs.get("natsumi.theme.font-size-offset").value);
+            } else {
+                this.setFontSizeOffset(0);
+            }
+        });
     }
 
     setFont(newFont) {
@@ -56,6 +68,10 @@ class NatsumiFontManager {
         }
 
         document.body.style.setProperty("--natsumi-custom-font", newFont);
+    }
+
+    setFontSizeOffset(fontSize) {
+        document.body.style.setProperty("--natsumi-font-offset", `${fontSize}px`);
     }
 }
 
