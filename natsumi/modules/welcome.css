@@ -1157,7 +1157,8 @@ body[natsumi-welcome-complete] {
   #tabbrowser-tabpanels, #nora-statusbar, #status-bar, #urlbar,
   #panel-sidebar-select-box, #notifications-toolbar, #sidebar-main,
   #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar, #sidebar-container {
+  #natsumi-pinned-toolbar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
+  #sidebar-container {
     opacity: 0;
     transition: opacity 0.3s ease !important;
     pointer-events: none !important;
@@ -1195,7 +1196,8 @@ body[natsumi-welcome-drumroll-complete] {
   }
 
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar, #sidebar-container {
+  #natsumi-pinned-toolbar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
+  #sidebar-container {
     opacity: 0.5;
   }
 
@@ -1227,7 +1229,8 @@ body[natsumi-welcome-complete-full] {
   }
 
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar, #sidebar-container {
+  #natsumi-pinned-toolbar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
+  #sidebar-container {
     opacity: 1;
   }
 
@@ -1262,7 +1265,8 @@ body[natsumi-welcome] {
   }
 
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar, #sidebar-container {
+  #natsumi-pinned-toolbar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
+  #sidebar-container {
     opacity: 0;
     pointer-events: none !important;
   }
