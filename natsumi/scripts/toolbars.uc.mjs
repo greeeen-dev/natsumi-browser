@@ -377,6 +377,11 @@ class NatsumiToolbarManager {
     }
 
     copyTopToolbarHeight() {
+        if (!CustomizableUI.areas.includes("natsumi-top-toolbar")) {
+            document.body.style.removeProperty("--natsumi-top-toolbar-height");
+            return;
+        }
+
         let topToolbarNode = document.getElementById("natsumi-top-toolbar");
         let toolbarWidgets = window.CustomizableUI.getWidgetIdsInArea("natsumi-top-toolbar");
 
