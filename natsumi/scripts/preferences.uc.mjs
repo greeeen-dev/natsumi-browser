@@ -4492,8 +4492,8 @@ function addSidebarMiniplayerPane() {
     let miniplayerLayoutSelection = new MultipleChoicePreference(
         "natsumiMiniplayerLayout",
         "natsumi.miniplayer.scroll-view",
-        "Layout",
-        "Choose the layout you want for the Miniplayers."
+        "Layout and Appearance",
+        "Choose the layout and look you want for the Miniplayers."
     );
 
     for (let layout in miniplayerLayouts) {
@@ -4514,6 +4514,21 @@ function addSidebarMiniplayerPane() {
         "Use artwork to determine Miniplayer's accent color",
         "",
         true
+    ));
+
+    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerScroll", new CheckboxChoice(
+        "natsumi.miniplayer.disable-text-scrolling",
+        "natsumiSidebarMiniplayerScroll",
+        "Scroll title and author text on overflow",
+        "",
+        true
+    ));
+
+    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerDefaultPin", new CheckboxChoice(
+        "natsumi.miniplayer.pin-by-default",
+        "natsumiSidebarMiniplayerDefaultPin",
+        "Pin Miniplayers by default",
+        ""
     ));
 
     let miniplayerLayoutNode = miniplayerLayoutSelection.generateNode();

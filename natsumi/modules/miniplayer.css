@@ -50,6 +50,16 @@ SOFTWARE.
   }
 }
 
+@keyframes miniplayer-scroll {
+  from {
+    translate: 0;
+  }
+
+  to {
+    translate: calc(var(--natsumi-animation-width) * -1);
+  }
+}
+
 #vertical-tabs {
   flex-direction: column;
 }
@@ -124,7 +134,7 @@ SOFTWARE.
 
   @media not -moz-pref("natsumi.miniplayer.disable-dynamic-accent") {
     &[miniplayer-has-custom-color][miniplayer-has-artwork] {
-      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container {
+      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container, .natsumi-miniplayer-pin-button {
         --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
       }
 
@@ -169,11 +179,11 @@ SOFTWARE.
     }
   }
 
-  &:hover {
+  &:hover, &[pinned] {
     min-height: 110px;
   }
 
-  &:not(:hover) {
+  &:not(:hover):not([pinned]) {
     &::before {
       width: calc(100% + 50px);
       height: calc(100% + 50px);
@@ -201,10 +211,15 @@ SOFTWARE.
     padding: 4px !important;
   }
 
+  .natsumi-miniplayer-top-container {
+    gap: 4px;
+  }
+
   .natsumi-miniplayer-site-container {
     padding: 4px !important;
     border-radius: 8px !important;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    flex: 1;
 
     .natsumi-miniplayer-site-icon {
       width: 16px;
@@ -242,14 +257,68 @@ SOFTWARE.
     }
   }
 
+  .natsumi-miniplayer-pin-button {
+    min-width: 24px;
+    height: 24px;
+    padding: 5px !important;
+    border-radius: 8px !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    -moz-context-properties: stroke, fill;
+    stroke: white;
+    background-image: url("../icons/lucide/pin.svg");
+    background-size: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+      stroke: light-dark(black, white);
+    }
+
+    &:hover {
+      background-color: var(--natsumi-button-hover-color-dark);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: var(--natsumi-button-hover-color);
+      }
+    }
+
+    &:active {
+      background-color: var(--natsumi-button-active-color-dark);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: var(--natsumi-button-active-color);
+      }
+    }
+  }
+
+  &[pinned] {
+    .natsumi-miniplayer-pin-button {
+      background-color: var(--natsumi-button-active-color-dark);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: var(--natsumi-button-active-color);
+      }
+    }
+  }
+
   .natsumi-miniplayer-title-container {
     padding-inline: 4px !important;
+    overflow: hidden;
+
+    .natsumi-miniplayer-title-scrollable {
+      gap: 150px;
+
+      &[animate-overflow] {
+        animation: miniplayer-scroll var(--natsumi-animation-duration) linear;
+      }
+    }
 
     .natsumi-miniplayer-title {
       display: inline-block !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      min-width: fit-content;
+      text-wrap: nowrap;
       font-size: large;
       font-weight: bold;
       color: white;
@@ -260,21 +329,70 @@ SOFTWARE.
     }
   }
 
+  &[natsumi-title-overflow] {
+    .natsumi-miniplayer-title-container {
+      mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0), black 4px, black calc(100% - 4px), rgba(0, 0, 0, 0));
+    }
+  }
+
+  &:not([natsumi-title-overflow]) {
+    .natsumi-miniplayer-title[duplicate] {
+      display: none !important;
+    }
+  }
+
   .natsumi-miniplayer-author-container {
     padding-inline: 4px !important;
     opacity: 0.7;
+    overflow: hidden;
 
     .natsumi-miniplayer-artist {
       display: inline-block !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
       font-size: 12px;
       color: white;
-      white-space: nowrap;
+      text-wrap: nowrap;
 
       @media -moz-pref("natsumi.miniplayer.disable-artwork") {
         color: light-dark(black, white);
       }
+    }
+
+    .natsumi-miniplayer-author-scrollable {
+      gap: 150px;
+
+      &[animate-overflow] {
+        animation: miniplayer-scroll var(--natsumi-animation-duration) linear;
+      }
+    }
+  }
+
+  &[natsumi-author-overflow] {
+    .natsumi-miniplayer-author-container {
+      mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0), black 4px, black calc(100% - 4px), rgba(0, 0, 0, 0));
+    }
+  }
+
+  &:not([natsumi-author-overflow]) {
+    .natsumi-miniplayer-artist[duplicate] {
+      display: none !important;
+    }
+  }
+
+  &[animations-disabled] {
+    .natsumi-miniplayer-title-scrollable, .natsumi-miniplayer-author-scrollable {
+      animation: none !important;
+      max-width: -moz-available;
+    }
+
+    .natsumi-miniplayer-title, .natsumi-miniplayer-artist {
+      min-width: -moz-available !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .natsumi-miniplayer-title[duplicate], .natsumi-miniplayer-artist[duplicate] {
+      display: none !important;
     }
   }
 
