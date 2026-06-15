@@ -224,6 +224,7 @@ class NatsumiMiniplayer {
                     </div>
                 </div>
                 <div class="natsumi-miniplayer-controls-container">
+                    <div class="natsumi-miniplayer-pin-button"></div>
                     <div class="natsumi-miniplayer-pip-button" disabled="${!pipAvailable}"></div>
                     <div class="natsumi-miniplayer-prevtrack-button" disabled="${!prevTrackAvailable}"></div>
                     <div class="natsumi-miniplayer-pauseplay-button" disabled="${!playPauseAvailable}" playing="${this.isPlaying}"></div>
@@ -264,13 +265,16 @@ class NatsumiMiniplayer {
         this._node.querySelector(".natsumi-miniplayer-pip-button").addEventListener("click", () => {
             this._tab.linkedBrowser.browsingContext.currentWindowGlobal.getActor("PictureInPictureLauncher").sendAsyncMessage("PictureInPicture:KeyToggle");
         });
-        this._node.querySelector(".natsumi-miniplayer-pin-button").addEventListener("click", () => {
-            if (this.pinned) {
-                this.unpinMiniplayer();
-            } else {
-                this.pinMiniplayer();
-            }
-        });
+
+        for (let pinButton of this._node.querySelectorAll(".natsumi-miniplayer-pin-button")) {
+            pinButton.addEventListener("click", () => {
+                if (this.pinned) {
+                    this.unpinMiniplayer();
+                } else {
+                    this.pinMiniplayer();
+                }
+            });
+        }
 
         // Append to container
         let miniplayerContainer = document.getElementById("natsumi-miniplayer-container");

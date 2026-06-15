@@ -262,7 +262,7 @@ SOFTWARE.
     height: 24px;
     padding: 5px !important;
     border-radius: 8px !important;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     -moz-context-properties: stroke, fill;
     stroke: white;
     background-image: url("../icons/lucide/pin.svg");
@@ -293,7 +293,7 @@ SOFTWARE.
   }
 
   &[pinned] {
-    .natsumi-miniplayer-pin-button {
+    .natsumi-miniplayer-pin-button, .natsumi-miniplayer-pin-button:hover {
       background-color: var(--natsumi-button-active-color-dark);
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 
@@ -461,11 +461,15 @@ SOFTWARE.
     padding: 4px !important;
     justify-content: space-between;
 
+    .natsumi-miniplayer-pin-button {
+      background-image: none !important;
+    }
+
     & > * {
-      width: 28px;
+      min-width: 28px;
       height: 28px;
       border-radius: 8px;
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 
       &[disabled="true"] {
         opacity: 0.5;
@@ -480,7 +484,7 @@ SOFTWARE.
         }
       }
 
-      &:active {
+      &:active, &:hover:active {
         background-color: var(--natsumi-button-active-color-dark);
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 
@@ -505,6 +509,10 @@ SOFTWARE.
           stroke: light-dark(black, white);
         }
       }
+    }
+
+    .natsumi-miniplayer-pin-button::before {
+      background-image: url("../icons/lucide/pin.svg");
     }
 
     .natsumi-miniplayer-pip-button::before {
@@ -650,7 +658,15 @@ SOFTWARE.
   }
 }
 
-#sidebar-main:not([sidebar-launcher-expanded]), #nav-bar {
+#sidebar-container[sidebar-launcher-expanded], #sidebar-main[sidebar-launcher-expanded] {
+  .natsumi-miniplayer {
+    .natsumi-miniplayer-controls-container .natsumi-miniplayer-pin-button {
+      display: none;
+    }
+  }
+}
+
+#sidebar-container:not([sidebar-launcher-expanded]), #sidebar-main:not([sidebar-launcher-expanded]), #nav-bar {
   #natsumi-miniplayer-container {
     @media -moz-pref("sidebar.verticalTabs") {
       max-width: var(--tab-collapsed-background-width) !important;
@@ -693,28 +709,38 @@ SOFTWARE.
         margin-top: 0 !important;
         padding-block: 2px !important;
       }
+
+      & > * {
+        border-radius: calc(var(--natsumi-tab-border-radius) - 2px) !important;
+      }
     }
 
     .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
-      transition: margin 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: margin 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     }
 
-    &:hover {
+    &:hover, &[pinned] {
       @media -moz-pref("sidebar.verticalTabs") {
         min-height: calc(var(--tab-collapsed-background-width) + 112px) !important;
       }
 
       @media not -moz-pref("sidebar.verticalTabs") {
-        max-width: 148px !important;
+        max-width: 176px !important;
       }
     }
 
-    &:not(:hover) {
+    &:not(:hover):not([pinned]) {
       @media -moz-pref("sidebar.verticalTabs") {
         min-height: var(--tab-collapsed-background-width) !important;
 
         .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
           margin-bottom: -100% !important;
+          opacity: 0;
+        }
+
+        .natsumi-miniplayer-pin-button {
+          margin-top: calc(-100% - 6px) !important;
+          opacity: 0;
         }
       }
 
@@ -723,6 +749,12 @@ SOFTWARE.
 
         .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
           margin-right: -100% !important;
+          opacity: 0;
+        }
+
+        .natsumi-miniplayer-pin-button {
+          margin-left: calc(-100% - 6px) !important;
+          opacity: 0;
         }
       }
     }
