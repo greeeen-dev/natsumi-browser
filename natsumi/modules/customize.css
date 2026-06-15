@@ -35,13 +35,22 @@ SOFTWARE.
   }
 }
 
+@keyframes bottom-toolbar-statusbar-move {
+  from {
+    translate: 0 -28px;
+  }
+
+  to {
+    translate: 0 calc(-40vh - 28px);
+  }
+}
+
 :root[customizing] {
   #browser {
     display: flex;
   }
 
-  #nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"],
-  #status-bar[collapsed="true"], #natsumi-bottom-toolbar {
+  #natsumi-bottom-toolbar {
     transition: bottom 0.3s ease, translate 0.3s ease;
     translate: 0 -40vh;
     min-width: 36px !important;
@@ -55,6 +64,12 @@ SOFTWARE.
         height: unset !important;
       }
     }
+  }
+
+  &:has(#nora-statusbar, #status-bar) #natsumi-bottom-toolbar {
+    transition: none !important;
+    translate: 0 calc(-40vh - 28px);
+    animation: bottom-toolbar-statusbar-move 0.3s ease;
   }
 
   #customization-container {
