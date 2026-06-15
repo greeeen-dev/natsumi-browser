@@ -239,6 +239,12 @@ tab[natsumi-workspace-hidden] {
   }
 }
 
+#tabbrowser-tabs[tablist-has-focus] {
+  tab.tablist-keyboard-focus .tab-background {
+    outline: 2px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+  }
+}
+
 /* Unloaded Tabs */
 @media not -moz-pref("natsumi.tabs.disable-grayout-unloaded") {
   .tabbrowser-tab[pending="true"] {

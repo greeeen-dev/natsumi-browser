@@ -31,7 +31,7 @@ SOFTWARE.
   .tabbrowser-tab {
     &[natsumi-glimpse-selected] {
       & > .tab-stack > .tab-background {
-        background-color: var(--tab-background-color-selected, var(--tab-selected-bgcolor)) !important;
+        background: var(--tab-background-color-selected, var(--tab-selected-bgcolor)) !important;
         box-shadow: var(--tab-selected-shadow, var(--tab-box-shadow));
         outline-color: var(--tab-selected-outline-color);
       }
