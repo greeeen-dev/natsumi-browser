@@ -374,6 +374,22 @@ class NatsumiToolbarManager {
         }
 
         document.body.style.setProperty("--natsumi-sidebar-width", `${width}px`);
+
+        // Refresh Miniplayer text scrolling
+        let miniplayerContainer = document.getElementById("natsumi-miniplayer-container");
+
+        if (!miniplayerContainer) {
+            return;
+        }
+
+        for (let miniplayerNode of miniplayerContainer.querySelectorAll(".natsumi-miniplayer")) {
+            if (!miniplayerNode.natsumiMiniplayerController) {
+                // This Miniplayer is broken
+                continue;
+            }
+
+            miniplayerNode.natsumiMiniplayerController.refreshMetadataAnimations();
+        }
     }
 
     copyTopToolbarHeight() {
