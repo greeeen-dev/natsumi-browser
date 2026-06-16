@@ -25,3 +25,195 @@ SOFTWARE.
 */
 
 /* ==== Fluent context menu icons ==== */
+
+@media -moz-pref("natsumi.theme.icons", "fluent") {
+  #context-back {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/arrow-left.svg");
+  }
+
+  #context-forward {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/arrow-right.svg");
+  }
+
+  #context-reload {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/rotate-right.svg");
+  }
+
+  #context-bookmarkpage {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/bookmark.svg");
+  }
+
+  #context-savepage, #context-savelink {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/save.svg");
+  }
+
+  #context-selectall, #context_selectAllTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/select-all.svg");
+  }
+
+  #context-take-screenshot {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/screenshot.svg");
+  }
+
+  #context-viewsource {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/source.svg");
+  }
+
+  #context-inspect {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/inspect.svg");
+  }
+
+  #context-inspect-a11y {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/accessibility.svg");
+  }
+
+  #context-viewimage {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/image.svg");
+  }
+
+  #context-copyimage, #context-copyaudiourl, #context-copyvideourl, #context-copylink, #context-stripOnShareLink {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/copy.svg");
+  }
+
+  #context-sendimage, #context-sendaudio, #context-sendvideo {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/mail.svg");
+  }
+
+  #context-undo {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/undo.svg");
+  }
+
+  #context-redo {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/redo.svg");
+  }
+
+  #context-cut {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/cut.svg");
+  }
+
+  #context-copy {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/copy.svg");
+  }
+
+  #context-paste {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/paste.svg");
+  }
+
+  #context-delete {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/backspace.svg");
+  }
+
+  #context-translate-selection {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/language.svg");
+  }
+
+  #context-openlinkintab, #context_openANewTab {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/plus.svg");
+  }
+
+  #context-openlinkinsplitview {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/split-view.svg");
+  }
+
+  #context-openlink {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/window.svg");
+  }
+
+  #context-openlinkprivate {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/private-window.svg");
+  }
+
+  #context-previewlink {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/opacity-1.svg");
+  }
+
+  #context-bookmarklink, #context_bookmarkTab, #context_bookmarkSelectedTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/bookmark.svg");
+  }
+
+  #context-searchselect {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/search.svg");
+  }
+
+  #context_moveTabToNewGroup::after, #context_moveSplitViewToNewGroup::after {
+    background: currentColor;
+    mask-image: url("chrome://natsumi/content/icons/fluent/folder-filled.svg");
+    mask-size: 16px;
+  }
+
+  #context_moveTabToSplitView, #context_separateSplitView, #context_reverseSplitView, #context_ungroupSplitView, #floorp_openInSplitView {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/split-view.svg");
+  }
+
+  #context_reloadTab, #context_reloadSelectedTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/rotate-right.svg");
+  }
+
+  #context_toggleMuteTab, #context_toggleMuteSelectedTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/volume-off.svg");
+
+    &[muted] {
+      --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/volume.svg");
+    }
+  }
+
+  #context_pinTab, #context_pinSelectedTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/pin.svg");
+  }
+
+  #context_unpinTab, #context_unpinSelectedTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/pin-off.svg");
+  }
+
+  #context_unloadTab {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/sleep.svg");
+  }
+
+  #context_duplicateTab, #context_duplicateTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/copy.svg");
+  }
+
+  #context_closeTab {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/close.svg");
+  }
+
+  #context_closeDuplicateTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/trash.svg");
+  }
+
+  #toolbar-context-openANewTab {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/plus.svg");
+  }
+
+  #toolbar-context-reloadSelectedTab, #toolbar-context-reloadSelectedTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/rotate-right.svg");
+  }
+
+  #toolbar-context-bookmarkSelectedTab, #toolbar-context-bookmarkSelectedTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/bookmark.svg");
+  }
+
+  #toolbar-context-selectAllTabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/select-all.svg");
+  }
+
+  #toolbar-context-undoCloseTab, #context_undoCloseTab {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/undo.svg");
+  }
+
+  #toggle_statusBar {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/status-bar.svg");
+  }
+
+  #toolbar-context-customize-sidebar, #toolbar-context-customize {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/paintbrush.svg");
+  }
+
+  #toolbar-context-toggle-vertical-tabs {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/sidebar.svg");
+  }
+
+  #toolbar-context-full-screen-exit, #context_fullscreenExit {
+    --natsumi-menu-icon: url("chrome://natsumi/content/icons/fluent/fullscreen-exit.svg");
+  }
+}
