@@ -846,6 +846,16 @@ if (!miniplayerContainer) {
     Services.prefs.addObserver("sidebar.verticalTabs", () => {
         if (ucApi.Prefs.get("sidebar.verticalTabs").value) {
             tabsContainer.insertBefore(miniplayerContainer, miniplayerCounter.node);
+
+            // Refresh miniplayer text scroll
+            for (let miniplayerNode of miniplayerContainer.querySelectorAll(".natsumi-miniplayer")) {
+                if (!miniplayerNode.natsumiMiniplayerController) {
+                    // This Miniplayer is broken
+                    continue;
+                }
+
+                miniplayerNode.natsumiMiniplayerController.refreshMetadataAnimations();
+            }
         } else {
             navBarLastButton.parentElement.insertBefore(miniplayerContainer, navBarLastButton);
         }
