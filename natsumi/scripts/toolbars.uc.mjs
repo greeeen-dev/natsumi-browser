@@ -498,8 +498,18 @@ class NatsumiStatusBarHandler {
         if (this.statusBarNode) {
             this.statusBarObserver.observe(this.statusBarNode, {attributes: true, childList: true, subtree: true});
 
-            // Add observer for status bar
-            document.body.natsumiButtonsManager.patchToolbarButtons(this.statusBarNode);
+            if (isFloorp) {
+                // Get Floorp version if we're on Floorp
+                let floorpVersion = AppConstants.MOZ_APP_VERSION_DISPLAY.split("@")[0];
+
+                // Get minor version
+                let minorVersion = parseInt(floorpVersion.split(".")[1]);
+
+                if (minorVersion < 15) {
+                    // Add observer for status bar
+                    document.body.natsumiButtonsManager.patchToolbarButtons(this.statusBarNode);
+                }
+            }
 
             if (this.isWaterfox) {
                 // Induce 100ms delay
