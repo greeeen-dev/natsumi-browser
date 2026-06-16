@@ -470,7 +470,6 @@ class NatsumiStatusBarHandler {
         this.statusBarNode = null;
         this.isWaterfox = false;
         this.statusBarObserver = null;
-        this.waterfoxObserver = null;
     }
 
     init() {
@@ -486,18 +485,12 @@ class NatsumiStatusBarHandler {
     }
 
     initStatusBar() {
-        if (this.statusBarObserver) {
-            return;
-        }
-
-        this.statusBarNode = document.querySelector("#nora-statusbar");
+        this.statusBarNode = document.getElementById("nora-statusbar");
         if (this.isWaterfox) {
             this.statusBarNode = document.getElementById("status-bar");
         }
 
         if (this.statusBarNode) {
-            this.statusBarObserver.observe(this.statusBarNode, {attributes: true, childList: true, subtree: true});
-
             if (isFloorp) {
                 // Get Floorp version if we're on Floorp
                 let floorpVersion = AppConstants.MOZ_APP_VERSION_DISPLAY.split("@")[0];
@@ -511,25 +504,21 @@ class NatsumiStatusBarHandler {
                 }
             }
 
-            if (this.isWaterfox) {
-                // Induce 100ms delay
-                setTimeout(() => {
-                    this.migrateStatusBar();
-                }, 100);
-            } else {
+            // Induce 100ms delay
+            setTimeout(() => {
                 this.migrateStatusBar();
-            }
-        } else if (this.isWaterfox && !this.waterfoxObserver) {
-            // Waterfox can be a bit sluggish here, so we wait
-            this.waterfoxObserver = new MutationObserver(() => {
-                let statusBar = document.getElementById("status-bar");
+            }, 100);
+        } else if (!this.statusBarObserver) {
+            // This can be a bit sluggish here, so we wait
+            this.statusBarObserver = new MutationObserver(() => {
+                let statusBar = document.getElementById("nora-statusbar") ?? document.getElementById("status-bar");
 
                 if (statusBar) {
-                    this.initStatusBar();
-                    this.waterfoxObserver.disconnect();
+                    this.migrateStatusBar();
+                    this.statusBarObserver.disconnect();
                 }
             });
-            this.waterfoxObserver.observe(document.body, {childList: true});
+            this.statusBarObserver.observe(document.body, {childList: true});
         }
     }
 
