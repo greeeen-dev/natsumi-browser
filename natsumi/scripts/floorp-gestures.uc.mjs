@@ -59,7 +59,13 @@ class NatsumiGesturesWrapper {
         }
 
         // Get gesture
-        const gestures = this.gesturesModule.g();
+        let gestures;
+
+        if (typeof this.gesturesModule.g === "function") {
+            gestures = this.gesturesModule.g();
+        } else {
+            gestures = this.gesturesModule.g
+        }
 
         for (const gesture of gestures) {
             if (gesture.name === gestureName) {
