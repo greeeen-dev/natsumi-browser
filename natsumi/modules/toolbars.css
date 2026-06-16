@@ -586,7 +586,9 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
     }
   }
 
-  #vertical-tabs {
-    padding-bottom: calc(var(--natsumi-bottom-toolbar-height, 28px) + 6px + var(--natsumi-browser-separation)) !important;
+  @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
+    #vertical-tabs {
+      padding-bottom: calc(var(--natsumi-bottom-toolbar-height, 28px) + 6px + var(--natsumi-browser-separation)) !important;
+    }
   }
 }

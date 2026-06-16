@@ -66,10 +66,15 @@ SOFTWARE.
     }
   }
 
-  &:has(#nora-statusbar, #status-bar) #natsumi-bottom-toolbar {
+  &:has(#nora-statusbar) #natsumi-bottom-toolbar {
     transition: none !important;
     translate: 0 calc(-40vh - 28px);
     animation: bottom-toolbar-statusbar-move 0.3s ease;
+  }
+
+  #status-bar[collapsed="true"] {
+    min-height: 0 !important;
+    max-height: 0 !important;
   }
 
   #customization-container {
