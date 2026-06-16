@@ -89,8 +89,8 @@ and websites. No more being forced to show mercy to websites when shortcuts conf
 #### Get extra features custom-made for specific browsers.
 ![](./images/floorp-features.webp)
 
-Does your browser have Workspaces? Or another toolbar that can be used in the sidebar? Natsumi adds
-extra features to your browser for a more complete experience.
+Natsumi takes advantage of your browser's own features to add extra features on top of them for a
+more complete experience.
 
 ## Full-fledged vs. CSS-only
 Some Natsumi features require JavaScript to work. You can still use Natsumi without JS support at the
@@ -107,7 +107,7 @@ cost of losing some features.
 | Custom themes                      | :white_check_mark:              | :x:                |
 | Single Toolbar                     | :white_check_mark:              | :x:                |
 | Compact Mode                       | :white_check_mark:              | :x:                |
-| Status bar as sidebar toolbar      | :white_check_mark:              | :x:                |
+| Natsumi toolbars                   | :white_check_mark:              | :x:                |
 | Natsumi Shortcuts                  | :white_check_mark:              | :x:                |
 
 
@@ -290,9 +290,6 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   the workspaces toolbar button is set to display as an icons strip. **Floorp exclusive.**
 - `natsumi.sidebar.floorp-floating-panel`: Floats the Panel Sidebar similar to Compact Mode. **Floorp
   exclusive.**
-- `natsumi.sidebar.hide-sidebar-controls` (boolean): Hides sidebar controls.
-- `natsumi.sidebar.use-statusbar-in-sidebar` (boolean): Uses Floorp or Waterfox's Status Bar as a toolbar
-  for the sidebar when the Status Bar is "hidden". **Floorp and Waterfox exclusive.**
 - `natsumi.sidebar.hide-workspace-indicator` (boolean): Hides the Floorp Workspace indicator added by
   Natsumi. **Floorp exclusive.**
 - `natsumi.sidebar.legacy-workspace-indicator` (boolean): Uses the legacy Workspace indicator. Use this if

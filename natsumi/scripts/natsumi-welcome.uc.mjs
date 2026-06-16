@@ -1086,7 +1086,8 @@ function setupInitialConfig() {
         #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels,
         #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
         #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
-        #natsumi-pinned-toolbar, #nav-bar, #sidebar-container {
+        #natsumi-pinned-toolbar, #natsumi-top-toolbar, #natsumi-bottom-toolbar, #nav-bar,
+        #sidebar-container {
             opacity: 0;
             pointer-events: none !important;
         }

@@ -2007,12 +2007,13 @@ class CustomThemePicker {
 }
 
 class CheckboxChoice {
-    constructor(preference, id, label, description = "", opposite = false) {
+    constructor(preference, id, label, description = "", opposite = false, beta = false) {
         this.preference = preference;
         this.id = id;
         this.label = label;
         this.description = description;
         this.opposite = opposite;
+        this.beta = beta;
     }
 
     getSelected() {
@@ -2049,7 +2050,7 @@ class CheckboxChoice {
         }
 
         let nodeString = `
-            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}"${checkedAttribute} label="${this.label}">
+            <checkbox id="${this.id}" preference="${this.preference}" opposite="${this.opposite}"${checkedAttribute} label="${this.label}" beta="${this.beta}">
                 <image class="checkbox-check" checked="${selected}"/>
                 <label class="checkbox-label-box" flex="1">
                     <image class="checkbox-icon"/>
@@ -3264,6 +3265,18 @@ function addThemesPane() {
 
     let themeNode = themeSelection.generateNode();
 
+    let unfortunateTypo = false;
+    if (ucApi.Prefs.get("natsumi.theme.vowels-empty").exists()) {
+        unfortunateTypo = ucApi.Prefs.get("natsumi.theme.vowels-empty").value;
+    }
+
+    if (unfortunateTypo) {
+        // i'm sorry. (thankfully i took EXTRA CAUTION to avoid this typo)
+        console.warn("Vowel movement...");
+        const playfulDesc = themeNode.querySelector(`.natsumi-mc-choice[value="playful"] .natsumi-mc-choice-description`);
+        playfulDesc.textContent = playfulDesc.textContent.replace("op", "oo");
+    }
+
     // Set listeners for each button
     let themeButtons = themeNode.querySelectorAll(".natsumi-mc-choice");
     themeButtons.forEach(button => {
@@ -3503,6 +3516,14 @@ function addIconsPane() {
         "Use alternative Back/Forward icons"
     ));
 
+    // Context menu icons
+    iconSelection.registerExtras("natsumiIconsContextMenu", new CheckboxChoice(
+        "natsumi.theme.context-menu-icons",
+        "natsumiIconsContextMenu",
+        "Show icons in context menu",
+        "This may not show for some operating systems."
+    ));
+
     let iconNode = iconSelection.generateNode();
 
     // Set listeners for each button
@@ -3721,6 +3742,18 @@ function addSidebarTabsPane() {
     ));
 
     tabDesignSelection.registerExtras("natsumiTabGrayoutOptions", tabGrayoutSubgroup);
+
+    // Tab font size offset slider
+    let fontOffsetSlider = new SliderChoice(
+        "0",
+        "12",
+        "0",
+        "Tab font size offset",
+        "",
+        "natsumi.theme.font-size-offset",
+    )
+
+    tabDesignSelection.registerExtras("natsumiTabFontSizeOffset", fontOffsetSlider);
 
     let tabDesignNode = tabDesignSelection.generateNode();
 
@@ -3985,20 +4018,6 @@ function addSidebarButtonsPane() {
         "Tweak the buttons visible in the sidebar."
     );
 
-    if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
-        if (
-            ucApi.Prefs.get("natsumi.browser.type").value === "floorp" ||
-            ucApi.Prefs.get("natsumi.browser.type").value === "waterfox"
-        ) {
-            buttonsGroup.registerOption("natsumiSidebarEnableToolbar", new CheckboxChoice(
-                "natsumi.sidebar.use-statusbar-in-sidebar",
-                "natsumiSidebarEnableToolbar",
-                "Use Status Bar in the Sidebar when the Status Bar is &#34;hidden&#34;",
-                "This will move the Status Bar to the bottom of the sidebar when it is in its hidden state."
-            ));
-        }
-    }
-
     buttonsGroup.registerOption("natsumiSidebarPinnedToolbarTop", new CheckboxChoice(
         "natsumi.theme.pinned-toolbar-on-top",
         "natsumiSidebarPinnedToolbarTop",
@@ -4052,10 +4071,30 @@ function addSidebarButtonsPane() {
         "This will let you open new tabs through the URL bar instead. Warning: This will override browser.urlbar.openintab."
     ));
 
-    buttonsGroup.registerOption("natsumiSidebarHideControls", new CheckboxChoice(
-        "natsumi.sidebar.hide-sidebar-controls",
-        "natsumiSidebarHideControls",
-        "Hide Sidebar controls"
+    if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").exists()) {
+        if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").value) {
+            buttonsGroup.registerOption("natsumiSidebarTopToolbar", new CheckboxChoice(
+                "natsumi.sidebar.top-toolbar",
+                "natsumiSidebarTopToolbar",
+                "Top toolbar",
+                "Creates a new top toolbar in the sidebar.",
+                false,
+                true
+            ));
+        }
+    }
+
+    buttonsGroup.registerOption("natsumiSidebarShowControls", new CheckboxChoice(
+        "natsumi.sidebar.disable-bottom-toolbar",
+        "natsumiSidebarShowControls",
+        "Show Sidebar controls",
+        "This will disable the bottom toolbar."
+    ));
+
+    buttonsGroup.registerOption("natsumiSidebarAutohideBottomToolbar", new CheckboxChoice(
+        "natsumi.sidebar.autohide-bottom-toolbar",
+        "natsumiSidebarAutohideBottomToolbar",
+        "Hide Bottom Toolbar when empty"
     ));
 
     buttonsGroup.registerOption("natsumiSidebarHideNewTab", new CheckboxChoice(
@@ -4473,8 +4512,8 @@ function addSidebarMiniplayerPane() {
     let miniplayerLayoutSelection = new MultipleChoicePreference(
         "natsumiMiniplayerLayout",
         "natsumi.miniplayer.scroll-view",
-        "Layout",
-        "Choose the layout you want for the Miniplayers."
+        "Layout and Appearance",
+        "Choose the layout and look you want for the Miniplayers."
     );
 
     for (let layout in miniplayerLayouts) {
@@ -4495,6 +4534,21 @@ function addSidebarMiniplayerPane() {
         "Use artwork to determine Miniplayer's accent color",
         "",
         true
+    ));
+
+    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerScroll", new CheckboxChoice(
+        "natsumi.miniplayer.disable-text-scrolling",
+        "natsumiSidebarMiniplayerScroll",
+        "Scroll title and author text on overflow",
+        "",
+        true
+    ));
+
+    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerDefaultPin", new CheckboxChoice(
+        "natsumi.miniplayer.pin-by-default",
+        "natsumiSidebarMiniplayerDefaultPin",
+        "Pin Miniplayers by default",
+        ""
     ));
 
     let miniplayerLayoutNode = miniplayerLayoutSelection.generateNode();

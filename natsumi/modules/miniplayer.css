@@ -50,14 +50,27 @@ SOFTWARE.
   }
 }
 
+@keyframes miniplayer-scroll {
+  from {
+    translate: 0;
+  }
+
+  to {
+    translate: calc(var(--natsumi-animation-width) * -1);
+  }
+}
+
 #vertical-tabs {
   flex-direction: column;
 }
 
 #natsumi-miniplayer-container {
   -moz-window-dragging: no-drag;
-  margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
   flex-direction: row;
+
+  &:not([hide-margin]) {
+    margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
+  }
 
   @media -moz-pref("sidebar.verticalTabs") {
     order: 1;
@@ -76,6 +89,28 @@ SOFTWARE.
 
     &:not([hide-margin]) {
       margin-top: calc(var(--tab-block-margin) + 1px) !important;
+    }
+  }
+
+  @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
+    &:not([hide-margin]) {
+      margin-bottom: var(--natsumi-browser-separation) !important;
+    }
+  }
+}
+
+@media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
+  @media -moz-pref("natsumi.sidebar.autohide-bottom-toolbar") {
+    #sidebar-container, #sidebar-main {
+      &:not([natsumi-bottom-toolbar-empty]) #natsumi-miniplayer-container:not([hide-margin]) {
+        margin-bottom: var(--natsumi-browser-separation) !important;
+      }
+    }
+  }
+
+  @media not -moz-pref("natsumi.sidebar.autohide-bottom-toolbar") {
+    #natsumi-miniplayer-container:not([hide-margin]) {
+      margin-bottom: 0 !important;
     }
   }
 }
@@ -99,7 +134,7 @@ SOFTWARE.
 
   @media not -moz-pref("natsumi.miniplayer.disable-dynamic-accent") {
     &[miniplayer-has-custom-color][miniplayer-has-artwork] {
-      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container {
+      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container, .natsumi-miniplayer-pin-button {
         --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
       }
 
@@ -144,11 +179,11 @@ SOFTWARE.
     }
   }
 
-  &:hover {
+  &:hover, &[pinned] {
     min-height: 110px;
   }
 
-  &:not(:hover) {
+  &:not(:hover):not([pinned]) {
     &::before {
       width: calc(100% + 50px);
       height: calc(100% + 50px);
@@ -176,10 +211,15 @@ SOFTWARE.
     padding: 4px !important;
   }
 
+  .natsumi-miniplayer-top-container {
+    gap: 4px;
+  }
+
   .natsumi-miniplayer-site-container {
     padding: 4px !important;
     border-radius: 8px !important;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    flex: 1;
 
     .natsumi-miniplayer-site-icon {
       width: 16px;
@@ -217,14 +257,68 @@ SOFTWARE.
     }
   }
 
+  .natsumi-miniplayer-pin-button {
+    min-width: 24px;
+    height: 24px;
+    padding: 5px !important;
+    border-radius: 8px !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    -moz-context-properties: stroke, fill;
+    stroke: white;
+    background-image: url("../icons/lucide/pin.svg");
+    background-size: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+      stroke: light-dark(black, white);
+    }
+
+    &:hover {
+      background-color: var(--natsumi-button-hover-color-dark);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: var(--natsumi-button-hover-color);
+      }
+    }
+
+    &:active {
+      background-color: var(--natsumi-button-active-color-dark);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: var(--natsumi-button-active-color);
+      }
+    }
+  }
+
+  &[pinned] {
+    .natsumi-miniplayer-pin-button, .natsumi-miniplayer-pin-button:hover {
+      background-color: var(--natsumi-button-active-color-dark);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: var(--natsumi-button-active-color);
+      }
+    }
+  }
+
   .natsumi-miniplayer-title-container {
     padding-inline: 4px !important;
+    overflow: hidden;
+
+    .natsumi-miniplayer-title-scrollable {
+      gap: 150px;
+
+      &[animate-overflow] {
+        animation: miniplayer-scroll var(--natsumi-animation-duration) linear;
+      }
+    }
 
     .natsumi-miniplayer-title {
       display: inline-block !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      min-width: fit-content;
+      text-wrap: nowrap;
       font-size: large;
       font-weight: bold;
       color: white;
@@ -235,21 +329,70 @@ SOFTWARE.
     }
   }
 
+  &[natsumi-title-overflow] {
+    .natsumi-miniplayer-title-container {
+      mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0), black 4px, black calc(100% - 4px), rgba(0, 0, 0, 0));
+    }
+  }
+
+  &:not([natsumi-title-overflow]) {
+    .natsumi-miniplayer-title[duplicate] {
+      display: none !important;
+    }
+  }
+
   .natsumi-miniplayer-author-container {
     padding-inline: 4px !important;
     opacity: 0.7;
+    overflow: hidden;
 
     .natsumi-miniplayer-artist {
       display: inline-block !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
       font-size: 12px;
       color: white;
-      white-space: nowrap;
+      text-wrap: nowrap;
 
       @media -moz-pref("natsumi.miniplayer.disable-artwork") {
         color: light-dark(black, white);
       }
+    }
+
+    .natsumi-miniplayer-author-scrollable {
+      gap: 150px;
+
+      &[animate-overflow] {
+        animation: miniplayer-scroll var(--natsumi-animation-duration) linear;
+      }
+    }
+  }
+
+  &[natsumi-author-overflow] {
+    .natsumi-miniplayer-author-container {
+      mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0), black 4px, black calc(100% - 4px), rgba(0, 0, 0, 0));
+    }
+  }
+
+  &:not([natsumi-author-overflow]) {
+    .natsumi-miniplayer-artist[duplicate] {
+      display: none !important;
+    }
+  }
+
+  &[animations-disabled] {
+    .natsumi-miniplayer-title-scrollable, .natsumi-miniplayer-author-scrollable {
+      animation: none !important;
+      max-width: -moz-available;
+    }
+
+    .natsumi-miniplayer-title, .natsumi-miniplayer-artist {
+      min-width: -moz-available !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .natsumi-miniplayer-title[duplicate], .natsumi-miniplayer-artist[duplicate] {
+      display: none !important;
     }
   }
 
@@ -318,11 +461,15 @@ SOFTWARE.
     padding: 4px !important;
     justify-content: space-between;
 
+    .natsumi-miniplayer-pin-button {
+      background-image: none !important;
+    }
+
     & > * {
-      width: 28px;
+      min-width: 28px;
       height: 28px;
       border-radius: 8px;
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 
       &[disabled="true"] {
         opacity: 0.5;
@@ -337,7 +484,7 @@ SOFTWARE.
         }
       }
 
-      &:active {
+      &:active, &:hover:active {
         background-color: var(--natsumi-button-active-color-dark);
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 
@@ -362,6 +509,10 @@ SOFTWARE.
           stroke: light-dark(black, white);
         }
       }
+    }
+
+    .natsumi-miniplayer-pin-button::before {
+      background-image: url("../icons/lucide/pin.svg");
     }
 
     .natsumi-miniplayer-pip-button::before {
@@ -507,7 +658,15 @@ SOFTWARE.
   }
 }
 
-#sidebar-main:not([sidebar-launcher-expanded]), #nav-bar {
+#sidebar-container[sidebar-launcher-expanded], #sidebar-main[sidebar-launcher-expanded] {
+  .natsumi-miniplayer {
+    .natsumi-miniplayer-controls-container .natsumi-miniplayer-pin-button {
+      display: none;
+    }
+  }
+}
+
+#sidebar-container:not([sidebar-launcher-expanded]), #sidebar-main:not([sidebar-launcher-expanded]), #nav-bar {
   #natsumi-miniplayer-container {
     @media -moz-pref("sidebar.verticalTabs") {
       max-width: var(--tab-collapsed-background-width) !important;
@@ -550,28 +709,38 @@ SOFTWARE.
         margin-top: 0 !important;
         padding-block: 2px !important;
       }
+
+      & > * {
+        border-radius: calc(var(--natsumi-tab-border-radius) - 2px) !important;
+      }
     }
 
     .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
-      transition: margin 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: margin 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     }
 
-    &:hover {
+    &:hover, &[pinned] {
       @media -moz-pref("sidebar.verticalTabs") {
         min-height: calc(var(--tab-collapsed-background-width) + 112px) !important;
       }
 
       @media not -moz-pref("sidebar.verticalTabs") {
-        max-width: 148px !important;
+        max-width: 176px !important;
       }
     }
 
-    &:not(:hover) {
+    &:not(:hover):not([pinned]) {
       @media -moz-pref("sidebar.verticalTabs") {
         min-height: var(--tab-collapsed-background-width) !important;
 
         .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
           margin-bottom: -100% !important;
+          opacity: 0;
+        }
+
+        .natsumi-miniplayer-pin-button {
+          margin-top: calc(-100% - 6px) !important;
+          opacity: 0;
         }
       }
 
@@ -580,6 +749,12 @@ SOFTWARE.
 
         .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
           margin-right: -100% !important;
+          opacity: 0;
+        }
+
+        .natsumi-miniplayer-pin-button {
+          margin-left: calc(-100% - 6px) !important;
+          opacity: 0;
         }
       }
     }
@@ -610,11 +785,5 @@ SOFTWARE.
     &[active] {
       opacity: 1;
     }
-  }
-}
-
-@media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
-  #natsumi-miniplayer-container:not([hide-margin]) {
-    margin-bottom: var(--natsumi-browser-separation) !important;
   }
 }

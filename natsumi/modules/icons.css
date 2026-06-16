@@ -26,5 +26,6 @@ SOFTWARE.
 
 /* ==== Icon packs loader ==== */
 
+@import "icons/acorn/acorn.css";
 @import "icons/lucide/lucide.css";
 @import "icons/fluent/fluent.css";
