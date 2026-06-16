@@ -35,6 +35,16 @@ SOFTWARE.
   }
 }
 
+@keyframes bottom-toolbar-move {
+  from {
+    translate: 0 var(--natsumi-statusbar-offset, 0px);
+  }
+
+  to {
+    translate: 0 calc(-40vh + var(--natsumi-statusbar-offset, 0px));
+  }
+}
+
 @keyframes bottom-toolbar-statusbar-move {
   from {
     translate: 0 -28px;
@@ -51,9 +61,9 @@ SOFTWARE.
   }
 
   #natsumi-bottom-toolbar {
-    transition: bottom 0.3s ease, translate 0.3s ease;
-    translate: 0 -40vh;
+    translate: 0 calc(-40vh + var(--natsumi-statusbar-offset, 0px));
     min-width: 36px !important;
+    animation: bottom-toolbar-move 0.3s ease;
 
     @media not -moz-pref("sidebar.verticalTabs") {
       toolbarpaletteitem {
@@ -66,10 +76,8 @@ SOFTWARE.
     }
   }
 
-  &:has(#nora-statusbar) #natsumi-bottom-toolbar {
-    transition: none !important;
-    translate: 0 calc(-40vh - 28px);
-    animation: bottom-toolbar-statusbar-move 0.3s ease;
+  &:has(#nora-statusbar[style*="display:none"]) #natsumi-bottom-toolbar {
+    --natsumi-statusbar-offset: -28px;
   }
 
   #status-bar[collapsed="true"] {
