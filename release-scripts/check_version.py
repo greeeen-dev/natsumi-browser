@@ -30,7 +30,7 @@ import sys
 
 branch = sys.argv[-1]
 
-print("Detected branch: ", branch)
+print("Detected branch:", branch)
 
 with open('natsumi/version.json', 'r') as file:
     package_version = json.load(file)['version']
@@ -42,6 +42,9 @@ with open('theme.json', 'r') as file:
 
 if branch != "main":
     print("Branch is not main, assuming prerelease. Sine version will not be checked.")
+
+# Sanitize installer versions
+installer_versions = [version for version in installer_versions if version]
 
 installer_match = package_version in installer_versions
 sine_match = package_version == sine_version or branch != "main"
