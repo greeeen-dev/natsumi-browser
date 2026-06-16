@@ -44,32 +44,22 @@ class NatsumiSplitViewManager {
         }
 
         // Add event listeners
-        gBrowser.tabContainer.addEventListener("TabClose", this.onTabClose.bind(this));
-        window.addEventListener("TabSplitViewActivate", this.onSplitViewActivate.bind(this));
+        gBrowser.tabContainer.addEventListener("TabSelect", () => {this.onTabSelect()});
     }
 
-    onTabClose(event) {
-        let closedTab = event.target;
+    onTabSelect() {
+        // We'll need to ensure that .deck-selected is set for the correct tab
+        let allSelectedPanels = Array.from(document.querySelectorAll("#tabbrowser-tabpanels .browserSidebarContainer.deck-selected"));
 
-        if (closedTab.splitview) {
-            for (let tab of closedTab.splitview.tabs) {
-                let linkedPanelNode = document.getElementById(tab.linkedPanel);
-
-                if (linkedPanelNode) {
-                    linkedPanelNode.style.removeProperty("width");
-                    linkedPanelNode.removeAttribute("width");
-                }
-            }
+        if (allSelectedPanels.length <= 1) {
+            // No issues here, selected panel count is as expected
+            return;
         }
-    }
 
-    onSplitViewActivate() {
-        // Ensure split views have valid tabs
-        let splitTabs = document.querySelectorAll("tab-split-view-wrapper tab");
-        for (let splitTab of splitTabs) {
-            if (splitTab.hasAttribute("natsumi-glimpse-tab")) {
-                // Glimpse should never be split, destroy tab
-                gBrowser.removeTab(splitTab);
+        for (let tabPanel of allSelectedPanels) {
+            if (tabPanel.id !== gBrowser.selectedTab.linkedPanel) {
+                tabPanel.classList.remove("deck-selected");
+                console.log("Deselected", tabPanel.id);
             }
         }
     }
