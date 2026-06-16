@@ -64,7 +64,11 @@ class NatsumiGesturesWrapper {
             }
         } else {
             const gesture = this.gesturesModule.g.getAction(gestureName);
-            gesture.fn(window);
+
+            if (gesture) {
+                gesture.fn(window);
+                return;
+            }
         }
 
         console.warn("No gesture found: " + gestureName);
