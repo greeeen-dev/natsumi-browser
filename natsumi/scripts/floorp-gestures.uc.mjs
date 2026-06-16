@@ -31,7 +31,6 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
-import { applyCustomTheme } from "./custom-theme.sys.mjs";
 
 class NatsumiGesturesWrapper {
     // A wrapper class for managing mouse gestures in Floorp.
@@ -54,19 +53,18 @@ class NatsumiGesturesWrapper {
         }
 
         // Get gesture
-        let gestures;
-
         if (typeof this.gesturesModule.g === "function") {
-            gestures = this.gesturesModule.g();
-        } else {
-            gestures = this.gesturesModule.g
-        }
+            const gestures = this.gesturesModule.g();
 
-        for (const gesture of gestures) {
-            if (gesture.name === gestureName) {
-                gesture.fn(window);
-                return;
+            for (const gesture of gestures) {
+                if (gesture.name === gestureName) {
+                    gesture.fn(window);
+                    return;
+                }
             }
+        } else {
+            const gesture = this.gesturesModule.g.getAction(gestureName);
+            gesture.fn(window);
         }
 
         console.warn("No gesture found: " + gestureName);
