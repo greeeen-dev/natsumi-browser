@@ -66,7 +66,7 @@ class NatsumiGesturesWrapper {
             const gesture = this.gesturesModule.g.getAction(gestureName);
 
             if (gesture) {
-                gesture.fn(window);
+                gesture(window);
                 return;
             }
         }
