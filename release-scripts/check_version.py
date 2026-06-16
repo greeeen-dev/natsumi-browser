@@ -30,10 +30,12 @@ import sys
 
 branch = sys.argv[-1]
 
+print("Detected branch: ", branch)
+
 with open('natsumi/version.json', 'r') as file:
     package_version = json.load(file)['version']
 with open('installer/installer.json', 'r') as file:
-    installer_data = json.load(file)
+    installer_data = json.load(file)["package"]
     installer_versions = [installer_data["version"], installer_data["version_rc"], installer_data["version_beta"], installer_data["version_alpha"]]
 with open('theme.json', 'r') as file:
     sine_version = json.load(file)['version']
