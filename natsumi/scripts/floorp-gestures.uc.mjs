@@ -33,11 +33,6 @@ SOFTWARE.
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import { applyCustomTheme } from "./custom-theme.sys.mjs";
 
-function convertToXUL(node) {
-    // noinspection JSUnresolvedReference
-    return window.MozXULElement.parseXULToFragment(node);
-}
-
 class NatsumiGesturesWrapper {
     // A wrapper class for managing mouse gestures in Floorp.
     constructor() {
