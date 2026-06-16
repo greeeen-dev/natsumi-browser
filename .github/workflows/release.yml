@@ -16,7 +16,7 @@ jobs:
           python-version: '3.13'
       - name: Check version
         run: |
-          python3 ./scripts/check_version.py ${{ github.ref_name }}
+          python3 ./release-scripts/check_version.py ${{ github.ref_name }}
 
   build-installer:
     name: Build
