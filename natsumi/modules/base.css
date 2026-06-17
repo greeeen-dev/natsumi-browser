@@ -781,4 +781,16 @@ splitter:hover {
     background-image: var(--natsumi-menu-icon, none);
     order: -1;
   }
+
+  #context-forward > img,
+  #context-back > img,
+  #context-reload > img,
+  #context-stop > img,
+  #context-bookmarkpage > img {
+    display: none;
+  }
+
+  #context-navigation {
+    height: 28px;
+  }
 }
