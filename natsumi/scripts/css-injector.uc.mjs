@@ -80,6 +80,7 @@ if (!window.natsumiCSSInjector) {
         window.natsumiCSSInjector = new NatsumiCSSInjector();
         window.natsumiCSSInjector.inject("linux-border-radius.css");
         window.natsumiCSSInjector.inject("macos-menus.css");
+        window.natsumiCSSInjector.inject("tabs-fixes.css");
 
         window.addEventListener("DOMContentLoaded", (event) => {
             let targetDoc = event.target;
