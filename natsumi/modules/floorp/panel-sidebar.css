@@ -83,7 +83,7 @@ SOFTWARE.
 
   #panel-sidebar-box {
     margin-bottom: var(--natsumi-browser-separation) !important;
-    background: transparent !important;
+    background: var(--toolbar-background-color, transparent) !important;
     border: var(--natsumi-border-width) solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
     border-radius: var(--natsumi-browser-border-radius) !important;
     overflow: hidden !important;
