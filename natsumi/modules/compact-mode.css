@@ -170,6 +170,10 @@ SOFTWARE.
         margin: var(--natsumi-browser-separation) 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation) !important;
         left: calc(var(--natsumi-compact-offset) * -1) !important;
 
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          left: calc(calc(var(--natsumi-compact-offset) * -1) + 6px) !important;
+        }
+
         @media -moz-pref("natsumi.theme.compact-marginless") {
           left: calc(calc(var(--natsumi-compact-offset) * -1) - var(--natsumi-browser-separation) + 6px) !important;
         }
@@ -186,7 +190,12 @@ SOFTWARE.
       }
 
       @media (-moz-pref("natsumi.theme.compact-style", "sidebar")) and (not -moz-pref("natsumi.theme.single-toolbar")) {
-        margin-top: -34px !important;
+        margin-top: 0 !important;
+        max-height: calc(100vh - 40px - calc(var(--natsumi-browser-separation) * 2)) !important;
+
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          max-height: calc(100vh - 42px - calc(var(--natsumi-browser-separation) * 3)) !important;
+        }
       }
 
       @media -moz-pref("natsumi.theme.compact-smaller-sidebar") {

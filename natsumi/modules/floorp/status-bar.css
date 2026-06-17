@@ -28,8 +28,8 @@ SOFTWARE.
 
 @media -moz-pref("natsumi.browser.type", "floorp") {
   #nora-statusbar {
-    background: transparent !important;
-    border: none !important;
+    background: var(--natsumi-status-bar-background, transparent) !important;
+    border: var(--natsumi-status-bar-border, none) !important;
 
     &:not(.hidden), &:not([style*="display:none"]), &:not([style*="display: none"]) {
       min-height: 28px !important;

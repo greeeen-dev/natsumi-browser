@@ -37,21 +37,11 @@ SOFTWARE.
 
 @keyframes bottom-toolbar-move {
   from {
-    translate: 0 var(--natsumi-statusbar-offset, 0px);
+    translate: var(--natsumi-left-offset, 0) var(--natsumi-statusbar-offset, 0px);
   }
 
   to {
-    translate: 0 calc(-40vh + var(--natsumi-statusbar-offset, 0px));
-  }
-}
-
-@keyframes bottom-toolbar-statusbar-move {
-  from {
-    translate: 0 -28px;
-  }
-
-  to {
-    translate: 0 calc(-40vh - 28px);
+    translate: var(--natsumi-left-offset, 0) calc(-40vh + var(--natsumi-statusbar-offset, 0px));
   }
 }
 
@@ -61,7 +51,7 @@ SOFTWARE.
   }
 
   #natsumi-bottom-toolbar {
-    translate: 0 calc(-40vh + var(--natsumi-statusbar-offset, 0px));
+    translate: var(--natsumi-left-offset, 0) calc(-40vh + var(--natsumi-statusbar-offset, 0px));
     min-width: 36px !important;
     animation: bottom-toolbar-move 0.3s ease;
 
@@ -78,6 +68,17 @@ SOFTWARE.
 
   &:has(#nora-statusbar[style*="display:none"]) #natsumi-bottom-toolbar {
     --natsumi-statusbar-offset: -28px;
+  }
+
+  @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+    #natsumi-bottom-toolbar {
+      --natsumi-left-offset: var(--natsumi-browser-separation);
+      --natsumi-statusbar-offset: calc(var(--natsumi-browser-separation) * -1);
+    }
+
+    &:has(#nora-statusbar[style*="display:none"]) #natsumi-bottom-toolbar {
+      --natsumi-statusbar-offset: calc(calc(var(--natsumi-browser-separation) * -2) - 28px);
+    }
   }
 
   #status-bar[collapsed="true"] {
