@@ -753,7 +753,7 @@ SOFTWARE.
         }
 
         .natsumi-miniplayer-pin-button {
-          margin-left: calc(-100% - 6px) !important;
+          margin-left: -100% !important;
           opacity: 0;
         }
       }
