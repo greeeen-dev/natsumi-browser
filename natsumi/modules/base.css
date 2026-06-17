@@ -782,15 +782,15 @@ splitter:hover {
     order: -1;
   }
 
-  #context-forward::after,
-  #context-back::after,
-  #context-reload::after,
-  #context-stop::after,
-  #context-bookmarkpage::after {
+  #context-navigation:not([hidden]) #context-forward::after,
+  #context-navigation:not([hidden]) #context-back::after,
+  #context-navigation:not([hidden]) #context-reload::after,
+  #context-navigation:not([hidden]) #context-stop::after,
+  #context-navigation:not([hidden]) #context-bookmarkpage::after {
     display: none;
   }
 
-  #context-navigation {
+  #context-navigationnot([hidden]) {
     height: 28px;
   }
 }
