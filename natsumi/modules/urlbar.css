@@ -318,6 +318,7 @@ SOFTWARE.
         #identity-box {
           height: 28px !important;
           padding: 0 !important;
+          margin-block: auto !important;
 
           #identity-icon-box {
             border-radius: 8px !important;
