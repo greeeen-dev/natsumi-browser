@@ -30,8 +30,11 @@ SOFTWARE.
   /* Standard mode */
   @media not -moz-pref("natsumi.theme.islands") {
     #navigator-toolbox {
-      margin-left: unset !important;
       margin-block-end: unset !important;
+
+      @media not -moz-pref("natsumi.theme.single-toolbar") {
+        margin-left: unset !important;
+      }
 
       @media -moz-pref("sidebar.position_start") {
         margin: 0 !important;
@@ -40,6 +43,20 @@ SOFTWARE.
       @media not -moz-pref("sidebar.position_start") {
         margin-top: 0 !important;
         margin-right: 0 !important;
+      }
+    }
+
+    @media -moz-pref("natsumi.theme.single-toolbar") and (not -moz-pref("sidebar.position_start")) {
+      body:not([natsumi-compact-mode]) {
+        #navigator-toolbox {
+          margin-right: -2px !important;
+        }
+
+        @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+          &[natsumi-panel-sidebar-on-right] #navigator-toolbox {
+            margin-right: calc(36px + var(--natsumi-browser-separation)) !important;
+          }
+        }
       }
     }
 

@@ -70,6 +70,10 @@ SOFTWARE.
       --natsumi-sidebar-margin-override: 0;
       margin-block: 0 !important;
     }
+
+    * {
+      --natsumi-actual-browser-separation: 0px;
+    }
   }
 
   &:has(#sidebar-splitter:not([hidden])) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
