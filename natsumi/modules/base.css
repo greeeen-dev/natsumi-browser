@@ -790,7 +790,7 @@ splitter:hover {
     display: none;
   }
 
-  #context-navigationnot([hidden]) {
+  #context-navigation:not([hidden]) {
     height: 28px;
   }
 }
