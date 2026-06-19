@@ -24,19 +24,20 @@ SOFTWARE.
 
 */
 
-/* ==== Floorp Status Bar ==== */
+/* ==== Firefox Nova tabs patches ==== */
 
-@media -moz-pref("natsumi.browser.type", "floorp") {
-  #nora-statusbar {
-    background: var(--natsumi-status-bar-background, transparent) !important;
-    border: var(--natsumi-status-bar-border, none) !important;
-
-    &:not(.hidden), &:not([style*="display:none"]), &:not([style*="display: none"]) {
-      min-height: 28px !important;
+@media -moz-pref("browser.nova.enabled") and (not -moz-pref("natsumi.theme.islands")) {
+  #tabbrowser-arrowscrollbox {
+    &::part(overflow-start-indicator), &::part(overflow-end-indicator) {
+      --toolbox-background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) !important;
     }
+  }
+}
 
-    #workspaces-toolbar-button {
-      margin: 0 4px !important;
+body[natsumi-compact-mode] {
+  #tabbrowser-arrowscrollbox {
+    &::part(overflow-start-indicator), &::part(overflow-end-indicator) {
+      --toolbox-background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) !important;
     }
   }
 }

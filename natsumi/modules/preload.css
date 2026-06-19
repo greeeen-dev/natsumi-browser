@@ -57,6 +57,7 @@ SOFTWARE.
   --natsumi-ff-background: color-mix(in srgb, var(--natsumi-ff-background-color) 40%, transparent);
 
   --natsumi-browser-separation: 6px;
+  --natsumi-actual-browser-separation: var(--natsumi-browser-separation);
   --natsumi-browser-base-border-radius: 8px;
   --natsumi-border-width: 1px;
   --natsumi-tab-border-radius: 8px;

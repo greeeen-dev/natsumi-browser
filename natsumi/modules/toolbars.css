@@ -137,7 +137,15 @@ SOFTWARE.
 }
 
 body[natsumi-compact-mode] #natsumi-pinned-toolbar {
-  --natsumi-top-toolbar-offset: var(--natsumi-top-toolbar-compact-offset) !important;
+  --natsumi-top-toolbar-offset: var(--natsumi-top-toolbar-compact-offset, 0px) !important;
+
+  @media (-moz-pref("natsumi.theme.compact-style", "sidebar")) and (not -moz-pref("natsumi.theme.single-toolbar")) {
+    --natsumi-top-toolbar-offset: calc(var(--natsumi-top-toolbar-compact-offset, 0px) + 31px) !important;
+
+    @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+      --natsumi-top-toolbar-offset: calc(var(--natsumi-top-toolbar-compact-offset, 0px) + 39px + var(--natsumi-browser-separation)) !important;
+    }
+  }
 }
 
 body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
@@ -204,12 +212,20 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
     @media -moz-pref("sidebar.position_start") {
       &:not([natsumi-panel-sidebar-on-right]) #natsumi-pinned-toolbar {
         left: calc(calc(var(--natsumi-browser-separation) * 2) + 36px);
+
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          left: calc(calc(var(--natsumi-browser-separation) * 2) + 32px);
+        }
       }
     }
 
     @media not -moz-pref("sidebar.position_start") {
       &[natsumi-panel-sidebar-on-right] #natsumi-pinned-toolbar {
         right: calc(calc(var(--natsumi-browser-separation) * 2) + 36px);
+
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          right: calc(calc(var(--natsumi-browser-separation) * 2) + 32px);
+        }
       }
     }
   }
@@ -445,8 +461,26 @@ body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"])
 
 @media -moz-pref("natsumi.browser.type", "floorp") or -moz-pref("natsumi.browser.type", "waterfox") {
   &:not(:has(#nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"])) {
-    #natsumi-bottom-toolbar {
+    body:not([natsumi-compact-mode]) #natsumi-bottom-toolbar {
       bottom: calc(var(--natsumi-browser-separation) + 28px) !important;
+    }
+
+    @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+      body:not([natsumi-compact-mode]) #natsumi-bottom-toolbar {
+        bottom: calc(calc(var(--natsumi-browser-separation) * 2) + 30px) !important;
+      }
+    }
+
+    @media (-moz-pref("natsumi.theme.compact-style", "toolbar")) and (not -moz-pref("natsumi.theme.single-toolbar")) {
+      #natsumi-bottom-toolbar {
+        bottom: calc(var(--natsumi-browser-separation) + 28px) !important;
+      }
+
+      @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+        #natsumi-bottom-toolbar {
+          bottom: calc(calc(var(--natsumi-browser-separation) * 2) + 30px) !important;
+        }
+      }
     }
   }
 }
@@ -458,6 +492,18 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
 @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
   &:has(#panel-sidebar-select-box) body:not([natsumi-panel-sidebar-on-right]) #natsumi-bottom-toolbar {
     left: calc(calc(var(--natsumi-browser-separation) * 3) + 36px);
+  }
+
+  @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+    &:has(#panel-sidebar-select-box) body:not([natsumi-panel-sidebar-on-right]):not([natsumi-compact-mode]) #natsumi-bottom-toolbar {
+      left: calc(calc(var(--natsumi-browser-separation) * 2) + 38px);
+    }
+
+    @media (-moz-pref("natsumi.theme.compact-style", "toolbar")) and (not -moz-pref("natsumi.theme.single-toolbar")) {
+      &:has(#panel-sidebar-select-box) body:not([natsumi-panel-sidebar-on-right])[natsumi-compact-mode] #natsumi-bottom-toolbar {
+        left: calc(calc(var(--natsumi-browser-separation) * 2) + 38px);
+      }
+    }
   }
 }
 

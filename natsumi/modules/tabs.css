@@ -230,12 +230,12 @@ tab[natsumi-workspace-hidden] {
 }
 
 .tab-text {
-  font-size: calc(11px + var(--natsumi-font-offset, 0px));
+  font-size: calc(1rem + var(--natsumi-font-offset, 0px));
 }
 
 #tabs-newtab-button, #vertical-tabs-newtab-button {
   .toolbarbutton-text {
-    font-size: calc(11px + var(--natsumi-font-offset, 0px));
+    font-size: calc(1rem + var(--natsumi-font-offset, 0px));
   }
 }
 

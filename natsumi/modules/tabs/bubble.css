@@ -38,8 +38,21 @@ SOFTWARE.
         margin-block: 0 !important;
         border-radius: 20px !important;
 
-        .tab-context-line, .tab-group-line {
+        .tab-context-line {
           display: none !important;
+        }
+
+        @media -moz-pref("sidebar.verticalTabs") {
+          .tab-group-line {
+            display: none !important;
+          }
+        }
+
+        @media not -moz-pref("sidebar.verticalTabs") {
+          .tab-group-line {
+            left: 0 !important;
+            margin-bottom: -2px;
+          }
         }
 
         @media -moz-pref("browser.nova.enabled") {
@@ -87,6 +100,14 @@ SOFTWARE.
           border: var(--natsumi-mat-hz-border) !important;
           background: var(--natsumi-mat-hz-background) !important;
           backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+        }
+
+        @media not -moz-pref("sidebar.verticalTabs") {
+          .tab-group-line {
+            margin-left: -4px !important;
+            min-width: calc(100% + 8px) !important;
+            margin-bottom: -4px !important;
+          }
         }
 
         & > .tab-stack > .tab-content {
@@ -327,10 +348,6 @@ SOFTWARE.
     min-height: calc(max(var(--floorp-tab-min-height, 36px), 36px) - 4px) !important;
     transition: background-color 0.2s ease;
     border-radius: var(--natsumi-tab-border-radius) !important;
-
-    .toolbarbutton-text {
-      font-size: calc(12px + var(--natsumi-font-offset, 0px)) !important;
-    }
 
     .toolbarbutton-icon {
       margin-bottom: 1px !important;

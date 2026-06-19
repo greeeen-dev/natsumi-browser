@@ -68,12 +68,18 @@ SOFTWARE.
         }
       }
 
+      @media not -moz-pref("sidebar.verticalTabs") {
+        .tab-group-line {
+          margin-bottom: calc(var(--tab-block-margin) * -1);
+        }
+      }
+
       .tab-loading-burst[bursting]::before {
         fill: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
       }
 
       .tab-text {
-        font-size: calc(12px + var(--natsumi-font-offset, 0px));
+        font-size: calc(1rem + 1px + var(--natsumi-font-offset, 0px));
       }
 
       .tab-stack {
@@ -309,7 +315,7 @@ SOFTWARE.
     border-radius: var(--natsumi-tab-border-radius) !important;
     
     .toolbarbutton-text {
-      font-size: calc(12px + var(--natsumi-font-offset, 0px)) !important;
+      font-size: calc(1rem + 1px + var(--natsumi-font-offset, 0px)) !important;
     }
     
     .toolbarbutton-icon {
