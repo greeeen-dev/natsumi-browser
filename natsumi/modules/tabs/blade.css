@@ -68,6 +68,12 @@ SOFTWARE.
         }
       }
 
+      @media not -moz-pref("sidebar.verticalTabs") {
+        .tab-group-line {
+          margin-bottom: calc(var(--tab-block-margin) * -1);
+        }
+      }
+
       .tab-loading-burst[bursting]::before {
         fill: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
       }
