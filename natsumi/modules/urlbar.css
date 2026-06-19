@@ -393,7 +393,7 @@ SOFTWARE.
 
         &:hover {
           #urlbar-background, .urlbar-background {
-            background-color: var(--natsumi-button-hover-color) !important;
+            background-color: var(--tab-background-color-hover, var(--tab-hover-background-color)) !important;
           }
         }
 
@@ -404,10 +404,6 @@ SOFTWARE.
 
           #urlbar-input {
             padding-left: 8px !important;
-
-            @media -moz-pref("browser.urlbar.trustPanel.featureGate") {
-              padding-left: 4px !important;
-            }
           }
 
           #identity-box {
@@ -465,6 +461,10 @@ SOFTWARE.
           }
         }
 
+        .urlbar-input-box {
+          margin-left: 0 !important;
+        }
+
         @media -moz-pref("natsumi.urlbar.single-toolbar-display-actions") {
           #identity-box {
             margin-left: 4px !important;
@@ -472,6 +472,12 @@ SOFTWARE.
 
             @media -moz-pref("browser.urlbar.trustPanel.featureGate") {
               margin-left: 0 !important;
+            }
+          }
+
+          #urlbar-input {
+            @media -moz-pref("browser.urlbar.trustPanel.featureGate") {
+              padding-left: 4px !important;
             }
           }
 
@@ -488,10 +494,6 @@ SOFTWARE.
           #trust-icon-container {
             margin-left: -28px !important;
             opacity: 0 !important;
-          }
-
-          &[pageproxystate="invalid"] #urlbar-input {
-            padding-left: 8px !important;
           }
 
           &:hover, &:has(#identity-icon-box[open]), &:has(.urlbar-page-action[open]) {
