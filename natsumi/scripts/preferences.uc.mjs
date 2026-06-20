@@ -5018,6 +5018,13 @@ function addMiscPreferencesPane() {
         "Copy clean URL with shortcut where possible"
     ));
 
+    miscPreferencesGroup.registerOption("natsumiMiscInvertedScroll", new CheckboxChoice(
+        "natsumi.browser.invert-scroll",
+        "natsumiMiscInvertedScroll",
+        "Invert scroll direction",
+        "This will invert the scroll direction for some Natsumi features. This does NOT affect web content."
+    ));
+
     let miscPreferencesNode = miscPreferencesGroup.generateNode();
 
     // Set listeners for each checkbox

@@ -60,6 +60,20 @@ SOFTWARE.
   }
 }
 
+@keyframes miniplayer-scrubber-pulse {
+  0% {
+    background-color: var(--natsumi-pulse-initial-color);
+  }
+
+  50% {
+    background-color: var(--natsumi-pulse-filled-color);
+  }
+
+  100% {
+    background-color: var(--natsumi-pulse-initial-color);
+  }
+}
+
 #vertical-tabs {
   flex-direction: column;
 }
@@ -134,7 +148,7 @@ SOFTWARE.
 
   @media not -moz-pref("natsumi.miniplayer.disable-dynamic-accent") {
     &[miniplayer-has-custom-color][miniplayer-has-artwork] {
-      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container, .natsumi-miniplayer-pin-button {
+      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-scrubber-container > *, .natsumi-miniplayer-site-container, .natsumi-miniplayer-pin-button {
         --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
       }
 
@@ -180,7 +194,15 @@ SOFTWARE.
   }
 
   &:hover, &[pinned] {
-    min-height: 110px;
+    min-height: 128px;
+
+    &[natsumi-no-scrubber] {
+      min-height: 110px;
+
+      .natsumi-miniplayer-scrubber-container {
+        display: none !important;
+      }
+    }
   }
 
   &:not(:hover):not([pinned]) {
@@ -362,6 +384,89 @@ SOFTWARE.
 
       &[animate-overflow] {
         animation: miniplayer-scroll var(--natsumi-animation-duration) linear;
+      }
+    }
+  }
+
+  .natsumi-miniplayer-scrubber-container {
+    padding-inline: 4px !important;
+    margin-top: 6px;
+
+    .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .natsumi-miniplayer-scrubber {
+      display: grid;
+      width: -moz-available;
+      height: 4px;
+      margin: auto 8px;
+      border-radius: 2px;
+      background-color: rgba(255, 255, 255, 0.5);
+      grid-template-columns: 1fr;
+      --natsumi-pulse-initial-color: rgba(255, 255, 255, 0.5);
+      --natsumi-pulse-filled-color: var(--natsumi-primary-color);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        --natsumi-pulse-filled-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      }
+
+      &[pulsing] {
+        animation: miniplayer-scrubber-pulse 2s ease 5;
+
+        &::before, &::after {
+          opacity: 0 !important;
+        }
+      }
+
+      &:not([pulsing]) {
+        transition: background-color 0.2s ease;
+      }
+
+      &:hover, &:active {
+        &::after {
+          scale: 1.2;
+        }
+
+        background-color: rgba(255, 255, 255, 0.7);
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          background-color: light-dark(rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0.7));
+        }
+      }
+
+      &::before {
+        content: "";
+        width: var(--natsumi-scrubber-position);
+        height: 4px;
+        border-radius: 2px;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        background-color: var(--natsumi-primary-color);
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
+      }
+
+      &::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        margin-top: -3px;
+        margin-left: var(--natsumi-scrubber-position);
+        border-radius: 5px;
+        translate: -5px;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        background-color: var(--natsumi-primary-color);
+        transition: scale 0.2s ease;
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
       }
     }
   }
@@ -683,6 +788,10 @@ SOFTWARE.
       &:not(:has(.natsumi-miniplayer:not([hidden]))) {
         margin-inline: 0 !important;
       }
+    }
+
+    .natsumi-miniplayer-scrubber-container {
+      display: none !important;
     }
   }
 
