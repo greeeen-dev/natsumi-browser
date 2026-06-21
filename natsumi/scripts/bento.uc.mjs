@@ -309,6 +309,6 @@ class NatsumiBentoManager {
     }
 }
 
-if (!document.body.natsumiBentoManager) {
+/*if (!document.body.natsumiBentoManager) {
     document.body.natsumiBentoManager = new NatsumiBentoManager();
-}
+}*/
