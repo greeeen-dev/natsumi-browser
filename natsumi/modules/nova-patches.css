@@ -404,6 +404,13 @@ SOFTWARE.
         max-width: calc(var(--natsumi-bookmarks-width) - calc(var(--natsumi-browser-separation) * 3)) !important;
       }
     }
+
+    :root[inDOMFullscreen="true"] {
+      #browser {
+        gap: 0 !important;
+        padding: 0 !important;
+      }
+    }
   }
 
   /* Global fixes */
