@@ -29,6 +29,11 @@ const whitelistedFileTypes = ["application/ogg"];
 const blacklistedFileTypes = ["audio/flac"];
 const uploadsPath = PathUtils.join(PathUtils.profileDir, "natsumi-uploads");
 
+function convertToXUL(node) {
+    // noinspection JSUnresolvedReference
+    return window.MozXULElement.parseXULToFragment(node);
+}
+
 export class NatsumiFile {
     constructor(name, filetype, data) {
         // Sanity check first
@@ -153,3 +158,146 @@ export async function deleteFile(fileId) {
     const filePath = PathUtils.join(uploadsPath, `${fileId}.json`);
     await IOUtils.remove(filePath, { ignoreAbsent: true });
 }
+
+export class FileUpload {
+    constructor(id, fileType) {
+        this.id = id;
+        this.callback = null;
+        this.fileType = fileType;
+        this.currentFile = null;
+        this.node = null;
+    }
+
+    generateNode() {
+        const fileSelectorNode = convertToXUL(`
+            <div class="natsumi-file-selector">
+                <div class="natsumi-file-current">No image uploaded</div>
+                <div class="natsumi-file-remove" hidden=""></div>
+                <div class="natsumi-file-submit"></div>
+            </div>
+        `);
+
+        // Get node
+        this.node = fileSelectorNode.querySelector(".natsumi-file-selector");
+        this.node.id = this.id;
+
+        // Set current file text
+        const currentNode = this.node.querySelector(".natsumi-file-current");
+        currentNode.textContent = `No ${this.fileType} selected`;
+
+        if (this.fileType === "image") {
+            // Use image icon
+            const submitNode = this.node.querySelector(".natsumi-file-submit");
+            submitNode.setAttribute("image", "");
+        }
+
+        // Add event listeners
+        const submitNode = this.node.querySelector(".natsumi-file-submit");
+        const removeNode = this.node.querySelector(".natsumi-file-remove");
+
+        submitNode.addEventListener("click", () => {
+            this.requestUpload();
+        })
+        removeNode.addEventListener("click", () => {
+            this.removeFile();
+        })
+
+        return this.node;
+    }
+
+    setUploadCallback(callback) {
+        this.callback = callback;
+    }
+
+    async requestUpload() {
+        let uploadNode = document.createElement("input");
+        uploadNode.type = "file";
+        uploadNode.accept = `${this.fileType}/*`;
+        uploadNode.style.display = "none";
+        uploadNode.setAttribute("moz-accept", `${this.fileType}/*`);
+        uploadNode.setAttribute("accept", `${this.fileType}/*`);
+        uploadNode.click();
+
+        let uploadTimeout;
+
+        const filePromise = new Promise((resolve, reject) => {
+            uploadNode.onchange = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+
+                const file = uploadNode.files[0];
+                if (!file) {
+                    reject("No file selected.");
+                    return;
+                }
+
+                resolve(file);
+            };
+
+            uploadNode.onabort = () => {
+                if (uploadTimeout) {
+                    clearTimeout(uploadTimeout);
+                }
+                reject("User aborted import.");
+            }
+
+            uploadTimeout = setTimeout(() => {
+                reject("Upload timed out.");
+            }, 120000);
+        });
+
+        try {
+            const uploadedFile = await filePromise;
+            await this.uploadFile(uploadedFile);
+        } catch(e) {
+            console.error("Upload failed:", e);
+        }
+    }
+
+    async uploadFile(file) {
+        if (this.currentFile) {
+            try {
+                await deleteFile(this.currentFile);
+            } catch(e) {
+                console.warn("Failed to delete existing file:", e);
+            }
+        }
+
+        const newFileId = await uploadFile(file);
+        await this.setFile(newFileId);
+        this.callback();
+    }
+
+    async setFile(fileId) {
+        const uploadedFile = await getFile(fileId);
+        this.currentFile = fileId;
+
+        // Set node text
+        const currentNode = this.node.querySelector(".natsumi-file-current");
+        currentNode.textContent = uploadedFile.name;
+
+        // Show remove button
+        const removeNode = this.node.querySelector(".natsumi-file-remove");
+        removeNode.removeAttribute("hidden");
+    }
+
+    resetFile() {
+        this.currentFile = null;
+
+        // Set node text
+        const currentNode = this.node.querySelector(".natsumi-file-current");
+        currentNode.textContent = `No ${this.fileType} selected`;
+
+        // Hide remove button
+        const removeNode = this.node.querySelector(".natsumi-file-remove");
+        removeNode.setAttribute("hidden", "");
+    }
+
+    async removeFile() {
+        await deleteFile(this.currentFile);
+        this.resetFile();
+        this.callback();
+    }
+}
+
