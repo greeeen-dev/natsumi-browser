@@ -2293,7 +2293,38 @@ function addGlimpseAccessibilityPane() {
     prefsView.insertBefore(glimpseAccessibilityNode, homePane);
 }
 
-function addSidebarMiniplayerPane() {
+function addMiniplayerBehaviorPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let miniplayerBehaviorGroup = new OptionsGroup(
+        "natsumiMiniplayerBehavior",
+        "Behavior",
+        "Tweak how you want Natsumi's Miniplayer to behave."
+    );
+
+    miniplayerBehaviorGroup.registerOption("natsumiMiniplayerToggle", new CheckboxChoice(
+        "natsumi.miniplayer.disabled",
+        "natsumiMiniplayerToggle",
+        "Enable Miniplayer",
+        "",
+        true
+    ));
+
+    miniplayerBehaviorGroup.registerOption("natsumiMiniplayerDefaultPin", new CheckboxChoice(
+        "natsumi.miniplayer.pin-by-default",
+        "natsumiMiniplayerDefaultPin",
+        "Pin Miniplayers by default",
+        ""
+    ));
+
+    let miniplayerBehaviorNode = miniplayerBehaviorGroup.generateNode();
+
+    prefsView.insertBefore(miniplayerBehaviorNode, homePane);
+}
+
+function addMiniplayerLayoutPane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
 
@@ -2309,35 +2340,28 @@ function addSidebarMiniplayerPane() {
         miniplayerLayoutSelection.registerOption(layout, miniplayerLayouts[layout]);
     }
 
-    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerArtwork", new CheckboxChoice(
+    miniplayerLayoutSelection.registerExtras("natsumiMiniplayerArtwork", new CheckboxChoice(
         "natsumi.miniplayer.disable-artwork",
-        "natsumiSidebarMiniplayerArtwork",
+        "natsumiMiniplayerArtwork",
         "Show media thumbnail/artwork as Miniplayer background",
         "",
         true
     ));
 
-    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerAccent", new CheckboxChoice(
+    miniplayerLayoutSelection.registerExtras("natsumiMiniplayerAccent", new CheckboxChoice(
         "natsumi.miniplayer.disable-dynamic-accent",
-        "natsumiSidebarMiniplayerAccent",
+        "natsumiMiniplayerAccent",
         "Use artwork to determine Miniplayer's accent color",
         "",
         true
     ));
 
-    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerScroll", new CheckboxChoice(
+    miniplayerLayoutSelection.registerExtras("natsumiMiniplayerScroll", new CheckboxChoice(
         "natsumi.miniplayer.disable-text-scrolling",
-        "natsumiSidebarMiniplayerScroll",
+        "natsumiMiniplayerScroll",
         "Scroll title and author text on overflow",
         "",
         true
-    ));
-
-    miniplayerLayoutSelection.registerExtras("natsumiSidebarMiniplayerDefaultPin", new CheckboxChoice(
-        "natsumi.miniplayer.pin-by-default",
-        "natsumiSidebarMiniplayerDefaultPin",
-        "Pin Miniplayers by default",
-        ""
     ));
 
     let miniplayerLayoutNode = miniplayerLayoutSelection.generateNode();
@@ -2757,7 +2781,8 @@ function addPreferencesPanes() {
     addGlimpseAccessibilityPane();
 
     prefsView.insertBefore(miniPlayerNode, homePane);
-    addSidebarMiniplayerPane();
+    addMiniplayerBehaviorPane();
+    addMiniplayerLayoutPane();
 
     let pipDisabled = false;
     if (ucApi.Prefs.get("natsumi.pip.disabled").exists()) {
