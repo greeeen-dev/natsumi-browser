@@ -452,14 +452,14 @@ SOFTWARE.
       height: 6px;
       margin: auto 8px;
       border-radius: 3px;
-      background-color: rgba(255, 255, 255, 0.5);
+      background-color: rgba(255, 255, 255, 0.3);
       grid-template-columns: 1fr;
-      --natsumi-pulse-initial-color: rgba(255, 255, 255, 0.5);
+      --natsumi-pulse-initial-color: rgba(255, 255, 255, 0.3);
       --natsumi-pulse-filled-color: var(--natsumi-primary-color);
 
       @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.5));
-        --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
         --natsumi-pulse-filled-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
       }
 
@@ -480,10 +480,10 @@ SOFTWARE.
           scale: 1.2;
         }
 
-        background-color: rgba(255, 255, 255, 0.7);
+        background-color: rgba(255, 255, 255, 0.5);
 
         @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.7));
+          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
         }
       }
 
@@ -738,12 +738,12 @@ SOFTWARE.
       color: light-dark(black, white);
 
       .natsumi-miniplayer-scrubber {
-        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.5));
+        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
         --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
         --natsumi-pulse-filled-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
 
         &:hover, &:active {
-          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.7));
+          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
         }
 
         &::before {
