@@ -224,6 +224,22 @@ SOFTWARE.
       &::before {
         background-image: var(--natsumi-miniplayer-site-icon) !important;
       }
+
+      &::after {
+        --natsumi-progress-color: var(--natsumi-primary-color);
+        content: "";
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        border-radius: 14px;
+        mask-image: radial-gradient(closest-side, transparent 12px, black 12px, black);
+        background: conic-gradient(var(--natsumi-progress-color) var(--natsumi-scrubber-position), transparent var(--natsumi-scrubber-position));
+        z-index: -1;
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          --natsumi-progress-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
+      }
     }
   }
 
@@ -391,6 +407,11 @@ SOFTWARE.
   .natsumi-miniplayer-scrubber-container {
     padding-inline: 4px !important;
     margin-top: 6px;
+    color: white;
+
+    @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+      color: light-dark(black, white);
+    }
 
     .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
       font-variant-numeric: tabular-nums;
@@ -399,9 +420,9 @@ SOFTWARE.
     .natsumi-miniplayer-scrubber {
       display: grid;
       width: -moz-available;
-      height: 4px;
+      height: 6px;
       margin: auto 8px;
-      border-radius: 2px;
+      border-radius: 3px;
       background-color: rgba(255, 255, 255, 0.5);
       grid-template-columns: 1fr;
       --natsumi-pulse-initial-color: rgba(255, 255, 255, 0.5);
@@ -440,8 +461,8 @@ SOFTWARE.
       &::before {
         content: "";
         width: var(--natsumi-scrubber-position);
-        height: 4px;
-        border-radius: 2px;
+        height: 6px;
+        border-radius: 3px;
         grid-row-start: 1;
         grid-column-start: 1;
         background-color: var(--natsumi-primary-color);
@@ -453,12 +474,12 @@ SOFTWARE.
 
       &::after {
         content: "";
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
         margin-top: -3px;
         margin-left: var(--natsumi-scrubber-position);
-        border-radius: 5px;
-        translate: -5px;
+        border-radius: 6px;
+        translate: -6px;
         grid-row-start: 1;
         grid-column-start: 1;
         background-color: var(--natsumi-primary-color);
@@ -468,6 +489,16 @@ SOFTWARE.
           background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
         }
       }
+    }
+  }
+
+  &[scrubber-hidden] {
+    .natsumi-miniplayer-scrubber-container {
+      display: none;
+    }
+
+    .natsumi-miniplayer-pip-button::after {
+      display: none;
     }
   }
 
@@ -498,65 +529,6 @@ SOFTWARE.
 
     .natsumi-miniplayer-title[duplicate], .natsumi-miniplayer-artist[duplicate] {
       display: none !important;
-    }
-  }
-
-  .natsumi-miniplayer-seekbar-container {
-    display: none;
-    padding-inline: 4px !important;
-    margin-top: 4px !important;
-
-    .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
-      font-variant-numeric: tabular-nums;
-      color: white;
-
-      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-        color: light-dark(black, white);
-      }
-    }
-
-    .natsumi-miniplayer-seekbar {
-      display: grid;
-      margin: auto 4px !important;
-      border-radius: 2px;
-      width: 100%;
-      height: 4px;
-      background-color: rgba(255, 255, 255, 0.3);
-      grid-template-columns: 1fr;
-
-      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-      }
-
-      &::before {
-        content: "";
-        width: var(--natsumi-seekbar-position);
-        height: 4px;
-        border-radius: 2px;
-        grid-row-start: 1;
-        grid-column-start: 1;
-        pointer-events: none;
-        background-color: var(--natsumi-primary-color);
-
-        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-        }
-      }
-
-      &::after {
-        content: "";
-        width: 8px;
-        height: 8px;
-        grid-row-start: 1;
-        grid-column-start: 1;
-        background-color: var(--natsumi-primary-color);
-        border-radius: 50%;
-        translate: calc(var(--natsumi-seekbar-position, 0) - 2px) -2px;
-
-        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-        }
-      }
     }
   }
 
@@ -714,24 +686,6 @@ SOFTWARE.
     .natsumi-miniplayer-author-container {
       .natsumi-miniplayer-artist {
         color: light-dark(black, white);
-      }
-    }
-
-    .natsumi-miniplayer-seekbar-container {
-      .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
-        color: light-dark(black, white);
-      }
-
-      .natsumi-miniplayer-seekbar {
-        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-
-        &::before {
-          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-        }
-
-        &::after {
-          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-        }
       }
     }
 

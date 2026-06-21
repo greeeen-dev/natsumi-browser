@@ -179,7 +179,6 @@ class NatsumiMiniplayer {
 
         // Scrubber
         this.scrubberLoop = null;
-        this.canUseScrubber = getMajorFirefoxVersion() >= 152;
         this.scrubberDrag = false;
     }
 
@@ -244,11 +243,6 @@ class NatsumiMiniplayer {
             </div>
         `
         this._node = convertToXUL(nodeString);
-
-        // Check miniplayer scrubber availability
-        if (!this.canUseScrubber) {
-            this._node.querySelector(".natsumi-miniplayer").setAttribute("natsumi-no-scrubber", "");
-        }
 
         // Add event handlers to media controller
         this.registerEventHandlers();
@@ -396,6 +390,7 @@ class NatsumiMiniplayer {
 
     registerEventHandlers() {
         this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = (event) => {
+            console.log(event);
             this.onPositionUpdate(event);
         };
         this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = () => {
@@ -758,7 +753,6 @@ class NatsumiMiniplayer {
 
     updateScrubber() {
         let positionNode = this._node.querySelector(".natsumi-miniplayer-position");
-        let scrubberNode = this._node.querySelector(".natsumi-miniplayer-scrubber");
         let durationNode = this._node.querySelector(".natsumi-miniplayer-duration");
 
         // Set timestamps
@@ -767,9 +761,9 @@ class NatsumiMiniplayer {
 
         // Set scrubber position
         if (this.duration > 0) {
-            scrubberNode.style.setProperty("--natsumi-scrubber-position", `${this.position / this.duration * 100}%`);
+            this._node.style.setProperty("--natsumi-scrubber-position", `${this.position / this.duration * 100}%`);
         } else {
-            scrubberNode.style.setProperty("--natsumi-scrubber-position", "0%");
+            this._node.style.setProperty("--natsumi-scrubber-position", "0%");
         }
     }
 
@@ -822,8 +816,7 @@ class NatsumiMiniplayer {
             return;
         }
 
-        let scrubberContainer = this._node.querySelector(".natsumi-miniplayer-scrubber-container");
-        scrubberContainer.setAttribute("hidden", "");
+        this._node.setAttribute("scrubber-hidden", "");
     }
 
     showScrubber() {
@@ -831,13 +824,11 @@ class NatsumiMiniplayer {
             return;
         }
 
-        let scrubberContainer = this._node.querySelector(".natsumi-miniplayer-scrubber-container");
-
-        if (!scrubberContainer.hasAttribute("hidden")) {
+        if (!this._node.hasAttribute("scrubber-hidden")) {
             return;
         }
 
-        scrubberContainer.removeAttribute("hidden");
+        this._node.removeAttribute("scrubber-hidden");
     }
 
     // Scrubber
