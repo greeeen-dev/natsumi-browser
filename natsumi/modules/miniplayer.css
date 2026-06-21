@@ -115,9 +115,17 @@ SOFTWARE.
 
 @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
   @media -moz-pref("natsumi.sidebar.autohide-bottom-toolbar") {
-    #sidebar-container, #sidebar-main {
-      &:not([natsumi-bottom-toolbar-empty]) #natsumi-miniplayer-container:not([hide-margin]) {
-        margin-bottom: var(--natsumi-browser-separation) !important;
+    body[natsumi-bottom-toolbar-empty] {
+      #sidebar-container, #sidebar-main {
+        #natsumi-miniplayer-container:not([hide-margin]) {
+          margin-bottom: var(--natsumi-browser-separation) !important;
+        }
+      }
+    }
+
+    body:not([natsumi-bottom-toolbar-empty]) {
+      #natsumi-miniplayer-container:not([hide-margin]) {
+        margin-bottom: 0 !important;
       }
     }
   }
