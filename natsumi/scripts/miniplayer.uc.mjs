@@ -421,7 +421,7 @@ class NatsumiMiniplayer {
 
     refreshMetadataAnimations() {
         // Get miniplayer width
-        const availableWidth = this._node.querySelector(".natsumi-miniplayer-info-container").getBoundingClientRect().width - 4;
+        const availableWidth = this._node.querySelector(".natsumi-miniplayer-info-container").getBoundingClientRect().width - 16;
         let scrollingDisabled = false;
 
         if (availableWidth === 0) {
@@ -947,9 +947,11 @@ class NatsumiMiniplayer {
 
         if (this._node && this._node.hasAttribute("hidden")) {
             this._node.removeAttribute("hidden");
+            miniplayerCounter.updateCount();
             this.refreshMetadataAnimations();
+        } else {
+            miniplayerCounter.updateCount();
         }
-        miniplayerCounter.updateCount();
     }
 
     pinMiniplayer() {
