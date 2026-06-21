@@ -231,9 +231,10 @@ SOFTWARE.
         position: absolute;
         width: 28px;
         height: 28px;
+        box-sizing: border-box;
         border-radius: 14px;
-        mask-image: radial-gradient(closest-side, transparent 12px, black 12px, black);
-        background: conic-gradient(var(--natsumi-progress-color) var(--natsumi-scrubber-position), transparent var(--natsumi-scrubber-position));
+        border: 2px solid var(--natsumi-progress-color);
+        mask-image: conic-gradient(black var(--natsumi-scrubber-position), transparent var(--natsumi-scrubber-position));
         z-index: -1;
 
         @media -moz-pref("natsumi.miniplayer.disable-artwork") {

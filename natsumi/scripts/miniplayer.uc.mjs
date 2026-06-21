@@ -180,6 +180,7 @@ class NatsumiMiniplayer {
         // Scrubber
         this.scrubberLoop = null;
         this.scrubberDrag = false;
+        this.scrubberAdvanced = getMajorFirefoxVersion() >= 152;
     }
 
     init() {
@@ -390,7 +391,6 @@ class NatsumiMiniplayer {
 
     registerEventHandlers() {
         this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = (event) => {
-            console.log(event);
             this.onPositionUpdate(event);
         };
         this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = () => {
@@ -706,6 +706,12 @@ class NatsumiMiniplayer {
         this._node.setAttribute("muted", this.isMuted);
         this._node.setAttribute("playing", this.isPlaying);
 
+        // Stop scrubber if not playing
+        // For FF152+, this is already handled by checking for playbackRate = 0
+        if (!this.scrubberAdvanced && !this.isPlaying) {
+            this.resetScrubberUpdate();
+        }
+
         // Set alternate button set state
         this._node.setAttribute("alternate-buttons", this.usesAlternateButtonSet());
 
@@ -747,7 +753,7 @@ class NatsumiMiniplayer {
         if (hours > 0) {
             return `${hours}:${minutesString}:${secondsString}`;
         } else {
-            return `${minutesString}:${secondsString}`;
+            return `${minutes}:${secondsString}`;
         }
     }
 
@@ -837,7 +843,7 @@ class NatsumiMiniplayer {
             this.resetScrubberUpdate();
         }
 
-        if (playbackRate === 0) {
+        if (playbackRate === 0 && this.scrubberAdvanced) {
             // We're probably paused here
             return;
         }
