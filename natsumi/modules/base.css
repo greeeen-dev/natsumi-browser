@@ -50,7 +50,7 @@ body > * {
       .browserContainer {
         background-color: transparent !important;
         border: none !important;
-        border-radius: 0 !important;
+        border-radius: 0;
       }
 
       .browserStack {
@@ -108,9 +108,11 @@ body > * {
   }
 
   &[chromehidden=""]:has(#sidebar-main[hidden], #sidebar-container[hidden]) {
-    #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
-      margin-left: var(--natsumi-browser-separation) !important;
-      margin-right: var(--natsumi-browser-separation) !important;
+    @media (not -moz-pref("browser.nova.enabled")) or (not -moz-pref("natsumi.theme.islands")) {
+      #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+        margin-left: var(--natsumi-browser-separation) !important;
+        margin-right: var(--natsumi-browser-separation) !important;
+      }
     }
   }
 
@@ -274,7 +276,7 @@ body > * {
 }
 
 #TabsToolbar {
-  margin-inline: var(--natsumi-browser-separation);
+  margin-inline: 6px;
 }
 
 #nav-bar-customization-target, #PanelUI-button {

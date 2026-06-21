@@ -489,6 +489,12 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
   left: 7px;
 }
 
+:root[uidensity="compact"] {
+  body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bottom-toolbar {
+    left: 2px;
+  }
+}
+
 @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
   &:has(#panel-sidebar-select-box) body:not([natsumi-panel-sidebar-on-right]) #natsumi-bottom-toolbar {
     left: calc(calc(var(--natsumi-browser-separation) * 3) + 36px);

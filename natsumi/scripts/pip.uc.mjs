@@ -188,9 +188,17 @@ function movePictureInPicture(event) {
     const minimumX = screen.availLeft;
     const minimumY = screen.availTop;
 
+    // Account for inverted scroll
+    let localMovementMulitplier = movementMultiplier;
+    if (ucApi.Prefs.get("natsumi.browser.invert-scroll").exists) {
+        if (ucApi.Prefs.get("natsumi.browser.invert-scroll").value) {
+            localMovementMulitplier = movementMultiplier * -1;
+        }
+    }
+
     // Calculate movement based on scroll distance
-    const movedX = Math.round(event.wheelDeltaX * movementMultiplier);
-    const movedY = Math.round(event.wheelDeltaY * movementMultiplier);
+    const movedX = Math.round(event.wheelDeltaX * localMovementMulitplier);
+    const movedY = Math.round(event.wheelDeltaY * localMovementMulitplier);
 
     // Calculate new positions for window
     const newX = Math.floor(Math.min(

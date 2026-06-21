@@ -1783,6 +1783,16 @@ SOFTWARE.
     }
   }
 
+  @media not -moz-pref("natsumi.theme.islands") {
+    #natsumiIslandsHazeButtonBox {
+      display: none !important;
+    }
+
+    .indent:has(#natsumiIslandsContentHaze) {
+      display: none !important;
+    }
+  }
+
   @media not -moz-pref("natsumi.startup.sound", "custom") {
     #natsumiSoundPicker {
       display: none !important;

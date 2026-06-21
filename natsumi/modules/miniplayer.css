@@ -60,6 +60,20 @@ SOFTWARE.
   }
 }
 
+@keyframes miniplayer-scrubber-pulse {
+  0% {
+    background-color: var(--natsumi-pulse-initial-color);
+  }
+
+  50% {
+    background-color: var(--natsumi-pulse-filled-color);
+  }
+
+  100% {
+    background-color: var(--natsumi-pulse-initial-color);
+  }
+}
+
 #vertical-tabs {
   flex-direction: column;
 }
@@ -67,6 +81,10 @@ SOFTWARE.
 #natsumi-miniplayer-container {
   -moz-window-dragging: no-drag;
   flex-direction: row;
+
+  @media -moz-pref("natsumi.miniplayer.disabled") {
+    display: none !important;
+  }
 
   &:not([hide-margin]) {
     margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
@@ -84,8 +102,6 @@ SOFTWARE.
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     gap: 10px;
-    padding: 4px !important;
-    margin: calc(var(--tab-block-margin) - 4px) calc(var(--tab-inner-inline-margin) - 4px) !important;
 
     &:not([hide-margin]) {
       margin-top: calc(var(--tab-block-margin) + 1px) !important;
@@ -99,11 +115,37 @@ SOFTWARE.
   }
 }
 
+@media -moz-pref("natsumi.miniplayer.scroll-view") and -moz-pref("sidebar.verticalTabs") {
+  #sidebar-main, #sidebar-container {
+    &[sidebar-launcher-expanded] {
+      #natsumi-miniplayer-container:not([hide-margin]) {
+        margin: calc(var(--tab-block-margin) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin) - 4px) !important;
+        padding: 4px !important;
+      }
+    }
+
+    &:not([sidebar-launcher-expanded]) {
+      #natsumi-miniplayer-container:not([hide-margin]) {
+        margin: calc(var(--tab-block-margin) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin) - 4px) !important;
+        padding: 4px !important;
+      }
+    }
+  }
+}
+
 @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
   @media -moz-pref("natsumi.sidebar.autohide-bottom-toolbar") {
-    #sidebar-container, #sidebar-main {
-      &:not([natsumi-bottom-toolbar-empty]) #natsumi-miniplayer-container:not([hide-margin]) {
-        margin-bottom: var(--natsumi-browser-separation) !important;
+    body[natsumi-bottom-toolbar-empty] {
+      #sidebar-container, #sidebar-main {
+        #natsumi-miniplayer-container:not([hide-margin]) {
+          margin-bottom: var(--natsumi-browser-separation) !important;
+        }
+      }
+    }
+
+    body:not([natsumi-bottom-toolbar-empty]) {
+      #natsumi-miniplayer-container:not([hide-margin]) {
+        margin-bottom: 0 !important;
       }
     }
   }
@@ -134,7 +176,7 @@ SOFTWARE.
 
   @media not -moz-pref("natsumi.miniplayer.disable-dynamic-accent") {
     &[miniplayer-has-custom-color][miniplayer-has-artwork] {
-      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-site-container, .natsumi-miniplayer-pin-button {
+      .natsumi-miniplayer-controls-container > *, .natsumi-miniplayer-scrubber-container > *, .natsumi-miniplayer-site-container, .natsumi-miniplayer-pin-button {
         --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
       }
 
@@ -180,7 +222,15 @@ SOFTWARE.
   }
 
   &:hover, &[pinned] {
-    min-height: 110px;
+    min-height: 128px;
+
+    &[natsumi-no-scrubber] {
+      min-height: 110px;
+
+      .natsumi-miniplayer-scrubber-container {
+        display: none !important;
+      }
+    }
   }
 
   &:not(:hover):not([pinned]) {
@@ -201,6 +251,23 @@ SOFTWARE.
 
       &::before {
         background-image: var(--natsumi-miniplayer-site-icon) !important;
+      }
+
+      &::after {
+        --natsumi-progress-color: var(--natsumi-primary-color);
+        content: "";
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        box-sizing: border-box;
+        border-radius: 14px;
+        border: 2px solid var(--natsumi-progress-color);
+        mask-image: conic-gradient(black var(--natsumi-scrubber-position), transparent var(--natsumi-scrubber-position));
+        z-index: -1;
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          --natsumi-progress-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
       }
     }
   }
@@ -366,6 +433,104 @@ SOFTWARE.
     }
   }
 
+  .natsumi-miniplayer-scrubber-container {
+    padding-inline: 4px !important;
+    margin-top: 6px;
+    color: white;
+
+    @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+      color: light-dark(black, white);
+    }
+
+    .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .natsumi-miniplayer-scrubber {
+      display: grid;
+      width: -moz-available;
+      height: 6px;
+      margin: auto 8px;
+      border-radius: 3px;
+      background-color: rgba(255, 255, 255, 0.3);
+      grid-template-columns: 1fr;
+      --natsumi-pulse-initial-color: rgba(255, 255, 255, 0.3);
+      --natsumi-pulse-filled-color: var(--natsumi-primary-color);
+
+      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        --natsumi-pulse-filled-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+      }
+
+      &[pulsing] {
+        animation: miniplayer-scrubber-pulse 2s ease 5;
+
+        &::before, &::after {
+          opacity: 0 !important;
+        }
+      }
+
+      &:not([pulsing]) {
+        transition: background-color 0.2s ease;
+      }
+
+      &:hover, &:active {
+        &::after {
+          scale: 1.2;
+        }
+
+        background-color: rgba(255, 255, 255, 0.5);
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        }
+      }
+
+      &::before {
+        content: "";
+        width: var(--natsumi-scrubber-position);
+        height: 6px;
+        border-radius: 3px;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        background-color: var(--natsumi-primary-color);
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
+      }
+
+      &::after {
+        content: "";
+        width: 12px;
+        height: 12px;
+        margin-top: -3px;
+        margin-left: var(--natsumi-scrubber-position);
+        border-radius: 6px;
+        translate: -6px;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        background-color: var(--natsumi-primary-color);
+        transition: scale 0.2s ease;
+
+        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
+      }
+    }
+  }
+
+  &[scrubber-hidden] {
+    .natsumi-miniplayer-scrubber-container {
+      display: none;
+    }
+
+    .natsumi-miniplayer-pip-button::after {
+      display: none;
+    }
+  }
+
   &[natsumi-author-overflow] {
     .natsumi-miniplayer-author-container {
       mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0), black 4px, black calc(100% - 4px), rgba(0, 0, 0, 0));
@@ -393,65 +558,6 @@ SOFTWARE.
 
     .natsumi-miniplayer-title[duplicate], .natsumi-miniplayer-artist[duplicate] {
       display: none !important;
-    }
-  }
-
-  .natsumi-miniplayer-seekbar-container {
-    display: none;
-    padding-inline: 4px !important;
-    margin-top: 4px !important;
-
-    .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
-      font-variant-numeric: tabular-nums;
-      color: white;
-
-      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-        color: light-dark(black, white);
-      }
-    }
-
-    .natsumi-miniplayer-seekbar {
-      display: grid;
-      margin: auto 4px !important;
-      border-radius: 2px;
-      width: 100%;
-      height: 4px;
-      background-color: rgba(255, 255, 255, 0.3);
-      grid-template-columns: 1fr;
-
-      @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
-      }
-
-      &::before {
-        content: "";
-        width: var(--natsumi-seekbar-position);
-        height: 4px;
-        border-radius: 2px;
-        grid-row-start: 1;
-        grid-column-start: 1;
-        pointer-events: none;
-        background-color: var(--natsumi-primary-color);
-
-        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-        }
-      }
-
-      &::after {
-        content: "";
-        width: 8px;
-        height: 8px;
-        grid-row-start: 1;
-        grid-column-start: 1;
-        background-color: var(--natsumi-primary-color);
-        border-radius: 50%;
-        translate: calc(var(--natsumi-seekbar-position, 0) - 2px) -2px;
-
-        @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
-        }
-      }
     }
   }
 
@@ -600,6 +706,22 @@ SOFTWARE.
       }
     }
 
+    .natsumi-miniplayer-pin-button {
+      stroke: light-dark(black, white);
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color);
+      }
+
+      &:active {
+        background-color: var(--natsumi-button-active-color);
+      }
+    }
+
+    &[pinned] .natsumi-miniplayer-pin-button {
+      background-color: var(--natsumi-button-active-color);
+    }
+
     .natsumi-miniplayer-title-container {
       .natsumi-miniplayer-title {
         color: light-dark(black, white);
@@ -612,13 +734,17 @@ SOFTWARE.
       }
     }
 
-    .natsumi-miniplayer-seekbar-container {
-      .natsumi-miniplayer-position, .natsumi-miniplayer-duration {
-        color: light-dark(black, white);
-      }
+    .natsumi-miniplayer-scrubber-container {
+      color: light-dark(black, white);
 
-      .natsumi-miniplayer-seekbar {
+      .natsumi-miniplayer-scrubber {
         background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.3));
+        --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        --natsumi-pulse-filled-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+
+        &:hover, &:active {
+          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        }
 
         &::before {
           background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
@@ -683,6 +809,10 @@ SOFTWARE.
       &:not(:has(.natsumi-miniplayer:not([hidden]))) {
         margin-inline: 0 !important;
       }
+    }
+
+    .natsumi-miniplayer-scrubber-container {
+      display: none !important;
     }
   }
 
@@ -758,10 +888,6 @@ SOFTWARE.
         }
       }
     }
-  }
-
-  #natsumi-miniplayer-counter-container {
-    display: none !important;
   }
 }
 

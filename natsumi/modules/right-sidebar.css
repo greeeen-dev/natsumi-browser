@@ -28,6 +28,7 @@ SOFTWARE.
 
 @media not -moz-pref("sidebar.position_start") {
   #sidebar-box {
+    margin-inline-start: unset !important;
     margin-right: 0 !important;
   }
 

@@ -30,6 +30,7 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+import {getMajorFirefoxVersion} from "./version.sys.mjs";
 
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
@@ -64,6 +65,15 @@ class NatsumiMiniplayerCounter {
         // Add scroll event listener
         this._miniplayerContainer.addEventListener("wheel", (event) => {
             this.updateSelected();
+
+            if (!event.target) {
+                return;
+            }
+
+            if (event.target.closest(".natsumi-miniplayer-scrubber")) {
+                event.stopImmediatePropagation();
+                event.preventDefault();
+            }
         });
 
         this._initialized = true;
@@ -152,7 +162,6 @@ class NatsumiMiniplayer {
         this.isMuted = false;
         this.duration = 0;
         this.position = 0;
-        //this._positionIncrement = null;
         this.getPlaybackState();
 
         // Get tab data
@@ -176,6 +185,11 @@ class NatsumiMiniplayer {
         this.authorAnimationScheduler = null;
         this.globalAnimationScheduler = null;
         this.deferAnimationUpdate = false;
+
+        // Scrubber
+        this.scrubberLoop = null;
+        this.scrubberDrag = false;
+        this.scrubberAdvanced = getMajorFirefoxVersion() >= 152;
     }
 
     init() {
@@ -222,6 +236,11 @@ class NatsumiMiniplayer {
                             <div class="natsumi-miniplayer-artist" duplicate=""></div>
                         </div>
                     </div>
+                    <div class="natsumi-miniplayer-scrubber-container">
+                        <div class="natsumi-miniplayer-position"></div>
+                        <div class="natsumi-miniplayer-scrubber"></div>
+                        <div class="natsumi-miniplayer-duration"></div>
+                    </div>
                 </div>
                 <div class="natsumi-miniplayer-controls-container">
                     <div class="natsumi-miniplayer-pin-button"></div>
@@ -265,6 +284,21 @@ class NatsumiMiniplayer {
         this._node.querySelector(".natsumi-miniplayer-pip-button").addEventListener("click", () => {
             this._tab.linkedBrowser.browsingContext.currentWindowGlobal.getActor("PictureInPictureLauncher").sendAsyncMessage("PictureInPicture:KeyToggle");
         });
+        this._node.querySelector(".natsumi-miniplayer-scrubber").addEventListener("mousedown", (event) => {
+            this.scrubberDrag = true;
+            this.handleScrubber(event);
+        });
+        this._node.querySelector(".natsumi-miniplayer-scrubber").addEventListener("wheel", (event) => {
+            this.handleScrubber(event, true);
+        });
+        window.addEventListener("mousemove", (event) => {
+            if (this.scrubberDrag) {
+                this.handleScrubber(event);
+            }
+        });
+        window.addEventListener("mouseup", () => {
+            this.scrubberDrag = false;
+        })
 
         for (let pinButton of this._node.querySelectorAll(".natsumi-miniplayer-pin-button")) {
             pinButton.addEventListener("click", () => {
@@ -365,26 +399,18 @@ class NatsumiMiniplayer {
     }
 
     registerEventHandlers() {
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = () => {
-                this.onPositionUpdate();
-            };
-        }
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = () => {
-                this.onPlaybackUpdate();
-            };
-        }
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange = () => {
-                this.onMetadataUpdate();
-            };
-        }
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange = () => {
-                this.onSupportedKeysUpdate();
-            };
-        }
+        this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = (event) => {
+            this.onPositionUpdate(event);
+        };
+        this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = () => {
+            this.onPlaybackUpdate();
+        };
+        this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange = () => {
+            this.onMetadataUpdate();
+        };
+        this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange = () => {
+            this.onSupportedKeysUpdate();
+        };
     }
 
     usesAlternateButtonSet() {
@@ -395,7 +421,7 @@ class NatsumiMiniplayer {
 
     refreshMetadataAnimations() {
         // Get miniplayer width
-        const availableWidth = this._node.querySelector(".natsumi-miniplayer-info-container").getBoundingClientRect().width - 4;
+        const availableWidth = this._node.querySelector(".natsumi-miniplayer-info-container").getBoundingClientRect().width - 16;
         let scrollingDisabled = false;
 
         if (availableWidth === 0) {
@@ -689,6 +715,12 @@ class NatsumiMiniplayer {
         this._node.setAttribute("muted", this.isMuted);
         this._node.setAttribute("playing", this.isPlaying);
 
+        // Stop scrubber if not playing
+        // For FF152+, this is already handled by checking for playbackRate = 0
+        if (!this.scrubberAdvanced && !this.isPlaying) {
+            this.resetScrubberUpdate();
+        }
+
         // Set alternate button set state
         this._node.setAttribute("alternate-buttons", this.usesAlternateButtonSet());
 
@@ -707,8 +739,160 @@ class NatsumiMiniplayer {
         }
     }
 
+    getTimestamp(seconds) {
+        // Get minutes
+        let minutes = Math.floor(seconds / 60);
+        seconds = Math.floor(seconds % 60);
+
+        // Get hours from minutes
+        let hours = Math.floor(minutes / 60);
+        minutes = minutes % 60;
+
+        // Get strings
+        let secondsString = `${seconds}`;
+        let minutesString = `${minutes}`;
+
+        if (seconds < 10) {
+            secondsString = `0${seconds}`;
+        }
+        if (minutes < 10) {
+            minutesString = `0${minutes}`;
+        }
+
+        if (hours > 0) {
+            return `${hours}:${minutesString}:${secondsString}`;
+        } else {
+            return `${minutes}:${secondsString}`;
+        }
+    }
+
+    updateScrubber() {
+        let positionNode = this._node.querySelector(".natsumi-miniplayer-position");
+        let durationNode = this._node.querySelector(".natsumi-miniplayer-duration");
+
+        // Set timestamps
+        positionNode.textContent = this.getTimestamp(this.position);
+        durationNode.textContent = this.getTimestamp(this.duration);
+
+        // Set scrubber position
+        if (this.duration > 0) {
+            this._node.style.setProperty("--natsumi-scrubber-position", `${this.position / this.duration * 100}%`);
+        } else {
+            this._node.style.setProperty("--natsumi-scrubber-position", "0%");
+        }
+    }
+
+    handleScrubber(event, isScroll = false) {
+        let newPosition;
+        const scrubber = this._node.querySelector(".natsumi-miniplayer-scrubber");
+
+        if (isScroll) {
+            const scrollMultiplier = 1;
+            let scrollAmount;
+
+            if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+                scrollAmount = event.deltaX * -1;
+            } else {
+                scrollAmount = event.deltaY * -1;
+            }
+
+            if (ucApi.Prefs.get("natsumi.browser.invert-scroll").exists) {
+                if (ucApi.Prefs.get("natsumi.browser.invert-scroll").value) {
+                    scrollAmount = scrollAmount * -1;
+                }
+            }
+
+            newPosition = this.position + (scrollAmount * scrollMultiplier);
+        } else {
+            // Get width and relative position
+            const scrubberWidth = scrubber.getBoundingClientRect().width;
+            const scrubberPos = scrubber.getBoundingClientRect().x;
+            const scrubberRelativePos = event.clientX - scrubberPos;
+
+            if (scrubberWidth === 0) {
+                return;
+            }
+
+            // Get new position
+            newPosition = (scrubberRelativePos / scrubberWidth) * this.duration;
+        }
+
+        if (newPosition > this.duration) {
+            newPosition = this.duration;
+        } else if (newPosition < 0) {
+            newPosition = 0;
+        }
+
+        this._tab.linkedBrowser.browsingContext.mediaController.seekTo(newPosition);
+    }
+
+    hideScrubber() {
+        if (!this._node) {
+            return;
+        }
+
+        this._node.setAttribute("scrubber-hidden", "");
+    }
+
+    showScrubber() {
+        if (!this._node) {
+            return;
+        }
+
+        if (!this._node.hasAttribute("scrubber-hidden")) {
+            return;
+        }
+
+        this._node.removeAttribute("scrubber-hidden");
+    }
+
+    // Scrubber
+    scheduleScrubberUpdate(playbackRate = 1) {
+        if (this.scrubberLoop) {
+            this.resetScrubberUpdate();
+        }
+
+        if (playbackRate === 0 && this.scrubberAdvanced) {
+            // We're probably paused here
+            return;
+        }
+
+        this.scrubberLoop = setInterval(() => {
+            if (!this._node) {
+                this.resetScrubberUpdate();
+            }
+
+            this.position++;
+            this.updateScrubber();
+
+            if (this.position >= this.duration) {
+                this.resetScrubberUpdate();
+            }
+        }, 1000 / playbackRate);
+    }
+
+    resetScrubberUpdate() {
+        if (this.scrubberLoop) {
+            clearInterval(this.scrubberLoop);
+            this.scrubberLoop = null;
+        }
+    }
+
     // Events
-    onPositionUpdate() {
+    onPositionUpdate(event) {
+        if (isNaN(event.duration)) {
+            this.hideScrubber();
+            this.resetScrubberUpdate();
+        } else {
+            // Set scrubber data
+            this.position = event.position;
+            this.duration = event.duration;
+            this.showScrubber();
+            this.updateScrubber();
+            this.scheduleScrubberUpdate(event.playbackRate);
+        }
+
+        // Update UI
         this.getTabData();
         this.updateUI();
     }
@@ -763,9 +947,11 @@ class NatsumiMiniplayer {
 
         if (this._node && this._node.hasAttribute("hidden")) {
             this._node.removeAttribute("hidden");
+            miniplayerCounter.updateCount();
             this.refreshMetadataAnimations();
+        } else {
+            miniplayerCounter.updateCount();
         }
-        miniplayerCounter.updateCount();
     }
 
     pinMiniplayer() {

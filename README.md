@@ -407,7 +407,7 @@ you will need to keep certain files (preload, postload, natsumi-config) for Nats
 
 ### "Why is Natsumi not compatible with Zen Browser or Midori Browser?"
 Zen Browser and Midori Browser are not supported due to a hostile stance on personalization (among
-some other issues) and ethical issues respectively.
+some other issues) and ethical concerns respectively.
 
 **Please do not try to port Natsumi to either of these browsers.** I have my reasons why I left
 these browsers unsupported, so I would really appreciate it if you respected my decision.
@@ -416,8 +416,8 @@ these browsers unsupported, so I would really appreciate it if you respected my 
 Although Natsumi is designed to be as customizable as possible, there may be some opinionated
 design choices that I may not change. In the end, Natsumi is still my personal browser skin.
 
-If you would like me to add options for certain aspects of the browser, please open a feature request
-and I will consider it.
+If you would like me to add options for certain aspects of the browser, please open a feature
+request and I will consider it.
 
 ### "Can I use your code for my browser?"
 If your browser is open-source and licensed under the GPLv3 or later (or AGPLv3 or later), then yes.
