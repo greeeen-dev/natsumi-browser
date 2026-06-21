@@ -85,16 +85,15 @@ export class NatsumiShortcutActions {
             isSingleToolbar = ucApi.Prefs.get("natsumi.theme.single-toolbar").value;
         }
 
+        if (!ucApi.Prefs.get("sidebar.verticalTabs").value) {
+            return;
+        }
+
         ucApi.Prefs.get("natsumi.theme.single-toolbar").value = !isSingleToolbar;
     }
 
     static toggleVerticalTabs() {
-        let isVerticalTabs = false;
-        if (ucApi.Prefs.get("sidebar.verticalTabs").exists()) {
-            isVerticalTabs = ucApi.Prefs.get("sidebar.verticalTabs").value;
-        }
-
-        ucApi.Prefs.get("sidebar.verticalTabs").value = !isVerticalTabs;
+        ucApi.Prefs.get("sidebar.verticalTabs").value = !ucApi.Prefs.get("sidebar.verticalTabs").value;
     }
 
     static toggleCompactMode() {
