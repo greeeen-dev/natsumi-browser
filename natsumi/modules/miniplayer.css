@@ -82,6 +82,10 @@ SOFTWARE.
   -moz-window-dragging: no-drag;
   flex-direction: row;
 
+  @media -moz-pref("natsumi.miniplayer.disabled") {
+    display: none !important;
+  }
+
   &:not([hide-margin]) {
     margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
   }
@@ -454,7 +458,7 @@ SOFTWARE.
       --natsumi-pulse-filled-color: var(--natsumi-primary-color);
 
       @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-        background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.5));
         --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
         --natsumi-pulse-filled-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
       }
@@ -479,7 +483,7 @@ SOFTWARE.
         background-color: rgba(255, 255, 255, 0.7);
 
         @media -moz-pref("natsumi.miniplayer.disable-artwork") {
-          background-color: light-dark(rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0.7));
+          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.7));
         }
       }
 
@@ -702,6 +706,22 @@ SOFTWARE.
       }
     }
 
+    .natsumi-miniplayer-pin-button {
+      stroke: light-dark(black, white);
+
+      &:hover {
+        background-color: var(--natsumi-button-hover-color);
+      }
+
+      &:active {
+        background-color: var(--natsumi-button-active-color);
+      }
+    }
+
+    &[pinned] .natsumi-miniplayer-pin-button {
+      background-color: var(--natsumi-button-active-color);
+    }
+
     .natsumi-miniplayer-title-container {
       .natsumi-miniplayer-title {
         color: light-dark(black, white);
@@ -711,6 +731,28 @@ SOFTWARE.
     .natsumi-miniplayer-author-container {
       .natsumi-miniplayer-artist {
         color: light-dark(black, white);
+      }
+    }
+
+    .natsumi-miniplayer-scrubber-container {
+      color: light-dark(black, white);
+
+      .natsumi-miniplayer-scrubber {
+        background-color: light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.5));
+        --natsumi-pulse-initial-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+        --natsumi-pulse-filled-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+
+        &:hover, &:active {
+          background-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.7));
+        }
+
+        &::before {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
+
+        &::after {
+          background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+        }
       }
     }
 
