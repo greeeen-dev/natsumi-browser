@@ -98,8 +98,6 @@ SOFTWARE.
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     gap: 10px;
-    padding: 4px !important;
-    margin: calc(var(--tab-block-margin) - 4px) calc(var(--tab-inner-inline-margin) - 4px) !important;
 
     &:not([hide-margin]) {
       margin-top: calc(var(--tab-block-margin) + 1px) !important;
@@ -109,6 +107,24 @@ SOFTWARE.
   @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
     &:not([hide-margin]) {
       margin-bottom: var(--natsumi-browser-separation) !important;
+    }
+  }
+}
+
+@media -moz-pref("natsumi.miniplayer.scroll-view") and -moz-pref("sidebar.verticalTabs") {
+  #sidebar-main, #sidebar-container {
+    &[sidebar-launcher-expanded] {
+      #natsumi-miniplayer-container:not([hide-margin]) {
+        margin: calc(var(--tab-block-margin) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin) - 4px) !important;
+        padding: 4px !important;
+      }
+    }
+
+    &:not([sidebar-launcher-expanded]) {
+      #natsumi-miniplayer-container:not([hide-margin]) {
+        margin: calc(var(--tab-block-margin) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin) - 4px) !important;
+        padding: 4px !important;
+      }
     }
   }
 }
@@ -830,10 +846,6 @@ SOFTWARE.
         }
       }
     }
-  }
-
-  #natsumi-miniplayer-counter-container {
-    display: none !important;
   }
 }
 

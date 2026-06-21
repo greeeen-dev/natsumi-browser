@@ -65,6 +65,15 @@ class NatsumiMiniplayerCounter {
         // Add scroll event listener
         this._miniplayerContainer.addEventListener("wheel", (event) => {
             this.updateSelected();
+
+            if (!event.target) {
+                return;
+            }
+
+            if (event.target.closest(".natsumi-miniplayer-scrubber")) {
+                event.stopImmediatePropagation();
+                event.preventDefault();
+            }
         });
 
         this._initialized = true;
