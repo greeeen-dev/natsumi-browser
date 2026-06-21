@@ -1252,6 +1252,30 @@ function addLayoutPane() {
         "This will change the layout to look closer to the Firefox Nova design."
     );
 
+    let novaIslandsHazeCheckbox = new CheckboxChoice(
+        "natsumi.theme.islands-haze",
+        "natsumiIslandsHazeButton",
+        "Use Haze for Islands view",
+        ""
+    );
+
+    let novaIslandsSubgroup = new OptionsGroup(
+        "natsumiIslandsHazeOptions",
+        "",
+        ""
+    );
+
+    novaIslandsSubgroup.registerOption("natsumiIslandsContentHaze", new CheckboxChoice(
+        "natsumi.theme.islands-content-haze",
+        "natsumiIslandsContentHaze",
+        "Apply Haze to web content container",
+        "This may significantly impact performance.",
+        false,
+        false,
+        "natsumi.theme.islands-haze",
+        false
+    ));
+
     let noGapsCheckbox = new CheckboxChoice(
         "natsumi.theme.no-margin",
         "natsumiNoGapsButton",
@@ -1296,6 +1320,8 @@ function addLayoutPane() {
     )
 
     layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
+    layoutSelection.registerExtras("natsumiIslandsHazeButtonBox", novaIslandsHazeCheckbox);
+    layoutSelection.registerExtras("natsumiIslandsHazeOptions", novaIslandsSubgroup);
     layoutSelection.registerExtras("natsumiNoGapsButtonBox", noGapsCheckbox);
     layoutSelection.registerExtras("natsumiShowMenuButtonBox", menuButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
@@ -1327,7 +1353,6 @@ function addLayoutPane() {
 function addThemesPane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
-    const osName = Services.appinfo.OS.toLowerCase();
 
     // Create theme selection
     let themeSelection = new MultipleChoicePreference(

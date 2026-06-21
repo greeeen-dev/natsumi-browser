@@ -274,7 +274,7 @@ body > * {
 }
 
 #TabsToolbar {
-  margin-inline: var(--natsumi-browser-separation);
+  margin-inline: 6px;
 }
 
 #nav-bar-customization-target, #PanelUI-button {

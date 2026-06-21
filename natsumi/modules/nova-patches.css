@@ -126,6 +126,75 @@ SOFTWARE.
       border: 1px solid var(--chrome-content-separator-color) !important;
     }
 
+    @media -moz-pref("natsumi.theme.islands-haze") {
+      @media -moz-pref("natsumi.theme.islands-content-haze") {
+        #tabbrowser-tabbox .browserStack {
+          background-color: transparent !important;
+        }
+
+        .browserSidebarContainer {
+          background-color: var(--natsumi-mat-hz-background) !important;
+          backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+          border: var(--natsumi-mat-hz-border-thin) !important;
+          box-shadow: var(--natsumi-mat-hz-shadow) !important;
+        }
+      }
+
+      @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+        #panel-sidebar-select-box {
+          --natsumi-panel-sidebar-background: var(--natsumi-mat-hz-background) !important;
+          --natsumi-panel-sidebar-haze-border: var(--natsumi-mat-hz-border-thin) !important;
+          backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+          box-shadow: var(--natsumi-mat-hz-shadow) !important;
+        }
+      }
+
+      #nora-statusbar {
+        --toolbar-background-color: var(--natsumi-mat-hz-background) !important;
+        --natsumi-status-bar-haze-border: var(--natsumi-mat-hz-border-thin) !important;
+        backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+        box-shadow: var(--natsumi-mat-hz-shadow) !important;
+      }
+
+      body:not([natsumi-compact-mode]) {
+        @media not -moz-pref("natsumi.theme.single-toolbar") {
+          #navigator-toolbox {
+            background-color: var(--natsumi-mat-hz-background) !important;
+            backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+            border: var(--natsumi-mat-hz-border-thin) !important;
+            box-shadow: var(--natsumi-mat-hz-shadow) !important;
+          }
+        }
+
+        #sidebar-main, #sidebar-container {
+          background-color: var(--natsumi-mat-hz-background) !important;
+          backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+          border: var(--natsumi-mat-hz-border-thin) !important;
+          box-shadow: var(--natsumi-mat-hz-shadow) !important;
+        }
+      }
+
+      body[natsumi-compact-mode] {
+        @media -moz-pref("natsumi.theme.compact-style", "toolbar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
+          #sidebar-main, #sidebar-container {
+            background-color: var(--natsumi-mat-hz-background) !important;
+            backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+            border: var(--natsumi-mat-hz-border-thin) !important;
+            box-shadow: var(--natsumi-mat-hz-shadow) !important;
+          }
+        }
+
+        @media -moz-pref("natsumi.theme.compact-style", "sidebar") and (not -moz-pref("natsumi.theme.single-toolbar")) {
+          #navigator-toolbox {
+            background-color: var(--natsumi-mat-hz-background) !important;
+            backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
+            border: var(--natsumi-mat-hz-border-thin) !important;
+            box-shadow: var(--natsumi-mat-hz-shadow) !important;
+          }
+        }
+      }
+    }
+
     @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
       :root:not([inDOMFullscreen="true"]):not([drawtitle])[chromehidden=""] body[natsumi-panel-sidebar-enabled] {
         &:not([natsumi-panel-sidebar-on-right]) {
@@ -226,7 +295,7 @@ SOFTWARE.
 
     #panel-sidebar-select-box {
       --natsumi-panel-sidebar-background: var(--toolbar-background-color);
-      --natsumi-panel-sidebar-border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color) !important;
+      --natsumi-panel-sidebar-border: var(--natsumi-panel-sidebar-haze-border, var(--natsumi-border-width) solid var(--natsumi-browser-border-color)) !important;
       min-width: 38px !important;
     }
 
@@ -250,7 +319,7 @@ SOFTWARE.
       border-radius: var(--natsumi-browser-border-radius);
       max-width: calc(100vw - calc(var(--natsumi-browser-separation) * 2));
       --natsumi-status-bar-background: var(--toolbar-background-color) !important;
-      --natsumi-status-bar-border: 1px solid var(--chrome-content-separator-color) !important;
+      --natsumi-status-bar-border: var(--natsumi-status-bar-haze-border, 1px solid var(--chrome-content-separator-color)) !important;
     }
 
     #natsumi-pinned-toolbar {
