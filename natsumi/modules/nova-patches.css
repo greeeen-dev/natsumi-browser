@@ -158,7 +158,7 @@ SOFTWARE.
 
       body:not([natsumi-compact-mode]) {
         @media not -moz-pref("natsumi.theme.single-toolbar") {
-          #navigator-toolbox {
+          #navigator-toolbox:not(.fullscreen-with-menubar, .fullscreen-floating-toolbox) {
             background-color: var(--natsumi-mat-hz-background) !important;
             backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
             border: var(--natsumi-mat-hz-border-thin) !important;

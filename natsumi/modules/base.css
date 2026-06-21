@@ -108,9 +108,11 @@ body > * {
   }
 
   &[chromehidden=""]:has(#sidebar-main[hidden], #sidebar-container[hidden]) {
-    #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
-      margin-left: var(--natsumi-browser-separation) !important;
-      margin-right: var(--natsumi-browser-separation) !important;
+    @media (not -moz-pref("browser.nova.enabled")) or (not -moz-pref("natsumi.theme.islands")) {
+      #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+        margin-left: var(--natsumi-browser-separation) !important;
+        margin-right: var(--natsumi-browser-separation) !important;
+      }
     }
   }
 
