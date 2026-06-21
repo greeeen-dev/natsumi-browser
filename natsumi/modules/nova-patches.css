@@ -385,6 +385,10 @@ SOFTWARE.
 
       #natsumi-bottom-toolbar {
         translate: var(--natsumi-browser-separation) calc(var(--natsumi-browser-separation) * -1);
+
+        @media not -moz-pref("sidebar.position_start") {
+          translate: calc(var(--natsumi-browser-separation) * -1) calc(var(--natsumi-browser-separation) * -1);
+        }
       }
     }
 
