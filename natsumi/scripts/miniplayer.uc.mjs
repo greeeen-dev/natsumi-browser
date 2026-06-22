@@ -866,6 +866,7 @@ class NatsumiMiniplayer {
             this.updateScrubber();
 
             if (this.position >= this.duration) {
+                this.position = this.duration;
                 this.resetScrubberUpdate();
             }
         }, 1000 / playbackRate);
