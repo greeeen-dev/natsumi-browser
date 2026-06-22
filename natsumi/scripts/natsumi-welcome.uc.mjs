@@ -329,6 +329,13 @@ class NatsumiWelcome {
         document.body.setAttribute("natsumi-welcome-complete", "");
         document.body.removeAttribute("natsumi-welcome");
 
+        // Set username (if logged in)
+        const uiState = UIState.get();
+        if (uiState.status === UIState.STATUS_SIGNED_IN && uiState.displayName) {
+            const drumrollCompleteText = this.node.querySelector("#natsumi-welcome-drumroll-complete .natsumi-welcome-drumroll-text");
+            drumrollCompleteText.textContent = `Welcome to Natsumi, ${uiState.displayName}`
+        }
+
         setTimeout(() => {
             // Show welcome complete drumroll
             document.body.setAttribute("natsumi-welcome-drumroll-complete", "");
@@ -1079,7 +1086,8 @@ function setupInitialConfig() {
         #PersonalToolbar, #nav-bar-customization-target, #PanelUI-button, #tabbrowser-tabpanels,
         #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
         #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
-        #natsumi-pinned-toolbar, #nav-bar {
+        #natsumi-pinned-toolbar, #natsumi-top-toolbar, #natsumi-bottom-toolbar, #nav-bar,
+        #sidebar-container {
             opacity: 0;
             pointer-events: none !important;
         }

@@ -24,14 +24,37 @@ SOFTWARE.
 
 */
 
-/* ==== Floorp miniplayer fixes ==== */
+export function getBrowserVersion() {
+    let browserName = AppConstants.MOZ_APP_BASENAME;
+    const forkedFox = browserName.toLowerCase() !== "firefox";
 
-@media -moz-pref("natsumi.browser.type", "floorp") {
-  @media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
-    @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
-      &:has(#nora-statusbar.hidden) #natsumi-sidebar-container {
-        margin-bottom: 0 !important;
-      }
+    if (!forkedFox) {
+        return getFirefoxVersion();
     }
-  }
+
+    let forkedVersion = AppConstants.MOZ_APP_VERSION_DISPLAY;
+
+    if (browserName.toLowerCase() === "floorp") {
+        // Browser version format: [Floorp version]@[Firefox version] (e.g. 12.3.0@144.0)
+        forkedVersion = forkedVersion.split("@")[0];
+    } else if (browserName.toLowerCase() === "mullvadbrowser") {
+        forkedVersion = AppConstants.BASE_BROWSER_VERSION;
+    }
+
+    return forkedVersion;
+}
+
+export function getFirefoxVersion() {
+    let browserName = AppConstants.MOZ_APP_BASENAME;
+    let browserVersion = Services.appinfo.platformVersion ?? Services.appinfo.version;
+
+    if (browserName.toLowerCase() === "glide") {
+        browserVersion = AppConstants.GLIDE_FIREFOX_VERSION;
+    }
+
+    return browserVersion;
+}
+
+export function getMajorFirefoxVersion() {
+    return parseInt(getFirefoxVersion().split(".", 1)[0]);
 }

@@ -24,14 +24,20 @@ SOFTWARE.
 
 */
 
-/* ==== Waterfox miniplayer fixes ==== */
+/* ==== Firefox Nova tabs patches ==== */
 
-:root[data-title-default="Waterfox"] {
-  @media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
-    @media -moz-pref("natsumi.sidebar.use-statusbar-in-sidebar") {
-      &:has(#status-bar[collapsed="true"]) #natsumi-sidebar-container {
-        margin-bottom: 0 !important;
-      }
+@media -moz-pref("browser.nova.enabled") and (not -moz-pref("natsumi.theme.islands")) {
+  #tabbrowser-arrowscrollbox {
+    &::part(overflow-start-indicator), &::part(overflow-end-indicator) {
+      --toolbox-background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) !important;
+    }
+  }
+}
+
+body[natsumi-compact-mode] {
+  #tabbrowser-arrowscrollbox {
+    &::part(overflow-start-indicator), &::part(overflow-end-indicator) {
+      --toolbox-background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) !important;
     }
   }
 }

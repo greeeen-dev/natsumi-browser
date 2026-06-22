@@ -68,12 +68,18 @@ SOFTWARE.
         }
       }
 
+      @media not -moz-pref("sidebar.verticalTabs") {
+        .tab-group-line {
+          margin-bottom: calc(var(--tab-block-margin) * -1);
+        }
+      }
+
       .tab-loading-burst[bursting]::before {
         fill: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
       }
 
       .tab-text {
-        font-size: 12px;
+        font-size: calc(1rem + 1px + var(--natsumi-font-offset, 0px));
       }
 
       .tab-stack {
@@ -145,7 +151,7 @@ SOFTWARE.
         & > .tab-stack > .tab-background {
           box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
           background-image: none !important;
-          background-color: var(--natsumi-mat-hz-background) !important;
+          background: var(--natsumi-mat-hz-background) !important;
           animation: backdrop-fadein 0.2s ease;
 
           @media -moz-pref("natsumi.sidebar.blur-tab-button") {
@@ -276,7 +282,7 @@ SOFTWARE.
     }
   }
 
-  #sidebar-main:not([sidebar-launcher-expanded]) {
+  #sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded]) {
     .tabbrowser-tab {
       min-width: var(--floorp-tab-min-height, var(--tab-min-height)) !important;
 
@@ -313,7 +319,7 @@ SOFTWARE.
     border-radius: var(--natsumi-tab-border-radius) !important;
     
     .toolbarbutton-text {
-      font-size: 12px;
+      font-size: calc(1rem + 1px + var(--natsumi-font-offset, 0px)) !important;
     }
     
     .toolbarbutton-icon {

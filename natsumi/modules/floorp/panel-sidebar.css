@@ -26,6 +26,30 @@ SOFTWARE.
 
 /* ==== Floorp panel sidebar ==== */
 
+@keyframes natsumi-panel-sidebar-overlay {
+  from {
+    opacity: 0;
+    translate: 20px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+
+@keyframes natsumi-panel-sidebar-overlay-left {
+  from {
+    opacity: 0;
+    translate: -20px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+
 @media -moz-pref("natsumi.browser.type", "floorp") {
   body[natsumi-panel-sidebar-on-right] {
     @media -moz-pref("sidebar.position_start") {
@@ -45,7 +69,7 @@ SOFTWARE.
         }
       }
 
-      #sidebar-main {
+      #sidebar-main, #sidebar-container7 {
         order: 7 !important;
       }
     }
@@ -60,12 +84,16 @@ SOFTWARE.
   #panel-sidebar-box {
     margin-bottom: var(--natsumi-browser-separation) !important;
     background: transparent !important;
-    border: var(--natsumi-border-width) solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
+    border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color) !important;
     border-radius: var(--natsumi-browser-border-radius) !important;
     overflow: hidden !important;
 
     @media -moz-pref("natsumi.theme.single-toolbar") {
       z-index: 2;
+    }
+
+    #panel-sidebar-header, #panel-sidebar-browser-box {
+      background: var(--toolbar-background-color, light-dark(#f9f9fb, rgb(43, 42, 51))) !important;
     }
   }
 
@@ -90,7 +118,7 @@ SOFTWARE.
       @media -moz-pref("natsumi.theme.single-toolbar") {
         body[natsumi-panel-sidebar-enabled]:not([natsumi-compact-mode])[natsumi-panel-sidebar-on-right] {
           #navigator-toolbox {
-            margin-right: calc(36px + calc(var(--natsumi-browser-separation) * 2));
+            margin-right: calc(36px + var(--natsumi-browser-separation));
           }
         }
       }
@@ -110,7 +138,7 @@ SOFTWARE.
     --panel-sidebar-panel-size: 28px;
     --panel-sidebar-width: calc(var(--panel-sidebar-panel-size) + calc(var(--natsumi-panel-item-separation) * 2)) !important;
     margin: var(--natsumi-browser-separation) !important;
-    background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
+    background-color: var(--natsumi-panel-sidebar-background, light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1))) !important;
     border-radius: var(--natsumi-browser-border-radius);
 
     .panel-sidebar-panel {
@@ -146,7 +174,7 @@ SOFTWARE.
 
   body[natsumi-compact-mode]:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-box {
     @media not (-moz-pref("natsumi.theme.compact-style", "toolbar")) {
-      @media -moz-pref("sidebar.position_start") {
+      @media -moz-pref("sidebar.position_start") and -moz-pref("natsumi.sidebar.floorp-floating-panel") {
         margin-left: var(--natsumi-browser-separation) !important;
       }
     }
@@ -172,7 +200,7 @@ SOFTWARE.
     margin-left: 0 !important;
   }
 
-  body[natsumi-panel-sidebar-on-right][natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+  :root[chromehidden=""] body[natsumi-panel-sidebar-on-right][natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     --natsumi-right-sidebar-margin-override: 0 !important;
     margin-right: 0 !important;
   }
@@ -245,6 +273,10 @@ SOFTWARE.
 
       @media not -moz-pref("natsumi.theme.single-toolbar") {
         height: calc(100vh - var(--natsumi-browser-separation) - var(--natsumi-panel-sidebar-bookmarks-offset) - 40px) !important;
+
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          height: calc(100vh - calc(var(--natsumi-browser-separation) * 3) - var(--natsumi-panel-sidebar-bookmarks-offset) - 42px) !important;
+        }
       }
 
       @media -moz-pref("natsumi.theme.single-toolbar") {
@@ -253,6 +285,10 @@ SOFTWARE.
 
       @media not -moz-pref("sidebar.verticalTabs") {
         height: calc(100vh - var(--natsumi-browser-separation) - var(--natsumi-panel-sidebar-bookmarks-offset) - 84px) !important;
+
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          height: calc(100vh - calc(var(--natsumi-browser-separation) * 3) - var(--natsumi-panel-sidebar-bookmarks-offset) - 86px) !important;
+        }
       }
     }
 
@@ -304,6 +340,76 @@ SOFTWARE.
           transition: right 0.2s ease, opacity 0.2s ease !important;
           right: 0;
         }
+      }
+    }
+  }
+
+  @media -moz-pref("natsumi.sidebar.floorp-overlay-panel") {
+    #tabbrowser-tabpanels {
+      transition: scale 0.3s ease, opacity 0.3s ease;
+    }
+
+    #sidebar-box {
+      transition: scale 0.3s ease, opacity 0.3s ease, translate 0.3s ease;
+    }
+
+    :root:not([inDOMFullscreen="true"]):not([drawtitle])[chromehidden=""] body[natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) {
+      #panel-sidebar-box {
+        z-index: 10;
+      }
+
+      #panel-sidebar-splitter {
+        z-index: 999;
+        margin-left: calc(calc(var(--natsumi-panel-sidebar-width) + var(--natsumi-browser-separation)) * -1) !important;
+
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          margin-left: calc(calc(var(--natsumi-panel-sidebar-width) + calc(var(--natsumi-browser-separation) * 2)) * -1) !important;
+        }
+
+        &:not(:hover) {
+          background-color: transparent !important;
+        }
+      }
+
+      &:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-splitter {
+        margin-left: unset !important;
+        margin-right: calc(calc(var(--natsumi-panel-sidebar-width) + 4px) * -1) !important;
+
+        @media -moz-pref("browser.nova.enabled") and -moz-pref("natsumi.theme.islands") {
+          margin-right: calc(calc(var(--natsumi-panel-sidebar-width) + 4px + calc(var(--natsumi-browser-separation) * 2)) * -1) !important;
+        }
+      }
+
+      #tabbrowser-tabpanels {
+        opacity: 0.5;
+        scale: 98%;
+        pointer-events: none;
+      }
+
+      #sidebar-box {
+        opacity: 0.5;
+        scale: 98%;
+        translate: 1% 1% !important;
+      }
+
+      #sidebar-box .sidebar-browser-stack, #sidebar-splitter {
+        pointer-events: none;
+      }
+    }
+
+    body[natsumi-panel-sidebar-active] {
+      #panel-sidebar-box {
+        animation: natsumi-panel-sidebar-overlay 0.3s ease;
+      }
+
+      &:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-box {
+        animation-name: natsumi-panel-sidebar-overlay-left;
+      }
+    }
+
+    body[natsumi-panel-sidebar-floating] {
+      #panel-sidebar-box {
+        animation-duration: 0s;
       }
     }
   }

@@ -26,7 +26,7 @@ SOFTWARE.
 
 /* ==== Single toolbar view ==== */
 @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
-  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded])[chromehidden=""] {
+  :root:not([customizing]):has(#sidebar-main[sidebar-launcher-expanded], #sidebar-container[sidebar-launcher-expanded])[chromehidden=""] {
     #navigator-toolbox {
       width: var(--natsumi-sidebar-width) !important;
       min-height: 85px !important;
@@ -109,21 +109,15 @@ SOFTWARE.
         .searchmode-switcher {
           display: none !important;
         }
+
+        .urlbar-input-box {
+          margin-left: 4px;
+        }
       }
     }
 
     #vertical-tabs {
-      #tabbrowser-tabs {
-        padding-top: calc(var(--natsumi-tabs-padding-offset, 0px) + 82px) !important;
-      }
-
-      &:has(#pinned-tabs-container[dragActive]) {
-        padding-top: calc(var(--natsumi-tabs-padding-offset, 0px) + 82px) !important;
-
-        #tabbrowser-tabs {
-          padding-top: 0 !important;
-        }
-      }
+      --natsumi-single-toolbar-offset: calc(var(--natsumi-tabs-padding-offset, 0px) + 82px);
     }
 
     #unified-extensions-button {
@@ -266,6 +260,10 @@ SOFTWARE.
       }
     }
 
+    .browserContainer, #panel-sidebar-select-box > *:first-child, #panel-sidebar-header, #sidebar-box .sidebar-browser-stack {
+      transition: margin-top 0.2s ease !important;
+    }
+
     body:has([natsumi-welcome]) {
       #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
         margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
@@ -342,6 +340,23 @@ SOFTWARE.
                 display: flex !important;
               }
             }
+          }
+        }
+
+        body[natsumi-bookmarks-hover] {
+          --natsumi-internal-margin: calc(-30px - var(--natsumi-browser-separation) + var(--natsumi-actual-browser-separation));
+
+          /* Probably also redundant but adding it just in case */
+          @media (-moz-platform: windows) {
+            --natsumi-internal-margin: calc(-36px - var(--natsumi-browser-separation) + var(--natsumi-actual-browser-separation));
+          }
+
+          .browserContainer, #panel-sidebar-select-box > *:first-child, #sidebar-box .sidebar-browser-stack {
+            margin-top: var(--natsumi-internal-margin) !important;
+          }
+
+          &:not([natsumi-panel-sidebar-floating]) #panel-sidebar-header {
+            margin-top: var(--natsumi-internal-margin) !important;
           }
         }
 

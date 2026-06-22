@@ -153,12 +153,12 @@ SOFTWARE.
 /* Theme colors */
 :root[windowtype*="navigator:browser"] {
   /* Use theme color if possible */
-  &[style*="--lwt"] html:not([ai-window]) body::after {
+  &[style*="--lwt"]:not([ai-window]) body::after {
     background-color: var(--lwt-accent-color);
   }
 
   /* Use theme images in solid color layer if possible */
-  &[lwtheme]:not([lwtheme-image-y-align]) html:not([ai-window]) body {
+  &[lwtheme]:not([lwtheme-image-y-align]):not([ai-window]) body {
     background-image: none !important;
 
     &::after {
@@ -171,7 +171,7 @@ SOFTWARE.
 
 /* Override accent color if theme color is set */
 @media not -moz-pref("natsumi.theme.force-natsumi-color") {
-  :root[style*="--lwt"] html:not([ai-window]) {
+  :root[style*="--lwt"]:not([ai-window]) {
     * {
       --natsumi-primary-color: var(--lwt-accent-color) !important;
 
@@ -181,9 +181,13 @@ SOFTWARE.
         }
       }
     }
+
+    toolbar[brighttext] #urlbar {
+      color-scheme: dark !important;
+    }
   }
 
-  html[ai-window] {
+  :root[ai-window] {
     * {
       --natsumi-primary-color: var(--color-violet-20) !important;
     }

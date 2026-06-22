@@ -80,6 +80,15 @@ SOFTWARE.
   }
 }
 
+* {
+  --tab-inner-inline-margin: var(--space-medium);
+  --tab-collapsed-width: calc(var(--tab-collapsed-background-width) + 2 * var(--space-medium)) !important;
+
+  @media -moz-pref("sidebar.verticalTabs") {
+    --tab-inline-padding: calc((var(--tab-collapsed-width) - var(--icon-size, 16px)) / 2);
+  }
+}
+
 /* Global tweaks for tabs */
 .tabbrowser-tab {
   --attention-dot-color: transparent !important;
@@ -218,6 +227,22 @@ tab-split-view-wrapper {
 
 tab[natsumi-workspace-hidden] {
   display: none !important;
+}
+
+.tab-text {
+  font-size: calc(1rem + var(--natsumi-font-offset, 0px));
+}
+
+#tabs-newtab-button, #vertical-tabs-newtab-button {
+  .toolbarbutton-text {
+    font-size: calc(1rem + var(--natsumi-font-offset, 0px));
+  }
+}
+
+#tabbrowser-tabs[tablist-has-focus] {
+  tab.tablist-keyboard-focus .tab-background {
+    outline: 2px solid light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+  }
 }
 
 /* Unloaded Tabs */

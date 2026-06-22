@@ -36,6 +36,10 @@ class NatsumiPanelSidebarHandler {
     constructor() {
         this.wasDisabled = false;
         this.hasPanelSidebarObserver = false;
+        this.panelSidebarObserver = new MutationObserver(() => {
+            this.getPanelSidebarState();
+            this.copyPanelSidebarWidth();
+        });
     }
 
     init() {
@@ -50,11 +54,25 @@ class NatsumiPanelSidebarHandler {
         this.getPanelSidebarPosition();
         this.getPanelSidebarEnabled();
 
-        // Set listener for panel sidebar
+        // Set listener for panel sidebar state
         let rootObserver = new MutationObserver(() => {
             this.getPanelSidebarState();
+            this.copyPanelSidebarWidth();
         })
         rootObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["style"]});
+
+        // Add event listener for web content and sidebar
+        let browserBox = document.getElementById("tabbrowser-tabbox");
+        let sidebarBox = document.getElementById("sidebar-box");
+        browserBox.addEventListener("click", () => {this.handleBrowserClick()});
+        sidebarBox.addEventListener("click", () => {this.handleBrowserClick()});
+
+        // Add event listener for escape key press
+        window.addEventListener("keydown", (event) => {
+            if (event.key.toLowerCase() === "escape") {
+                this.handleEscPress();
+            }
+        });
     }
 
     getPanelSidebarState() {
@@ -69,10 +87,7 @@ class NatsumiPanelSidebarHandler {
 
             if (!this.hasPanelSidebarObserver) {
                 // Create observer
-                let panelSidebarObserver = new MutationObserver(() => {
-                    this.getPanelSidebarState();
-                });
-                panelSidebarObserver.observe(panelSidebar, {attributes: true, attributeFilter: ["data-floating"]});
+                this.panelSidebarObserver.observe(panelSidebar, {attributes: true, attributeFilter: ["style", "data-floating"]});
                 this.hasPanelSidebarObserver = true;
             }
 
@@ -109,6 +124,7 @@ class NatsumiPanelSidebarHandler {
             document.body.setAttribute("natsumi-panel-sidebar-enabled", "");
         } else {
             document.body.removeAttribute("natsumi-panel-sidebar-enabled");
+            this.hasPanelSidebarObserver = false;
         }
     }
 
@@ -140,6 +156,47 @@ class NatsumiPanelSidebarHandler {
 
         // This is enabled on Floorp by default, so we'd need to return false here
         return false;
+    }
+
+    copyPanelSidebarWidth() {
+        let panelSidebar = document.getElementById("panel-sidebar-box");
+
+        if (!panelSidebar) {
+            console.warn("Panel Sidebar box not found, probably not loaded in yet");
+            return;
+        }
+
+        let panelSidebarWidth = panelSidebar.getBoundingClientRect().width;
+        document.body.style.setProperty("--natsumi-panel-sidebar-width", `${panelSidebarWidth}px`);
+    }
+
+    handleBrowserClick(keyPress = false) {
+        let hasOverlay = false;
+        if (ucApi.Prefs.get("natsumi.sidebar.floorp-overlay-panel").exists) {
+            hasOverlay = ucApi.Prefs.get("natsumi.sidebar.floorp-overlay-panel").value;
+        }
+
+        if (!hasOverlay && !keyPress) {
+            return;
+        }
+
+        if (!document.body.hasAttribute("natsumi-panel-sidebar-active") || document.body.hasAttribute("natsumi-panel-sidebar-floating")) {
+            return;
+        }
+
+        let closeButton = document.getElementById("panel-sidebar-close");
+        closeButton.click();
+    }
+
+    handleEscPress() {
+        let hasEscape = false;
+        if (ucApi.Prefs.get("natsumi.sidebar.floorp-escape-panel").exists) {
+            hasEscape = ucApi.Prefs.get("natsumi.sidebar.floorp-escape-panel").value;
+        }
+
+        if (hasEscape) {
+            this.handleBrowserClick(true);
+        }
     }
 
     updateSidebarRemoved() {

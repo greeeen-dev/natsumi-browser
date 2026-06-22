@@ -72,8 +72,8 @@ hand when you don't need the extra tools.
 #### Go minimal or go utility-first, it's your choice.
 ![](./images/single-toolbar.webp)
 
-Not a fan of multiple toolbars? Craving more horizontal space? Natsumi adds it to your browser of
-choice.
+Not a fan of multiple toolbars? Craving more vertical space? Natsumi lets you merge your navigation
+bar into one unified sidebar for more space for your web content.
 
 And of course, you can always use the Multiple Toolbars layout. Natsumi doesn't force things on you.
 
@@ -89,8 +89,8 @@ and websites. No more being forced to show mercy to websites when shortcuts conf
 #### Get extra features custom-made for specific browsers.
 ![](./images/floorp-features.webp)
 
-Does your browser have Workspaces? Or another toolbar that can be used in the sidebar? Natsumi adds
-extra features to your browser for a more complete experience.
+Natsumi takes advantage of your browser's own features to add extra features on top of them for a
+more complete experience.
 
 ## Full-fledged vs. CSS-only
 Some Natsumi features require JavaScript to work. You can still use Natsumi without JS support at the
@@ -107,7 +107,7 @@ cost of losing some features.
 | Custom themes                      | :white_check_mark:              | :x:                |
 | Single Toolbar                     | :white_check_mark:              | :x:                |
 | Compact Mode                       | :white_check_mark:              | :x:                |
-| Status bar as sidebar toolbar      | :white_check_mark:              | :x:                |
+| Natsumi toolbars                   | :white_check_mark:              | :x:                |
 | Natsumi Shortcuts                  | :white_check_mark:              | :x:                |
 
 
@@ -290,9 +290,6 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
   the workspaces toolbar button is set to display as an icons strip. **Floorp exclusive.**
 - `natsumi.sidebar.floorp-floating-panel`: Floats the Panel Sidebar similar to Compact Mode. **Floorp
   exclusive.**
-- `natsumi.sidebar.hide-sidebar-controls` (boolean): Hides sidebar controls.
-- `natsumi.sidebar.use-statusbar-in-sidebar` (boolean): Uses Floorp or Waterfox's Status Bar as a toolbar
-  for the sidebar when the Status Bar is "hidden". **Floorp and Waterfox exclusive.**
 - `natsumi.sidebar.hide-workspace-indicator` (boolean): Hides the Floorp Workspace indicator added by
   Natsumi. **Floorp exclusive.**
 - `natsumi.sidebar.legacy-workspace-indicator` (boolean): Uses the legacy Workspace indicator. Use this if
@@ -372,9 +369,11 @@ If you have Natsumi Append installed, most of these can be tweaked through the p
 ## Browser support
 All browsers must be based on Firefox 140 or above.
 
+Using a different Firefox-based browser? Let me know and I'll see if I can add support for it!
+
 | Browser     | Status                       | Versions | Notes                                                                                     |
 |-------------|------------------------------|----------|-------------------------------------------------------------------------------------------|
-| Floorp      | :star: Recommended           | 12.3.0+  | Natsumi works best on Floorp!                                                             |
+| Floorp      | :star: Recommended           | 12.3.0+  | Natsumi works best on Floorp! (Not available for portable versions just yet)              |
 | Firefox     | :white_check_mark: Supported | 140+     |                                                                                           |
 | Waterfox    | :white_check_mark: Supported | 6.6.0+   |                                                                                           |
 | Librewolf   | :white_check_mark: Supported | 140+     |                                                                                           |
@@ -386,7 +385,7 @@ All browsers must be based on Firefox 140 or above.
 
 ## FAQs
 ### "Does Natsumi support the new Firefox Nova redesign?"
-Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 153**.
+Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 152 and above**.
 
 Firefox Nova is still in early development and constantly changing. Each Natsumi release will aim to
 address these changes, so that once Firefox Nova is complete and rolled out, Natsumi will be
@@ -408,7 +407,7 @@ you will need to keep certain files (preload, postload, natsumi-config) for Nats
 
 ### "Why is Natsumi not compatible with Zen Browser or Midori Browser?"
 Zen Browser and Midori Browser are not supported due to a hostile stance on personalization (among
-some other issues) and ethical issues respectively.
+some other issues) and ethical concerns respectively.
 
 **Please do not try to port Natsumi to either of these browsers.** I have my reasons why I left
 these browsers unsupported, so I would really appreciate it if you respected my decision.
@@ -417,8 +416,8 @@ these browsers unsupported, so I would really appreciate it if you respected my 
 Although Natsumi is designed to be as customizable as possible, there may be some opinionated
 design choices that I may not change. In the end, Natsumi is still my personal browser skin.
 
-If you would like me to add options for certain aspects of the browser, please open a feature request
-and I will consider it.
+If you would like me to add options for certain aspects of the browser, please open a feature
+request and I will consider it.
 
 ### "Can I use your code for my browser?"
 If your browser is open-source and licensed under the GPLv3 or later (or AGPLv3 or later), then yes.

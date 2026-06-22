@@ -45,17 +45,15 @@ class NatsumiCompactModeManager {
     }
 
     init() {
-        let sidebarNode = document.getElementById("sidebar-main");
+        let sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
         let navigatorToolboxNode = document.getElementById("navigator-toolbox");
         let navbarNode = document.getElementById("nav-bar");
 
         // Check if browser is Floorp or Waterfox
         let isFloorp = false;
-        let isWaterfox = false;
 
         if (ucApi.Prefs.get("natsumi.browser.type").exists) {
             isFloorp = ucApi.Prefs.get("natsumi.browser.type").value === "floorp";
-            isWaterfox = ucApi.Prefs.get("natsumi.browser.type").value === "waterfox";
         }
 
         if (sidebarNode) {
@@ -74,12 +72,8 @@ class NatsumiCompactModeManager {
         }
 
         this.registerDeferrable("natsumi-pinned-toolbar");
-
-        if (isFloorp) {
-            this.registerDeferrable("nora-statusbar");
-        } else if (isWaterfox) {
-            this.registerDeferrable("status-bar");
-        }
+        this.registerDeferrable("natsumi-top-toolbar");
+        this.registerDeferrable("natsumi-bottom-toolbar");
 
         let deferrableListener = new MutationObserver(() => {
             for (let deferrable of this.deferrable) {
@@ -249,7 +243,7 @@ class NatsumiCompactModeManager {
             }
         }
 
-        if ((event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
+        if ((event.target.id === "sidebar-container" || event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
             if (this.sidebarTimeout) {
                 clearTimeout(this.sidebarTimeout);
                 this.sidebarTimeout = null;
@@ -278,16 +272,14 @@ class NatsumiCompactModeManager {
 
             document.body.setAttribute("natsumi-compact-navbar-hover", "");
         } else if ((
-            event.target.id === "nora-statusbar" || event.target.id === "status-bar"
+            event.target.id === "natsumi-top-toolbar" || event.target.id === "natsumi-bottom-toolbar"
         ) && sidebarHidden) {
-            if (event.target.classList.contains("hidden") || event.target.getAttribute("collapsed") === "true" || event.target.style.display === "none") {
-                if (this.sidebarTimeout) {
-                    clearTimeout(this.sidebarTimeout);
-                    this.sidebarTimeout = null;
-                }
-
-                this.sidebarHovered++;
+            if (this.sidebarTimeout) {
+                clearTimeout(this.sidebarTimeout);
+                this.sidebarTimeout = null;
             }
+
+            this.sidebarHovered++;
         }
 
         if (this.sidebarHovered > 0) {
@@ -324,7 +316,7 @@ class NatsumiCompactModeManager {
             }
         }
 
-        if ((event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
+        if ((event.target.id === "sidebar-container" || event.target.id === "sidebar-main" || event.target.id === "natsumi-pinned-toolbar") && sidebarHidden) {
             this.sidebarHovered--;
             sidebarInteracted = true;
         } else if ((
@@ -343,12 +335,10 @@ class NatsumiCompactModeManager {
                 }, this.visibleDuration);
             }
         } else if ((
-            event.target.id === "nora-statusbar" || event.target.id === "status-bar"
+            event.target.id === "natsumi-top-toolbar" || event.target.id === "natsumi-bottom-toolbar"
         ) && sidebarHidden) {
-            if (event.target.classList.contains("hidden") || event.target.getAttribute("collapsed") === "true" || event.target.style.display === "none") {
-                sidebarInteracted = true;
-                this.sidebarHovered--;
-            }
+            sidebarInteracted = true;
+            this.sidebarHovered--;
         }
 
         if (this.sidebarHovered <= 0 && sidebarInteracted) {
@@ -392,7 +382,7 @@ class NatsumiCompactModeManager {
     }
 
     handleSidebarResize() {
-        let sidebarNode = document.getElementById("sidebar-main");
+        let sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
 
         // Get sidebar state
         const sidebarExpanded = sidebarNode.hasAttribute("sidebar-launcher-expanded");

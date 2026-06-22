@@ -44,6 +44,8 @@ SOFTWARE.
         --button-background-color-primary: var(--color-accent-primary) !important;
         --button-background-color-primary-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
         --button-background-color-primary-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+        --page-nav-button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
+        --page-nav-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, transparent) !important;
       }
 
       #page-header {

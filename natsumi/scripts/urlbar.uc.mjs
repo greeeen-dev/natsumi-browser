@@ -43,6 +43,7 @@ class NatsumiURLBarController {
         this.wasOpened = false;
         this.wasOpenInNewTab = false;
         this.replacingNewTab = false;
+        this.originalConfig = ucApi.Prefs.get("browser.urlbar.openintab").value;
     }
 
     init() {
@@ -114,7 +115,7 @@ class NatsumiURLBarController {
                         this.urlBarObject.inputField.value = gBrowser.selectedBrowser.browsingContext.currentURI.spec;
                     }
 
-                    ucApi.Prefs.set("browser.urlbar.openintab", false);
+                    ucApi.Prefs.set("browser.urlbar.openintab", this.originalConfig);
                 }
             });
         });
@@ -136,9 +137,7 @@ class NatsumiURLBarController {
                 // solution, please PR it in
                 this.urlBarNode.openLinkAsNewTab = false;
                 this.wasOpenInNewTab = false;
-
-                // Disable browser.urlbar.openintab to prevent conflicts
-                ucApi.Prefs.set("browser.urlbar.openintab", false);
+                ucApi.Prefs.set("browser.urlbar.openintab", this.originalConfig);
             }
         });
 
@@ -152,9 +151,11 @@ class NatsumiURLBarController {
             let replaceNewTab = ucApi.Prefs.get("natsumi.tabs.replace-new-tab").value;
             this.replacingNewTab = replaceNewTab;
 
-            // Disable browser.urlbar.openintab if replace new tab is disabled
+            // Reset browser.urlbar.openintab if replace new tab is disabled
             if (!replaceNewTab) {
-                ucApi.Prefs.set("browser.urlbar.openintab", false);
+                ucApi.Prefs.set("browser.urlbar.openintab", this.originalConfig);
+            } else {
+                this.originalConfig = ucApi.Prefs.get("browser.urlbar.openintab").value;
             }
         });
 

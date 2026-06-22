@@ -30,6 +30,7 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
+import {getMajorFirefoxVersion} from "./version.sys.mjs";
 
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
@@ -64,6 +65,15 @@ class NatsumiMiniplayerCounter {
         // Add scroll event listener
         this._miniplayerContainer.addEventListener("wheel", (event) => {
             this.updateSelected();
+
+            if (!event.target) {
+                return;
+            }
+
+            if (event.target.closest(".natsumi-miniplayer-scrubber")) {
+                event.stopImmediatePropagation();
+                event.preventDefault();
+            }
         });
 
         this._initialized = true;
@@ -152,7 +162,6 @@ class NatsumiMiniplayer {
         this.isMuted = false;
         this.duration = 0;
         this.position = 0;
-        //this._positionIncrement = null;
         this.getPlaybackState();
 
         // Get tab data
@@ -166,6 +175,21 @@ class NatsumiMiniplayer {
 
         // Set additional variables
         this.alternateButtonSet = false;
+
+        // Pinned and visibility state
+        this.pinned = false;
+        this.shouldHide = false;
+
+        // Overflow animations
+        this.titleAnimationScheduler = null;
+        this.authorAnimationScheduler = null;
+        this.globalAnimationScheduler = null;
+        this.deferAnimationUpdate = false;
+
+        // Scrubber
+        this.scrubberLoop = null;
+        this.scrubberDrag = false;
+        this.scrubberAdvanced = getMajorFirefoxVersion() >= 152;
     }
 
     init() {
@@ -187,31 +211,39 @@ class NatsumiMiniplayer {
         let playPauseAvailable = availableButtons.includes("playpause");
         let nextTrackAvailable = availableButtons.includes("nexttrack");
         let prevTrackAvailable = availableButtons.includes("previoustrack");
-        let seekAvailable = availableButtons.includes("seekto");
         let pipAvailable = ucApi.Prefs.get("media.videocontrols.picture-in-picture.video-toggle.enabled").value;
-
-        // Get seekbar times
-        let positionMinutes = Math.floor(this.position / 60);
-        let positionSeconds = Math.floor(this.position % 60);
-        let durationMinutes = Math.floor(this.duration / 60);
-        let durationSeconds = Math.floor(this.duration % 60);
 
         // Generate node
         let nodeString = `
             <div id="natsumi-miniplayer-${this._tab.linkedPanel}" class="natsumi-miniplayer" muted="${this.isMuted}" playing="${this.isPlaying}">
                 <div class="natsumi-miniplayer-info-container">
-                    <div class="natsumi-miniplayer-site-container">
-                        <div class="natsumi-miniplayer-site-icon"></div>
-                        <div class="natsumi-miniplayer-site-name"></div>
+                    <div class="natsumi-miniplayer-top-container">
+                        <div class="natsumi-miniplayer-site-container">
+                            <div class="natsumi-miniplayer-site-icon"></div>
+                            <div class="natsumi-miniplayer-site-name"></div>
+                        </div>
+                        <div class="natsumi-miniplayer-pin-button"></div>
                     </div>
                     <div class="natsumi-miniplayer-title-container">
-                        <div class="natsumi-miniplayer-title"></div>
+                        <div class="natsumi-miniplayer-title-scrollable">
+                            <div class="natsumi-miniplayer-title"></div>
+                            <div class="natsumi-miniplayer-title" duplicate=""></div>
+                        </div>
                     </div>
                     <div class="natsumi-miniplayer-author-container">
-                        <div class="natsumi-miniplayer-artist"></div>
+                        <div class="natsumi-miniplayer-author-scrollable">
+                            <div class="natsumi-miniplayer-artist"></div>
+                            <div class="natsumi-miniplayer-artist" duplicate=""></div>
+                        </div>
+                    </div>
+                    <div class="natsumi-miniplayer-scrubber-container">
+                        <div class="natsumi-miniplayer-position"></div>
+                        <div class="natsumi-miniplayer-scrubber"></div>
+                        <div class="natsumi-miniplayer-duration"></div>
                     </div>
                 </div>
                 <div class="natsumi-miniplayer-controls-container">
+                    <div class="natsumi-miniplayer-pin-button"></div>
                     <div class="natsumi-miniplayer-pip-button" disabled="${!pipAvailable}"></div>
                     <div class="natsumi-miniplayer-prevtrack-button" disabled="${!prevTrackAvailable}"></div>
                     <div class="natsumi-miniplayer-pauseplay-button" disabled="${!playPauseAvailable}" playing="${this.isPlaying}"></div>
@@ -249,9 +281,34 @@ class NatsumiMiniplayer {
                 this.nextTrack();
             }
         });
-        this._node.querySelector(".natsumi-miniplayer-pip-button").addEventListener("click", (event) => {
+        this._node.querySelector(".natsumi-miniplayer-pip-button").addEventListener("click", () => {
             this._tab.linkedBrowser.browsingContext.currentWindowGlobal.getActor("PictureInPictureLauncher").sendAsyncMessage("PictureInPicture:KeyToggle");
         });
+        this._node.querySelector(".natsumi-miniplayer-scrubber").addEventListener("mousedown", (event) => {
+            this.scrubberDrag = true;
+            this.handleScrubber(event);
+        });
+        this._node.querySelector(".natsumi-miniplayer-scrubber").addEventListener("wheel", (event) => {
+            this.handleScrubber(event, true);
+        });
+        window.addEventListener("mousemove", (event) => {
+            if (this.scrubberDrag) {
+                this.handleScrubber(event);
+            }
+        });
+        window.addEventListener("mouseup", () => {
+            this.scrubberDrag = false;
+        })
+
+        for (let pinButton of this._node.querySelectorAll(".natsumi-miniplayer-pin-button")) {
+            pinButton.addEventListener("click", () => {
+                if (this.pinned) {
+                    this.unpinMiniplayer();
+                } else {
+                    this.pinMiniplayer();
+                }
+            });
+        }
 
         // Append to container
         let miniplayerContainer = document.getElementById("natsumi-miniplayer-container");
@@ -269,13 +326,43 @@ class NatsumiMiniplayer {
             this._node.setAttribute("miniplayer-has-artwork", "");
         }
 
+        // Set up debugging
+        this._node.natsumiMiniplayerController = this;
+
         // Set site data and media metadata
         this._node.querySelector(".natsumi-miniplayer-site-name").textContent = this.siteName || "Unknown site";
-        this._node.querySelector(".natsumi-miniplayer-title").textContent = this.title || "Unknown";
-        this._node.querySelector(".natsumi-miniplayer-artist").textContent = this.artist || "Unknown artist";
+        this._node.querySelector(".natsumi-miniplayer-title-container").setAttribute("text", this.title || "Unknown");
+        this._node.querySelector(".natsumi-miniplayer-author-container").setAttribute("text", this.artist || "Unknown artist");
         if (this.album) {
-            this._node.querySelector(".natsumi-miniplayer-artist").textContent = `${this.artist || "Unknown artist"} • ${this.album}`;
+            this._node.querySelector(".natsumi-miniplayer-artist").setAttribute("text", `${this.artist || "Unknown artist"} • ${this.album}`);
         }
+
+        // Set animation listeners
+        this._node.querySelector(".natsumi-miniplayer-title-scrollable").addEventListener("animationend", () => {
+            this._node.querySelector(".natsumi-miniplayer-title-scrollable").removeAttribute("animate-overflow");
+
+            if (this.deferAnimationUpdate) {
+                return;
+            }
+
+            this.titleAnimationScheduler = setTimeout(() => {
+                this._node.querySelector(".natsumi-miniplayer-title-scrollable").setAttribute("animate-overflow", "");
+            }, 4000);
+        });
+        this._node.querySelector(".natsumi-miniplayer-author-scrollable").addEventListener("animationend", () => {
+            this._node.querySelector(".natsumi-miniplayer-author-scrollable").removeAttribute("animate-overflow");
+
+            if (this.deferAnimationUpdate) {
+                return;
+            }
+
+            this.authorAnimationScheduler = setTimeout(() => {
+                this._node.querySelector(".natsumi-miniplayer-author-scrollable").setAttribute("animate-overflow", "");
+            }, 4000);
+        });
+        Services.prefs.addObserver("natsumi.miniplayer.disable-text-scrolling", () => {
+            this.refreshMetadataAnimations();
+        })
 
         // Set key event listeners
         window.addEventListener("keydown", (event) => {
@@ -285,37 +372,137 @@ class NatsumiMiniplayer {
             this.onKeyUp(event);
         });
 
+        // Set up animations
+        this.refreshMetadataAnimations();
+        let metadataMutationObserver = new MutationObserver(() => {
+            this.refreshMetadataAnimations();
+        });
+        metadataMutationObserver.observe(
+            this._node.querySelector(".natsumi-miniplayer-title-container"),
+            {attributes: true, attributeFilter: ["text"]}
+        );
+        metadataMutationObserver.observe(
+            this._node.querySelector(".natsumi-miniplayer-author-container"),
+            {attributes: true, attributeFilter: ["text"]}
+        );
+
+        // Pin miniplayer if required
+        if (ucApi.Prefs.get("natsumi.miniplayer.pin-by-default").exists) {
+            let shouldPin = ucApi.Prefs.get("natsumi.miniplayer.pin-by-default").value;
+            if (shouldPin) {
+                this.pinMiniplayer();
+            }
+        }
+
         this._initialized = true;
         miniplayerCounter.updateCount();
     }
 
     registerEventHandlers() {
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = () => {
-                this.onPositionUpdate();
-            };
-        }
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = () => {
-                this.onPlaybackUpdate();
-            };
-        }
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange = () => {
-                this.onMetadataUpdate();
-            };
-        }
-        if (!this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange) {
-            this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange = () => {
-                this.onSupportedKeysUpdate();
-            };
-        }
+        this._tab.linkedBrowser.browsingContext.mediaController.onpositionstatechange = (event) => {
+            this.onPositionUpdate(event);
+        };
+        this._tab.linkedBrowser.browsingContext.mediaController.onplaybackstatechange = () => {
+            this.onPlaybackUpdate();
+        };
+        this._tab.linkedBrowser.browsingContext.mediaController.onmetadatachange = () => {
+            this.onMetadataUpdate();
+        };
+        this._tab.linkedBrowser.browsingContext.mediaController.onsupportedkeyschange = () => {
+            this.onSupportedKeysUpdate();
+        };
     }
 
     usesAlternateButtonSet() {
         const availableButtons = this._tab.linkedBrowser.browsingContext.mediaController.supportedKeys
         const trackSkipAvailable = availableButtons.includes("nexttrack") || availableButtons.includes("previoustrack");
         return this.alternateButtonSet || !trackSkipAvailable;
+    }
+
+    refreshMetadataAnimations() {
+        // Get miniplayer width
+        const availableWidth = this._node.querySelector(".natsumi-miniplayer-info-container").getBoundingClientRect().width - 16;
+        let scrollingDisabled = false;
+
+        if (availableWidth === 0) {
+            // Assume hidden and defer update
+            return;
+        }
+
+        if (ucApi.Prefs.get("natsumi.miniplayer.disable-text-scrolling").exists) {
+            scrollingDisabled = ucApi.Prefs.get("natsumi.miniplayer.disable-text-scrolling").value;
+        }
+
+        // Get title and author
+        const mediaTitle = this._node.querySelector(".natsumi-miniplayer-title-container").getAttribute("text");
+        const mediaAuthor = this._node.querySelector(".natsumi-miniplayer-author-container").getAttribute("text");
+
+        // Set content
+        for (let titleNode of this._node.querySelectorAll(".natsumi-miniplayer-title")) {
+            titleNode.textContent = mediaTitle;
+        }
+        for (let authorNode of this._node.querySelectorAll(".natsumi-miniplayer-artist")) {
+            authorNode.textContent = mediaAuthor;
+        }
+
+        // Clear existing timeouts
+        this._node.removeAttribute("natsumi-title-overflow");
+        this._node.removeAttribute("natsumi-author-overflow");
+        clearTimeout(this.titleAnimationScheduler);
+        clearTimeout(this.authorAnimationScheduler);
+        this.titleAnimationScheduler = null;
+        this.authorAnimationScheduler = null;
+        this.deferAnimationUpdate = true;
+        this._node.querySelector(".natsumi-miniplayer-title-scrollable").removeAttribute("animate-overflow");
+        this._node.querySelector(".natsumi-miniplayer-author-scrollable").removeAttribute("animate-overflow");
+        this.deferAnimationUpdate = false;
+
+        if (this.globalAnimationScheduler) {
+            clearTimeout(this.globalAnimationScheduler);
+            this.globalAnimationScheduler = null;
+        }
+
+        if (scrollingDisabled) {
+            // Defer animation until scrolling is enabled
+            this._node.setAttribute("animations-disabled", "");
+            return;
+        } else {
+            if (this._node.hasAttribute("animations-disabled")) {
+                this._node.removeAttribute("animations-disabled");
+            }
+        }
+
+        // Get new width for each node
+        const pixelsPerSecond = 40;
+        const singleTitleWidth = this._node.querySelector(".natsumi-miniplayer-title").getBoundingClientRect().width;
+        const singleAuthorWidth = this._node.querySelector(".natsumi-miniplayer-artist").getBoundingClientRect().width;
+
+        let scheduleTitleOverflow = false;
+        let scheduleAuthorOverflow = false;
+
+        if (singleTitleWidth > availableWidth) {
+            scheduleTitleOverflow = true;
+            this._node.setAttribute("natsumi-title-overflow", "");
+            this._node.querySelector(".natsumi-miniplayer-title-container").style.setProperty("--natsumi-animation-duration", `${(singleTitleWidth + 150) / pixelsPerSecond}s`);
+            this._node.querySelector(".natsumi-miniplayer-title-container").style.setProperty("--natsumi-animation-width", `${singleTitleWidth + 150}px`);
+        }
+        if (singleAuthorWidth > availableWidth) {
+            scheduleAuthorOverflow = true;
+            this._node.setAttribute("natsumi-author-overflow", "");
+            this._node.querySelector(".natsumi-miniplayer-author-container").style.setProperty("--natsumi-animation-duration", `${(singleAuthorWidth + 150) / pixelsPerSecond}s`);
+            this._node.querySelector(".natsumi-miniplayer-author-container").style.setProperty("--natsumi-animation-width", `${singleAuthorWidth + 150}px`);
+        }
+
+        if (scheduleTitleOverflow || scheduleAuthorOverflow) {
+            this.globalAnimationScheduler = setTimeout(() => {
+                if (scheduleTitleOverflow) {
+                    this._node.querySelector(".natsumi-miniplayer-title-scrollable").setAttribute("animate-overflow", "");
+                }
+                if (scheduleAuthorOverflow) {
+                    this._node.querySelector(".natsumi-miniplayer-author-scrollable").setAttribute("animate-overflow", "");
+                }
+            }, 4000);
+        }
     }
 
     getMediaMetadata() {
@@ -473,7 +660,7 @@ class NatsumiMiniplayer {
     }
 
     // UI updates
-    async updateUI() {
+    async updateUI(forceAnimationUpdate = false) {
         if (!this._node) {
             return;
         }
@@ -486,12 +673,24 @@ class NatsumiMiniplayer {
             }
         }
 
-        // Update titles
+        // Update site name
         this._node.querySelector(".natsumi-miniplayer-site-name").textContent = this.siteName || "Unknown site";
-        this._node.querySelector(".natsumi-miniplayer-title").textContent = this.title || "Unknown";
-        this._node.querySelector(".natsumi-miniplayer-artist").textContent = this.artist || "Unknown artist";
+
+        // Update metadata if required
+        let currentTitle = this._node.querySelector(".natsumi-miniplayer-title-container").getAttribute("text");
+        let currentAuthor = this._node.querySelector(".natsumi-miniplayer-author-container").getAttribute("text");
+        let newTitle = this.title || "Unknown";
+        let newAuthor = this.artist || "Unknown artist"
+
         if (this.album) {
-            this._node.querySelector(".natsumi-miniplayer-artist").textContent = `${this.artist || "Unknown artist"} • ${this.album}`;
+            newAuthor = `${this.artist || "Unknown artist"} • ${this.album}`;
+        }
+
+        if (currentTitle !== newTitle || forceAnimationUpdate) {
+            this._node.querySelector(".natsumi-miniplayer-title-container").setAttribute("text", newTitle);
+        }
+        if (currentAuthor !== newAuthor || forceAnimationUpdate) {
+            this._node.querySelector(".natsumi-miniplayer-author-container").setAttribute("text", newAuthor);
         }
 
         // Get available buttons
@@ -499,7 +698,6 @@ class NatsumiMiniplayer {
         let playPauseAvailable = availableButtons.includes("playpause");
         let nextTrackAvailable = availableButtons.includes("nexttrack");
         let prevTrackAvailable = availableButtons.includes("previoustrack");
-        let seekAvailable = availableButtons.includes("seekto");
         let pipAvailable = ucApi.Prefs.get("media.videocontrols.picture-in-picture.video-toggle.enabled").value;
 
         if (this.usesAlternateButtonSet()) {
@@ -512,12 +710,16 @@ class NatsumiMiniplayer {
         let nextTrackButton = this._node.querySelector(".natsumi-miniplayer-nexttrack-button");
         let prevTrackButton = this._node.querySelector(".natsumi-miniplayer-prevtrack-button");
         let pipButton = this._node.querySelector(".natsumi-miniplayer-pip-button");
-        let positionLabel = this._node.querySelector(".natsumi-miniplayer-position");
-        let durationLabel = this._node.querySelector(".natsumi-miniplayer-duration");
 
         // Set play states
         this._node.setAttribute("muted", this.isMuted);
         this._node.setAttribute("playing", this.isPlaying);
+
+        // Stop scrubber if not playing
+        // For FF152+, this is already handled by checking for playbackRate = 0
+        if (!this.scrubberAdvanced && !this.isPlaying) {
+            this.resetScrubberUpdate();
+        }
 
         // Set alternate button set state
         this._node.setAttribute("alternate-buttons", this.usesAlternateButtonSet());
@@ -537,8 +739,160 @@ class NatsumiMiniplayer {
         }
     }
 
+    getTimestamp(seconds) {
+        // Get minutes
+        let minutes = Math.floor(seconds / 60);
+        seconds = Math.floor(seconds % 60);
+
+        // Get hours from minutes
+        let hours = Math.floor(minutes / 60);
+        minutes = minutes % 60;
+
+        // Get strings
+        let secondsString = `${seconds}`;
+        let minutesString = `${minutes}`;
+
+        if (seconds < 10) {
+            secondsString = `0${seconds}`;
+        }
+        if (minutes < 10) {
+            minutesString = `0${minutes}`;
+        }
+
+        if (hours > 0) {
+            return `${hours}:${minutesString}:${secondsString}`;
+        } else {
+            return `${minutes}:${secondsString}`;
+        }
+    }
+
+    updateScrubber() {
+        let positionNode = this._node.querySelector(".natsumi-miniplayer-position");
+        let durationNode = this._node.querySelector(".natsumi-miniplayer-duration");
+
+        // Set timestamps
+        positionNode.textContent = this.getTimestamp(this.position);
+        durationNode.textContent = this.getTimestamp(this.duration);
+
+        // Set scrubber position
+        if (this.duration > 0) {
+            this._node.style.setProperty("--natsumi-scrubber-position", `${this.position / this.duration * 100}%`);
+        } else {
+            this._node.style.setProperty("--natsumi-scrubber-position", "0%");
+        }
+    }
+
+    handleScrubber(event, isScroll = false) {
+        let newPosition;
+        const scrubber = this._node.querySelector(".natsumi-miniplayer-scrubber");
+
+        if (isScroll) {
+            const scrollMultiplier = 1;
+            let scrollAmount;
+
+            if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+                scrollAmount = event.deltaX * -1;
+            } else {
+                scrollAmount = event.deltaY * -1;
+            }
+
+            if (ucApi.Prefs.get("natsumi.browser.invert-scroll").exists) {
+                if (ucApi.Prefs.get("natsumi.browser.invert-scroll").value) {
+                    scrollAmount = scrollAmount * -1;
+                }
+            }
+
+            newPosition = this.position + (scrollAmount * scrollMultiplier);
+        } else {
+            // Get width and relative position
+            const scrubberWidth = scrubber.getBoundingClientRect().width;
+            const scrubberPos = scrubber.getBoundingClientRect().x;
+            const scrubberRelativePos = event.clientX - scrubberPos;
+
+            if (scrubberWidth === 0) {
+                return;
+            }
+
+            // Get new position
+            newPosition = (scrubberRelativePos / scrubberWidth) * this.duration;
+        }
+
+        if (newPosition > this.duration) {
+            newPosition = this.duration;
+        } else if (newPosition < 0) {
+            newPosition = 0;
+        }
+
+        this._tab.linkedBrowser.browsingContext.mediaController.seekTo(newPosition);
+    }
+
+    hideScrubber() {
+        if (!this._node) {
+            return;
+        }
+
+        this._node.setAttribute("scrubber-hidden", "");
+    }
+
+    showScrubber() {
+        if (!this._node) {
+            return;
+        }
+
+        if (!this._node.hasAttribute("scrubber-hidden")) {
+            return;
+        }
+
+        this._node.removeAttribute("scrubber-hidden");
+    }
+
+    // Scrubber
+    scheduleScrubberUpdate(playbackRate = 1) {
+        if (this.scrubberLoop) {
+            this.resetScrubberUpdate();
+        }
+
+        if (playbackRate === 0 && this.scrubberAdvanced) {
+            // We're probably paused here
+            return;
+        }
+
+        this.scrubberLoop = setInterval(() => {
+            if (!this._node) {
+                this.resetScrubberUpdate();
+            }
+
+            this.position++;
+            this.updateScrubber();
+
+            if (this.position >= this.duration) {
+                this.resetScrubberUpdate();
+            }
+        }, 1000 / playbackRate);
+    }
+
+    resetScrubberUpdate() {
+        if (this.scrubberLoop) {
+            clearInterval(this.scrubberLoop);
+            this.scrubberLoop = null;
+        }
+    }
+
     // Events
-    onPositionUpdate() {
+    onPositionUpdate(event) {
+        if (isNaN(event.duration)) {
+            this.hideScrubber();
+            this.resetScrubberUpdate();
+        } else {
+            // Set scrubber data
+            this.position = event.position;
+            this.duration = event.duration;
+            this.showScrubber();
+            this.updateScrubber();
+            this.scheduleScrubberUpdate(event.playbackRate);
+        }
+
+        // Update UI
         this.getTabData();
         this.updateUI();
     }
@@ -557,7 +911,7 @@ class NatsumiMiniplayer {
         this.updateUI();
     }
 
-    onSupportedKeysUpdate(event) {
+    onSupportedKeysUpdate() {
         this.updateUI();
     }
 
@@ -576,6 +930,12 @@ class NatsumiMiniplayer {
     }
 
     hideMiniplayer() {
+        this.shouldHide = true;
+
+        if (this.pinned) {
+            return;
+        }
+
         if (this._node) {
             this._node.setAttribute("hidden", "true");
         }
@@ -583,10 +943,35 @@ class NatsumiMiniplayer {
     }
 
     showMiniplayer() {
-        if (this._node) {
+        this.shouldHide = false;
+
+        if (this._node && this._node.hasAttribute("hidden")) {
             this._node.removeAttribute("hidden");
+            miniplayerCounter.updateCount();
+            this.refreshMetadataAnimations();
+        } else {
+            miniplayerCounter.updateCount();
         }
-        miniplayerCounter.updateCount();
+    }
+
+    pinMiniplayer() {
+        this.pinned = true;
+
+        if (this._node) {
+            this._node.setAttribute("pinned", "true");
+        }
+    }
+
+    unpinMiniplayer() {
+        this.pinned = false;
+
+        if (this._node) {
+            this._node.removeAttribute("pinned");
+        }
+
+        if (this.shouldHide) {
+            this.hideMiniplayer();
+        }
     }
 
     async destroy() {
@@ -620,7 +1005,7 @@ async function registerMiniplayer(tab) {
         return;
     }
 
-    if (tab.selected) {
+    if (tab.selected && !tab.natsumiMiniplayer.pinned) {
         tab.natsumiMiniplayer.hideMiniplayer();
     }
 }
@@ -647,6 +1032,16 @@ if (!miniplayerContainer) {
     Services.prefs.addObserver("sidebar.verticalTabs", () => {
         if (ucApi.Prefs.get("sidebar.verticalTabs").value) {
             tabsContainer.insertBefore(miniplayerContainer, miniplayerCounter.node);
+
+            // Refresh miniplayer text scroll
+            for (let miniplayerNode of miniplayerContainer.querySelectorAll(".natsumi-miniplayer")) {
+                if (!miniplayerNode.natsumiMiniplayerController) {
+                    // This Miniplayer is broken
+                    continue;
+                }
+
+                miniplayerNode.natsumiMiniplayerController.refreshMetadataAnimations();
+            }
         } else {
             navBarLastButton.parentElement.insertBefore(miniplayerContainer, navBarLastButton);
         }

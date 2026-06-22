@@ -277,7 +277,7 @@ SOFTWARE.
       &[selected], &[natsumi-glimpse-selected] {
         & > .tab-stack > .tab-background {
           box-shadow: var(--tab-selected-shadow);
-          background-color: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
+          background: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3)) !important;
 
           @media not -moz-pref("sidebar.verticalTabs") {
             margin-bottom: 0 !important;
@@ -288,7 +288,7 @@ SOFTWARE.
     }
   }
 
-  #sidebar-main[sidebar-launcher-expanded] {
+  #sidebar-main[sidebar-launcher-expanded], #sidebar-container[sidebar-launcher-expanded] {
     tab-split-view-wrapper {
       margin-right: 0 !important;
       border-radius: 4px 0 0 4px !important;
@@ -307,7 +307,7 @@ SOFTWARE.
     }
   }
 
-  #sidebar-main:not([sidebar-launcher-expanded]) {
+  #sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded]) {
     #tabbrowser-arrowscrollbox, #natsumi-static-tabs-container {
       .tabbrowser-tab > .tab-stack > .tab-background {
         width: calc(var(--tab-collapsed-background-width) + var(--tab-inner-inline-margin)) !important;
@@ -360,7 +360,7 @@ SOFTWARE.
     .tabbrowser-tab {
       &[natsumi-glimpse-selected] {
         & > .tab-stack > .tab-background {
-          background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
+          background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
           box-shadow: var(--tab-selected-shadow);
           outline-color: var(--tab-selected-outline-color);
         }

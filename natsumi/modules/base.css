@@ -50,7 +50,7 @@ body > * {
       .browserContainer {
         background-color: transparent !important;
         border: none !important;
-        border-radius: 0 !important;
+        border-radius: 0;
       }
 
       .browserStack {
@@ -100,39 +100,27 @@ body > * {
           margin: auto 0 !important;
         }
       }
+
+      &:empty {
+        display: none;
+      }
     }
   }
 
-  &[chromehidden=""]:has(#sidebar-main[hidden]) {
-    #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
-      margin-left: var(--natsumi-browser-separation) !important;
-      margin-right: var(--natsumi-browser-separation) !important;
+  &[chromehidden=""]:has(#sidebar-main[hidden], #sidebar-container[hidden]) {
+    @media (not -moz-pref("browser.nova.enabled")) or (not -moz-pref("natsumi.theme.islands")) {
+      #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+        margin-left: var(--natsumi-browser-separation) !important;
+        margin-right: var(--natsumi-browser-separation) !important;
+      }
     }
   }
 
   @media -moz-pref("natsumi.theme.no-margin") and (not -moz-pref("natsumi.theme.islands")) {
     body:not([natsumi-panel-sidebar-active]):not([natsumi-compact-mode]), body[natsumi-panel-sidebar-floating]:not([natsumi-compact-mode]) {
       @media -moz-pref("sidebar.position_start") {
-        &:is(:not([natsumi-panel-sidebar-on-right]), :not([natsumi-panel-sidebar-enabled])) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
-          --natsumi-tabbox-margin-override: 0;
-
-          .browserSidebarContainer {
-            border-right: none !important;
-            border-bottom: none !important;
-            --natsumi-browser-border-radius-override: var(--natsumi-browser-border-radius) 0 0 0;
-          }
-
-          @media -moz-pref("natsumi.theme.single-toolbar") {
-            --natsumi-sidebar-margin-override: -1px;
-
-            .browserSidebarContainer {
-              --natsumi-browser-border-radius-override: 0;
-            }
-          }
-        }
-
-        &[natsumi-panel-sidebar-on-right] #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
-          @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+        &:is(:not([natsumi-panel-sidebar-on-right]), :not([natsumi-panel-sidebar-enabled])):not(:has(#tabbrowser-tabpanels[splitview])) {
+          #tabbrowser-tabbox {
             --natsumi-tabbox-margin-override: 0;
 
             .browserSidebarContainer {
@@ -141,11 +129,47 @@ body > * {
               --natsumi-browser-border-radius-override: var(--natsumi-browser-border-radius) 0 0 0;
             }
 
+            * {
+              --natsumi-actual-browser-separation: 0px;
+            }
+
             @media -moz-pref("natsumi.theme.single-toolbar") {
               --natsumi-sidebar-margin-override: -1px;
 
               .browserSidebarContainer {
                 --natsumi-browser-border-radius-override: 0;
+              }
+
+              * {
+                --natsumi-actual-browser-separation: -1px;
+              }
+            }
+          }
+        }
+
+        &[natsumi-panel-sidebar-on-right]:not(:has(#tabbrowser-tabpanels[splitview])) {
+          @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
+            #tabbrowser-tabbox {
+              --natsumi-tabbox-margin-override: 0;
+
+              .browserSidebarContainer {
+                border-right: none !important;
+                border-bottom: none !important;
+                --natsumi-browser-border-radius-override: var(--natsumi-browser-border-radius) 0 0 0;
+              }
+            }
+
+            * {
+              --natsumi-actual-browser-separation: 0px;
+            }
+
+            @media -moz-pref("natsumi.theme.single-toolbar") {
+              #tabbrowser-tabbox {
+                --natsumi-sidebar-margin-override: 0px;
+
+                .browserSidebarContainer {
+                  --natsumi-browser-border-radius-override: 0;
+                }
               }
             }
           }
@@ -195,7 +219,7 @@ body > * {
 
     @media not -moz-pref("sidebar.verticalTabs") {
       body:not([natsumi-panel-sidebar-enabled]):not([natsumi-compact-mode]), body[natsumi-panel-sidebar-floating]:not([natsumi-compact-mode]) {
-        &:has(#sidebar-main[hidden]) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
+        &:has(#sidebar-main[hidden], #sidebar-container[hidden]) #tabbrowser-tabbox:not(:has(#tabbrowser-tabpanels[splitview])) {
           --natsumi-tabbox-margin-override: 0;
           --natsumi-browser-separation: 0 !important;
 
@@ -237,8 +261,10 @@ body > * {
   display: none !important;
 }
 
-:root[customizing] #sidebar-main:not([sidebar-launcher-expanded]) #vertical-tabs {
-  min-width: unset !important;
+:root[customizing] #sidebar-main:not([sidebar-launcher-expanded]), :root[customizing] #sidebar-container:not([sidebar-launcher-expanded]) {
+  #vertical-tabs {
+    min-width: unset !important;
+  }
 }
 
 #vertical-tabs {
@@ -250,7 +276,7 @@ body > * {
 }
 
 #TabsToolbar {
-  margin-inline: var(--natsumi-browser-separation);
+  margin-inline: 6px;
 }
 
 #nav-bar-customization-target, #PanelUI-button {
@@ -265,7 +291,8 @@ body > * {
   }
 }
 
-#nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar {
+#nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
+#TabsToolbar-customization-target {
   & > toolbarbutton, & > toolbaritem {
     &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
       padding-inline: 4px !important;
@@ -297,6 +324,8 @@ body > * {
       padding: 6px !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
       border-radius: 4px !important;
+      background: unset !important;
+      border: none !important;
 
       /* Match Firefox's macOS 26 theme */
       @media (-moz-mac-tahoe-theme) {
@@ -323,13 +352,13 @@ body > * {
       &:active, &[open], &[checked] {
         .toolbarbutton-icon {
           background-color: var(--natsumi-button-active-color) !important;
-          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
         }
 
         &:hover {
           .toolbarbutton-icon {
             background-color: var(--natsumi-button-active-color) !important;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
           }
         }
       }
@@ -405,6 +434,10 @@ body > * {
   .avatar-container {
     margin-left: 6px !important;
   }
+}
+
+#TabsToolbar-customization-target toolbarbutton {
+  margin-block: auto !important;
 }
 
 #nav-bar-overflow-button {
@@ -579,7 +612,7 @@ body > * {
   }
 }
 
-@media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+@media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
   #vertical-tabs {
     min-height: 100% !important;
   }
@@ -721,7 +754,7 @@ splitter:hover {
 }
 
 :root[sidebar-expand-on-hover] {
-  #sidebar-main {
+  #sidebar-main, #sidebar-container {
     background: transparent !important;
   }
 
@@ -741,5 +774,43 @@ splitter:hover {
     &:not([sidebar-ongoing-animations])[sidebar-launcher-expanded] {
       margin-inline-start: var(--natsumi-sidebar-width) !important;
     }
+  }
+}
+
+@media not -moz-pref("sidebar.verticalTabs") {
+  #tabbrowser-tabs {
+    &::before {
+      margin-top: var(--tab-block-margin, 6px);
+      height: calc(100% - calc(var(--tab-block-margin, 6px) * 2)) !important;
+    }
+  }
+}
+
+@media -moz-pref("natsumi.theme.context-menu-icons") {
+  menuitem:not([image])::before {
+    order: -2;
+  }
+
+  menuitem:not([image])::after {
+    content: "";
+    -moz-context-properties: stroke, fill !important;
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    background-size: 16px;
+    background-image: var(--natsumi-menu-icon, none);
+    order: -1;
+  }
+
+  #context-navigation:not([hidden]) #context-forward::after,
+  #context-navigation:not([hidden]) #context-back::after,
+  #context-navigation:not([hidden]) #context-reload::after,
+  #context-navigation:not([hidden]) #context-stop::after,
+  #context-navigation:not([hidden]) #context-bookmarkpage::after {
+    display: none;
+  }
+
+  #context-navigation:not([hidden]) {
+    height: 28px;
   }
 }

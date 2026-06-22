@@ -93,7 +93,7 @@ SOFTWARE.
       &[selected], &[visuallyselected], &:hover, &[natsumi-glimpse-selected] {
         & > .tab-stack {
           & > .tab-background {
-            background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
+            background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
             clip-path: polygon(
                     0 50%,
                     var(--horizontal-dist) 0,
@@ -138,7 +138,7 @@ SOFTWARE.
     .tabbrowser-tab {
       &[natsumi-glimpse-selected] {
         & > .tab-stack > .tab-background {
-          background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
+          background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
           box-shadow: var(--tab-selected-shadow);
           outline-color: var(--tab-selected-outline-color);
         }

@@ -37,7 +37,7 @@ SOFTWARE.
 
     &[selected], &[multiselected], &[natsumi-glimpse-selected] {
       & > .tab-stack > .tab-background {
-        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
+        background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
         box-shadow: var(--tab-selected-shadow, var(--tab-box-shadow));
         outline-color: var(--tab-selected-outline-color);
       }

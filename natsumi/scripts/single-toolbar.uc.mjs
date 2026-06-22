@@ -57,7 +57,7 @@ class NatsumiSingleToolbarManager {
             }
         });
 
-        let sidebarNode = document.getElementById("sidebar-main");
+        let sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
 
         // Check if sidebar is expanded
         // We'll add a 100ms delay so Firefox has time to load

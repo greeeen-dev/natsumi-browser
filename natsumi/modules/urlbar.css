@@ -316,7 +316,9 @@ SOFTWARE.
         border-radius: var(--natsumi-tab-border-radius) !important;
 
         #identity-box {
-          padding: 4px 0 !important;
+          height: 28px !important;
+          padding: 0 !important;
+          margin-block: auto !important;
 
           #identity-icon-box {
             border-radius: 8px !important;
@@ -391,7 +393,7 @@ SOFTWARE.
 
         &:hover {
           #urlbar-background, .urlbar-background {
-            background-color: var(--natsumi-button-hover-color) !important;
+            background-color: var(--tab-background-color-hover, var(--tab-hover-background-color)) !important;
           }
         }
 
@@ -402,10 +404,6 @@ SOFTWARE.
 
           #urlbar-input {
             padding-left: 8px !important;
-
-            @media -moz-pref("browser.urlbar.trustPanel.featureGate") {
-              padding-left: 4px !important;
-            }
           }
 
           #identity-box {
@@ -463,6 +461,10 @@ SOFTWARE.
           }
         }
 
+        .urlbar-input-box {
+          margin-left: 0 !important;
+        }
+
         @media -moz-pref("natsumi.urlbar.single-toolbar-display-actions") {
           #identity-box {
             margin-left: 4px !important;
@@ -470,6 +472,12 @@ SOFTWARE.
 
             @media -moz-pref("browser.urlbar.trustPanel.featureGate") {
               margin-left: 0 !important;
+            }
+          }
+
+          #urlbar-input {
+            @media -moz-pref("browser.urlbar.trustPanel.featureGate") {
+              padding-left: 4px !important;
             }
           }
 
@@ -486,10 +494,6 @@ SOFTWARE.
           #trust-icon-container {
             margin-left: -28px !important;
             opacity: 0 !important;
-          }
-
-          &[pageproxystate="invalid"] #urlbar-input {
-            padding-left: 8px !important;
           }
 
           &:hover, &:has(#identity-icon-box[open]), &:has(.urlbar-page-action[open]) {
@@ -556,6 +560,11 @@ SOFTWARE.
 
         #tracking-protection-icon-container, #identity-box, #page-action-buttons, #trust-icon-container {
           display: none !important;
+        }
+
+        #urlbar-results {
+          padding: 0 !important;
+          padding-top: 0.5rem !important;
         }
 
         .urlbar-input-box {
@@ -789,6 +798,12 @@ SOFTWARE.
 
         .urlbarView {
           overflow: visible !important;
+          margin-inline: 7px !important;
+          margin-block: 0 7px !important;
+
+          &[noresults] {
+            display: none !important;
+          }
         }
 
         &[noresults] {
@@ -939,10 +954,9 @@ SOFTWARE.
         }
 
         .urlbar-page-action {
-          transition: background-color 0.2s ease, box-shadow 0.2s ease, width 0.2s ease 0.5s, padding 0.2s ease 0.5s, opacity 0.2s ease 0.5s;
-          width: 0 !important;
-          padding: 6px 0 !important;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease, margin-right 0.2s ease 0.5s, opacity 0.2s ease 0.5s;
           opacity: 0;
+          margin-right: -26px !important;
           pointer-events: none !important;
         }
 
