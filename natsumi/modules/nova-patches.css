@@ -90,6 +90,24 @@ SOFTWARE.
           margin-left: 2px !important;
         }
       }
+
+      @media -moz-pref("sidebar.expandOnHover") {
+        #sidebar-main, #sidebar-container {
+          bottom: 0 !important;
+
+          @media -moz-pref("sidebar.position_start") {
+            left: unset !important;
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+            right: unset !important;
+          }
+        }
+
+        #natsumi-bottom-toolbar {
+          z-index: 999 !important;
+        }
+      }
     }
 
     @media (
