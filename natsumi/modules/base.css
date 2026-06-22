@@ -235,6 +235,13 @@ body > * {
   }
 }
 
+:root[inDOMFullscreen="true"] {
+  #natsumi-bottom-toolbar {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
 .split-view-splitter {
   min-width: var(--natsumi-browser-separation) !important;
 }
