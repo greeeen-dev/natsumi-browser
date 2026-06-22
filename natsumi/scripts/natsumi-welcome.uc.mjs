@@ -430,7 +430,8 @@ class NatsumiDefaultStartupAnimation extends NatsumiBaseStartupAnimation {
             ["nya :3", null],
             ["stay hydrated!!!1", null],
             ["quotes? in my browser???", null],
-            ["Eat ice cream for a huge buff.", "@therealconfused"]
+            ["Eat ice cream for a huge buff.", "@therealconfused"],
+            ["Natsumi is your browser mod. Good choice.", null]
         ]
 
         // Pick a random quote
