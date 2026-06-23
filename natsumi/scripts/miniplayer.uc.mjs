@@ -759,6 +759,10 @@ class NatsumiMiniplayer {
             minutesString = `0${minutes}`;
         }
 
+        if (hours > 99) {
+            return "99:59:59+";
+        }
+
         if (hours > 0) {
             return `${hours}:${minutesString}:${secondsString}`;
         } else {
