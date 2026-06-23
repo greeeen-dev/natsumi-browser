@@ -1088,7 +1088,7 @@ function setupInitialConfig() {
         #nora-statusbar, #status-bar, #urlbar, #panel-sidebar-select-box, #notifications-toolbar,
         #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button, #tabbrowser-tabbox,
         #natsumi-pinned-toolbar, #natsumi-top-toolbar, #natsumi-bottom-toolbar, #nav-bar,
-        #sidebar-container {
+        #sidebar-container, #zen-sidebar-top-buttons, #titlebar {
             opacity: 0;
             pointer-events: none !important;
         }
@@ -1359,7 +1359,7 @@ if (ucApi.Prefs.get("natsumi.startup.type").exists()) {
     startupEnabled = ucApi.Prefs.get("natsumi.startup.tyoe").value !== "default";
 }
 
-if (!blockProgress && !earlyBlockProgress && startupEnabled && isBrowser) {
+if ((!blockProgress || !earlyBlockProgress) && startupEnabled && isBrowser) {
     runStartupAnimation().catch((error) => {
         console.error("Failed to run startup animation:", error);
     });
