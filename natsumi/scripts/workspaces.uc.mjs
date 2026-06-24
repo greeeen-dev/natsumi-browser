@@ -632,6 +632,24 @@ if (isFloorp) {
     try {
         let workspacesButton = document.getElementById("workspaces-toolbar-button");
 
+        if (!document.body.natsumiWorkspacesWrapper) {
+            // Initialize workspaces wrapper
+            document.body.natsumiWorkspacesWrapper = new NatsumiWorkspacesWrapper();
+            document.body.natsumiWorkspacesWrapper.dataRetrieveQueue.push(() => {
+                copyWorkspaceName();
+                applyCustomTheme();
+            });
+            document.body.natsumiWorkspacesWrapper.init().then(() => {
+                // Initialize workspace indicator
+                document.body.natsumiWorkspaceIndicator = new NatsumiWorkspaceIndicator();
+                document.body.natsumiWorkspaceIndicator.init();
+
+                // Initialize workspace pins manager
+                document.body.natsumiWorkspacePinsManager = new NatsumiWorkspacePinsManager();
+                document.body.natsumiWorkspacePinsManager.init();
+            });
+        }
+
         if (workspacesButton) {
             copyAllWorkspaces();
         } else {
@@ -750,22 +768,6 @@ if (isFloorp) {
                 document.body.natsumiWorkspaceIndicator.refreshIndicator();
             }
         });
-
-        // Initialize workspaces wrapper
-        document.body.natsumiWorkspacesWrapper = new NatsumiWorkspacesWrapper();
-        document.body.natsumiWorkspacesWrapper.dataRetrieveQueue.push(() => {
-            copyWorkspaceName();
-            applyCustomTheme();
-        });
-        document.body.natsumiWorkspacesWrapper.init().then(() => {
-            // Initialize workspace indicator
-            document.body.natsumiWorkspaceIndicator = new NatsumiWorkspaceIndicator();
-            document.body.natsumiWorkspaceIndicator.init();
-
-            // Initialize workspace pins manager
-            document.body.natsumiWorkspacePinsManager = new NatsumiWorkspacePinsManager();
-            document.body.natsumiWorkspacePinsManager.init();
-        })
     } catch (e) {
         console.error(e);
     }
