@@ -69,7 +69,7 @@ SOFTWARE.
         }
       }
 
-      #sidebar-main, #sidebar-container7 {
+      #sidebar-main, #sidebar-container {
         order: 7 !important;
       }
     }
