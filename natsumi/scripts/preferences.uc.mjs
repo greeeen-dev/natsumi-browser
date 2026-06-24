@@ -1714,6 +1714,12 @@ function addSidebarTabsPane() {
         "My desktop environment can't scale properly",
         "Applies a 0.5px offset to Blade highlight to account for scaling issues."
     ));
+    tabDesignSelection.registerExtras("natsumiTabAbsoluteFontSize", new CheckboxChoice(
+        "natsumi.tabs.absolute-font-size",
+        "natsumiTabAbsoluteFontSize",
+        "Use absolute font size",
+        "Sets font size to use 12px instead of (global font size) + 1px."
+    ));
 
     // Fusion options
     tabDesignSelection.registerExtras("natsumiTabFusionHighlight", new CheckboxChoice(

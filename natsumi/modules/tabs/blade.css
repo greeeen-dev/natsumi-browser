@@ -80,6 +80,10 @@ SOFTWARE.
 
       .tab-text {
         font-size: calc(1rem + 1px + var(--natsumi-font-offset, 0px));
+
+        @media -moz-pref("natsumi.tabs.absolute-font-size") {
+          font-size: calc(12px + var(--natsumi-font-offset, 0px));
+        }
       }
 
       .tab-stack {
@@ -316,6 +320,10 @@ SOFTWARE.
     
     .toolbarbutton-text {
       font-size: calc(1rem + 1px + var(--natsumi-font-offset, 0px)) !important;
+
+      @media -moz-pref("natsumi.tabs.absolute-font-size") {
+        font-size: calc(12px + var(--natsumi-font-offset, 0px)) !important;
+      }
     }
     
     .toolbarbutton-icon {
