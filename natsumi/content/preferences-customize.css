@@ -722,6 +722,12 @@ SOFTWARE.
     }
   }
 
+  @media -moz-pref("natsumi.tabs.use-custom-type") and (not -moz-pref("natsumi.tabs.type", "curve")) {
+    #natsumiTabAbsoluteFontSize {
+      display: none !important;
+    }
+  }
+
   @media (not -moz-pref("natsumi.tabs.use-custom-type")) or (not -moz-pref("natsumi.tabs.type", "fusion")) {
     #natsumiTabFusionHighlight {
       display: none !important;

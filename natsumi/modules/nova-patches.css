@@ -90,6 +90,24 @@ SOFTWARE.
           margin-left: 2px !important;
         }
       }
+
+      @media -moz-pref("sidebar.visibility", "expand-on-hover") {
+        #sidebar-main, #sidebar-container {
+          bottom: 0 !important;
+
+          @media -moz-pref("sidebar.position_start") {
+            left: unset !important;
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+            right: unset !important;
+          }
+        }
+
+        #natsumi-bottom-toolbar {
+          z-index: 999 !important;
+        }
+      }
     }
 
     @media (
@@ -385,6 +403,10 @@ SOFTWARE.
 
       #natsumi-bottom-toolbar {
         translate: var(--natsumi-browser-separation) calc(var(--natsumi-browser-separation) * -1);
+
+        @media not -moz-pref("sidebar.position_start") {
+          translate: calc(var(--natsumi-browser-separation) * -1) calc(var(--natsumi-browser-separation) * -1);
+        }
       }
     }
 

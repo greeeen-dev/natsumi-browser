@@ -32,6 +32,7 @@ SOFTWARE.
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import { applyCustomTheme } from "./custom-theme.sys.mjs";
+import { workspacesModulePath } from "./floorp-modules.sys.mjs";
 
 function convertToXUL(node) {
     // noinspection JSUnresolvedReference
@@ -53,44 +54,7 @@ class NatsumiWorkspacesWrapper {
     }
 
     async init() {
-        let workspacesModulePath = "chrome://noraneko/content/assets/js/index28.js";
-
-        // Get Floorp version
-        let floorpVersion = AppConstants.MOZ_APP_VERSION_DISPLAY.split("@")[0];
-
-        // Get minor version
-        let minorVersion = parseInt(floorpVersion.split(".")[1]);
-        let patchVersion = parseInt(floorpVersion.split(".")[2]);
-
-        // Get Firedragon status
         let isFiredragon = AppConstants.MOZ_APP_BASENAME.toLowerCase() === "firedragon";
-
-        if (minorVersion >= 14) {
-            // Floorp 12.14.0+ (do nothing)
-        } else if (minorVersion >= 12) {
-            // Floorp 12.12.0+
-            workspacesModulePath = "chrome://noraneko/content/assets/js/index27.js";
-        } else if (minorVersion > 9 || minorVersion === 9 && patchVersion >= 2) {
-            // Floorp 12.9.2+
-            workspacesModulePath = "chrome://noraneko/content/assets/js/index26.js";
-        } else if (minorVersion === 9 && patchVersion < 2) {
-            // Floorp 12.9.0 and 12.9.1
-            workspacesModulePath = "chrome://noraneko/content/assets/js/index25.js";
-        } else if (minorVersion >= 8) {
-            // Floorp 12.8.0+
-            workspacesModulePath = "chrome://noraneko/content/assets/js/index25.js";
-        } else if (minorVersion >= 4) {
-            // Floorp 12.4.0+
-            workspacesModulePath = "chrome://noraneko/content/assets/js/index23.js";
-        } else {
-            // Everything else
-            workspacesModulePath = "chrome://noraneko/content/assets/js/index22.js";
-        }
-
-        if (isFiredragon) {
-            // Firedragon 12.3.0+ (overrides Floorp module path)
-            workspacesModulePath = "chrome://noraneko/content/assets/js/modules/workspaces.js";
-        }
 
         this.workspacesModule = await import(workspacesModulePath);
         let workspacesContext;
@@ -668,6 +632,24 @@ if (isFloorp) {
     try {
         let workspacesButton = document.getElementById("workspaces-toolbar-button");
 
+        if (!document.body.natsumiWorkspacesWrapper) {
+            // Initialize workspaces wrapper
+            document.body.natsumiWorkspacesWrapper = new NatsumiWorkspacesWrapper();
+            document.body.natsumiWorkspacesWrapper.dataRetrieveQueue.push(() => {
+                copyWorkspaceName();
+                applyCustomTheme();
+            });
+            document.body.natsumiWorkspacesWrapper.init().then(() => {
+                // Initialize workspace indicator
+                document.body.natsumiWorkspaceIndicator = new NatsumiWorkspaceIndicator();
+                document.body.natsumiWorkspaceIndicator.init();
+
+                // Initialize workspace pins manager
+                document.body.natsumiWorkspacePinsManager = new NatsumiWorkspacePinsManager();
+                document.body.natsumiWorkspacePinsManager.init();
+            });
+        }
+
         if (workspacesButton) {
             copyAllWorkspaces();
         } else {
@@ -786,22 +768,6 @@ if (isFloorp) {
                 document.body.natsumiWorkspaceIndicator.refreshIndicator();
             }
         });
-
-        // Initialize workspaces wrapper
-        document.body.natsumiWorkspacesWrapper = new NatsumiWorkspacesWrapper();
-        document.body.natsumiWorkspacesWrapper.dataRetrieveQueue.push(() => {
-            copyWorkspaceName();
-            applyCustomTheme();
-        });
-        document.body.natsumiWorkspacesWrapper.init().then(() => {
-            // Initialize workspace indicator
-            document.body.natsumiWorkspaceIndicator = new NatsumiWorkspaceIndicator();
-            document.body.natsumiWorkspaceIndicator.init();
-
-            // Initialize workspace pins manager
-            document.body.natsumiWorkspacePinsManager = new NatsumiWorkspacePinsManager();
-            document.body.natsumiWorkspacePinsManager.init();
-        })
     } catch (e) {
         console.error(e);
     }

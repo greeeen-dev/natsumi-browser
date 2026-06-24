@@ -759,6 +759,10 @@ class NatsumiMiniplayer {
             minutesString = `0${minutes}`;
         }
 
+        if (hours > 99) {
+            return "99:59:59+";
+        }
+
         if (hours > 0) {
             return `${hours}:${minutesString}:${secondsString}`;
         } else {
@@ -866,6 +870,7 @@ class NatsumiMiniplayer {
             this.updateScrubber();
 
             if (this.position >= this.duration) {
+                this.position = this.duration;
                 this.resetScrubberUpdate();
             }
         }, 1000 / playbackRate);

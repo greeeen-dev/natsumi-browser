@@ -26,8 +26,8 @@ SOFTWARE.
 
 /* ==== Firefox Nova tabs patches ==== */
 
-@media -moz-pref("browser.nova.enabled") and (not -moz-pref("natsumi.theme.islands")) {
-  #tabbrowser-arrowscrollbox {
+@media -moz-pref("browser.nova.enabled") and ((not -moz-pref("natsumi.theme.islands")) or -moz-pref("natsumi.theme.islands-haze")) {
+  #tabbrowser-arrowscrollbox, #pinned-tabs-container {
     &::part(overflow-start-indicator), &::part(overflow-end-indicator) {
       --toolbox-background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) !important;
     }
@@ -35,7 +35,7 @@ SOFTWARE.
 }
 
 body[natsumi-compact-mode] {
-  #tabbrowser-arrowscrollbox {
+  #tabbrowser-arrowscrollbox, #pinned-tabs-container {
     &::part(overflow-start-indicator), &::part(overflow-end-indicator) {
       --toolbox-background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) !important;
     }

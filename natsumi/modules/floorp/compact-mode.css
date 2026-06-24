@@ -33,6 +33,34 @@ SOFTWARE.
       top: 0;
     }
 
+    &:has(#navigator-toolbox[movingtab]) #tabbrowser-tabpanels {
+      @media -moz-pref("sidebar.verticalTabs") {
+        @media -moz-pref("sidebar.position_start") {
+          margin-left: var(--natsumi-sidebar-width) !important;
+
+          .deck-selected {
+            margin-left: calc(var(--natsumi-sidebar-width) * -1) !important;
+          }
+        }
+
+        @media not -moz-pref("sidebar.position_start") {
+          margin-right: var(--natsumi-sidebar-width) !important;
+
+          .deck-selected {
+            margin-right: calc(var(--natsumi-sidebar-width) * -1) !important;
+          }
+        }
+      }
+
+      @media not -moz-pref("sidebar.verticalTabs") {
+        margin-top: 40px !important;
+
+        .deck-selected {
+          margin-top: -40px !important;
+        }
+      }
+    }
+
     @media -moz-pref("natsumi.theme.compact-marginless") {
       #panel-sidebar-box:not([data-floating="true"]) {
         --natsumi-sidebar-margin-override: 0;

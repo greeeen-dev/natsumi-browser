@@ -235,6 +235,13 @@ body > * {
   }
 }
 
+:root[inDOMFullscreen="true"] {
+  #natsumi-bottom-toolbar {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
 .split-view-splitter {
   min-width: var(--natsumi-browser-separation) !important;
 }
@@ -759,20 +766,44 @@ splitter:hover {
   }
 
   &:has(#sidebar-box[hidden]) #tabbrowser-tabbox, #sidebar-box {
-    &[sidebar-ongoing-animations] {
-      &[sidebar-launcher-expanded] {
-        animation: sidebar-hover-tabbox-extend 0.4s ease;
-        animation-fill-mode: forwards;
+    @media -moz-pref("browser.nova.enabled") {
+      transition: margin-inline-start 0.4s ease, margin-inline-end 0.4s ease;
+
+      @media -moz-pref("sidebar.position_start") {
+        margin-inline-start: var(--sidebar-launcher-collapsed-width) !important;
       }
 
-      &:not([sidebar-launcher-expanded]) {
-        animation: sidebar-hover-tabbox-collapse 0.4s ease;
-        animation-fill-mode: forwards;
+      @media not -moz-pref("sidebar.position_start") {
+        margin-inline-end: var(--sidebar-launcher-collapsed-width) !important;
+      }
+
+      &[sidebar-launcher-expanded] {
+        @media -moz-pref("sidebar.position_start") {
+          margin-inline-start: var(--natsumi-sidebar-width) !important;
+        }
+
+        @media not -moz-pref("sidebar.position_start") {
+          margin-inline-end: var(--natsumi-sidebar-width) !important;
+        }
       }
     }
 
-    &:not([sidebar-ongoing-animations])[sidebar-launcher-expanded] {
-      margin-inline-start: var(--natsumi-sidebar-width) !important;
+    @media not -moz-pref("browser.nova.enabled") {
+      &[sidebar-ongoing-animations] {
+        &[sidebar-launcher-expanded] {
+          animation: sidebar-hover-tabbox-extend 0.4s ease;
+          animation-fill-mode: forwards;
+        }
+
+        &:not([sidebar-launcher-expanded]) {
+          animation: sidebar-hover-tabbox-collapse 0.4s ease;
+          animation-fill-mode: forwards;
+        }
+      }
+
+      &:not([sidebar-ongoing-animations])[sidebar-launcher-expanded] {
+        margin-inline-start: var(--natsumi-sidebar-width) !important;
+      }
     }
   }
 }

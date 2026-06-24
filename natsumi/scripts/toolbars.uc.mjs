@@ -83,6 +83,14 @@ class NatsumiToolbarManager {
             }
         });
         this.sidebarObserver.observe(this.sidebarNode, {attributes: true, attributeFilter: ["style", "sidebar-launcher-expanded", "sidebar-ongoing-animations"]});
+
+        // Run initial copy
+        this.copySidebarWidth();
+        this.copyTopToolbarHeight();
+        this.copyBottomToolbarHeight();
+        this.copyWindowButtonsWidth();
+        this.copyPinnedTabsHeight();
+        this.copyPinnedToolbarHeight();
     }
 
     initPinnedToolbar() {

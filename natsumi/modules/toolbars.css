@@ -176,6 +176,26 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
     margin-top: calc(var(--natsumi-top-toolbar-offset, 0px) + var(--tab-block-margin) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
   }
 
+  @media -moz-pref("natsumi.browser.type", "floorp") {
+    &:not(:has(#natsumi-workspace-indicator)) {
+      #natsumi-tabs-clearer {
+        margin-top: calc(var(--natsumi-top-toolbar-offset, 0px) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
+      }
+
+      @media -moz-pref("natsumi.sidebar.clear-merge-with-workspaces") or -moz-pref("natsumi.sidebar.hide-clear-tabs") {
+        #vertical-tabs {
+          --natsumi-tabs-padding-offset: calc(var(--natsumi-top-toolbar-offset, 0px) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px);
+        }
+
+        @media not -moz-pref("natsumi.theme.single-toolbar") {
+          #tabbrowser-tabs {
+            padding-top: var(--natsumi-tabs-padding-offset, 0px) !important;
+          }
+        }
+      }
+    }
+  }
+
   @media -moz-pref("natsumi.sidebar.hide-workspace-indicator") or (not -moz-pref("natsumi.browser.type", "floorp")) {
     #natsumi-tabs-clearer {
       margin-top: calc(var(--natsumi-top-toolbar-offset, 0px) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
