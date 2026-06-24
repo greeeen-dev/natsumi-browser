@@ -177,7 +177,7 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
   }
 
   @media -moz-pref("natsumi.browser.type", "floorp") {
-    &:not(:has(natsumi-workspace-indicator)) {
+    &:not(:has(#natsumi-workspace-indicator)) {
       #natsumi-tabs-clearer {
         margin-top: calc(var(--natsumi-top-toolbar-offset, 0px) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
       }
