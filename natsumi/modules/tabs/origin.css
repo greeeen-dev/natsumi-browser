@@ -28,7 +28,7 @@ SOFTWARE.
 /* Origin is a tab design inspired by Natsumi v1. */
 
 @media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "origin") {
-  #tabbrowser-arrowscrollbox .tabbrowser-tab {
+  #tabbrowser-arrowscrollbox .tabbrowser-tab, #natsumi-static-tabs-container .tabbrowser-tab {
     & > .tab-stack > .tab-background {
       transition: background 0.2s ease, box-shadow 0.2s ease !important;
       box-shadow: none !important;
