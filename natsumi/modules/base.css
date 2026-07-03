@@ -86,7 +86,7 @@ body > * {
       }
 
       .browserStack {
-        @media not -moz-pref("natsumi.theme.disable-sdl2") {
+        @media (not -moz-pref("natsumi.theme.disable-sdl2")) and (not -moz-pref("natsumi.theme.no-content-backdrop")) {
           background-color: light-dark(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2));
         }
       }

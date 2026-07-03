@@ -1672,6 +1672,25 @@ function addSDL2Pane() {
         true
     ));
 
+    let sdl2Subgroup = new OptionsGroup(
+        "natsumiSDL2Options",
+        "",
+        ""
+    );
+
+    sdl2Subgroup.registerOption("natsumiSDL2Backdrop", new CheckboxChoice(
+        "natsumi.theme.no-content-backdrop",
+        "natsumiSDL2Backdrop",
+        "Enable web content backdrop",
+        "This does not affect browser.tabs.allow_transparent_browser.",
+        true,
+        false,
+        "natsumi.theme.disable-sdl2",
+        true
+    ));
+
+    sdl2Group.registerOption("natsumiSDL2Options", sdl2Subgroup);
+
     let sdl2Node = sdl2Group.generateNode();
 
     prefsView.insertBefore(sdl2Node, homePane);
