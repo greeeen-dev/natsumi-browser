@@ -259,7 +259,8 @@ body[natsumi-startup-animation] {
   }
 
   #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-  #natsumi-pinned-toolbar, #sidebar-container {
+  #natsumi-pinned-toolbar, #sidebar-container, #natsumi-top-toolbar,
+  #natsumi-bottom-toolbar {
     opacity: 0;
     transition: opacity 0.2s ease !important;
     pointer-events: none !important;
@@ -281,7 +282,8 @@ body[natsumi-startup-animation] {
     }
 
     #sidebar-main, #TabsToolbar-customization-target, #nav-bar-overflow-button,
-    #natsumi-pinned-toolbar, #sidebar-container {
+    #natsumi-pinned-toolbar, #sidebar-container, #natsumi-top-toolbar,
+    #natsumi-bottom-toolbar {
       opacity: 1;
     }
 
