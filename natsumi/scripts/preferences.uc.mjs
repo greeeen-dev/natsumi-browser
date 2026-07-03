@@ -32,14 +32,15 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
-import { NatsumiNotification } from "./notifications.sys.mjs";
+import {NatsumiNotification} from "./notifications.sys.mjs";
 import {FileUpload} from "./files.sys.mjs";
 import {
     customThemeLoader,
     applyCustomTheme,
     CustomThemePicker
 } from "./custom-theme.sys.mjs";
-import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
+import {resetTabStyleIfNeeded} from "./reset-tab-style.sys.mjs";
+import {NatsumiCSSInjector} from "./injector.sys.mjs";
 
 // Get redesign status
 let categoryNode = document.getElementById("categories");
@@ -2919,9 +2920,16 @@ function goodGirlBoyEnby() {
     }
 }
 
+function injectStyles() {
+    let styleInjector = new NatsumiCSSInjector();
+    styleInjector.inject("file-picker.css");
+    styleInjector.inject("theme-builder.css");
+}
+
 console.log("Loading prefs panes...");
 
 try {
+    injectStyles();
     addOptionStyles();
     addToSidebar();
     addPreferencesPanes();
