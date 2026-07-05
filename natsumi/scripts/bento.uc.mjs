@@ -27,6 +27,7 @@ SOFTWARE.
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
 const tempDirectory = PathUtils.join(PathUtils.profileDir, "natsumi-bento-temp");
+const bentoDirectory = PathUtils.join(PathUtils.profileDir, "natsumi-bento");
 const tempFilesDirectory = PathUtils.join(tempDirectory, "files");
 const themesPath = PathUtils.join(PathUtils.profileDir, "natsumi-themes");
 const uploadsPath = PathUtils.join(PathUtils.profileDir, "natsumi-uploads");
@@ -130,6 +131,21 @@ class NatsumiBentoManager {
 
             ucApi.Prefs.set(config["name"], config["value"])
         }
+    }
+
+    async packageBento() {
+        if (!this.working) {
+            throw new Error("Not actively working on a Bento right now");
+        }
+
+        const zipWriter = Cc["@mozilla.org/zipwriter;1"].createInstance(Ci.nsIZipWriter);
+        const zipFile = await IOUtils.getFile(PathUtils.join(bentoDirectory, "my-bento.nbto"));
+
+        if (zipFile.exists()) {
+            await IOUtils.remove(zipFile);
+        }
+
+        // My laptop is breaking down or something. Please help me.
     }
 
     async createTempDirectory(exporting = false) {
@@ -304,8 +320,12 @@ class NatsumiBentoManager {
         }
 
         if (!exportedSomething) {
+            await this.deleteTempDirectory();
             throw new Error("Tried to create an empty Bento, please choose something to export.");
         }
+
+        // Package bento
+
     }
 }
 
