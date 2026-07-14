@@ -244,7 +244,7 @@ SOFTWARE.
             @media not -moz-pref("sidebar.verticalTabs") {
               width: 0;
               height: 2px;
-              top: var(--tab-block-margin);
+              top: var(--tab-block-margin, 2px);
               left: 50%;
               transition: width 0.1s linear, left 0.1s linear;
             }

@@ -70,7 +70,7 @@ SOFTWARE.
 
       @media not -moz-pref("sidebar.verticalTabs") {
         .tab-group-line {
-          margin-bottom: calc(var(--tab-block-margin) * -1);
+          margin-bottom: calc(var(--tab-block-margin, 2px) * -1);
         }
       }
 
@@ -194,7 +194,7 @@ SOFTWARE.
 
   /* Pinned tabs */
   #pinned-tabs-container, #vertical-pinned-tabs-container {
-    --tab-height-with-margin-padding: calc(41px + (2 * var(--tab-block-margin)));
+    --tab-height-with-margin-padding: calc(41px + (2 * var(--tab-block-margin, 2px)));
 
     .tab-background {
       border: none !important;
@@ -269,7 +269,7 @@ SOFTWARE.
 
   #tabbrowser-tabs[expanded] {
     #pinned-tabs-container, #vertical-pinned-tabs-container {
-      --tab-height-with-margin-padding: calc(45px + (2 * var(--tab-block-margin)));
+      --tab-height-with-margin-padding: calc(45px + (2 * var(--tab-block-margin, 2px)));
     }
   }
 

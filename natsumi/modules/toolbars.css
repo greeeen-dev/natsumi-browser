@@ -173,7 +173,7 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
   --natsumi-pinned-toolbar-default: -16px;
 
   #natsumi-workspace-indicator {
-    margin-top: calc(var(--natsumi-top-toolbar-offset, 0px) + var(--tab-block-margin) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
+    margin-top: calc(var(--natsumi-top-toolbar-offset, 0px) + var(--tab-block-margin, 2px) + var(--natsumi-pinned-toolbar-height, var(--natsumi-pinned-toolbar-default)) + 16px) !important;
   }
 
   @media -moz-pref("natsumi.browser.type", "floorp") {

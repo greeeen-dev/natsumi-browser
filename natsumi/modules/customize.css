@@ -91,7 +91,12 @@ SOFTWARE.
     min-height: 40vh !important;
     max-height: 40vh !important;
     animation: customization-appear 0.3s ease;
+    animation-fill-mode: forwards;
     order: 9 !important;
+    margin-bottom: 0 !important;
+    margin-inline: var(--natsumi-browser-separation) !important;
+    border-bottom: none !important;
+    border-radius: var(--natsumi-browser-border-radius) var(--natsumi-browser-border-radius) 0 0 !important;
   }
 
   #customization-panel-container {
@@ -118,5 +123,9 @@ SOFTWARE.
 
   &:has(#navigator-toolbox.fullscreen-with-menubar, #navigator-toolbox.fullscreen-floating-toolbox) #customization-panel-container {
     --natsumi-macos-offset: 62px;
+  }
+
+  #browser {
+    display: flex !important;
   }
 }
