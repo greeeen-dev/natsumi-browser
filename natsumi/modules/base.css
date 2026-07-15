@@ -356,7 +356,7 @@ body > * {
     --toolbarbutton-outer-padding: 4px;
     max-height: 40px !important;
 
-    .toolbarbutton-icon {
+    .toolbarbutton-icon, .ipprotection-icon-layer {
       box-sizing: content-box !important;
       width: 16px !important;
       height: 16px !important;
@@ -377,6 +377,12 @@ body > * {
       }
     }
 
+    .ipprotection-icon-stack .toolbarbutton-icon, .ipprotection-icon-layer {
+      height: 14px !important;
+      padding: 7px !important;
+      width: fit-content !important;
+    }
+
     .toolbarbutton-badge {
       position: absolute !important;
       right: 6px !important;
@@ -384,18 +390,18 @@ body > * {
     }
 
     &:not([disabled]) {
-      &:hover .toolbarbutton-icon:not(.searchmode-switcher-icon) {
+      &:hover .toolbarbutton-icon:not(.searchmode-switcher-icon), &:hover .ipprotection-icon-layer {
         background-color: var(--natsumi-button-hover-color) !important;
       }
 
       &:active, &[open], &[checked] {
-        .toolbarbutton-icon {
+        .toolbarbutton-icon, .ipprotection-icon-layer {
           background-color: var(--natsumi-button-active-color) !important;
           box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
         }
 
         &:hover {
-          .toolbarbutton-icon {
+          .toolbarbutton-icon, .ipprotection-icon-layer {
             background-color: var(--natsumi-button-active-color) !important;
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
           }

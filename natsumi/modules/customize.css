@@ -93,7 +93,6 @@ SOFTWARE.
     animation: customization-appear 0.3s ease;
     animation-fill-mode: forwards;
     order: 9 !important;
-    margin-bottom: 0 !important;
     margin-inline: var(--natsumi-browser-separation) !important;
     border-bottom: none !important;
     border-radius: var(--natsumi-browser-border-radius) var(--natsumi-browser-border-radius) 0 0 !important;
