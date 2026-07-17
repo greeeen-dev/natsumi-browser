@@ -327,9 +327,14 @@ SOFTWARE.
       margin-inline: calc(var(--natsumi-browser-separation) / -2 - 2px) !important;
     }
 
-    #sidebar-splitter, #sidebar-launcher-splitter {
+    #sidebar-splitter, #sidebar-launcher-splitter, #ai-window-splitter {
       margin-inline: calc(var(--natsumi-browser-separation) / -2 - 2px) !important;
       max-width: 4px !important;
+    }
+
+    #ai-window-box {
+      border-radius: var(--natsumi-browser-border-radius);
+      border: 1px solid var(--chrome-content-separator-color) !important;
     }
 
     #nora-statusbar {

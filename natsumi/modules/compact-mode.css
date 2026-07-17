@@ -43,6 +43,31 @@ SOFTWARE.
     }
   }
 
+  &:has(#ai-window-box:not([collapsed])) {
+    #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+      @media -moz-pref("sidebar.position_start") {
+        margin-right: 0 !important;
+      }
+
+      @media not -moz-pref("sidebar.position_start") {
+        margin-left: 0 !important;
+      }
+    }
+  }
+
+  #ai-window-box {
+    margin-top: var(--natsumi-browser-separation) !important;
+    margin-bottom: var(--natsumi-browser-separation) !important;
+
+    @media -moz-pref("sidebar.position_start") {
+      margin-right: var(--natsumi-browser-separation) !important;
+    }
+
+    @media not -moz-pref("sidebar.position_start") {
+      margin-left: var(--natsumi-browser-separation) !important;
+    }
+  }
+
   @media -moz-pref("natsumi.theme.compact-marginless") {
     #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
       margin: 0 !important;
