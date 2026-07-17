@@ -65,16 +65,19 @@ class NatsumiWorkspacesWrapper {
             workspacesContext = this.workspacesModule._.getCtx();
         }
 
+        // Set init to true
+        this.initialized = true;
+
         // This can be lazy, so we can always initialize this later
         if (workspacesContext) {
             this.setManagers(workspacesContext);
         } else {
             console.warn("Workspaces context could not be retrieved, will do this later.");
             this.setInitInterval();
+            return;
         }
 
-        // Set init to true
-        this.initialized = true;
+        this.setProperInit();
     }
 
     setInitInterval() {
@@ -99,19 +102,25 @@ class NatsumiWorkspacesWrapper {
 
                 // Set managers and init status
                 this.setManagers(workspacesContext);
-                this.properInit = true;
-
-                // Signal to all queued classes that they can retrieve data now
-                for (let queuedFunction of this.dataRetrieveQueue) {
-                    queuedFunction();
-                }
-                this.dataRetrieveQueue = [];
-
-                // Clear interval
-                clearInterval(this.initInterval);
-                this.initInterval = null;
+                this.setProperInit();
             }
         }, 100);
+    }
+
+    setProperInit() {
+        this.properInit = true;
+
+        // Signal to all queued classes that they can retrieve data now
+        for (let queuedFunction of this.dataRetrieveQueue) {
+            queuedFunction();
+        }
+        this.dataRetrieveQueue = [];
+
+        // Clear interval (if any)
+        if (this.initInterval) {
+            clearInterval(this.initInterval);
+            this.initInterval = null;
+        }
     }
 
     setManagers(workspacesContext) {
@@ -550,6 +559,14 @@ function getCurrentWorkspaceData() {
 }
 
 function copyWorkspaceName() {
+    if (!document.body.natsumiWorkspacesWrapper.properInit) {
+        console.log("Deferring workspaces name copy");
+        document.body.natsumiWorkspacesWrapper.dataRetrieveQueue.push(() => {
+            copyWorkspaceName();
+        });
+        return;
+    }
+
     let currentWorkspaceData = getCurrentWorkspaceData();
     let sidebar = document.getElementById("sidebar-main");
     sidebar.style.setProperty("--natsumi-workspace-name", `"${currentWorkspaceData["name"]}"`);
@@ -561,6 +578,14 @@ function copyAllWorkspaces() {
 
     if (!workspacesButton) {
         // Mutation observer will take care of this for us
+        return;
+    }
+
+    if (!document.body.natsumiWorkspacesWrapper.properInit) {
+        console.log("Deferring workspaces data copy");
+        document.body.natsumiWorkspacesWrapper.dataRetrieveQueue.push(() => {
+            copyAllWorkspaces();
+        });
         return;
     }
 
@@ -647,6 +672,8 @@ if (isFloorp) {
                 // Initialize workspace pins manager
                 document.body.natsumiWorkspacePinsManager = new NatsumiWorkspacePinsManager();
                 document.body.natsumiWorkspacePinsManager.init();
+            }).catch((e) => {
+                console.error(e);
             });
         }
 
@@ -655,53 +682,31 @@ if (isFloorp) {
         } else {
             // Let mutation observers handle this
             let toolbarsObserver = new MutationObserver(function (mutations) {
-                mutations.forEach(function (mutationRecord) {
+                mutations.forEach(() => {
                     let newWorkspacesButton = document.getElementById("workspaces-toolbar-button");
                     if (newWorkspacesButton) {
                         copyAllWorkspaces();
-
-                        // Ensure workspace button is always visible
-                        let isVerticalTabs = ucApi.Prefs.get("sidebar.verticalTabs").value;
-                        if (isVerticalTabs && newWorkspacesButton.parentNode.id === "TabsToolbar-customization-target") {
-                            // This shouldn't be here
-                            let targetStatusbar = false;
-                            if (ucApi.Prefs.get("natsumi.theme.patch-move-workspaces-to-statusbar").exists) {
-                                targetStatusbar = ucApi.Prefs.get("natsumi.theme.patch-move-workspaces-to-statusbar").value;
-                            }
-
-                            if (targetStatusbar) {
-                                let statusBar = document.getElementById("nora-statusbar");
-                                let existingButtons = statusBar.querySelectorAll("toolbarbutton");
-
-                                if (existingButtons.length === 2) {
-                                    statusBar.insertBefore(newWorkspacesButton, existingButtons[1]);
-                                } else {
-                                    statusBar.appendChild(newWorkspacesButton);
-                                }
-                            } else {
-                                let navbarTarget = document.getElementById("nav-bar-customization-target");
-                                let sidebarNode = navbarTarget.querySelector("sidebar-button");
-
-                                if (sidebarNode) {
-                                    navbarTarget.insertBefore(newWorkspacesButton, sidebarNode.nextSibling);
-                                } else {
-                                    navbarTarget.insertBefore(newWorkspacesButton, navbarTarget.firstChild);
-                                }
-                            }
-                        }
-
                         toolbarsObserver.disconnect(); // Stop observing once the button exists
                     }
                 });
             });
 
-            let toolbox = document.getElementById("nav-bar-customization-target");
-            let statusBar = document.getElementById("nora-statusbar");
+            let observableToolbars = [
+                "nav-bar-customization-target",
+                "PersonalToolbar",
+                "TabsToolbar-customization-target",
+                "natsumi-top-toolbar",
+                "natsumi-bottom-toolbar",
+                "nora-statusbar"
+            ];
 
-            toolbarsObserver.observe(toolbox, {attributes: true, childList: true, subtree: true});
+            for (let toolbarId of observableToolbars) {
+                let toolbar = document.getElementById(toolbarId);
 
-            if (statusBar) {
-                toolbarsObserver.observe(statusBar, {attributes: true, childList: true, subtree: true});
+                if (toolbar) {
+                    console.log("Observing", toolbarId);
+                    toolbarsObserver.observe(toolbar, {attributes: true, childList: true, subtree: true});
+                }
             }
         }
 
