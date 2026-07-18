@@ -77,7 +77,7 @@ SOFTWARE.
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
+    background-image: url("../icons/natsumi-glass.png");
     background-size: 30vh;
 
     @media -moz-pref("natsumi.theme.pride") {
@@ -117,7 +117,7 @@ SOFTWARE.
     #natsumi-startup-xp-icon {
       width: 210px;
       height: 210px;
-      background-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
+      background-image: url("../icons/natsumi-glass.png");
       background-size: 210px;
       rotate: 10deg;
       margin-inline: auto 16px;

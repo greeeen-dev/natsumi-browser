@@ -188,7 +188,7 @@ SOFTWARE.
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    list-style-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
+    list-style-image: url("../icons/natsumi-glass.png");
 
     @media -moz-pref("natsumi.theme.pride") {
       list-style-image: url("../icons/natsumi-pride.png");
@@ -317,7 +317,7 @@ SOFTWARE.
     #natsumi-corner-icon-image {
       width: 50px;
       height: 50px;
-      list-style-image: url("../icons/natsumi-pride.png"); /* revert to natsumi-glass.png */
+      list-style-image: url("../icons/natsumi-glass.png");
       margin-right: 5px !important;
 
       @media -moz-pref("natsumi.theme.pride") {
