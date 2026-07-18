@@ -353,7 +353,7 @@ SOFTWARE.
 
     &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend],
     &:has(#natsumi-top-toolbar toolbarbutton[open]), &:has(#natsumi-bottom-toolbar toolbarbutton[open]),
-    &:has(#natsumi-pinned-toolbar toolbarbutton[open]) &:has(#sidebar-main #tabbrowser-tabs[movingtab], #sidebar-container #tabbrowser-tabs[movingtab]) {
+    &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &:has(#sidebar-main #tabbrowser-tabs[movingtab], #sidebar-container #tabbrowser-tabs[movingtab]) {
       #sidebar-main, #sidebar-container {
         opacity: 1 !important;
 
