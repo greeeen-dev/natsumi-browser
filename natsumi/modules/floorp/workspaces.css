@@ -296,8 +296,8 @@ SOFTWARE.
       -moz-window-dragging: no-drag;
 
       @media -moz-pref("sidebar.verticalTabs") {
-        margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
-        margin-bottom: calc(var(--tab-block-margin) - 2px) !important;
+        margin: var(--tab-block-margin, 2px) var(--tab-inner-inline-margin) !important;
+        margin-bottom: calc(var(--tab-block-margin, 2px) - 2px) !important;
         width: calc(100% - calc(var(--tab-inner-inline-margin) * 2));
         height: 36px;
         padding: 0 calc(var(--tab-inline-padding) - var(--tab-inner-inline-margin)) !important;
@@ -305,7 +305,7 @@ SOFTWARE.
 
       @media not -moz-pref("sidebar.verticalTabs") {
         order: -1 !important;
-        margin: var(--tab-block-margin) var(--tab-inline-padding) !important;
+        margin: var(--tab-block-margin, 2px) var(--tab-inline-padding) !important;
         padding: 0 4px !important;
       }
 

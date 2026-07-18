@@ -32,14 +32,15 @@ SOFTWARE.
 */
 
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
-import { NatsumiNotification } from "./notifications.sys.mjs";
+import {NatsumiNotification} from "./notifications.sys.mjs";
 import {FileUpload} from "./files.sys.mjs";
 import {
     customThemeLoader,
     applyCustomTheme,
     CustomThemePicker
 } from "./custom-theme.sys.mjs";
-import { resetTabStyleIfNeeded } from "./reset-tab-style.sys.mjs";
+import {resetTabStyleIfNeeded} from "./reset-tab-style.sys.mjs";
+import {NatsumiCSSInjector} from "./injector.sys.mjs";
 
 // Get redesign status
 let categoryNode = document.getElementById("categories");
@@ -1671,6 +1672,25 @@ function addSDL2Pane() {
         true
     ));
 
+    let sdl2Subgroup = new OptionsGroup(
+        "natsumiSDL2Options",
+        "",
+        ""
+    );
+
+    sdl2Subgroup.registerOption("natsumiSDL2Backdrop", new CheckboxChoice(
+        "natsumi.theme.no-content-backdrop",
+        "natsumiSDL2Backdrop",
+        "Enable web content backdrop",
+        "This does not affect browser.tabs.allow_transparent_browser.",
+        true,
+        false,
+        "natsumi.theme.disable-sdl2",
+        true
+    ));
+
+    sdl2Group.registerOption("natsumiSDL2Options", sdl2Subgroup);
+
     let sdl2Node = sdl2Group.generateNode();
 
     prefsView.insertBefore(sdl2Node, homePane);
@@ -2919,9 +2939,16 @@ function goodGirlBoyEnby() {
     }
 }
 
+function injectStyles() {
+    let styleInjector = new NatsumiCSSInjector();
+    styleInjector.inject("file-picker.css");
+    styleInjector.inject("theme-builder.css");
+}
+
 console.log("Loading prefs panes...");
 
 try {
+    injectStyles();
     addOptionStyles();
     addToSidebar();
     addPreferencesPanes();

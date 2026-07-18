@@ -110,7 +110,8 @@ function makeCatNoisesAndDoSomeVeryCuteInitialSetupBecauseIFeltVeryCuteWhenWriti
         "meow",
         "mrrp",
         "mrrow",
-        "nya"
+        "nya",
+        "purr"
     ]
     const catNoise = catNoises[Math.floor(Math.random() * catNoises.length)];
     console.log(`${catNoise} :3`);

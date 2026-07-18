@@ -208,7 +208,7 @@ tab-split-view-wrapper {
     border: none !important;
 
     .tab-background {
-      margin-block: var(--tab-block-margin) !important;
+      margin-block: var(--tab-block-margin, 2px) !important;
     }
   }
 }

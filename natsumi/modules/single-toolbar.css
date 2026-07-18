@@ -33,6 +33,11 @@ SOFTWARE.
       z-index: 1 !important;
     }
 
+    #ai-window-box {
+      margin-top: var(--natsumi-browser-separation) !important;
+      transition: margin 0.2s ease;
+    }
+
     body[natsumi-compact-mode] {
       #navigator-toolbox.fullscreen-with-menubar, #navigator-toolbox.fullscreen-floating-toolbox {
         background-color: transparent !important;
@@ -378,7 +383,8 @@ SOFTWARE.
 
     @media not -moz-pref("natsumi.theme.show-bookmarks-on-hover") {
       body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"]), body[natsumi-bookmarks-extend] {
-        #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"] {
+        #tabbrowser-tabbox, #sidebar-splitter, #sidebar-box, #panel-sidebar-box[data-floating="false"],
+        #ai-window-box {
           margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
 
           /* Probably redundant but keeping it here just in case */

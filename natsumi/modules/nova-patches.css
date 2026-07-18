@@ -327,9 +327,14 @@ SOFTWARE.
       margin-inline: calc(var(--natsumi-browser-separation) / -2 - 2px) !important;
     }
 
-    #sidebar-splitter, #sidebar-launcher-splitter {
+    #sidebar-splitter, #sidebar-launcher-splitter, #ai-window-splitter {
       margin-inline: calc(var(--natsumi-browser-separation) / -2 - 2px) !important;
       max-width: 4px !important;
+    }
+
+    #ai-window-box {
+      border-radius: var(--natsumi-browser-border-radius);
+      border: 1px solid var(--chrome-content-separator-color) !important;
     }
 
     #nora-statusbar {
@@ -342,6 +347,42 @@ SOFTWARE.
 
     #natsumi-pinned-toolbar {
       border: 1px solid transparent !important;
+    }
+
+    &[inFullscreen]:not([inDOMFullscreen]) {
+      #navigator-toolbox {
+        margin: var(--natsumi-browser-separation) !important;
+        border-radius: var(--chrome-block-radius) !important;
+      }
+
+      body:not([natsumi-compact-mode]) #browser {
+        padding: 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation);
+      }
+
+      #sidebar-container {
+        /* This only affects FF154 so we don't need to use #sidebar-main */
+        border-radius: var(--chrome-block-radius) !important;
+
+        @media not -moz-pref("natsumi.theme.islands-haze") {
+          border: 1px solid var(--chrome-content-separator-color) !important;
+        }
+
+        &[sidebar-panel-open] {
+          @media -moz-pref("sidebar.position_start") {
+            border-start-end-radius: 0 !important;
+            border-end-end-radius: 0 !important;
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+            border-start-start-radius: 0 !important;
+            border-end-start-radius: 0 !important;
+          }
+        }
+      }
+
+      #urlbar:not([open]) {
+        translate: 0 !important;
+      }
     }
 
     body:not([natsumi-compact-mode]) {

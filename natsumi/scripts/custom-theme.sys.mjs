@@ -581,7 +581,8 @@ export async function applyCustomTheme() {
 }
 
 export class CustomThemePicker {
-    constructor(id, loaderMethod, applyMethod, legacyTargetPref, singleColor = false, allowOpacity = true) {
+    constructor(id, loaderMethod, applyMethod, legacyTargetPref, singleColor = false,
+                allowOpacity = true, floatingTools = false, simplified = false) {
         this.id = id;
         this.loaderMethod = loaderMethod;
         this.applyMethod = applyMethod;
@@ -606,6 +607,8 @@ export class CustomThemePicker {
         this.node = null;
         this.workspace = null;
         this.fileUpload = new FileUpload("natsumi-custom-theme-image-upload", "image");
+        this.floatingTools = floatingTools;
+        this.simplified = simplified;
 
         // Configs
         this.availableLayers = 2;
@@ -826,6 +829,18 @@ export class CustomThemePicker {
         });
 
         toolsButton.addEventListener("click", () => {
+            if (this.simplified) {
+                let toolsWarningNotification = new NatsumiNotification(
+                    "You can't use tools here!",
+                    "Advanced theme customization is available in settings.",
+                    "chrome://natsumi/content/icons/lucide/warning.svg",
+                    10000,
+                    "warning"
+                )
+                toolsWarningNotification.addToContainer();
+                return;
+            }
+
             let toolsContainer = this.node.querySelector(".natsumi-custom-theme-tools-container");
 
             if (toolsContainer.hasAttribute("hidden")) {
@@ -970,6 +985,11 @@ export class CustomThemePicker {
         document.addEventListener("keyup", (event) => {
             this.shiftPressed = event.shiftKey;
         });
+
+        if (this.floatingTools) {
+            let toolsContainer = this.node.querySelector(".natsumi-custom-theme-tools-container");
+            this.node.appendChild(toolsContainer);
+        }
 
         if (isFloorp && floorpWorkspacesEnabled) {
             // Set up workspace selector

@@ -29,51 +29,12 @@ SOFTWARE.
 
 */
 
-// CSS injector for styles that need inline injection
+import {NatsumiCSSInjector} from "./injector.sys.mjs";
 
 const dialogUrls = [
     "chrome://global/content/commonDialog.xhtml",
     "chrome://browser/content/sanitize_v2.xhtml"
 ]
-
-class NatsumiCSSInjector {
-    constructor(targetDoc = null) {
-        this.injected = new Map();
-        this.targetDoc = targetDoc ?? document;
-    }
-
-    inject(filepath, target) {
-        if (this.injected.has(filepath)) {
-            console.error(`Style already exists for ${filepath}`);
-            return;
-        }
-
-        if (!target) {
-            target = this.targetDoc.head;
-
-            if (!target) {
-                target = this.targetDoc.documentElement;
-            }
-        }
-
-        const injectedStyle = this.targetDoc.createElement("link");
-        injectedStyle.rel = "stylesheet"
-        injectedStyle.href = `chrome://natsumi/content/modules/injected/${filepath}`;
-        target.appendChild(injectedStyle);
-        this.injected.set(filepath, injectedStyle);
-        console.log(`Injected ${filepath}`, injectedStyle);
-    }
-
-    remove(filepath) {
-        if (!this.injected.has(filepath)) {
-            console.error(`Style does not exist for ${filepath}`);
-            return;
-        }
-
-        this.injected.get(filepath).remove();
-        this.injected.delete(filepath);
-    }
-}
 
 if (!window.natsumiCSSInjector) {
     try {
@@ -81,6 +42,8 @@ if (!window.natsumiCSSInjector) {
         window.natsumiCSSInjector.inject("linux-border-radius.css");
         window.natsumiCSSInjector.inject("macos-menus.css");
         window.natsumiCSSInjector.inject("tabs-fixes.css");
+        window.natsumiCSSInjector.inject("theme-builder.css");
+        window.natsumiCSSInjector.inject("file-picker.css");
 
         window.addEventListener("DOMContentLoaded", (event) => {
             let targetDoc = event.target;

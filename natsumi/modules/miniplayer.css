@@ -87,7 +87,7 @@ SOFTWARE.
   }
 
   &:not([hide-margin]) {
-    margin: var(--tab-block-margin) var(--tab-inner-inline-margin) !important;
+    margin: var(--tab-block-margin, 2px) var(--tab-inner-inline-margin) !important;
   }
 
   @media -moz-pref("sidebar.verticalTabs") {
@@ -104,7 +104,7 @@ SOFTWARE.
     gap: 10px;
 
     &:not([hide-margin]) {
-      margin-top: calc(var(--tab-block-margin) + 1px) !important;
+      margin-top: calc(var(--tab-block-margin, 2px) + 1px) !important;
     }
   }
 
@@ -119,14 +119,14 @@ SOFTWARE.
   #sidebar-main, #sidebar-container {
     &[sidebar-launcher-expanded] {
       #natsumi-miniplayer-container:not([hide-margin]) {
-        margin: calc(var(--tab-block-margin) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin) - 4px) !important;
+        margin: calc(var(--tab-block-margin, 2px) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin, 2px) - 4px) !important;
         padding: 4px !important;
       }
     }
 
     &:not([sidebar-launcher-expanded]) {
       #natsumi-miniplayer-container:not([hide-margin]) {
-        margin: calc(var(--tab-block-margin) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin) - 4px) !important;
+        margin: calc(var(--tab-block-margin, 2px) + 1px) calc(var(--tab-inner-inline-margin) - 4px) calc(var(--tab-block-margin, 2px) - 4px) !important;
         padding: 4px !important;
       }
     }

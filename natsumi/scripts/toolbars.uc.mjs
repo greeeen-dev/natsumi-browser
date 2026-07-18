@@ -66,7 +66,7 @@ class NatsumiToolbarManager {
         }
 
         // Get sidebar
-        this.sidebarNode = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
+        this.sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
 
         this.sidebarObserver = new MutationObserver(() => {
             this.copySidebarWidth();
@@ -308,7 +308,7 @@ class NatsumiToolbarManager {
     }
 
     copyPinnedToolbarHeight() {
-        let pinnedToolbar = document.querySelector("#natsumi-pinned-toolbar");
+        let pinnedToolbar = document.getElementById("natsumi-pinned-toolbar");
 
         if (!pinnedToolbar) {
             // Probably not initialized yet
@@ -368,7 +368,7 @@ class NatsumiToolbarManager {
             return;
         }
 
-        let sidebar = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
+        let sidebar = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
 
         // Usually the sidebar should always exist, but if it doesn't, we can just return
         if (!sidebar) {
@@ -425,7 +425,12 @@ class NatsumiToolbarManager {
     }
 
     copyBottomToolbarHeight() {
-        let sidebarNode = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
+        if (!CustomizableUI.areas.includes("natsumi-bottom-toolbar")) {
+            document.body.style.removeProperty("--natsumi-bottom-toolbar-height");
+            return;
+        }
+
+        let sidebarNode = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
         let bottomToolbarNode = document.getElementById("natsumi-bottom-toolbar");
         let toolbarWidgets = window.CustomizableUI.getWidgetIdsInArea("natsumi-bottom-toolbar");
 
@@ -460,7 +465,7 @@ class NatsumiToolbarManager {
 
         const width = windowButtonsNode.getBoundingClientRect().width + "px";
 
-        let navBar = document.querySelector("#navigator-toolbox");
+        let navBar = document.getElementById("navigator-toolbox");
 
         if (navBar) {
             navBar.style.setProperty("--natsumi-window-buttons-width", width);
@@ -469,7 +474,7 @@ class NatsumiToolbarManager {
 
     copySidebarOptionsHeight() {
         // The buttons strip is in a shadow root, so we'll need to do some more work here
-        let sidebarNode = (document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main")).querySelector("sidebar-main");
+        let sidebarNode = (document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main")).querySelector("sidebar-main");
         let sidebarNodeSR = sidebarNode.shadowRoot;
 
         if (!sidebarNodeSR) {
@@ -660,24 +665,7 @@ if (!document.body.natsumiButtonsManager) {
     document.body.natsumiButtonsManager.init();
 }
 
-let sidebar = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
-
 if (!document.body.natsumiStatusBarHandler) {
     document.body.natsumiStatusBarHandler = new NatsumiStatusBarHandler();
     document.body.natsumiStatusBarHandler.init();
-}
-
-if (!sidebar) {
-    console.warn("Sidebar not found, trying to find it...");
-    for (let i = 0; i < 10; i++) {
-        sidebar = document.querySelector("#sidebar-container") ?? document.querySelector("#sidebar-main");
-
-        // If the sidebar exists, we can stop searching
-        if (sidebar) {
-            break;
-        }
-
-        // Wait for 1s before trying again
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
 }
