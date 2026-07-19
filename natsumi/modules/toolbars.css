@@ -292,6 +292,12 @@ body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"])
   }
 }
 
+@media not -moz-pref("natsumi.sidebar.top-toolbar") {
+  #natsumi-top-toolbar-container {
+    display: none !important;
+  }
+}
+
 @media -moz-pref("sidebar.verticalTabs") and (-moz-pref("natsumi.sidebar.top-toolbar")) and (not -moz-pref("natsumi.theme.islands")) and (not -moz-pref("natsumi.theme.single-toolbar")) {
   body:not([natsumi-compact-mode]) {
     #natsumi-top-toolbar {
