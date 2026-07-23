@@ -882,7 +882,7 @@ splitter:hover {
     }
 
     @media not -moz-pref("sidebar.position_start") {
-      right: calc(var(--natsumi-browser-separation) + 6px);
+      left: calc(var(--natsumi-browser-separation) + 6px);
     }
 
     @media -moz-pref("sidebar.verticalTabs") {
