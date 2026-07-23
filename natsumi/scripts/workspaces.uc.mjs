@@ -568,7 +568,7 @@ function copyWorkspaceName() {
     }
 
     let currentWorkspaceData = getCurrentWorkspaceData();
-    let sidebar = document.getElementById("sidebar-main");
+    let sidebar = document.getElementById("sidebar-container") ?? document.getElementById("sidebar-main");
     sidebar.style.setProperty("--natsumi-workspace-name", `"${currentWorkspaceData["name"]}"`);
     sidebar.style.setProperty("--natsumi-workspace-icon", currentWorkspaceData["icon"]);
 }
