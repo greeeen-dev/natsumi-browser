@@ -264,7 +264,7 @@ SOFTWARE.
   }
 
   &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend],
-  &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &:has(#sidebar-main #tabbrowser-tabs[movingtab], #sidebar-container #tabbrowser-tabs[movingtab]) {
+  &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &:has(#vertical-tabs #tabbrowser-tabs[movingtab], #vertical-tabs .tab-group-label-container[open]) {
     #sidebar-main, #sidebar-container {
       opacity: 1 !important;
 
@@ -353,7 +353,7 @@ SOFTWARE.
 
     &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend],
     &:has(#natsumi-top-toolbar toolbarbutton[open]), &:has(#natsumi-bottom-toolbar toolbarbutton[open]),
-    &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &:has(#sidebar-main #tabbrowser-tabs[movingtab], #sidebar-container #tabbrowser-tabs[movingtab]) {
+    &:has(#natsumi-pinned-toolbar toolbarbutton[open]), &:has(#vertical-tabs #tabbrowser-tabs[movingtab], #vertical-tabs .tab-group-label-container[open]) {
       #sidebar-main, #sidebar-container {
         opacity: 1 !important;
 
@@ -472,7 +472,7 @@ SOFTWARE.
       &[natsumi-compact-navbar-extend] #navigator-toolbox,
       #navigator-toolbox.fullscreen-with-menubar,
       #navigator-toolbox.fullscreen-floating-toolbox,
-      #navigator-toolbox:has(toolbarbutton[open], #urlbar[focused]) {
+      #navigator-toolbox:has(toolbarbutton[open], #urlbar[focused], .tab-group-label-container[open]) {
         top: 0 !important;
         opacity: 1 !important;
 
@@ -495,7 +495,7 @@ SOFTWARE.
       &[natsumi-compact-navbar-hover], &[natsumi-compact-navbar-extend],
       &:has(#navigator-toolbox.fullscreen-with-menubar),
       &:has(#navigator-toolbox.fullscreen-floating-toolbar),
-      &:has(#navigator-toolbox toolbarbutton[open], #urlbar[focused]) {
+      &:has(#navigator-toolbox toolbarbutton[open], #urlbar[focused], #navigator-toolbox .tab-group-label-container[open]) {
         @media not -moz-pref("natsumi.theme.compact-smaller-sidebar") {
           #sidebar-main, #sidebar-container {
             --natsumi-toolbar-height: 40px;
@@ -599,7 +599,7 @@ SOFTWARE.
       }
     }
 
-    &:has(toolbarbutton[open]), &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend] {
+    &:has(toolbarbutton[open], #vertical-tabs .tab-group-label-container[open]), &[natsumi-compact-sidebar-hover], &[natsumi-compact-sidebar-extend] {
       #sidebar-main, #sidebar-container {
         opacity: 1 !important;
 

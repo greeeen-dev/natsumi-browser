@@ -328,7 +328,6 @@ SOFTWARE.
             margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
             --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 30px);
 
-            /* Probably redundant but keeping it here just in case */
             @media (-moz-platform: windows) {
               margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
               --natsumi-marginless-override: calc(var(--natsumi-browser-separation) + 36px);
@@ -351,9 +350,8 @@ SOFTWARE.
         body[natsumi-bookmarks-hover] {
           --natsumi-internal-margin: calc(-30px - var(--natsumi-browser-separation) + var(--natsumi-actual-browser-separation));
 
-          /* Probably also redundant but adding it just in case */
           @media (-moz-platform: windows) {
-            --natsumi-internal-margin: calc(-36px - var(--natsumi-browser-separation) + var(--natsumi-actual-browser-separation));
+            --natsumi-internal-margin: calc(-34px - var(--natsumi-browser-separation) + var(--natsumi-actual-browser-separation));
           }
 
           .browserContainer, #panel-sidebar-select-box > *:first-child, #sidebar-box .sidebar-browser-stack {
@@ -387,7 +385,6 @@ SOFTWARE.
         #ai-window-box {
           margin-top: calc(var(--natsumi-browser-separation) + 30px) !important;
 
-          /* Probably redundant but keeping it here just in case */
           @media (-moz-platform: windows) {
             margin-top: calc(var(--natsumi-browser-separation) + 36px) !important;
           }
@@ -422,6 +419,12 @@ SOFTWARE.
 
     body[natsumi-compact-mode] #notifications-toolbar {
       display: none;
+    }
+
+    @media (-moz-platform: windows) {
+      #PersonalToolbar .titlebar-buttonbox-container {
+        margin-block: -6px !important;
+      }
     }
   }
 }

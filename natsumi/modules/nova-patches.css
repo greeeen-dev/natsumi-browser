@@ -181,6 +181,22 @@ SOFTWARE.
             backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
             border: var(--natsumi-mat-hz-border-thin) !important;
             box-shadow: var(--natsumi-mat-hz-shadow) !important;
+
+            @media -moz-pref("natsumi.theme.islands-gradient") and -moz-pref("sidebar.verticalTabs") {
+              background-image: var(--toolbox-background-image) !important;
+            }
+          }
+        }
+
+        @media -moz-pref("natsumi.theme.islands-gradient") and (not -moz-pref("sidebar.verticalTabs")) {
+          #navigator-toolbox {
+            overflow: hidden !important;
+          }
+
+          #TabsToolbar {
+            background-image: var(--toolbox-background-image) !important;
+            margin-inline: 0 !important;
+            padding-inline: 6px !important;
           }
         }
 
