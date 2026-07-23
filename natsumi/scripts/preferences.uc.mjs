@@ -1253,6 +1253,13 @@ function addLayoutPane() {
         "This will change the layout to look closer to the Firefox Nova design."
     );
 
+    let novaIslandsGradientCheckbox = new CheckboxChoice(
+        "natsumi.theme.islands-gradient",
+        "natsumiIslandsGradientButton",
+        "Use Nova theme gradient for navigation bar",
+        ""
+    );
+
     let novaIslandsHazeCheckbox = new CheckboxChoice(
         "natsumi.theme.islands-haze",
         "natsumiIslandsHazeButton",
@@ -1321,6 +1328,7 @@ function addLayoutPane() {
     )
 
     layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
+    layoutSelection.registerExtras("natsumiIslandsGradientButtonBox", novaIslandsGradientCheckbox);
     layoutSelection.registerExtras("natsumiIslandsHazeButtonBox", novaIslandsHazeCheckbox);
     layoutSelection.registerExtras("natsumiIslandsHazeOptions", novaIslandsSubgroup);
     layoutSelection.registerExtras("natsumiNoGapsButtonBox", noGapsCheckbox);
