@@ -659,12 +659,8 @@ body > * {
 
 @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
   body[natsumi-append-installed] {
-     #vertical-tabs {
-       min-height: 100% !important;
-     }
-
-    #tabbrowser-tabs::after {
-      border-color: transparent !important;
+    #vertical-tabs {
+      min-height: 100% !important;
     }
   }
 }

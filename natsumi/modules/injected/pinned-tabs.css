@@ -26,11 +26,13 @@ SOFTWARE.
 
 /* ==== Pinned tabs width ==== */
 
-#pinned-tabs-container, #vertical-pinned-tabs-container {
-  &::part(items-wrapper) {
-    grid-template-columns: repeat(auto-fit, minmax(calc(
-            var(--natsumi-pinned-tab-width, var(--tab-pinned-expanded-background-width)) +
-            2 * var(--tab-pinned-margin-inline-expanded)
-    ), auto)) !important;
+@media -moz-pref("sidebar.verticalTabs") {
+  #pinned-tabs-container, #vertical-pinned-tabs-container {
+    &::part(items-wrapper) {
+      grid-template-columns: repeat(auto-fit, minmax(calc(
+              var(--natsumi-pinned-tab-width, var(--tab-pinned-expanded-background-width)) +
+              2 * var(--tab-pinned-margin-inline-expanded)
+      ), auto)) !important;
+    }
   }
 }

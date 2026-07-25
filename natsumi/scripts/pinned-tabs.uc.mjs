@@ -90,6 +90,7 @@ class NatsumiPinnedTabsManager {
         if (ucApi.Prefs.get("natsumi.tabs.pinned-tabs-width").exists) {
             minimumWidth = ucApi.Prefs.get("natsumi.tabs.pinned-tabs-width").value;
         }
+        const isNumber = typeof minimumWidth === "number"
 
         const pinnedTabsStyle = `
             #pinned-tabs-container, #vertical-pinned-tabs-container {
@@ -102,14 +103,14 @@ class NatsumiPinnedTabsManager {
         let currentStyle = document.getElementById("natsumi-pinned-tabs-width");
 
         if (currentStyle) {
-            if (isNaN(minimumWidth)) {
+            if (!isNumber) {
                 currentStyle.remove();
                 return;
             }
 
             currentStyle.textContent = pinnedTabsStyle;
         } else {
-            if (isNaN(minimumWidth)) {
+            if (!isNumber) {
                 return;
             }
 

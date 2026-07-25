@@ -772,6 +772,12 @@ SOFTWARE.
     }
   }
 
+  #natsumiPinnedTabsGroup {
+    @media not -moz-pref("sidebar.verticalTabs") {
+      display: none !important;
+    }
+  }
+
   #natsumiPipMaterialGroup, #natsumiPDFMaterialGroup, #natsumiURLbarLayoutGroup {
     .natsumi-mc-choice {
       .natsumi-mc-choice-image-browser {
