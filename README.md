@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="420" src="./images/kawaii-pride.png">
+  <img width="420" src="./images/kawaii.png">
   <br>
   Natsumi Browser
 </h1>
