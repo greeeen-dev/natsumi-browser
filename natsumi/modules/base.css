@@ -658,12 +658,27 @@ body > * {
 }
 
 @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
-  #vertical-tabs {
-    min-height: 100% !important;
-  }
+  body[natsumi-append-installed] {
+     #vertical-tabs {
+       min-height: 100% !important;
+     }
 
-  #tabbrowser-tabs::after {
-    border-color: transparent !important;
+    #tabbrowser-tabs::after {
+      border-color: transparent !important;
+    }
+  }
+}
+
+/* Hide sidebar controls (CSS only) */
+@media -moz-pref("natsumi.sidebar.hide-sidebar-controls") {
+  body:not([natsumi-append-installed]) {
+    #vertical-tabs {
+      min-height: 100% !important;
+    }
+
+    #tabbrowser-tabs::after {
+      border-color: transparent !important;
+    }
   }
 }
 

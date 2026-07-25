@@ -631,7 +631,7 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
   }
 }
 
-:root:not([customizing]) #sidebar-container, #sidebar-main {
+:root:not([customizing]) body[natsumi-append-installed] #sidebar-container, #sidebar-main {
   &:not([natsumi-bottom-toolbar-empty]) {
     #vertical-tabs {
       @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
