@@ -1954,6 +1954,25 @@ function addSidebarPanelSidebarPane() {
         "When enabled, the Panel Sidebar selection box will hide and float over the browser similarly to the main sidebar in Compact Mode.",
     ));
 
+    let floatingSidebarSubgroup = new OptionsGroup(
+        "natsumiSidebarFloatingPanelSidebarOptions",
+        "",
+        ""
+    );
+
+    floatingSidebarSubgroup.registerOption("natsumiSidebarFloatingPanelSidebar", new CheckboxChoice(
+        "natsumi.sidebar.floorp-smaller-floating-panel",
+        "natsumiSidebarFloatingPanelSidebar",
+        "Smaller Panel Sidebar",
+        "This will reduce the height of the panel sidebar launcher.",
+        false,
+        false,
+        "natsumi.sidebar.floorp-floating-panel",
+        false
+    ));
+
+    panelSidebarGroup.registerOption("natsumiSidebarFloatingPanelSidebarOptions", floatingSidebarSubgroup);
+
     panelSidebarGroup.registerOption("natsumiSidebarOverlayPanelSidebar", new CheckboxChoice(
         "natsumi.sidebar.floorp-overlay-panel",
         "natsumiSidebarOverlayPanelSidebar",

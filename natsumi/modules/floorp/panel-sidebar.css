@@ -413,4 +413,11 @@ SOFTWARE.
       }
     }
   }
+
+  @media -moz-pref("natsumi.sidebar.floorp-smaller-floating-panel") {
+    #panel-sidebar-select-box {
+      top: calc(15vh - var(--natsumi-browser-separation)) !important;
+      max-height: 70vh;
+    }
+  }
 }
