@@ -167,7 +167,7 @@ SOFTWARE.
         }
       }
 
-      #nora-statusbar {
+      #nora-statusbar, #status-bar {
         --toolbar-background-color: var(--natsumi-mat-hz-background) !important;
         --natsumi-status-bar-haze-border: var(--natsumi-mat-hz-border-thin) !important;
         backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
@@ -181,22 +181,6 @@ SOFTWARE.
             backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
             border: var(--natsumi-mat-hz-border-thin) !important;
             box-shadow: var(--natsumi-mat-hz-shadow) !important;
-
-            @media -moz-pref("natsumi.theme.islands-gradient") and -moz-pref("sidebar.verticalTabs") {
-              background-image: var(--toolbox-background-image) !important;
-            }
-          }
-        }
-
-        @media -moz-pref("natsumi.theme.islands-gradient") and (not -moz-pref("sidebar.verticalTabs")) {
-          #navigator-toolbox {
-            overflow: hidden !important;
-          }
-
-          #TabsToolbar {
-            background-image: var(--toolbox-background-image) !important;
-            margin-inline: 0 !important;
-            padding-inline: 6px !important;
           }
         }
 
@@ -226,6 +210,24 @@ SOFTWARE.
             box-shadow: var(--natsumi-mat-hz-shadow) !important;
           }
         }
+      }
+    }
+
+    #navigator-toolbox:not(.fullscreen-with-menubar, .fullscreen-floating-toolbox) {
+      @media -moz-pref("natsumi.theme.islands-gradient") and -moz-pref("sidebar.verticalTabs") {
+        background-image: var(--toolbox-background-image) !important;
+      }
+    }
+
+    @media -moz-pref("natsumi.theme.islands-gradient") and (not -moz-pref("sidebar.verticalTabs")) {
+      #navigator-toolbox {
+        overflow: hidden !important;
+      }
+
+      #TabsToolbar {
+        background-image: var(--toolbox-background-image) !important;
+        margin-inline: 0 !important;
+        padding-inline: 6px !important;
       }
     }
 
@@ -353,7 +355,7 @@ SOFTWARE.
       border: 1px solid var(--chrome-content-separator-color) !important;
     }
 
-    #nora-statusbar {
+    #nora-statusbar, #status-bar {
       margin: 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation);
       border-radius: var(--natsumi-browser-border-radius);
       max-width: calc(100vw - calc(var(--natsumi-browser-separation) * 2));

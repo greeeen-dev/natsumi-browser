@@ -534,7 +534,7 @@ body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"])
 }
 
 @media -moz-pref("natsumi.browser.type", "floorp") or -moz-pref("natsumi.browser.type", "waterfox") {
-  &:not(:has(#nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed="true"])) {
+  &:not(:has(#nora-statusbar.hidden, #nora-statusbar[style*="display:none"], #nora-statusbar[style*="display: none"], #status-bar[collapsed])) {
     body:not([natsumi-compact-mode]) #natsumi-bottom-toolbar {
       bottom: calc(var(--natsumi-browser-separation) + 28px) !important;
     }
