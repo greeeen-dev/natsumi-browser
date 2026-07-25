@@ -44,6 +44,7 @@ if (!window.natsumiCSSInjector) {
         window.natsumiCSSInjector.inject("tabs-fixes.css");
         window.natsumiCSSInjector.inject("theme-builder.css");
         window.natsumiCSSInjector.inject("file-picker.css");
+        window.natsumiCSSInjector.inject("pinned-tabs.css");
 
         window.addEventListener("DOMContentLoaded", (event) => {
             let targetDoc = event.target;

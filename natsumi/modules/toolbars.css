@@ -160,8 +160,13 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
   }
 }
 
-#pinned-tabs-container {
-  @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
+@media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
+  #sidebar-container {
+    --natsumi-top-toolbar-margin: calc(var(--natsumi-pinned-toolbar-height) + 8px);
+    margin-top: calc(var(--natsumi-pinned-toolbar-height) + 8px) !important;
+  }
+
+  &:not(:has(#sidebar-container)) #pinned-tabs-container {
     margin-top: calc(var(--natsumi-pinned-toolbar-height) + 8px) !important;
   }
 }
@@ -655,7 +660,7 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
   border-bottom: var(--tabstrip-inner-border) !important;
 }
 
-#vertical-tabs {
+&:not(:has(#sidebar-container)) #vertical-tabs {
   #tabbrowser-tabs {
     padding-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-top-toolbar-compact-offset, 0px)) !important;
   }
@@ -667,6 +672,10 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
       padding-top: 0 !important;
     }
   }
+}
+
+#sidebar-container {
+  margin-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-top-toolbar-margin, 0px) + var(--natsumi-top-toolbar-compact-offset, 0px)) !important;
 }
 
 :root:not([customizing]) {

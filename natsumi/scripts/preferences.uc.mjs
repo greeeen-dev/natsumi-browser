@@ -2120,6 +2120,34 @@ function addSidebarButtonsPane() {
     prefsView.insertBefore(sidebarButtonsNode, homePane);
 }
 
+function addPinnedTabsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let pinnedTabsGroup = new OptionsGroup(
+        "natsumiPinnedTabs",
+        "Pinned tabs",
+        "Tweak how you want pinned tabs to look and behave."
+    );
+
+    // Tab font size offset slider
+    let pinnedTabsWidthSlider = new SliderChoice(
+        "40",
+        "200",
+        "40",
+        "Pinned tab minimum width",
+        "",
+        "natsumi.tabs.pinned-tabs-width",
+    )
+
+    pinnedTabsGroup.registerOption("natsumiPinnedTabsWidth", pinnedTabsWidthSlider);
+
+    let pinnedTabsNode = pinnedTabsGroup.generateNode();
+
+    prefsView.insertBefore(pinnedTabsNode, homePane);
+}
+
 function addTabsBehaviorPane() {
     let prefsView = document.getElementById("mainPrefPane");
     let homePane = prefsView.querySelector("#firefoxHomeCategory");
@@ -2828,6 +2856,7 @@ function addPreferencesPanes() {
     addSidebarWorkspacesPane();
     addSidebarPanelSidebarPane();
     addSidebarButtonsPane();
+    addPinnedTabsPane();
     addTabsBehaviorPane();
 
     prefsView.insertBefore(compactModeNode, homePane);
