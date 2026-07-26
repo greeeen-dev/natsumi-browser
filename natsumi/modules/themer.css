@@ -162,9 +162,11 @@ SOFTWARE.
     background-image: none !important;
 
     &::after {
-      background-image: var(--lwt-additional-images);
-      background-repeat: var(--lwt-background-tiling);
-      background-position: var(--lwt-background-alignment);
+      @media (-moz-pref("natsumi.theme.type", "default")) or (not -moz-pref("natsumi.theme.type")) {
+        background-image: var(--lwt-additional-images);
+        background-repeat: var(--lwt-background-tiling);
+        background-position: var(--lwt-background-alignment);
+      }
     }
   }
 }
