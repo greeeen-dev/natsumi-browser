@@ -163,7 +163,7 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
 @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
   #sidebar-container {
     --natsumi-top-toolbar-margin: calc(var(--natsumi-pinned-toolbar-height) + 8px);
-    margin-top: calc(var(--natsumi-pinned-toolbar-height) + 8px) !important;
+    padding-top: calc(var(--natsumi-pinned-toolbar-height) + 8px) !important;
   }
 
   &:not(:has(#sidebar-container)) #pinned-tabs-container {
@@ -675,7 +675,7 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
 }
 
 #sidebar-container {
-  margin-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-top-toolbar-margin, 0px) + var(--natsumi-top-toolbar-compact-offset, 0px)) !important;
+  padding-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-top-toolbar-margin, 0px) + var(--natsumi-top-toolbar-compact-offset, 0px)) !important;
 }
 
 :root:not([customizing]) {
