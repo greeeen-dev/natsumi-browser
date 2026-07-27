@@ -572,7 +572,7 @@ class NatsumiMiniplayer {
 
     togglePlayPause() {
         if (this.isPlaying) {
-            this._tab.linkedBrowser.browsingContext.mediaController.pause();
+            this._tab.linkedBrowser.browsingContext.mediaController.pause("user");
         } else {
             this._tab.linkedBrowser.browsingContext.mediaController.play();
         }
@@ -1015,6 +1015,60 @@ async function registerMiniplayer(tab) {
     }
 }
 
+function configureMiniplayerCreator(tab) {
+    if (tab.miniplayerCreator) {
+        try {
+            tab.miniplayerCreator.disconnect();
+        } catch(e) {
+            console.warn("Failed to removing existing mutation observer, proceeding anyway:", e);
+        }
+
+        tab.miniplayerCreator = null;
+    }
+
+    tab.miniplayerCreator = new MutationObserver(() => {
+        if (tab.linkedBrowser.browsingContext.mediaController.isPlaying) {
+            if (!tab.natsumiMiniplayer) {
+                registerMiniplayer(tab);
+            } else {
+                try {
+                    // If this is successful, the metadata still exists
+                    tab.natsumiMiniplayer.getMediaMetadata();
+
+                    // Since metadata exists, we can update some stuff
+                    tab.natsumiMiniplayer.getPlaybackState();
+                } catch(e) {
+                    // Metadata doesn't exist
+                    tab.natsumiMiniplayer.destroy();
+                    tab.natsumiMiniplayer = null;
+                }
+            }
+        } else {
+            if (tab.natsumiMiniplayer) {
+                try {
+                    // If this is successful, the metadata still exists
+                    tab.natsumiMiniplayer.getMediaMetadata();
+
+                    // Since metadata exists, we can update some stuff
+                    tab.natsumiMiniplayer.getPlaybackState();
+                } catch(e) {
+                    // Metadata doesn't exist, so destroy
+                    tab.natsumiMiniplayer.destroy();
+                    tab.natsumiMiniplayer = null;
+                }
+            }
+        }
+    });
+
+    try {
+        tab.miniplayerCreator.observe(tab, {attributes: true, attributeFilter: ["soundplaying"]})
+    } catch(e) {
+        console.error(e);
+    }
+
+    console.log("Configured miniplayer creator for", tab);
+}
+
 let miniplayerContainer = document.getElementById("natsumi-miniplayer-container");
 let miniplayerCounter = null;
 if (!miniplayerContainer) {
@@ -1054,43 +1108,60 @@ if (!miniplayerContainer) {
 }
 
 // Register miniplayer when audio starts playing
-window.gBrowser.addEventListener("DOMAudioPlaybackStarted", (event) => {
-    let tab = window.gBrowser.getTabForBrowser(event.target);
+if (getMajorFirefoxVersion() >= 154) {
+    window.gBrowser.tabContainer.addEventListener("TabBrowserInserted", (event) => {
+        let tab = event.target;
+        configureMiniplayerCreator(tab);
+    });
 
-    if (!tab.natsumiMiniplayer) {
-        registerMiniplayer(tab);
-    } else {
-        try {
-            // If this is successful, the metadata still exists
-            tab.natsumiMiniplayer.getMediaMetadata();
-
-            // Since metadata exists, we can update some stuff
-            tab.natsumiMiniplayer.getPlaybackState();
-        } catch(e) {
-            // Metadata doesn't exist
-            tab.natsumiMiniplayer.destroy();
-            tab.natsumiMiniplayer = null;
+    // Also do this for any open tabs
+    for (let tab of gBrowser.tabs) {
+        if (!tab.linkedBrowser.browsingContext) {
+            // Defer for now
+            continue;
         }
+
+        configureMiniplayerCreator(tab);
     }
-});
+} else {
+    window.gBrowser.addEventListener("DOMAudioPlaybackStarted", (event) => {
+        let tab = window.gBrowser.getTabForBrowser(event.target);
 
-// Destroy miniplayer when audio stops playing (UNLESS metadata still exists)
-window.gBrowser.addEventListener("DOMAudioPlaybackStopped", (event) => {
-    let tab = window.gBrowser.getTabForBrowser(event.target);
-    if (tab.natsumiMiniplayer) {
-        try {
-            // If this is successful, the metadata still exists
-            tab.natsumiMiniplayer.getMediaMetadata();
+        if (!tab.natsumiMiniplayer) {
+            registerMiniplayer(tab);
+        } else {
+            try {
+                // If this is successful, the metadata still exists
+                tab.natsumiMiniplayer.getMediaMetadata();
 
-            // Since metadata exists, we can update some stuff
-            tab.natsumiMiniplayer.getPlaybackState();
-        } catch(e) {
-            // Metadata doesn't exist, so destroy
-            tab.natsumiMiniplayer.destroy();
-            tab.natsumiMiniplayer = null;
+                // Since metadata exists, we can update some stuff
+                tab.natsumiMiniplayer.getPlaybackState();
+            } catch(e) {
+                // Metadata doesn't exist
+                tab.natsumiMiniplayer.destroy();
+                tab.natsumiMiniplayer = null;
+            }
         }
-    }
-});
+    });
+
+    // Destroy miniplayer when audio stops playing (UNLESS metadata still exists)
+    window.gBrowser.addEventListener("DOMAudioPlaybackStopped", (event) => {
+        let tab = window.gBrowser.getTabForBrowser(event.target);
+        if (tab.natsumiMiniplayer) {
+            try {
+                // If this is successful, the metadata still exists
+                tab.natsumiMiniplayer.getMediaMetadata();
+
+                // Since metadata exists, we can update some stuff
+                tab.natsumiMiniplayer.getPlaybackState();
+            } catch(e) {
+                // Metadata doesn't exist, so destroy
+                tab.natsumiMiniplayer.destroy();
+                tab.natsumiMiniplayer = null;
+            }
+        }
+    });
+}
 
 // Add event listener for reloads
 let progressListener = {"onStateChange": (browser, webProgress) => {
@@ -1127,6 +1198,16 @@ window.gBrowser.tabContainer.addEventListener("TabClose", (event) => {
     if (tab.natsumiMiniplayer) {
         tab.natsumiMiniplayer.destroy();
         tab.natsumiMiniplayer = null;
+    }
+
+    if (tab.miniplayerCreator) {
+        try {
+            tab.miniplayerCreator.disconnect();
+        } catch(e) {
+            console.warn("Failed to removing existing mutation observer, proceeding anyway:", e);
+        }
+
+        tab.miniplayerCreator = null;
     }
 });
 window.gBrowser.tabContainer.addEventListener("TabBrowserDiscarded", (event) => {
