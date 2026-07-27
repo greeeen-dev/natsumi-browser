@@ -31,11 +31,6 @@ SOFTWARE.
 
 import { NatsumiActorWrapper } from "./actors/js-actors.js";
 
-function convertToXUL(node) {
-    // noinspection JSUnresolvedReference
-    return window.MozXULElement.parseXULToFragment(node);
-}
-
 let JSWindowActors = {
     NatsumiWeb: {
         parent: {
