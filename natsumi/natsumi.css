@@ -77,6 +77,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 
 /* Waterfox-specific modules */
 @import "modules/waterfox/base.css";
+@import "modules/waterfox/status-bar.css";
 
 /* Finish setup */
 @import "modules/postload.css";

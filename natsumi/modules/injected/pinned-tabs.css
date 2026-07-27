@@ -1,8 +1,3 @@
-// ==UserScript==
-// @include   main
-// @ignorecache
-// ==/UserScript==
-
 /*
 
 Natsumi Browser - Welcome to your personal internet.
@@ -29,42 +24,15 @@ SOFTWARE.
 
 */
 
-import { NatsumiActorWrapper } from "./actors/js-actors.js";
+/* ==== Pinned tabs width ==== */
 
-let JSWindowActors = {
-    NatsumiWeb: {
-        parent: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebParent.sys.mjs"
-        },
-        child: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebChild.sys.mjs",
-            events: {
-                DOMContentLoaded: {},
-                click: {
-                    capture: true
-                },
-                mousedown: {
-                    capture: true
-                },
-                mouseup: {
-                    capture: true
-                },
-                drag: {
-                    capture: true
-                }
-            },
-        },
-        allFrames: true,
-        safeForUntrustedWebProcess: true,
-        matches: [
-            "https://natsumi.greeeen.dev/*"
-        ]
+@media -moz-pref("sidebar.verticalTabs") {
+  #pinned-tabs-container, #vertical-pinned-tabs-container {
+    &::part(items-wrapper) {
+      grid-template-columns: repeat(auto-fit, minmax(calc(
+              var(--natsumi-pinned-tab-width, var(--tab-pinned-expanded-background-width)) +
+              2 * var(--tab-pinned-margin-inline-expanded)
+      ), auto)) !important;
     }
-}
-
-try {
-    let actorWrapper = new NatsumiActorWrapper();
-    actorWrapper.addWindowActors(JSWindowActors);
-} catch (e) {
-    console.error("Failed to add Natsumi JS Window Actors:", e);
+  }
 }

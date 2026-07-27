@@ -1339,6 +1339,7 @@ let JSWindowActors = {
             },
         },
         allFrames: true,
+        safeForUntrustedWebProcess: true,
         matches: [
             "*://*/*"
         ],
@@ -1366,6 +1367,7 @@ if (!window.natsumiGlimpseChainer) {
 try {
     let actorWrapper = new NatsumiActorWrapper();
     actorWrapper.addWindowActors(JSWindowActors);
+    console.log("Actors added");
 } catch (e) {
     console.error("Failed to add Natsumi JS Window Actors:", e);
 }

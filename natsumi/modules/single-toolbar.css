@@ -121,7 +121,7 @@ SOFTWARE.
       }
     }
 
-    #vertical-tabs {
+    #sidebar-container, #vertical-tabs {
       --natsumi-single-toolbar-offset: calc(var(--natsumi-tabs-padding-offset, 0px) + 82px);
     }
 

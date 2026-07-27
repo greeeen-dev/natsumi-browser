@@ -1,8 +1,3 @@
-// ==UserScript==
-// @include   main
-// @ignorecache
-// ==/UserScript==
-
 /*
 
 Natsumi Browser - Welcome to your personal internet.
@@ -29,42 +24,19 @@ SOFTWARE.
 
 */
 
-import { NatsumiActorWrapper } from "./actors/js-actors.js";
+/* ==== Waterfox Status Bar ==== */
 
-let JSWindowActors = {
-    NatsumiWeb: {
-        parent: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebParent.sys.mjs"
-        },
-        child: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebChild.sys.mjs",
-            events: {
-                DOMContentLoaded: {},
-                click: {
-                    capture: true
-                },
-                mousedown: {
-                    capture: true
-                },
-                mouseup: {
-                    capture: true
-                },
-                drag: {
-                    capture: true
-                }
-            },
-        },
-        allFrames: true,
-        safeForUntrustedWebProcess: true,
-        matches: [
-            "https://natsumi.greeeen.dev/*"
-        ]
+@media -moz-pref("natsumi.browser.type", "waterfox") {
+  #status-bar {
+    background: var(--natsumi-status-bar-background, transparent) !important;
+    border: var(--natsumi-status-bar-border, none) !important;
+
+    @media -moz-pref("browser.nova.enabled") and (not -moz-pref("natsumi.theme.islands")) {
+      margin-bottom: 0 !important;
     }
-}
 
-try {
-    let actorWrapper = new NatsumiActorWrapper();
-    actorWrapper.addWindowActors(JSWindowActors);
-} catch (e) {
-    console.error("Failed to add Natsumi JS Window Actors:", e);
+    &:not([collapsed]), &[collapsed="false"] {
+      min-height: 28px !important;
+    }
+  }
 }

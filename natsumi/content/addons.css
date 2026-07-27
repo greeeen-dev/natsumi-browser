@@ -80,6 +80,7 @@ SOFTWARE.
         margin-inline: -4px;
         margin-bottom: 4px !important;
         padding-right: var(--space-xxlarge);
+        z-index: 1;
 
         &::before {
           content: "";

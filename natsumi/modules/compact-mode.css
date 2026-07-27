@@ -254,6 +254,18 @@ SOFTWARE.
       }
     }
 
+    #sidebar-container {
+      @media -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
+        @media not -moz-pref("natsumi.theme.single-toolbar") {
+          padding-top: calc(20px + var(--natsumi-pinned-toolbar-height)) !important;
+        }
+
+        @media -moz-pref("natsumi.theme.single-toolbar") {
+          padding-top: calc(90px + var(--natsumi-pinned-toolbar-height)) !important;
+        }
+      }
+    }
+
     &[natsumi-custom-theme-has-image] {
       #sidebar-main, #sidebar-container {
         @media not -moz-pref("natsumi.theme.compact-sidebar-accent") {
@@ -566,6 +578,7 @@ SOFTWARE.
       position: absolute !important;
       z-index: 999 !important;
       top: var(--natsumi-browser-separation) !important;
+      margin: 0 !important;
       transition: left 0.2s ease, right 0.2s ease !important;
       --natsumi-compact-offset: calc(var(--natsumi-sidebar-width) - var(--natsumi-compact-hoverable) + var(--natsumi-browser-separation));
 

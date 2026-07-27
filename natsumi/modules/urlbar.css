@@ -59,6 +59,9 @@ SOFTWARE.
     --natsumi-urlbar-hover-background-color: var(--natsumi-colors-urlbar-background);
     --natsumi-urlbar-search-engine-color: var(--natsumi-button-hover-color);
     --natsumi-urlbar-search-engine-text: light-dark(black, white);
+    --urlbar-basic-component-size: 26px !important;
+    --urlbar-icon-padding: 5px !important;
+
     transition: backdrop-filter 0.2s ease;
 
     &:not([breakout]) {
