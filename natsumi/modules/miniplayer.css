@@ -87,7 +87,7 @@ SOFTWARE.
   }
 
   &:not([hide-margin]) {
-    margin: var(--tab-block-margin, 2px) var(--tab-inner-inline-margin) !important;
+    margin: var(--tab-block-margin, 2px) var(--space-medium) !important;
   }
 
   @media -moz-pref("sidebar.verticalTabs") {
