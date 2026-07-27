@@ -58,6 +58,20 @@ SOFTWARE.
   }
 }
 
+@keyframes extension-access-request {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 #nav-bar {
   border: none !important;
 }
@@ -990,5 +1004,61 @@ body[natsumi-editing-theme] {
 
   #context-navigation:not([hidden]) {
     height: 28px;
+  }
+}
+
+@media -moz-pref("natsumi.theme.compact-extensions") {
+  #unified-extensions-panel {
+    .unified-extensions-item-action-button {
+      padding-block: 0 !important;
+      max-height: 36px !important;
+
+      .unified-extensions-item-message-deck {
+        display: none !important;
+      }
+
+      .toolbarbutton-icon, .unified-extensions-item-icon {
+        width: 16px !important;
+        height: 16px !important;
+      }
+
+      .unified-extensions-item-contents {
+        margin-right: 6px !important;
+        overflow: hidden;
+      }
+
+      .unified-extensions-item-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:not(:hover):not([disabled]) {
+        &:has(label[data-l10n-id="origin-controls-state-no-access"]) {
+          opacity: 0.5 !important;
+        }
+
+        &:has(label[data-l10n-id="origin-controls-state-when-clicked"]) {
+          animation: extension-access-request 1.5s linear infinite;
+        }
+      }
+    }
+
+    .unified-extensions-item-menu-button {
+      padding-block: 0 !important;
+      max-height: 36px !important;
+    }
+
+    .panel-header {
+      display: none !important;
+    }
+
+    toolbarseparator:first-of-type {
+      display: none !important;
+    }
+
+    .panel-subview-body {
+      margin-top: 6px !important;
+    }
   }
 }

@@ -2788,22 +2788,77 @@ function addMiscPreferencesPane() {
         "Hide subcategories list"
     ));
 
-    miscPreferencesGroup.registerOption("natsumiMiscCopyCleanUrl", new CheckboxChoice(
+    let miscPreferencesNode = miscPreferencesGroup.generateNode();
+
+    prefsView.insertBefore(miscPreferencesNode, homePane);
+}
+
+function addMiscPanelsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let miscPanelsGroup = new OptionsGroup(
+        "natsumiMiscPanels",
+        "Panels",
+        "Tweak how you want panels or popups to look."
+    );
+
+    miscPanelsGroup.registerOption("natsumiMiscCompactExtensions", new CheckboxChoice(
+        "natsumi.theme.compact-extensions",
+        "natsumiMiscCompactExtensions",
+        "Compact Extensions panel",
+        ""
+    ));
+
+    let miscPanelsNode = miscPanelsGroup.generateNode();
+
+    prefsView.insertBefore(miscPanelsNode, homePane);
+}
+
+function addMiscShortcutsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let miscShortcutsGroup = new OptionsGroup(
+        "natsumiMiscShortcuts",
+        "Shortcuts",
+        "Tweak how you want some shortcuts to behave."
+    );
+
+    miscShortcutsGroup.registerOption("natsumiMiscCopyCleanUrl", new CheckboxChoice(
         "natsumi.browser.copy-clean-link",
         "natsumiMiscCopyCleanUrl",
         "Copy clean URL with shortcut where possible"
     ));
 
-    miscPreferencesGroup.registerOption("natsumiMiscInvertedScroll", new CheckboxChoice(
+    let miscShortcutsNode = miscShortcutsGroup.generateNode();
+
+    prefsView.insertBefore(miscShortcutsNode, homePane);
+}
+
+function addMiscInteractionsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Create choices group
+    let miscInteractionsGroup = new OptionsGroup(
+        "natsumiMiscInteractions",
+        "Interactions",
+        "Tweak how you want some interactions to behave."
+    );
+
+    miscInteractionsGroup.registerOption("natsumiMiscInvertedScroll", new CheckboxChoice(
         "natsumi.browser.invert-scroll",
         "natsumiMiscInvertedScroll",
         "Invert scroll direction",
         "This will invert the scroll direction for some Natsumi features. This does NOT affect web content."
     ));
 
-    let miscPreferencesNode = miscPreferencesGroup.generateNode();
+    let miscInteractionsNode = miscInteractionsGroup.generateNode();
 
-    prefsView.insertBefore(miscPreferencesNode, homePane);
+    prefsView.insertBefore(miscInteractionsNode, homePane);
 }
 
 function addPreferencesPanes() {
@@ -2927,6 +2982,9 @@ function addPreferencesPanes() {
 
     prefsView.insertBefore(miscNode, homePane);
     addMiscPreferencesPane();
+    addMiscPanelsPane();
+    addMiscShortcutsPane();
+    addMiscInteractionsPane();
 }
 
 function addHideFloorpWarnings() {
