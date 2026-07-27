@@ -60,6 +60,7 @@ let JSWindowActors = {
             },
         },
         allFrames: true,
+        safeForUntrustedWebProcess: true,
         matches: [
             "https://natsumi.greeeen.dev/*"
         ]
