@@ -395,7 +395,7 @@ class NatsumiMiniplayer {
         }
 
         this._initialized = true;
-        miniplayerCounter.updateCount();
+        document.body.natsumiMiniplayerCounter.updateCount();
     }
 
     registerEventHandlers() {
@@ -944,7 +944,7 @@ class NatsumiMiniplayer {
         if (this._node) {
             this._node.setAttribute("hidden", "true");
         }
-        miniplayerCounter.updateCount();
+        document.body.natsumiMiniplayerCounter.updateCount();
     }
 
     showMiniplayer() {
@@ -952,10 +952,10 @@ class NatsumiMiniplayer {
 
         if (this._node && this._node.hasAttribute("hidden")) {
             this._node.removeAttribute("hidden");
-            miniplayerCounter.updateCount();
+            document.body.natsumiMiniplayerCounter.updateCount();
             this.refreshMetadataAnimations();
         } else {
-            miniplayerCounter.updateCount();
+            document.body.natsumiMiniplayerCounter.updateCount();
         }
     }
 
@@ -993,7 +993,7 @@ class NatsumiMiniplayer {
         }
         this._node = null;
         this._initialized = false;
-        miniplayerCounter.updateCount();
+        document.body.natsumiMiniplayerCounter.updateCount();
     }
 }
 
@@ -1070,7 +1070,6 @@ function configureMiniplayerCreator(tab) {
 }
 
 let miniplayerContainer = document.getElementById("natsumi-miniplayer-container");
-let miniplayerCounter = null;
 if (!miniplayerContainer) {
     let isVerticalTabs = ucApi.Prefs.get("sidebar.verticalTabs").value;
     let tabsContainer = document.getElementById("vertical-tabs");
@@ -1085,12 +1084,12 @@ if (!miniplayerContainer) {
         navBarLastButton.parentElement.insertBefore(miniplayerContainer, navBarLastButton);
     }
 
-    miniplayerCounter = new NatsumiMiniplayerCounter(miniplayerContainer);
-    miniplayerCounter.init();
+    document.body.natsumiMiniplayerCounter = new NatsumiMiniplayerCounter(miniplayerContainer);
+    document.body.natsumiMiniplayerCounter.init();
 
     Services.prefs.addObserver("sidebar.verticalTabs", () => {
         if (ucApi.Prefs.get("sidebar.verticalTabs").value) {
-            tabsContainer.insertBefore(miniplayerContainer, miniplayerCounter.node);
+            tabsContainer.insertBefore(miniplayerContainer, document.body.natsumiMiniplayerCounter.node);
 
             // Refresh miniplayer text scroll
             for (let miniplayerNode of miniplayerContainer.querySelectorAll(".natsumi-miniplayer")) {
