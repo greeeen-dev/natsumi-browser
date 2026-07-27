@@ -220,10 +220,6 @@ SOFTWARE.
     }
 
     @media -moz-pref("natsumi.theme.islands-gradient") and (not -moz-pref("sidebar.verticalTabs")) {
-      #navigator-toolbox {
-        overflow: hidden !important;
-      }
-
       #TabsToolbar {
         background-image: var(--toolbox-background-image) !important;
         margin-inline: 0 !important;
@@ -577,6 +573,7 @@ SOFTWARE.
       border-radius: 0 !important;
       background-image: none !important;
       translate: 0 !important;
+      overflow: visible !important;
     }
 
     #PersonalToolbar .titlebar-buttonbox {
@@ -664,10 +661,6 @@ SOFTWARE.
     margin-top: 0 !important;
     background: transparent !important;
     min-height: 30px;
-  }
-
-  #navigator-toolbox {
-    overflow: visible !important;
   }
 
   #PersonalToolbar {
