@@ -1,0 +1,110 @@
+/*
+
+Natsumi Browser - Welcome to your personal internet.
+
+Copyright (c) 2024-present Green (@greeeen-dev)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* ==== Pinned tabs design (Dynamic) ==== */
+/* Dynamic inherits the favicon image for better distinction between pinned tabs. */
+
+@media not -moz-pref("natsumi.tabs.pinned-use-custom-type") {
+  #pinned-tabs-container, #vertical-pinned-tabs-container {
+    --tab-height-with-margin-padding: calc(41px + (2 * var(--tab-block-margin, 2px)));
+
+    .tab-background {
+      border: none !important;
+      border-radius: var(--natsumi-tab-border-radius) !important;
+      transition: background-color 0.2s ease;
+    }
+
+    .tabbrowser-tab {
+      .tab-stack {
+        transition: scale 0.2s ease;
+      }
+
+      &:active:not([style*="transform"]) .tab-stack {
+        scale: 0.95 !important;
+      }
+    }
+
+    @media not -moz-pref("natsumi.tabs.disable-pinned-tabs-favicon") {
+      .tab-background::before {
+        content: "";
+        width: 200% !important;
+        height: 200% !important;
+        left: 50% !important;
+        top: 50% !important;
+        translate: -50% -50% !important;
+        opacity: 0;
+        transition: opacity 0.2s ease !important;
+      }
+
+      .tab-background::after {
+        background-color: transparent;
+        transition: background-color 0.2s ease;
+      }
+    }
+
+    .tabbrowser-tab[selected], .tabbrowser-tab[natsumi-glimpse-selected] {
+      &[style*="--natsumi-tab-icon"] {
+        .tab-background {
+          background: transparent !important;
+          overflow: clip !important;
+          position: relative !important;
+        }
+
+        .tab-background::before {
+          background-image: var(--natsumi-tab-icon);
+          background-position: center;
+          background-size: contain !important;
+          position: absolute;
+          background-clip: padding-box !important;
+          filter: blur(20px) saturate(200%);
+          border-radius: var(--natsumi-tab-border-radius);
+          opacity: 1;
+        }
+
+        .tab-background::after {
+          content: "";
+          position: absolute;
+          margin-right: 2px !important;
+          margin-top: 2px !important;
+          width: calc(100% - 4px);
+          height: calc(100% - 4px);
+          background: var(--natsumi-mat-hz-background);
+          border-radius: calc(var(--natsumi-tab-border-radius) - 2px);
+
+          @media not -moz-pref("sidebar.verticalTabs") {
+            margin-left: 2px !important;
+          }
+        }
+      }
+    }
+  }
+
+  #tabbrowser-tabs[expanded] {
+    #pinned-tabs-container, #vertical-pinned-tabs-container {
+      --tab-height-with-margin-padding: calc(45px + (2 * var(--tab-block-margin, 2px)));
+    }
+  }
+}

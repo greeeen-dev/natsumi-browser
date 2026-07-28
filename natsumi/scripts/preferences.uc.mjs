@@ -767,6 +767,54 @@ const tabDesigns = {
     )
 }
 
+const pinnedTabDesigns = {
+    "default": new MCChoice(
+        "default",
+        "Dynamic",
+        "Sleek and adjustable",
+        `
+            <div id='pinned-tab-dynamic' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab' selected="">
+                    <div class='natsumi-mc-tab-icon'></div>
+                </div>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                </div>
+            </div>
+        `
+    ),
+    "neutron": new MCChoice(
+        "neutron",
+        "Neutron",
+        "Proton-style pinned tabs",
+        `
+            <div id='pinned-tab-neutron' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab' selected="">
+                    <div class='natsumi-mc-tab-icon'></div>
+                </div>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                </div>
+            </div>
+        `
+    ),
+    "classic": new MCChoice(
+        "classic",
+        "Classic",
+        "Standard Firefox pinned tabs",
+        `
+            <div id='pinned-tab-classic' class='natsumi-mc-choice-image-browser'>
+                <div class='natsumi-mc-tab' selected="">
+                    <div class='natsumi-mc-tab-icon'></div>
+                </div>
+                <div class='natsumi-mc-tab'>
+                    <div class='natsumi-mc-tab-icon'></div>
+                </div>
+            </div>
+        `
+    )
+}
+
 const urlbarLayouts = {
     "floating": new MCChoice(
         false,
@@ -1842,6 +1890,81 @@ function addSidebarTabsPane() {
     prefsView.insertBefore(tabDesignNode, homePane);
 }
 
+function addSidebarPinnedTabsPane() {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    // Ensure Blade is always used when custom styles is off
+    let selectedOverride = null;
+    if (ucApi.Prefs.get("natsumi.tabs.pinned-use-custom-type").exists()) {
+        if (!(ucApi.Prefs.get("natsumi.tabs.pinned-use-custom-type").value)) {
+            selectedOverride = "default";
+        }
+    }
+
+    // Create theme selection
+    let pinnedTabDesignSelection = new MultipleChoicePreference(
+        "natsumiPinnedTabDesign",
+        "natsumi.tabs.pinned-type",
+        "Pinned tabs",
+        "Choose the design you want for your tabs.",
+        selectedOverride,
+        "natsumi.tabs.pinned-use-custom-type"
+    );
+
+    for (let style in pinnedTabDesigns) {
+        pinnedTabDesignSelection.registerOption(style, pinnedTabDesigns[style]);
+    }
+
+    // Tab font size offset slider
+    let pinnedTabsWidthSlider = new SliderChoice(
+        "40",
+        "200",
+        "40",
+        "Pinned tab minimum width",
+        "",
+        "natsumi.tabs.pinned-tabs-width",
+    )
+
+    pinnedTabDesignSelection.registerExtras("natsumiPinnedTabsWidth", pinnedTabsWidthSlider);
+
+    let pinnedTabDesignNode = pinnedTabDesignSelection.generateNode();
+
+    // Set listeners for each button
+    let pinnedTabDesignButtons = pinnedTabDesignNode.querySelectorAll(".natsumi-mc-choice");
+    pinnedTabDesignButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            let selectedValue = button.getAttribute("value");
+
+            // Reset Floorp tab styles if needed
+            if (selectedValue !== "classic") {
+                // Check if we're on Floorp
+                if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
+                    if (ucApi.Prefs.get("natsumi.browser.type").value !== "floorp") {
+                        return;
+                    }
+                } else {
+                    // Assume we're on Firefox
+                    return;
+                }
+
+                let resetStyle = resetTabStyleIfNeeded();
+                if (resetStyle) {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Heads up: your tab style was reset to Proton.",
+                        "If you want to use other tab styles, simply enable the Classic tab design in settings.",
+                        "chrome://natsumi/content/icons/lucide/info.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                }
+            }
+        });
+    });
+
+    prefsView.insertBefore(pinnedTabDesignNode, homePane);
+}
+
 function addSidebarWorkspacesPane() {
     // Note: This is a Floorp-only feature, it shouldn't be seen on other browsers
     if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
@@ -2137,34 +2260,6 @@ function addSidebarButtonsPane() {
     let sidebarButtonsNode = buttonsGroup.generateNode();
 
     prefsView.insertBefore(sidebarButtonsNode, homePane);
-}
-
-function addPinnedTabsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
-    // Create choices group
-    let pinnedTabsGroup = new OptionsGroup(
-        "natsumiPinnedTabs",
-        "Pinned tabs",
-        "Tweak how you want pinned tabs to look and behave."
-    );
-
-    // Tab font size offset slider
-    let pinnedTabsWidthSlider = new SliderChoice(
-        "40",
-        "200",
-        "40",
-        "Pinned tab minimum width",
-        "",
-        "natsumi.tabs.pinned-tabs-width",
-    )
-
-    pinnedTabsGroup.registerOption("natsumiPinnedTabsWidth", pinnedTabsWidthSlider);
-
-    let pinnedTabsNode = pinnedTabsGroup.generateNode();
-
-    prefsView.insertBefore(pinnedTabsNode, homePane);
 }
 
 function addTabsBehaviorPane() {
@@ -2927,10 +3022,10 @@ function addPreferencesPanes() {
 
     prefsView.insertBefore(sidebarNode, homePane);
     addSidebarTabsPane();
+    addSidebarPinnedTabsPane();
     addSidebarWorkspacesPane();
     addSidebarPanelSidebarPane();
     addSidebarButtonsPane();
-    addPinnedTabsPane();
     addTabsBehaviorPane();
 
     prefsView.insertBefore(compactModeNode, homePane);

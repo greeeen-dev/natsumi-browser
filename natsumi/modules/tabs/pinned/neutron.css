@@ -24,46 +24,24 @@ SOFTWARE.
 
 */
 
-/* ==== Tabs design (Neutron) ==== */
-/* A Proton-like tab design for Firefox Nova */
+/* ==== Pinned tabs design (Neutron) ==== */
+/* A Proton-like tab design for Firefox Nova, ported to pinned tabs */
 
-@media -moz-pref("natsumi.tabs.use-custom-type") and -moz-pref("natsumi.tabs.type", "neutron") and -moz-pref("browser.nova.enabled") {
-  #tabbrowser-arrowscrollbox .tabbrowser-tab {
-    & > .tab-stack > .tab-background {
-      border-radius: 8px !important;
-      border: none !important;
-      background-image: none !important;
+@media -moz-pref("natsumi.tabs.pinned-use-custom-type") and -moz-pref("natsumi.tabs.pinned-type", "neutron") and -moz-pref("browser.nova.enabled") {
+  #pinned-tabs-container, #vertical-pinned-tabs-container {
+    .tabbrowser-tab {
+      & > .tab-stack > .tab-background {
+        border-radius: 8px !important;
+        border: none !important;
+        background-image: none !important;
+      }
     }
 
-    &[selected], &[multiselected], &[natsumi-glimpse-selected] {
+    .tabbrowser-tab[selected], .tabbrowser-tab[natsumi-glimpse-selected] {
       & > .tab-stack > .tab-background {
         background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
         box-shadow: var(--box-shadow-level-1) !important;
         outline-color: var(--tab-selected-outline-color);
-      }
-    }
-  }
-
-  tab-split-view-wrapper {
-    .tabbrowser-tab {
-      padding-block: 3px 2px !important;
-    }
-  }
-
-  #tabbrowser-tabs:not([expanded]) {
-    tab-split-view-wrapper {
-      .tabbrowser-tab {
-        min-width: 36px !important;
-        max-width: 36px !important;
-        margin-inline: 2px !important;
-
-        & > .tab-stack > .tab-content {
-          padding-inline: 10px !important;
-        }
-
-        & > .tab-stack > .tab-background {
-          margin-inline: auto !important;
-        }
       }
     }
   }

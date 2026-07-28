@@ -38,6 +38,10 @@ SOFTWARE.
 @import url("tabs/neutron.css");
 @import url("tabs/classic.css");
 
+/* Import pinned tab designs */
+@import url("tabs/pinned/dynamic.css");
+@import url("tabs/pinned/neutron.css");
+
 @keyframes natsumi-tab-appear {
   from {
     opacity: 0;
