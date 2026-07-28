@@ -61,10 +61,8 @@ SOFTWARE.
   }
 
   @media not -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
-    &:has(#vertical-pinned-tabs-splitter[hidden]) {
-      #sidebar-container {
-        --natsumi-top-toolbar-margin: calc(var(--natsumi-pinned-toolbar-height, -8px) + 8px);
-      }
+    #sidebar-container {
+      --natsumi-top-toolbar-margin: calc(var(--natsumi-pinned-toolbar-height, -8px) + 8px);
     }
   }
 
