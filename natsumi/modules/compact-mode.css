@@ -264,6 +264,16 @@ SOFTWARE.
           padding-top: calc(90px + var(--natsumi-pinned-toolbar-height)) !important;
         }
       }
+
+      &:has(#pinned-tabs-container:empty) {
+        @media not -moz-pref("natsumi.theme.single-toolbar") {
+          padding-top: calc(20px + var(--natsumi-pinned-toolbar-height)) !important;
+        }
+
+        @media -moz-pref("natsumi.theme.single-toolbar") {
+          padding-top: calc(90px + var(--natsumi-pinned-toolbar-height)) !important;
+        }
+      }
     }
 
     &[natsumi-custom-theme-has-image] {
