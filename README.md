@@ -385,12 +385,11 @@ Using a different Firefox-based browser? Let me know and I'll see if I can add s
 
 ## FAQs
 ### "Does Natsumi support the new Firefox Nova redesign?"
-Yes (sort of) - Natsumi is compatible with the current spec for **Firefox 152 and above**.
+Yes - Natsumi is compatible with the Firefox Nova redesign (and works great)!
 
-Firefox Nova is still in early development and constantly changing. Each Natsumi release will aim to
-address these changes, so that once Firefox Nova is complete and rolled out, Natsumi will be
-**Firefox Nova-ready from day one** while being fully backwards compatible with the old Proton design
-for older supported versions.
+Although Natsumi is Proton design native by default, it's been gradually getting patches every update
+to work with Firefox Nova as it was developed. Thanks to these efforts, Natsumi will be **Firefox
+Nova-ready from day one** while being fully backwards compatible with the old Proton design!
 
 ### "Can I disable individual features?"
 You can disable some features using the configuration options.

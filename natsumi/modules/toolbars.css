@@ -530,6 +530,14 @@ body:has(#PersonalToolbar:not([collapsed]), #PersonalToolbar[collapsed="false"])
 
 body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bottom-toolbar {
   left: 7px;
+
+  @media (not -moz-pref("sidebar.verticalTabs")) and -moz-pref("browser.nova.enabled") {
+    left: 2px;
+
+    @media -moz-pref("natsumi.theme.islands") {
+      left: 4px;
+    }
+  }
 }
 
 :root[uidensity="compact"] {

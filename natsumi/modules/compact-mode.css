@@ -359,6 +359,14 @@ SOFTWARE.
       left: calc(var(--natsumi-compact-offset) * -1) !important;
       opacity: 0 !important;
 
+      @media not -moz-pref("sidebar.verticalTabs") {
+        margin-inline: 2px !important;
+
+        @media not -moz-pref("browser.nova.enabled") {
+          margin-inline: 7px !important;
+        }
+      }
+
       @media -moz-pref("sidebar.position_start") {
         left: calc(var(--natsumi-compact-offset) * -1) !important;
       }

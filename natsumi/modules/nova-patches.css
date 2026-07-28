@@ -482,6 +482,10 @@ SOFTWARE.
         #sidebar-main, #sidebar-container {
           --natsumi-sidebar-height-override: calc(42px + var(--natsumi-browser-separation)) !important;
           --natsumi-compact-sidebar-offset: 1px;
+
+          @media not -moz-pref("sidebar.verticalTabs") {
+            --natsumi-sidebar-height-override: calc(86px + var(--natsumi-browser-separation)) !important;
+          }
         }
 
         #natsumi-pinned-toolbar {
