@@ -344,11 +344,21 @@ body > * {
   }
 }
 
+:root {
+  --natsumi-button-height: 40px;
+  --natsumi-button-padding: 4px;
+
+  &[uidensity="compact"] {
+    --natsumi-button-height: 32px;
+    --natsumi-button-padding: 2px;
+  }
+}
+
 #nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
 #TabsToolbar-customization-target {
   & > toolbarbutton, & > toolbaritem {
     &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
-      padding-inline: 4px !important;
+      padding-inline: var(--natsumi-button-padding) !important;
     }
   }
 
@@ -368,7 +378,7 @@ body > * {
 
   toolbarbutton {
     --toolbarbutton-outer-padding: 4px;
-    max-height: 40px !important;
+    max-height: var(--natsumi-button-height) !important;
 
     .toolbarbutton-icon, .ipprotection-icon-layer {
       box-sizing: content-box !important;

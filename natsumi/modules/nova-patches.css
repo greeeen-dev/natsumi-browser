@@ -585,16 +585,6 @@ SOFTWARE.
     }
   }
 
-  @media not -moz-pref("natsumi.theme.single-toolbar") {
-    #urlbar:not([open]) {
-      margin-block: 4px !important;
-
-      .urlbar-input-container {
-        max-height: 30px !important;
-      }
-    }
-  }
-
   #sidebar-box {
     background-color: transparent !important;
   }
@@ -610,7 +600,6 @@ SOFTWARE.
   #urlbar:not([open]) {
     .urlbar-input-container {
       border: 1px solid transparent !important;
-      padding: 1px !important;
     }
 
     .urlbar-background {
@@ -664,7 +653,6 @@ SOFTWARE.
   .urlbar-input-container {
     margin-top: 0 !important;
     background: transparent !important;
-    min-height: 30px;
   }
 
   #PersonalToolbar {

@@ -771,7 +771,7 @@ SOFTWARE.
         }
 
         &:not([selected]) {
-          margin-left: calc(50% - 6px);
+          margin-left: calc(50% - 4px);
         }
 
         .natsumi-mc-tab-icon {

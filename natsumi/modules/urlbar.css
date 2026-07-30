@@ -49,8 +49,34 @@ SOFTWARE.
 }
 
 @media not -moz-pref("natsumi.urlbar.disabled") {
-  #urlbar-container {
-    --urlbar-container-height: 40px !important;
+  :root {
+    --natsumi-urlbar-height: 32px;
+    --natsumi-urlbar-margin: 4px;
+    --natsumi-urlbar-input-height: 30px;
+    --natsumi-urlbar-container-padding: 4px;
+    --natsumi-urlbar-input-padding: 1px;
+    --natsumi-urlbar-button-size: calc(var(--natsumi-urlbar-height) - 6px);
+
+    #urlbar-container {
+      --urlbar-container-height: 40px !important;
+    }
+
+    &[uidensity="compact"] {
+      --natsumi-urlbar-height: 30px;
+      --natsumi-urlbar-margin: 2px;
+      --natsumi-urlbar-input-height: 28px;
+      --natsumi-urlbar-container-padding: 0;
+
+      #urlbar-container {
+        --urlbar-container-height: 32px !important;
+      }
+    }
+  }
+
+  @media (not -moz-pref("natsumi.theme.single-toolbar")) or (not -moz-pref("sidebar.verticalTabs")) {
+    &:not([taskbartab]) #urlbar-container:has(#urlbar:not([open])) {
+      padding-block: var(--natsumi-urlbar-container-padding) !important;
+    }
   }
 
   &:not([taskbartab]) #urlbar {
@@ -59,7 +85,7 @@ SOFTWARE.
     --natsumi-urlbar-hover-background-color: var(--natsumi-colors-urlbar-background);
     --natsumi-urlbar-search-engine-color: var(--natsumi-button-hover-color);
     --natsumi-urlbar-search-engine-text: light-dark(black, white);
-    --urlbar-basic-component-size: 26px !important;
+    --urlbar-basic-component-size: var(--natsumi-urlbar-button-size) !important;
     --urlbar-icon-padding: 5px !important;
 
     transition: backdrop-filter 0.2s ease;
@@ -72,8 +98,8 @@ SOFTWARE.
 
     .urlbar-page-action, .urlbar-revert-button {
       border-radius: 14px !important;
-      width: 26px !important;
-      height: 26px !important;
+      width: var(--natsumi-urlbar-button-size) !important;
+      height: var(--natsumi-urlbar-button-size) !important;
       padding: 5px !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
@@ -112,7 +138,16 @@ SOFTWARE.
         border-radius: 16px !important;
         border: 1px solid light-dark(var(--natsumi-colors-border-alt), var(--natsumi-button-active-color)) !important;
         transition: border 0.2s ease !important;
-        height: 32px !important;
+        height: var(--natsumi-urlbar-height) !important;
+
+        @media -moz-pref("browser.nova.enabled") {
+          margin-block: var(--natsumi-urlbar-margin) !important;
+
+          .urlbar-input-container {
+            padding: var(--natsumi-urlbar-input-padding) !important;
+            height: var(--natsumi-urlbar-input-height) !important;
+          }
+        }
 
         #urlbar-background, .urlbar-background {
           border-radius: 16px !important;
@@ -133,8 +168,8 @@ SOFTWARE.
 
         #urlbar-revert-button-container .urlbar-revert-button {
           padding: 5px !important;
-          width: 26px !important;
-          height: 26px !important;
+          width: var(--natsumi-urlbar-button-size) !important;
+          height: var(--natsumi-urlbar-button-size) !important;
           border-radius: 13px !important;
         }
 
@@ -151,7 +186,7 @@ SOFTWARE.
         }
 
         #trust-icon-container {
-          height: 26px !important;
+          height: var(--natsumi-urlbar-button-size) !important;
         }
 
         #tracking-protection-icon-container {
@@ -184,7 +219,7 @@ SOFTWARE.
           border-start-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
           border-end-end-radius: var(--natsumi-urlbar-button-end-radius) !important;
           transition: background-color 0.2s ease;
-          height: 26px !important;
+          height: var(--natsumi-urlbar-button-size) !important;
 
           &:hover, &[open] {
             background-color: var(--natsumi-button-hover-color) !important;
@@ -959,7 +994,7 @@ SOFTWARE.
         .urlbar-page-action {
           transition: background-color 0.2s ease, box-shadow 0.2s ease, margin-right 0.2s ease 0.5s, opacity 0.2s ease 0.5s;
           opacity: 0;
-          margin-right: -26px !important;
+          margin-right: calc(var(--natsumi-urlbar-button-size) * -1) !important;
           pointer-events: none !important;
         }
 

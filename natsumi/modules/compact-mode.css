@@ -528,7 +528,7 @@ SOFTWARE.
       &:has(#navigator-toolbox toolbarbutton[open], #urlbar[focused], #navigator-toolbox .tab-group-label-container[open]) {
         @media not -moz-pref("natsumi.theme.compact-smaller-sidebar") {
           #sidebar-main, #sidebar-container {
-            --natsumi-toolbar-height: 40px;
+            --natsumi-toolbar-height: var(--natsumi-button-height);
             top: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
             --natsumi-sidebar-height-offset: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
           }
