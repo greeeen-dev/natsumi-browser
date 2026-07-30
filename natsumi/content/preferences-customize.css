@@ -792,6 +792,8 @@ SOFTWARE.
         overflow: hidden;
 
         &[selected] {
+          box-shadow: var(--box-shadow-level-1) !important;
+
           &::before {
             content: "";
             grid-row-start: 1;
@@ -857,8 +859,9 @@ SOFTWARE.
 
           &[selected] {
             border: 1px solid transparent;
+            box-shadow: var(--box-shadow-level-1) !important;
             background: linear-gradient(light-dark(rgb(255, 255, 255), #252428)) padding-box,
-            linear-gradient(96deg, #b89cff 20.68%, light-dark(#ff9565, #764edd) 79.34%) border-box !important;
+                        linear-gradient(96deg, #b89cff 20.68%, light-dark(#ff9565, #764edd) 79.34%) border-box !important;
           }
         }
       }
