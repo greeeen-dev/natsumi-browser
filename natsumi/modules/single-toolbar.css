@@ -426,6 +426,12 @@ SOFTWARE.
         margin-block: -6px !important;
       }
     }
+
+    @media not -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
+      #sidebar-container {
+        padding-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-top-toolbar-compact-offset, 0px)) !important;
+      }
+    }
   }
 }
 

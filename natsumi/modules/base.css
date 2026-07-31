@@ -347,10 +347,17 @@ body > * {
 :root {
   --natsumi-button-height: 40px;
   --natsumi-button-padding: 4px;
+  --natsumi-tab-max-height: 44px;
 
   &[uidensity="compact"] {
     --natsumi-button-height: 32px;
     --natsumi-button-padding: 2px;
+    --natsumi-tab-max-height: 36px;
+  }
+
+  &[uidensity="touch"] {
+    --natsumi-button-height: 44px;
+    --natsumi-button-padding: 8px;
   }
 }
 
@@ -379,6 +386,7 @@ body > * {
   toolbarbutton {
     --toolbarbutton-outer-padding: 4px;
     max-height: var(--natsumi-button-height) !important;
+    min-height: var(--natsumi-button-height) !important;
 
     .toolbarbutton-icon, .ipprotection-icon-layer {
       box-sizing: content-box !important;

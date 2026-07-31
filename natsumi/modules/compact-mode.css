@@ -440,7 +440,7 @@ SOFTWARE.
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.6) !important;
         --natsumi-compact-bookmarks-height: 0px;
         --natsumi-compact-tabs-height: 0px;
-        --natsumi-compact-offset: calc(40px + var(--natsumi-compact-bookmarks-height) + var(--natsumi-compact-tabs-height) - var(--natsumi-compact-hoverable));
+        --natsumi-compact-offset: calc(var(--natsumi-button-height) + var(--natsumi-compact-bookmarks-height) + var(--natsumi-compact-tabs-height) - var(--natsumi-compact-hoverable));
         top: calc(var(--natsumi-compact-offset) * -1) !important;
         opacity: 0 !important;
 
@@ -484,7 +484,7 @@ SOFTWARE.
         }
 
         @media not -moz-pref("sidebar.verticalTabs") {
-          --natsumi-compact-tabs-height: 44px !important;
+          --natsumi-compact-tabs-height: var(--natsumi-tab-max-height) !important;
         }
       }
 

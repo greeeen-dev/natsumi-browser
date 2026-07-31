@@ -71,6 +71,14 @@ SOFTWARE.
         --urlbar-container-height: 32px !important;
       }
     }
+
+    &[uidensity="touch"] {
+      --natsumi-urlbar-container-padding: 6px;
+
+      #urlbar-container {
+        --urlbar-container-height: 44px !important;
+      }
+    }
   }
 
   @media (not -moz-pref("natsumi.theme.single-toolbar")) or (not -moz-pref("sidebar.verticalTabs")) {
@@ -138,6 +146,7 @@ SOFTWARE.
         border-radius: 16px !important;
         border: 1px solid light-dark(var(--natsumi-colors-border-alt), var(--natsumi-button-active-color)) !important;
         transition: border 0.2s ease !important;
+        min-height: var(--natsumi-urlbar-height) !important;
         height: var(--natsumi-urlbar-height) !important;
 
         @media -moz-pref("browser.nova.enabled") {
@@ -534,7 +543,7 @@ SOFTWARE.
             opacity: 0 !important;
           }
 
-          &:hover, &:has(#identity-icon-box[open]), &:has(.urlbar-page-action[open]) {
+          &:hover, &:has(#identity-icon-box[open]), &:has(#trust-icon-container[open]), &:has(.urlbar-page-action[open]) {
             #identity-icon-box, #identity-permission-box {
               margin-left: 0 !important;
               opacity: 1 !important;
@@ -556,6 +565,22 @@ SOFTWARE.
               opacity: 1 !important;
             }
           }
+        }
+      }
+
+      #trust-icon-container {
+        #trust-icon {
+          -moz-context-properties: stroke, fill, fill-opacity, stroke-opacity !important;
+        }
+
+        &.secure #trust-icon {
+          stroke: currentColor;
+          list-style-image: url("../icons/lucide/shield-safe.svg");
+        }
+
+        &.insecure #trust-icon {
+          stroke: red;
+          list-style-image: url("../icons/lucide/shield-unsafe.svg");
         }
       }
     }
@@ -1002,6 +1027,21 @@ SOFTWARE.
           background-color: transparent !important;
         }
       }
+    }
+  }
+
+  @media -moz-pref("natsumi.urlbar.show-kit") {
+    #trustpanel-popup {
+      --trustpanel-image-nova: url("chrome://global/skin/illustrations/kit-happy.svg") !important;
+
+      #trustpanel-graphic-image {
+        min-width: 70px;
+        background-size: cover !important;
+      }
+    }
+
+    #trustpanel-popup[tracking-protection="warning"] {
+      --trustpanel-image-nova: url("chrome://global/skin/illustrations/kit-concerned.svg") !important;
     }
   }
 }

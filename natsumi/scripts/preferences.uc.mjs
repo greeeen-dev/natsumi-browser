@@ -2765,6 +2765,14 @@ function addURLbarBehaviorPane() {
         false
     ));
 
+    behaviorGroup.registerOption("natsumiURLbarFirefoxKit", new CheckboxChoice(
+        "natsumi.urlbar.show-kit",
+        "natsumiURLbarFirefoxKit",
+        "Show Kit on trust panel",
+        "Because the cute mascot deserves more visibility and the shield icons don't do them justice.",
+        false
+    ));
+
     let behaviorNode = behaviorGroup.generateNode();
 
     prefsView.insertBefore(behaviorNode, homePane);
