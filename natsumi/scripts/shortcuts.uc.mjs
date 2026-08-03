@@ -754,6 +754,8 @@ class NatsumiKBSManager {
                         originalKeyNode.removeAttribute("disabled");
                     }
                 }
+
+                this.applyMenuKey(shortcutName);
             } else {
                 // Set modifiers
                 let modifiers = [];
@@ -801,6 +803,38 @@ class NatsumiKBSManager {
         mainKeyset.parentNode.insertBefore(mainKeyset, mainKeyset.nextSibling);
         if (devtoolsKeyset) {
             devtoolsKeyset.parentNode.insertBefore(devtoolsKeyset, devtoolsKeyset.nextSibling);
+        }
+    }
+
+    applyMenuKey(shortcut) {
+        let shortcutObject = this.shortcuts[shortcut];
+
+        if (!(shortcutObject instanceof NatsumiNativeKeyboardShortcut)) {
+            console.warn(`${shortcut} is not a native shortcut, cannot apply key for menu item`);
+            return;
+        }
+
+        let correspondingMenuItems = document.querySelectorAll(`menuitem:is([key='${shortcut}'], [natsumi-original-key='${shortcut}'])`);
+
+        for (let menuItem of correspondingMenuItems) {
+            if (shortcutObject.unregistered) {
+                if (!menuItem.hasAttribute("natsumi-original-key")) {
+                    menuItem.setAttribute("natsumi-original-key", menuItem.getAttribute("key"));
+                }
+
+                menuItem.removeAttribute("key");
+            } else if (shortcutObject.customized) {
+                if (!menuItem.hasAttribute("natsumi-original-key")) {
+                    menuItem.setAttribute("natsumi-original-key", menuItem.getAttribute("key"));
+                }
+
+                menuItem.setAttribute("key", `natsumiCustomized_${shortcut}`);
+            } else {
+                if (menuItem.hasAttribute("natsumi-original-key")) {
+                    menuItem.setAttribute("key", menuItem.getAttribute("natsumi-original-key"));
+                    menuItem.removeAttribute("natsumi-original-key");
+                }
+            }
         }
     }
 
