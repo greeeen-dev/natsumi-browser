@@ -40,7 +40,14 @@
           "chrome://browser/content/browser.xhtml"
         ]
       },
+      "pinned-tabs.uc.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
       "tab-animations.uc.mjs": {},
+      "bento.uc.mjs": {},
       "addons.uc.mjs": {
         "loadOrder": 10,
         "include": [
@@ -127,6 +134,12 @@
           "about:settings*"
         ]
       },
+      "floorp-modules.sys.mjs": {
+        "loadOrder": 11,
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
       "css-injector.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
@@ -138,12 +151,7 @@
           "chrome://browser/content/browser.xhtml"
         ]
       },
-      "pinned-tabs-icon.uc.mjs": {
-        "loadOrder": 11,
-        "include": [
-          "chrome://browser/content/browser.xhtml"
-        ]
-      },
+      "injector.sys.mjs": {},
       "updater.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
@@ -155,6 +163,7 @@
         ]
       },
       "files.sys.mjs": {},
+      "version.sys.mjs": {},
       "fonts.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml",
@@ -182,6 +191,11 @@
       },
       "shortcut-actions.sys.mjs": {},
       "glimpse.uc.mjs": {
+        "include": [
+          "chrome://browser/content/browser.xhtml"
+        ]
+      },
+      "theme-builder.uc.mjs": {
         "include": [
           "chrome://browser/content/browser.xhtml"
         ]
