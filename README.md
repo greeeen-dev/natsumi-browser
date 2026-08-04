@@ -23,6 +23,13 @@ customization options to allow you to fully make things yours.
 Despite the name, Natsumi is NOT a standalone browser - it's meant to be applied on top of your
 favorite Firefox-based browser!
 
+> [!IMPORTANT]
+> Natsumi is currently in **maintenance mode from August 30, 2026 to June 1, 2028**. I will do my
+> best to keep Natsumi stable and alive, but feature released may be infrequent or entirely halted
+> during this period.
+> 
+> **The project is not dead, though - it'll stay alive for the foreseeable future!**
+
 ## Features
 Natsumi has lots of features to enhance your browser - so many that I can't list them all here!
 
