@@ -385,8 +385,7 @@ body > * {
 
   toolbarbutton {
     --toolbarbutton-outer-padding: 4px;
-    max-height: var(--natsumi-button-height) !important;
-    min-height: var(--natsumi-button-height) !important;
+    max-height: 40px !important;
 
     .toolbarbutton-icon, .ipprotection-icon-layer {
       box-sizing: content-box !important;
@@ -440,6 +439,11 @@ body > * {
         }
       }
     }
+  }
+
+  &#nav-bar-customization-target toolbarbutton {
+    max-height: var(--natsumi-button-height) !important;
+    min-height: var(--natsumi-button-height) !important;
   }
 
   #fxa-toolbar-menu-button {
