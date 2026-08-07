@@ -180,8 +180,10 @@ body:not([natsumi-compact-mode]) #natsumi-pinned-toolbar {
 }
 
 #sidebar-container:has(#pinned-tabs-container:empty) {
-  --natsumi-top-toolbar-margin: calc(var(--natsumi-pinned-toolbar-height) + 8px);
-  padding-top: calc(var(--natsumi-pinned-toolbar-height) + 8px) !important;
+  @media not -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
+    --natsumi-top-toolbar-margin: calc(var(--natsumi-pinned-toolbar-height) + 8px);
+    padding-top: calc(var(--natsumi-pinned-toolbar-height) + 8px) !important;
+  }
 }
 
 &:has(#sidebar-main:not([sidebar-launcher-expanded]), #sidebar-container:not([sidebar-launcher-expanded])) {

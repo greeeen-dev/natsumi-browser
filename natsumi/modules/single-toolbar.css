@@ -430,6 +430,10 @@ SOFTWARE.
     @media not -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
       #sidebar-container {
         padding-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-top-toolbar-compact-offset, 0px)) !important;
+
+        &:has(#pinned-tabs-container:is([hidden], :empty)) {
+          padding-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-top-toolbar-compact-offset, 0px) + var(--natsumi-pinned-toolbar-height, -8px) + 8px) !important;
+        }
       }
     }
   }
