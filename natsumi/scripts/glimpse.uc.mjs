@@ -52,6 +52,9 @@ class NatsumiGlimpse {
     constructor() {
         this.glimpse = {};
         this.glimpseTabs = []; // Array to quickly check if a tab is a glimpse tab
+        this.isDeactivating = [];
+        this.isDragging = false;
+        this.isResizing = false;
         this.currentGlimpseTab = null;
         this.multiGlimpse = false;
         this.chainingGlimpse = false;
@@ -106,6 +109,7 @@ class NatsumiGlimpse {
                 }
             }
         });
+        document.getElementById("tabbrowser-tabpanels").addEventListener("click", (event) => {this.checkParentClick(event)});
     }
 
     ensureGlimpseParentRender() {
@@ -397,6 +401,29 @@ class NatsumiGlimpse {
         }
     }
 
+    checkParentClick(event) {
+        if (!natsumiGlimpse.currentGlimpseTab) {
+            return;
+        }
+
+        if (ucApi.Prefs.get("natsumi.glimpse.disable-click-to-close").exists) {
+            if (ucApi.Prefs.get("natsumi.glimpse.disable-click-to-close").value) {
+                return;
+            }
+        }
+
+        let selectedTab = event.target.closest(`#${this.currentGlimpseTab.linkedPanel}`);
+        if (selectedTab) {
+            let glimpseTab = this.glimpse[this.currentGlimpseTab.linkedPanel];
+            if (!glimpseTab) {
+                return;
+            }
+
+            let glimpseTabId = glimpseTab["tabs"][glimpseTab["index"]];
+            this.deactivateGlimpseWithAnim(glimpseTabId);
+        }
+    }
+
     activateChaining() {
         this.chainingGlimpse = true;
     }
@@ -502,9 +529,17 @@ class NatsumiGlimpse {
                 <div class="natsumi-glimpse-next-button"></div>
             </div>
         `);
+        let glimpseDragFragment = convertToXUL(`
+            <div class="natsumi-glimpse-drag"></div>
+        `);
+        let glimpseResizeFragment = convertToXUL(`
+            <div class="natsumi-glimpse-resize"></div>
+        `);
         let newBrowserContainer = newBrowser.parentElement.parentElement.parentElement;
         newBrowserContainer.appendChild(glimpseControlsFragment);
         newBrowserContainer.appendChild(glimpseMultiControlsFragment);
+        //newBrowserContainer.appendChild(glimpseDragFragment);
+        //newBrowserContainer.appendChild(glimpseResizeFragment);
 
         // Create Glimpse indicator
         let glimpseIndicatorFragment = convertToXUL(`
@@ -523,6 +558,8 @@ class NatsumiGlimpse {
         let glimpseExpandButton = newBrowserContainer.querySelector(".natsumi-glimpse-expand-button");
         let glimpseMultiPrevButton = newBrowserContainer.querySelector(".natsumi-glimpse-prev-button");
         let glimpseMultiNextButton = newBrowserContainer.querySelector(".natsumi-glimpse-next-button");
+        let glimpseDrag = newBrowserContainer.querySelector(".natsumi-glimpse-drag");
+        let glimpseResize = newBrowserContainer.querySelector(".natsumi-glimpse-resize");
 
         glimpseCloseButton.addEventListener("click", () => {
             this.deactivateGlimpseWithAnim(newTabId);
@@ -545,10 +582,28 @@ class NatsumiGlimpse {
         glimpseMultiNextButton.addEventListener("click", () => {
             this.cycleGlimpseTabs(currentTabId, true);
         });
+        /*glimpseDrag.addEventListener("mousedown", () => {
+            this.startGlimpseDrag();
+        });
+        glimpseDrag.addEventListener("mousemove", (event) => {
+            this.doGlimpseDrag(event);
+        });
+        glimpseDrag.addEventListener("mouseup", () => {
+            this.stopGlimpseDrag();
+        });
+        glimpseResize.addEventListener("mousedown", () => {
+            this.startGlimpseResize();
+        });
+        glimpseResize.addEventListener("mousemove", (event) => {
+            this.doGlimpseResize(event);
+        });
+        glimpseResize.addEventListener("mouseup", () => {
+            this.stopGlimpseResize();
+        });*/
 
         // Register glimpse
         if (!this.glimpse[currentTabId]) {
-            this.glimpse[currentTabId] = {"index": 0, "tabs": []};
+            this.glimpse[currentTabId] = {"index": 0, "tabs": [], x: 0, y: 0, width: 1, height: 1};
         }
         this.glimpse[currentTabId]["tabs"].push(newTabId);
         this.glimpse[currentTabId]["index"] = this.glimpse[currentTabId]["tabs"].length - 1;
@@ -632,10 +687,16 @@ class NatsumiGlimpse {
             return;
         }
 
+        if (this.isDeactivating.includes(glimpseTabId)) {
+            return;
+        }
+
         // This is sufficient to ensure that this is a Glimpse tab
         let tabbox = document.getElementById("tabbrowser-tabbox");
         tabbox.setAttribute("natsumi-glimpse-animate-disappear", "true");
+        this.isDeactivating.push(glimpseTabId);
         setTimeout(() => {
+            this.isDeactivating.splice(this.isDeactivating.indexOf(glimpseTabId), 1);
             this.deactivateGlimpse(glimpseTabId);
             tabbox.removeAttribute("natsumi-glimpse-animate-disappear");
         }, 300);
@@ -769,10 +830,16 @@ class NatsumiGlimpse {
             return;
         }
 
+        if (this.isDeactivating.includes(glimpseTabId)) {
+            return;
+        }
+
         // This is sufficient to ensure that this is a Glimpse tab
         let tabbox = document.getElementById("tabbrowser-tabbox");
         tabbox.setAttribute("natsumi-glimpse-animate-graduate", "true");
+        this.isDeactivating.push(glimpseTabId);
         setTimeout(() => {
+            this.isDeactivating.splice(this.isDeactivating.indexOf(glimpseTabId), 1);
             this.graduateGlimpse(glimpseTabId);
             tabbox.removeAttribute("natsumi-glimpse-animate-graduate");
         }, 300);
@@ -919,6 +986,59 @@ class NatsumiGlimpse {
         }
 
         glimpseData["index"] = newTabIndex;
+    }
+
+    getChildrenFor(parentId) {
+        if (!(parentId in this.glimpse)) {
+            return;
+        }
+
+        return this.glimpse[parentId]["tabs"];
+    }
+
+    getActiveChildFor(parentId) {
+        let childTabs = this.getChildrenFor(parentId);
+
+        if (!childTabs) {
+            return;
+        }
+
+        for (let childTab of childTabs) {
+            let childPanel = document.getElementById(childTab);
+
+            if (childPanel.classList.contains("deck-selected")) {
+                return childTab;
+            }
+        }
+    }
+
+    startGlimpseDrag() {
+        this.isDragging = true;
+    }
+
+    doGlimpseDrag(event) {
+        if (!this.isDragging) {
+            return;
+        }
+
+        // Get movable dimensions
+        let tabbox = document.getElementById("tabbrowser-tabbox");
+        let tabboxWidth = tabbox.getBoundingClientRect().width - 92;
+        let tabboxHeight = tabbox.getBoundingClientRect().height;
+        let minimumX = 46;
+        let minimumY = 0;
+
+        if (ucApi.Prefs.get("natsumi.glimpse.show-indicator").exists) {
+            if (ucApi.Prefs.get("natsumi.glimpse.show-indicator").value) {
+                tabboxHeight = tabboxHeight - 46;
+                minimumY = 46;
+            }
+        }
+
+        // Get the current position of the Glimpse tab
+        let glimpseTab = this.getActiveChildFor(this.currentGlimpseTab.linkedPanel);
+        let relativeX = document.getElementById(glimpseTab).getBoundingClientRect().x - tabbox.getBoundingClientRect().x;
+        let relativeY = document.getElementById(glimpseTab).getBoundingClientRect().y - tabbox.getBoundingClientRect().y;
     }
 }
 

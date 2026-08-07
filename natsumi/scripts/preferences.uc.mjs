@@ -2414,6 +2414,14 @@ function addGlimpseBehaviorPane() {
         "Move Glimpse controls to the right"
     ));
 
+    glimpseBehaviorGroup.registerOption("natsumiGlimpseClickToClose", new CheckboxChoice(
+        "natsumi.glimpse.disable-click-to-close",
+        "natsumiGlimpseClickToClose",
+        "Click on parent web content to close Glimpse tab",
+        "",
+        true
+    ));
+
     let glimpseBehaviorNode = glimpseBehaviorGroup.generateNode();
 
     prefsView.insertBefore(glimpseBehaviorNode, homePane);

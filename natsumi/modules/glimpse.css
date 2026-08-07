@@ -103,8 +103,11 @@
   visibility: visible !important;
   opacity: 0.5;
   scale: 98%;
-  pointer-events: none;
   -moz-subtree-hidden-only-visually: 0 !important;
+
+  .browserContainer {
+    pointer-events: none;
+  }
 }
 
 :root:not([inDOMFullscreen="true"]) .browserSidebarContainer:has(browser[natsumi-is-glimpse]) {
