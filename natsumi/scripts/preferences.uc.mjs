@@ -1332,6 +1332,12 @@ function addLayoutPane() {
         false
     ));
 
+    let noCurveCheckbox = new CheckboxChoice(
+        "natsumi.theme.disable-browser-radius",
+        "natsumiNoCurveButton",
+        "Remove web content border radius"
+    );
+
     let noGapsCheckbox = new CheckboxChoice(
         "natsumi.theme.no-margin",
         "natsumiNoGapsButton",
@@ -1380,6 +1386,7 @@ function addLayoutPane() {
     layoutSelection.registerExtras("natsumiIslandsHazeButtonBox", novaIslandsHazeCheckbox);
     layoutSelection.registerExtras("natsumiIslandsHazeOptions", novaIslandsSubgroup);
     layoutSelection.registerExtras("natsumiNoGapsButtonBox", noGapsCheckbox);
+    layoutSelection.registerExtras("natsumiNoCurveButtonBox", noCurveCheckbox);
     layoutSelection.registerExtras("natsumiShowMenuButtonBox", menuButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowBookmarksOnHoverBox", bookmarksOnHoverCheckbox);

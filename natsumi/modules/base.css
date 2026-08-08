@@ -89,7 +89,6 @@ body > * {
 
     .browserSidebarContainer {
       border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color);
-      border-radius: var(--natsumi-browser-border-radius-override, var(--natsumi-browser-border-radius)) !important;
       margin: 0 !important;
       overflow: hidden;
 
@@ -105,19 +104,23 @@ body > * {
         }
       }
 
-      &:has(.devtools-toolbox-side-iframe) {
-        .browserContainer browser {
-          border-radius: var(--natsumi-browser-border-radius) 0 0 var(--natsumi-browser-border-radius) !important;
+      @media not -moz-pref("natsumi.theme.disable-browser-radius") {
+        border-radius: var(--natsumi-browser-border-radius-override, var(--natsumi-browser-border-radius)) !important;
+
+        &:has(.devtools-toolbox-side-iframe) {
+          .browserContainer browser {
+            border-radius: var(--natsumi-browser-border-radius) 0 0 var(--natsumi-browser-border-radius) !important;
+          }
+
+          .devtools-toolbox-side-iframe {
+            border-radius: 0 var(--natsumi-browser-border-radius) var(--natsumi-browser-border-radius) 0 !important;
+          }
         }
 
-        .devtools-toolbox-side-iframe {
-          border-radius: 0 var(--natsumi-browser-border-radius) var(--natsumi-browser-border-radius) 0 !important;
-        }
-      }
-
-      @media not (-moz-platform: macos) {
-        browser {
-          border-radius: var(--natsumi-browser-border-radius) !important;
+        @media not (-moz-platform: macos) {
+          browser {
+            border-radius: var(--natsumi-browser-border-radius) !important;
+          }
         }
       }
     }
