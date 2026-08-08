@@ -30,6 +30,13 @@ SOFTWARE.
 
 */
 
+// A note for whoever is going to work on this during my absence:
+//
+// I've left a hint for the most common issue for the workspaces manager breaking in
+// floorp-modules.sys.mjs. If this breaks, consider checking there, but if it's not that,
+// please try your best to fix any issues. Your browser toolbox will be your best friend
+// when debugging.
+
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 import { applyCustomTheme } from "./custom-theme.sys.mjs";
 import { workspacesModulePath } from "./floorp-modules.sys.mjs";
