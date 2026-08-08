@@ -61,16 +61,16 @@ function waitForAudioLoad(audio) {
 
 function waitForAudioPlay(audio) {
     return new Promise((resolve, reject) => {
-        const onLoad = () => {
-            audio.removeEventListener('playing', onLoad);
-            resolve();
+        const onLoad = (event) => {
+            audio.removeEventListener('timeupdate', onLoad);
+            resolve(event.target.currentTime);
         };
         const onError = (e) => {
             audio.removeEventListener('error', onError);
             reject(e);
         };
 
-        audio.addEventListener('playing', onLoad);
+        audio.addEventListener('timeupdate', onLoad);
         audio.addEventListener('error', onError);
     });
 }
@@ -1305,9 +1305,14 @@ if (!cssEnabled || !settingsEnabled) {
     audio.addEventListener("playing", () => {console.log("playing", Date.now())});
 
     // Start welcomer
-    waitForAudioPlay(audio).then(() => {
+    waitForAudioPlay(audio).then((currentTime) => {
         console.log("start", Date.now());
-        natsumiWelcomeObject.start();
+
+        if (currentTime > 0.1) {
+            natsumiWelcomeObject.start();
+        } else {
+            setTimeout(() => {natsumiWelcomeObject.start()}, (0.1 - currentTime) * 1000);
+        }
     }).catch((error) => {
         console.warn("Failed to play audio:", error);
         natsumiWelcomeObject.start();

@@ -390,7 +390,7 @@ SOFTWARE.
   }
 
   &.natsumi-welcome-initial-animation {
-    --natsumi-global-delay: 0.5s;
+    --natsumi-global-delay: 0s;
     animation: icon-fadein-background 10s ease;
     animation-delay: var(--natsumi-global-delay);
 
