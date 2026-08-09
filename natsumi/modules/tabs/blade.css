@@ -90,7 +90,7 @@ SOFTWARE.
         transition: scale 0.2s ease;
       }
 
-      &:active:not([style*="transform"]):not(:has(.tab-close-button:hover)) .tab-stack {
+      &:active:not([style*="transform"]):not(:has(.tab-close-button:hover), :has(.tab-audio-button:hover)) .tab-stack {
         scale: 0.95 !important;
       }
 

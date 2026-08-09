@@ -401,6 +401,14 @@ SOFTWARE.
       stroke: currentColor !important;
     }
   }
+
+  /* Tab mute button */
+  .tab-audio-button {
+    --natsumi-button-icon: url("chrome://natsumi/content/icons/lucide/volume.svg");
+    --natsumi-button-icon-muted: url("chrome://natsumi/content/icons/lucide/volume-off.svg");
+    --natsumi-button-fill: none;
+    --natsumi-button-stroke: light-dark(black, white);
+  }
 }
 
 @media (not -moz-pref("natsumi.pip.disabled")) and -moz-pref("natsumi.theme.icons", "lucide") {

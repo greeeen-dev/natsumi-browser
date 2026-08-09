@@ -45,6 +45,7 @@ if (!window.natsumiCSSInjector) {
         window.natsumiCSSInjector.inject("theme-builder.css");
         window.natsumiCSSInjector.inject("file-picker.css");
         window.natsumiCSSInjector.inject("pinned-tabs.css");
+        window.natsumiCSSInjector.inject("mute-button.css");
 
         window.addEventListener("DOMContentLoaded", (event) => {
             let targetDoc = event.target;
