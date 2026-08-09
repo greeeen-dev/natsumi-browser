@@ -25,11 +25,13 @@ SOFTWARE.
 */
 
 let robotsButton = document.getElementById("errorTryAgain");
+let robotsPressed = 0;
+
 robotsButton.addEventListener("click", () => {
-    if (robotsButton.hasAttribute("natsumi-easter-egg")) {
+    if (robotsPressed === 1) {
         // >:3
         window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
     } else {
-        robotsButton.setAttribute("natsumi-easter-egg", "");
+        robotsPressed++;
     }
 });
