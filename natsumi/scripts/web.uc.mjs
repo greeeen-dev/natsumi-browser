@@ -39,19 +39,7 @@ let JSWindowActors = {
         child: {
             esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebChild.sys.mjs",
             events: {
-                DOMContentLoaded: {},
-                click: {
-                    capture: true
-                },
-                mousedown: {
-                    capture: true
-                },
-                mouseup: {
-                    capture: true
-                },
-                drag: {
-                    capture: true
-                }
+                DOMContentLoaded: {}
             },
         },
         allFrames: true,
