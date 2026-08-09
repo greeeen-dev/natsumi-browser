@@ -528,6 +528,13 @@ const colors = {
         "",
         "#d4bbff"
     ),
+    "silver": new MCChoice(
+        "silver",
+        "Silver",
+        null,
+        "",
+        "#c5c5c5"
+    ),
     "system": new MCChoice(
         "system",
         "System Accent",
@@ -1610,7 +1617,7 @@ function addColorsPane() {
         "natsumiColors",
         "natsumi.theme.accent-color",
         "Accent Color",
-        "Choose the accent color you want to use. This will be applied to various aspects of the browser Natsumi modifies."
+        "Choose the accent color you want to use. This will be applied throughout your browser."
     );
 
     let checkBoxExtraColor = new CheckboxChoice(

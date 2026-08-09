@@ -662,6 +662,9 @@ function createColorsPane() {
         <div class="natsumi-welcome-selection" pref="natsumi.theme.accent-color" type="string" value="lavender-purple">
             <div id="natsumi-welcome-lavender-purple" class="natsumi-welcome-selection-preview"></div>
         </div>
+        <div class="natsumi-welcome-selection" pref="natsumi.theme.accent-color" type="string" value="silver">
+            <div id="natsumi-welcome-silver" class="natsumi-welcome-selection-preview"></div>
+        </div>
         <div class="natsumi-welcome-selection" pref="natsumi.theme.accent-color" type="string" value="system">
             <div id="natsumi-welcome-system-accent" class="natsumi-welcome-selection-preview"></div>
         </div>
