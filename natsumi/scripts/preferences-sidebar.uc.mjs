@@ -172,7 +172,7 @@ function addSidebarSubcategory(categoryButton) {
                 highestPosSubcategory = subcategory;
             }
 
-            if (topPos > highestPos && topPos <= 130) {
+            if (topPos > highestPos && topPos <= 140) {
                 highestPos = topPos;
                 highestPosSubcategory = subcategory;
             }

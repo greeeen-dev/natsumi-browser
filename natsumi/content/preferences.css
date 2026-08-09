@@ -94,7 +94,7 @@ SOFTWARE.
         --box-button-background-color-hover: color-mix(in srgb, var(--color-accent-primary) 20%, transparent) !important;
         --box-button-background-color-active: color-mix(in srgb, var(--color-accent-primary) 30%, transparent) !important;
         --page-nav-button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
-        --page-nav-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, transparent) !important;
+        --page-nav-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent) !important;
         --link-color: var(--natsumi-content-color);
         --link-color-hover: var(--natsumi-hover-color);
         --link-color-active: var(--natsumi-active-color);
