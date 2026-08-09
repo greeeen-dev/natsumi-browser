@@ -326,6 +326,10 @@ SOFTWARE.
       display: grid;
       grid-template-columns: 1fr;
 
+      &.selected {
+        border-radius: 46px 46px 46px 14px !important;
+      }
+
       .natsumi-mc-choice-image-container {
         width: 80px;
         height: 80px;
