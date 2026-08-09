@@ -355,18 +355,30 @@ SOFTWARE.
       &:hover {
         &::before {
           content: "";
-          background: rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.4);
           width: 80px;
           height: 80px;
           grid-row-start: 1;
           grid-column-start: 1;
           z-index: 1;
         }
+
+        .natsumi-mc-choice-label {
+          opacity: 1;
+        }
       }
     }
 
     .natsumi-mc-choice-label {
-      display: none;
+      display: flex;
+      grid-row-start: 1;
+      grid-column-start: 1;
+      text-align: center;
+      align-items: center;
+      color: black;
+      padding-inline: 5px;
+      opacity: 0;
+      z-index: 1;
     }
   }
 
