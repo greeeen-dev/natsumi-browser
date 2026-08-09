@@ -76,6 +76,12 @@ SOFTWARE.
       .browserSidebarContainer {
         border: none !important;
         border-radius: 0 !important;
+
+        @media not (-moz-platform: macos) {
+          browser {
+            border-radius: 0 !important;
+          }
+        }
       }
     }
 

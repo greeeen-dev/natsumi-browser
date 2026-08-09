@@ -149,7 +149,7 @@ toolbarseparator.proton-zap::before {
 
         @media not (-moz-platform: macos) {
           browser {
-            border-radius: var(--natsumi-browser-border-radius) !important;
+            border-radius: calc(var(--natsumi-browser-border-radius) - 1px) !important;
           }
         }
       }
