@@ -80,6 +80,36 @@ body > * {
   font-family: var(--natsumi-custom-font) !important;
 }
 
+* {
+  --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+  --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, black) !important;
+  --color-accent-primary-active: color-mix(in srgb, var(--color-accent-primary) 30%, black) !important;
+  --button-background-color-menu-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, white);
+  --button-background-color-menu-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
+  --button-background-color-ghost-hover: var(--button-background-color-menu-hover);
+  --button-background-color-ghost-active: var(--button-background-color-menu-active);
+  --button-background-color-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+  --button-background-color-primary-hover: color-mix(in srgb, var(--button-background-color-primary) 85%, black);
+  --button-background-color-primary-active: color-mix(in srgb, var(--button-background-color-primary) 70%, black);
+  --promo-background-color: var(--button-background-color-menu-hover) !important;
+  --promo-background-color-vibrant: var(--button-background-color-menu-hover) !important;
+
+  @media (prefers-color-scheme: dark) {
+    --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, white) !important;
+    --color-accent-primary-active: color-mix(in srgb, var(--color-accent-primary) 30%, white) !important;
+    --button-background-color-menu-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, black);
+    --button-background-color-menu-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);
+  }
+}
+
+toolbarseparator.proton-zap::before {
+  border-image: linear-gradient(90deg, var(--natsumi-colors-primary), var(--natsumi-primary-color)) 1 !important;
+
+  @media (prefers-color-scheme: dark) {
+    border-image: linear-gradient(90deg, var(--natsumi-primary-color), white) 1 !important;
+  }
+}
+
 :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
   &[chromehidden=""] #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     margin-right: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;

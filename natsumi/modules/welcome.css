@@ -641,6 +641,10 @@ SOFTWARE.
           background-color: #d4bbff;
         }
 
+        &#natsumi-welcome-silver {
+          background-color: #c5c5c5;
+        }
+
         &#natsumi-welcome-system-accent {
           background-color: AccentColor;
         }

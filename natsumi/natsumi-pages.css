@@ -52,6 +52,7 @@ Removing or modifying parts of this file may break some parts of Natsumi.
 @import "content/blocked.css";
 @import "content/natsumi-web.css";
 @import "content/browser-in-browser.css";
+@import "content/about-pages.css";
 @import "content/global.css";
 @import "content/icons.css";
 
