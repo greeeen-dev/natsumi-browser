@@ -34,9 +34,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     if (targetDoc.URL === "about:robots") {
         try {
-            let scriptNode = targetDoc.createElement("script");
-            scriptNode.setAttribute("src", "chrome://natsumi/content/scripts/robots.js")
-            targetDoc.documentElement.appendChild(scriptNode);
+            let robotsButton = targetDoc.getElementById("errorTryAgain");
+            robotsButton.addEventListener("click", () => {
+                if (robotsButton.hasAttribute("natsumi-easter-egg")) {
+                    // >:3
+                    targetDoc.defaultView.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+                } else {
+                    robotsButton.setAttribute("natsumi-easter-egg", "");
+                }
+            });
         } catch(e) {
             console.error(e);
         }
