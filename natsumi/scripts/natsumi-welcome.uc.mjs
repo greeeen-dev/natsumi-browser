@@ -339,12 +339,12 @@ class NatsumiWelcome {
         setTimeout(() => {
             // Show welcome complete drumroll
             document.body.setAttribute("natsumi-welcome-drumroll-complete", "");
-        }, 2800);
+        }, 2600);
 
         setTimeout(() => {
             // Remove drumrolls
             document.body.setAttribute("natsumi-welcome-complete-full", "");
-        }, 4300);
+        }, 4100);
 
         setTimeout(() => {
             // We're finally through with the welcome
@@ -373,7 +373,7 @@ class NatsumiWelcome {
                 )
                 tabStyleResetObject.addToContainer();
             }
-        }, 4800);
+        }, 4600);
     }
 }
 
@@ -880,6 +880,17 @@ function createTabsPane() {
                 Clicky
             </div>
         </div>
+        <div class="natsumi-welcome-selection" pref="natsumi.tabs.type" type="string" value="neutron">
+            <div id="natsumi-welcome-tabs-neutron" class="natsumi-welcome-selection-preview">
+                <div class='natsumi-welcome-tab'>
+                    <div class='natsumi-welcome-tab-icon'></div>
+                    <div class='natsumi-welcome-tab-text'></div>
+                </div>
+            </div>
+            <div class="natsumi-welcome-selection-label">
+                Neutron
+            </div>
+        </div>
         <div class="natsumi-welcome-selection" pref="natsumi.tabs.type" type="string" value="classic">
             <div id="natsumi-welcome-tabs-classic" class="natsumi-welcome-selection-preview">
                 <div class='natsumi-welcome-tab'>
@@ -1311,10 +1322,10 @@ if (!cssEnabled || !settingsEnabled) {
     waitForAudioPlay(audio).then((currentTime) => {
         console.log("start", Date.now());
 
-        if (currentTime > 0.1) {
+        if (currentTime > 0.15) {
             natsumiWelcomeObject.start();
         } else {
-            setTimeout(() => {natsumiWelcomeObject.start()}, (0.1 - currentTime) * 1000);
+            setTimeout(() => {natsumiWelcomeObject.start()}, (0.15 - currentTime) * 1000);
         }
     }).catch((error) => {
         console.warn("Failed to play audio:", error);

@@ -452,7 +452,7 @@ SOFTWARE.
 
   #natsumi-welcome-content-body {
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: hidden;
     height: calc(100% - 48px) !important;
   }
 
@@ -465,6 +465,10 @@ SOFTWARE.
       background-color: var(--natsumi-mat-sd-background);
       border: var(--natsumi-mat-sd-border);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
+
+      #natsumi-welcome-content-body {
+        overflow-y: scroll;
+      }
     }
 
     #natsumi-corner-icon {
@@ -927,14 +931,6 @@ SOFTWARE.
         }
       }
 
-      #natsumi-welcome-tabs-classic {
-        .natsumi-welcome-tab {
-          background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
-          border-radius: 3px;
-          box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
-        }
-      }
-
       #natsumi-welcome-tabs-clicky {
         .natsumi-welcome-tab {
           background: light-dark(
@@ -952,6 +948,35 @@ SOFTWARE.
           box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1);
           border-radius: 3px;
         }
+      }
+    }
+
+    #natsumi-welcome-tabs-neutron {
+      .natsumi-welcome-tab {
+        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+      }
+    }
+
+    #natsumi-welcome-tabs-classic {
+      .natsumi-welcome-tab {
+        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+
+        @media -moz-pref("browser.nova.enabled") {
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background: linear-gradient(light-dark(rgb(255, 255, 255), #252428)) padding-box,
+                      linear-gradient(96deg, #b89cff 20.68%, light-dark(#ff9565, #764edd) 79.34%) border-box !important;
+        }
+      }
+    }
+
+    @media not -moz-pref("browser.nova.enabled") {
+      .natsumi-welcome-selection:has(#natsumi-welcome-tabs-neutron) {
+        display: none !important;
       }
     }
 
