@@ -626,8 +626,8 @@ toolbarseparator.proton-zap::before {
 /* Fullscreen alert */
 
 #fullscreen-warning {
-  --natsumi-fullscreen-button: url('chrome://global/skin/media/picture-in-picture-enter-fullscreen-button.svg');
-  --natsumi-fullscreen-exit-button: url('chrome://global/skin/media/picture-in-picture-exit-fullscreen-button.svg');
+  --natsumi-fullscreen-button: url('chrome://natsumi/content/icons/lucide/fullscreen.svg');
+  --natsumi-fullscreen-exit-button: url('chrome://natsumi/content/icons/lucide/fullscreen-exit.svg');
 
   &::before {
     display: none !important;
@@ -661,8 +661,10 @@ toolbarseparator.proton-zap::before {
       background-position: center;
       transform: translate(-50%, -50%);
       mask-image: var(--natsumi-fullscreen-button);
-      mask-size: 28px;
+      mask-size: 16px;
       mask-position: center;
+      -moz-context-properties: stroke, fill;
+      stroke: black;
 
       @media (prefers-color-scheme: dark) {
         background-color: white;
