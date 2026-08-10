@@ -175,11 +175,19 @@ SOFTWARE.
 @media not -moz-pref("natsumi.theme.force-natsumi-color") {
   :root[style*="--lwt"] {
     * {
-      --natsumi-primary-color: var(--lwt-accent-color) !important;
+      --natsumi-primary-color: oklch(from var(--lwt-accent-color) 0.825 0.1 h);
+
+      @media -moz-pref("natsumi.theme.force-actual-theme-color") {
+        --natsumi-primary-color: var(--lwt-accent-color) !important;
+      }
 
       @media -moz-pref("natsumi.theme.use-tab-theme-color") {
         .tabbrowser-tab {
-          --natsumi-primary-color: var(--lwt-tab-line-color) !important;
+          --natsumi-primary-color: oklch(from var(--lwt-tab-line-color) 0.825 0.1 h);
+
+          @media -moz-pref("natsumi.theme.force-actual-theme-color") {
+            --natsumi-primary-color: var(--lwt-tab-line-color) !important;
+          }
         }
       }
     }

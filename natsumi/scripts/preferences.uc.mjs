@@ -892,11 +892,12 @@ const startupSounds = {
 }
 
 class OptionsGroup {
-    constructor(id, label, description) {
+    constructor(id, label, description, parentId) {
         this.id = id;
         this.label = label;
         this.description = description;
         this.options = {};
+        this.parent = parentId;
     }
 
     registerOption(option, choiceObject) {
@@ -905,13 +906,22 @@ class OptionsGroup {
 
     generateNode(subgroup = false) {
         let nodeString = `
-            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
-                <html:h2>${this.label}</html:h2>
-                <description class="description-deemphasized">
-                    ${this.description}
-                </description>
-            </groupbox>
+            <html:div id="${this.id}Group" class="natsumi-groupbox-content" data-category="paneNatsumiSettings">
+                <html:div class="natsumi-group-label">${this.label}</html:div>
+            </html:div>
         `
+
+        if (!hasRedesignV2) {
+            nodeString = `
+                <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                    <html:h2>${this.label}</html:h2>
+                    <description class="description-deemphasized">
+                        ${this.description}
+                    </description>
+                </groupbox>
+            `
+        }
+
         let node = convertToXUL(nodeString);
         let groupNode = node.querySelector(`#${this.id}Group`);
 
@@ -978,17 +988,30 @@ class MultipleChoicePreference {
 
     generateNode(color = false) {
         let nodeString = `
-            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
-                <html:h2>${this.label}</html:h2>
+            <html:div id="${this.id}Group" class="natsumi-groupbox-content" data-category="paneNatsumiSettings">
+                <html:div class="natsumi-group-label">${this.label}</html:div>
                 <html:div id="${this.id}Settings">
-                    <description class="description-deemphasized">
-                        ${this.description}
-                    </description>
                     <div class="natsumi-mc-chooser">
                     </div>
                 </html:div>
-            </groupbox>
-        `
+            </html:div>
+        `;
+
+        if (!hasRedesignV2) {
+            nodeString = `
+                <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                    <html:h2>${this.label}</html:h2>
+                    <html:div id="${this.id}Settings">
+                        <description class="description-deemphasized">
+                            ${this.description}
+                        </description>
+                        <div class="natsumi-mc-chooser">
+                        </div>
+                    </html:div>
+                </groupbox>
+            `
+        }
+
         let node = convertToXUL(nodeString);
         let groupNode = node.querySelector(`#${this.id}Group`);
 
@@ -1045,17 +1068,29 @@ class RadioPreference extends MultipleChoicePreference {
 
     generateNode(color = false) {
         let nodeString = `
-            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
-                <html:h2>${this.label}</html:h2>
+            <html:div id="${this.id}Group" class="natsumi-groupbox-content" data-category="paneNatsumiSettings">
+                <html:div class="natsumi-group-label">${this.label}</html:div>
                 <html:div id="${this.id}Settings">
-                    <description class="description-deemphasized">
-                        ${this.description}
-                    </description>
                     <radiogroup class="natsumi-radio-chooser">
                     </radiogroup>
                 </html:div>
-            </groupbox>
-        `
+            </html:div>
+        `;
+
+        if (!hasRedesignV2) {
+            nodeString = `
+                <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                    <html:h2>${this.label}</html:h2>
+                    <html:div id="${this.id}Settings">
+                        <description class="description-deemphasized">
+                            ${this.description}
+                        </description>
+                        <radiogroup class="natsumi-radio-chooser">
+                        </radiogroup>
+                    </html:div>
+                </groupbox>
+            `;
+        }
         let node = convertToXUL(nodeString);
         let groupNode = node.querySelector(`#${this.id}Group`);
 
@@ -1084,17 +1119,29 @@ class SelectPreference extends MultipleChoicePreference {
 
     generateNode(color = false) {
         let nodeString = `
-            <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
-                <html:h2>${this.label}</html:h2>
+            <html:div id="${this.id}Group" class="natsumi-groupbox-content" data-category="paneNatsumiSettings">
+                <html:div class="natsumi-group-label">${this.label}</html:div>
                 <html:div id="${this.id}Settings">
-                    <description class="description-deemphasized">
-                        ${this.description}
-                    </description>
                     <html:select class="natsumi-select-chooser">
                     </html:select>
                 </html:div>
-            </groupbox>
-        `
+            </html:div>
+        `;
+
+        if (!hasRedesignV2) {
+            nodeString = `
+                <groupbox id="${this.id}Group" data-category="paneNatsumiSettings" hidden="true">
+                    <html:h2>${this.label}</html:h2>
+                    <html:div id="${this.id}Settings">
+                        <description class="description-deemphasized">
+                            ${this.description}
+                        </description>
+                        <html:select class="natsumi-select-chooser">
+                        </html:select>
+                    </html:div>
+                </groupbox>
+            `;
+        }
         let node = convertToXUL(nodeString);
         let groupNode = node.querySelector(`#${this.id}Group`);
 
@@ -1229,6 +1276,58 @@ function addToSidebar() {
     });
 }
 
+function addGroupbox(id, name, description, icon = null) {
+    let prefsView = document.getElementById("mainPrefPane");
+    let homePane = prefsView.querySelector("#firefoxHomeCategory");
+
+    if (!hasRedesignV2) {
+        let labelFragment = convertToXUL(`
+            <hbox id="natsumiAppearanceCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
+                <html:${categoryHeader}>Browser Appearance</html:${categoryHeader}>
+            </hbox>
+        `);
+        prefsView.insertBefore(labelFragment, homePane);
+    } else {
+        let iconHiddenString = "";
+
+        if (!icon) {
+            iconHiddenString = ` hidden=""`;
+        }
+
+        let groupboxFragment = convertToXUL(`
+            <groupbox id="${id}" class="natsumi-groupbox" data-category="paneNatsumiSettings" hidden="true">
+                <html:div class="natsumi-groupbox-label">
+                    <html:div class="natsumi-groupbox-icon" style="--natsumi-icon-url: url('${icon}')"${iconHiddenString}></html:div>
+                    <html:div class="natsumi-groupbox-heading">${name}</html:div>
+                </html:div>
+                <description class="description-deemphasized">
+                    ${description}
+                </description>
+            </groupbox>
+        `);
+
+        prefsView.insertBefore(groupboxFragment, homePane);
+    }
+}
+
+function addToGroupbox(node, id) {
+    if (!hasRedesignV2) {
+        let prefsView = document.getElementById("mainPrefPane");
+        let homePane = prefsView.querySelector("#firefoxHomeCategory");
+        prefsView.insertBefore(node, homePane);
+        return;
+    }
+
+    let groupbox = document.getElementById(id);
+
+    if (!groupbox) {
+        console.warn(`Groupbox ${id} does not exist`);
+        return;
+    }
+
+    groupbox.appendChild(node);
+}
+
 function addOptionStyles() {
     let styleNode = document.createElement("style");
     styleNode.id = "natsumi-options-style";
@@ -1283,9 +1382,8 @@ function addOptionStyles() {
     document.head.appendChild(styleNode);
 }
 
+// Browser appearance
 function addLayoutPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
     const osName = Services.appinfo.OS.toLowerCase();
 
     let windowControlsDescription = "";
@@ -1418,13 +1516,10 @@ function addLayoutPane() {
     let layoutSelector = layoutNode.querySelector(".natsumi-mc-chooser");
     layoutSelector.parentNode.insertBefore(verticalTabsDisabledNotice, layoutSelector);
 
-    prefsView.insertBefore(layoutNode, homePane);
+    addToGroupbox(layoutNode, "natsumiBrowserAppearance");
 }
 
 function addThemesPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create theme selection
     let themeSelection = new MultipleChoicePreference(
         "natsumiThemes",
@@ -1522,16 +1617,13 @@ function addThemesPane() {
         });
     });
 
-    prefsView.insertBefore(themeNode, homePane);
+    addToGroupbox(themeNode, "natsumiBrowserAppearance");
     customThemePickerUi.init().catch((error) => {
         console.error(error);
     });
 }
 
 function addWindowMaterialPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create theme selection
     let windowMaterialSelectionMac = new RadioPreference(
         "natsumiWindowMaterialMac",
@@ -1605,13 +1697,10 @@ function addWindowMaterialPane() {
         });
     });
 
-    prefsView.insertBefore(windowMaterialsNode, homePane);
+    addToGroupbox(windowMaterialsNode, "natsumiBrowserAppearance");
 }
 
 function addColorsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create color selection
     let colorSelection = new MultipleChoicePreference(
         "natsumiColors",
@@ -1620,18 +1709,33 @@ function addColorsPane() {
         "Choose the accent color you want to use. This will be applied throughout your browser."
     );
 
-    let checkBoxExtraColor = new CheckboxChoice(
+    let themeColorCheckbox = new CheckboxChoice(
         "natsumi.theme.force-natsumi-color",
-        "natsumiUseThemeAccentColor",
+        "natsumiUseThemeColor",
         "Use your Firefox theme's accent color where possible",
         "",
         true
-    )
+    );
+    colorSelection.registerExtras("natsumiThemeColorBox", themeColorCheckbox);
 
-    //let customColorPickerUi = new CustomThemePicker("natsumiCustomColorPicker", customColorLoader, applyCustomColor, "natsumi.theme.custom-color-data", true, false);
+    let themeColorSubgroup = new OptionsGroup(
+        "natsumiThemeColorOptions",
+        "",
+        ""
+    );
 
-    //colorSelection.registerExtras("natsumiCustomColorPickerBox", customColorPickerUi);
-    colorSelection.registerExtras("natsumiThemeColorBox", checkBoxExtraColor);
+    themeColorSubgroup.registerOption("natsumiThemeColorNormalized", new CheckboxChoice(
+        "natsumi.theme.force-actual-theme-color",
+        "natsumiThemeColorNormalized",
+        "Normalize Firefox theme accent color",
+        "This will keep saturation and brightness consistent with other Natsumi accent colors.",
+        true,
+        false,
+        "natsumi.theme.force-natsumi-color",
+        true
+    ));
+
+    colorSelection.registerExtras("natsumiThemeColorOptions", themeColorSubgroup);
 
     for (let color in colors) {
         colorSelection.registerOption(color, colors[color]);
@@ -1639,14 +1743,11 @@ function addColorsPane() {
 
     let colorNode = colorSelection.generateNode(true);
 
-    prefsView.insertBefore(colorNode, homePane);
+    addToGroupbox(colorNode, "natsumiBrowserAppearance");
     //customColorPickerUi.init();
 }
 
 function addIconsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create icons selection
     let iconSelection = new MultipleChoicePreference(
         "natsumiIcons",
@@ -1676,13 +1777,10 @@ function addIconsPane() {
 
     let iconNode = iconSelection.generateNode();
 
-    prefsView.insertBefore(iconNode, homePane);
+    addToGroupbox(iconNode, "natsumiBrowserAppearance");
 }
 
 function addFontsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     let availableFonts = [
         new SelectChoice(
             "default",
@@ -1720,13 +1818,10 @@ function addFontsPane() {
         setStringPreference("natsumi.theme.font", event.target.value);
     })
 
-    prefsView.insertBefore(fontNode, homePane);
+    addToGroupbox(fontNode, "natsumiBrowserAppearance");
 }
 
 function addSDL2Pane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let sdl2Group = new OptionsGroup(
         "natsumiSDL2",
@@ -1763,13 +1858,11 @@ function addSDL2Pane() {
 
     let sdl2Node = sdl2Group.generateNode();
 
-    prefsView.insertBefore(sdl2Node, homePane);
+    addToGroupbox(sdl2Node, "natsumiBrowserAppearance");
 }
 
+// Sidebar & Tabs
 function addSidebarTabsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Ensure Blade is always used when custom styles is off
     let selectedOverride = null;
     if (ucApi.Prefs.get("natsumi.tabs.use-custom-type").exists()) {
@@ -1901,13 +1994,10 @@ function addSidebarTabsPane() {
         });
     });
 
-    prefsView.insertBefore(tabDesignNode, homePane);
+    addToGroupbox(tabDesignNode, "natsumiSidebarTabs");
 }
 
 function addSidebarPinnedTabsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Ensure Blade is always used when custom styles is off
     let selectedOverride = null;
     if (ucApi.Prefs.get("natsumi.tabs.pinned-use-custom-type").exists()) {
@@ -1976,7 +2066,7 @@ function addSidebarPinnedTabsPane() {
         });
     });
 
-    prefsView.insertBefore(pinnedTabDesignNode, homePane);
+    addToGroupbox(pinnedTabDesignNode, "natsumiSidebarTabs");
 }
 
 function addSidebarWorkspacesPane() {
@@ -1989,9 +2079,6 @@ function addSidebarWorkspacesPane() {
         // Assume we're on Firefox
         return;
     }
-
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
 
     // Create choices group
     let workspacesGroup = new OptionsGroup(
@@ -2060,7 +2147,7 @@ function addSidebarWorkspacesPane() {
 
     let sidebarWorkspacesNode = workspacesGroup.generateNode();
 
-    prefsView.insertBefore(sidebarWorkspacesNode, homePane);
+    addToGroupbox(sidebarWorkspacesNode, "natsumiSidebarTabs");
 }
 
 function addSidebarPanelSidebarPane() {
@@ -2073,9 +2160,6 @@ function addSidebarPanelSidebarPane() {
         // Assume we're on Firefox
         return;
     }
-
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
 
     // Create choices group
     let panelSidebarGroup = new OptionsGroup(
@@ -2138,13 +2222,10 @@ function addSidebarPanelSidebarPane() {
     let firstCheckbox = panelSidebarNode.querySelector("checkbox");
     firstCheckbox.parentNode.insertBefore(panelSidebarDisabledNotice, firstCheckbox);
 
-    prefsView.insertBefore(panelSidebarNode, homePane);
+    addToGroupbox(panelSidebarNode, "natsumiSidebarTabs");
 }
 
 function addSidebarButtonsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let buttonsGroup = new OptionsGroup(
         "natsumiSidebarButtons",
@@ -2273,13 +2354,10 @@ function addSidebarButtonsPane() {
 
     let sidebarButtonsNode = buttonsGroup.generateNode();
 
-    prefsView.insertBefore(sidebarButtonsNode, homePane);
+    addToGroupbox(sidebarButtonsNode, "natsumiSidebarTabs");
 }
 
 function addTabsBehaviorPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let tabsBehaviorGroup = new OptionsGroup(
         "natsumiTabsBehavior",
@@ -2295,13 +2373,10 @@ function addTabsBehaviorPane() {
 
     let tabsBehaviorNode = tabsBehaviorGroup.generateNode();
 
-    prefsView.insertBefore(tabsBehaviorNode, homePane);
+    addToGroupbox(tabsBehaviorNode, "natsumiSidebarTabs");
 }
 
 function addCompactStylesPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create theme selection
     let styleSelection = new MultipleChoicePreference(
         "natsumiCompactStyle",
@@ -2355,13 +2430,10 @@ function addCompactStylesPane() {
     let styleSelector = styleNode.querySelector(".natsumi-mc-chooser");
     styleSelector.parentNode.insertBefore(compactSingleToolbarNotice, styleSelector);
 
-    prefsView.insertBefore(styleNode, homePane);
+    addToGroupbox(styleNode, "natsumiCompactMode");
 }
 
 function addCompactBehaviorPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let compactBehaviorGroup = new OptionsGroup(
         "natsumiCompactBehavior",
@@ -2395,13 +2467,10 @@ function addCompactBehaviorPane() {
 
     let compactBehaviorNode = compactBehaviorGroup.generateNode();
 
-    prefsView.insertBefore(compactBehaviorNode, homePane);
+    addToGroupbox(compactBehaviorNode, "natsumiCompactMode");
 }
 
 function addGlimpseBehaviorPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let glimpseBehaviorGroup = new OptionsGroup(
         "natsumiGlimpseBehavior",
@@ -2438,13 +2507,10 @@ function addGlimpseBehaviorPane() {
 
     let glimpseBehaviorNode = glimpseBehaviorGroup.generateNode();
 
-    prefsView.insertBefore(glimpseBehaviorNode, homePane);
+    addToGroupbox(glimpseBehaviorNode, "natsumiGlimpse");
 }
 
 function addGlimpseKeyPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Check if glimpse key exists
     let defaultOverride = null;
     if (ucApi.Prefs.get("natsumi.glimpse.key").exists()) {
@@ -2484,13 +2550,10 @@ function addGlimpseKeyPane() {
         });
     });
 
-    prefsView.insertBefore(glimpseKeyNode, homePane);
+    addToGroupbox(glimpseKeyNode, "natsumiGlimpse");
 }
 
 function addGlimpseAccessibilityPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let glimpseAccessibilityGroup = new OptionsGroup(
         "natsumiGlimpseAccessibility",
@@ -2513,13 +2576,10 @@ function addGlimpseAccessibilityPane() {
 
     let glimpseAccessibilityNode = glimpseAccessibilityGroup.generateNode();
 
-    prefsView.insertBefore(glimpseAccessibilityNode, homePane);
+    addToGroupbox(glimpseAccessibilityNode, "natsumiGlimpse");
 }
 
 function addMiniplayerBehaviorPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let miniplayerBehaviorGroup = new OptionsGroup(
         "natsumiMiniplayerBehavior",
@@ -2544,13 +2604,10 @@ function addMiniplayerBehaviorPane() {
 
     let miniplayerBehaviorNode = miniplayerBehaviorGroup.generateNode();
 
-    prefsView.insertBefore(miniplayerBehaviorNode, homePane);
+    addToGroupbox(miniplayerBehaviorNode, "natsumiMiniplayer");
 }
 
 function addMiniplayerLayoutPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create layout selection
     let miniplayerLayoutSelection = new MultipleChoicePreference(
         "natsumiMiniplayerLayout",
@@ -2599,13 +2656,10 @@ function addMiniplayerLayoutPane() {
     let miniplayerLayoutSelector = miniplayerLayoutNode.querySelector(".natsumi-mc-chooser");
     miniplayerLayoutSelector.parentNode.insertBefore(miniplayerVerticalNotice, miniplayerLayoutSelector);
 
-    prefsView.insertBefore(miniplayerLayoutNode, homePane);
+    addToGroupbox(miniplayerLayoutNode, "natsumiMiniplayer");
 }
 
 function addPipMaterialPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create theme selection
     let materialSelection = new MultipleChoicePreference(
         "natsumiPipMaterial",
@@ -2624,13 +2678,10 @@ function addPipMaterialPane() {
 
     let materialNode = materialSelection.generateNode();
 
-    prefsView.insertBefore(materialNode, homePane);
+    addToGroupbox(materialNode, "natsumiPictureInPicture");
 }
 
 function addPipBehaviorPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let pipBehaviorGroup = new OptionsGroup(
         "natsumiPipBehavior",
@@ -2674,13 +2725,10 @@ function addPipBehaviorPane() {
 
     let pipBehaviorNode = pipBehaviorGroup.generateNode();
 
-    prefsView.insertBefore(pipBehaviorNode, homePane);
+    addToGroupbox(pipBehaviorNode, "natsumiPictureInPicture");
 }
 
 function addPDFMaterialPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create theme selection
     let materialSelection = new MultipleChoicePreference(
         "natsumiPDFMaterial",
@@ -2695,13 +2743,10 @@ function addPDFMaterialPane() {
 
     let materialNode = materialSelection.generateNode();
 
-    prefsView.insertBefore(materialNode, homePane);
+    addToGroupbox(materialNode, "natsumiPDFViewer");
 }
 
 function addPDFCompactPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let compactGroup = new OptionsGroup(
         "natsumiPDFCompact",
@@ -2736,13 +2781,10 @@ function addPDFCompactPane() {
 
     let compactNode = compactGroup.generateNode();
 
-    prefsView.insertBefore(compactNode, homePane);
+    addToGroupbox(compactNode, "natsumiPDFViewer");
 }
 
 function addURLbarLayoutPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create theme selection
     let layoutSelection = new MultipleChoicePreference(
         "natsumiURLbarLayout",
@@ -2757,13 +2799,10 @@ function addURLbarLayoutPane() {
 
     let layoutNode = layoutSelection.generateNode();
 
-    prefsView.insertBefore(layoutNode, homePane);
+    addToGroupbox(layoutNode, "natsumiURLBar");
 }
 
 function addURLbarBehaviorPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let behaviorGroup = new OptionsGroup(
         "natsumiURLBarBehavior",
@@ -2797,13 +2836,10 @@ function addURLbarBehaviorPane() {
 
     let behaviorNode = behaviorGroup.generateNode();
 
-    prefsView.insertBefore(behaviorNode, homePane);
+    addToGroupbox(behaviorNode, "natsumiURLBar");
 }
 
 function addStartupAnimationsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create theme selection
     let startupSelection = new MultipleChoicePreference(
         "natsumiStartupAnimation",
@@ -2818,12 +2854,11 @@ function addStartupAnimationsPane() {
 
     let startupNode = startupSelection.generateNode();
 
-    prefsView.insertBefore(startupNode, homePane);
+    addToGroupbox(startupNode, "natsumiStartup");
 }
 
 function addStartupSoundsPane() {
     let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
 
     // Check if glimpse key exists
     let defaultOverride = null;
@@ -2864,7 +2899,7 @@ function addStartupSoundsPane() {
         });
     });
 
-    prefsView.insertBefore(startupSoundNode, homePane);
+    addToGroupbox(startupSoundNode, "natsumiStartup");
 
     // Create sound picker
     let customSoundPicker = new FileUpload("natsumiSoundPicker", "audio");
@@ -2890,9 +2925,6 @@ function addStartupSoundsPane() {
 }
 
 function addMiscPreferencesPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let miscPreferencesGroup = new OptionsGroup(
         "natsumiMiscPreferences",
@@ -2915,13 +2947,10 @@ function addMiscPreferencesPane() {
 
     let miscPreferencesNode = miscPreferencesGroup.generateNode();
 
-    prefsView.insertBefore(miscPreferencesNode, homePane);
+    addToGroupbox(miscPreferencesNode, "natsumiMiscellaneous");
 }
 
 function addMiscPanelsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let miscPanelsGroup = new OptionsGroup(
         "natsumiMiscPanels",
@@ -2938,13 +2967,10 @@ function addMiscPanelsPane() {
 
     let miscPanelsNode = miscPanelsGroup.generateNode();
 
-    prefsView.insertBefore(miscPanelsNode, homePane);
+    addToGroupbox(miscPanelsNode, "natsumiMiscellaneous");
 }
 
 function addMiscShortcutsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let miscShortcutsGroup = new OptionsGroup(
         "natsumiMiscShortcuts",
@@ -2960,13 +2986,10 @@ function addMiscShortcutsPane() {
 
     let miscShortcutsNode = miscShortcutsGroup.generateNode();
 
-    prefsView.insertBefore(miscShortcutsNode, homePane);
+    addToGroupbox(miscShortcutsNode, "natsumiMiscellaneous");
 }
 
 function addMiscInteractionsPane() {
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-
     // Create choices group
     let miscInteractionsGroup = new OptionsGroup(
         "natsumiMiscInteractions",
@@ -2983,65 +3006,29 @@ function addMiscInteractionsPane() {
 
     let miscInteractionsNode = miscInteractionsGroup.generateNode();
 
-    prefsView.insertBefore(miscInteractionsNode, homePane);
+    addToGroupbox(miscInteractionsNode, "natsumiMiscellaneous");
 }
 
 function addPreferencesPanes() {
-    // Category nodes
-    let appearanceNode = convertToXUL(`
-        <hbox id="natsumiAppearanceCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Browser Appearance</html:${categoryHeader}>
-        </hbox>
-    `);
-    let sidebarNode = convertToXUL(`
-        <hbox id="natsumiSidebarCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Sidebar &amp; Tabs</html:${categoryHeader}>
-        </hbox>
-    `);
-    let compactModeNode = convertToXUL(`
-        <hbox id="natsumiCompactModeCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Compact Mode</html:${categoryHeader}>
-        </hbox>
-    `);
-    let glimpseNode = convertToXUL(`
-        <hbox id="natsumiGlimpseCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Glimpse</html:${categoryHeader}>
-        </hbox>
-    `);
-    let miniPlayerNode = convertToXUL(`
-        <hbox id="natsumiMiniplayerCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Miniplayer</html:${categoryHeader}>
-        </hbox>
-    `);
-    let pipNode = convertToXUL(`
-        <hbox id="natsumiPipCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Picture-in-Picture</html:${categoryHeader}>
-        </hbox>
-    `);
-    let pdfjsNode = convertToXUL(`
-        <hbox id="natsumiPDFCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>PDF Viewer</html:${categoryHeader}>
-        </hbox>
-    `);
-    let urlbarNode = convertToXUL(`
-        <hbox id="natsumiUrlbarCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>URL Bar</html:${categoryHeader}>
-        </hbox>
-    `);
-    let startupNode = convertToXUL(`
-        <hbox id="natsumiStartupCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Startup</html:${categoryHeader}>
-        </hbox>
-    `);
-    let miscNode = convertToXUL(`
-        <hbox id="natsumiMiscCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-            <html:${categoryHeader}>Miscellaneous</html:${categoryHeader}>
-        </hbox>
-    `);
+    if (hasRedesignV2) {
+        let prefsView = document.getElementById("mainPrefPane");
+        let homePane = prefsView.querySelector("#firefoxHomeCategory");
 
-    let prefsView = document.getElementById("mainPrefPane");
-    let homePane = prefsView.querySelector("#firefoxHomeCategory");
-    prefsView.insertBefore(appearanceNode, homePane);
+        let appearanceNode = convertToXUL(`
+            <hbox id="natsumiCustomizeHeader" class="subcategory natsumi-category-header" data-category="paneNatsumiSettings" hidden="true">
+                <html:div class="natsumi-category-icon" style="background-image: url('chrome://natsumi/content/icons/lucide/paintbrush.svg')"></html:div>
+                <html:${categoryHeader}>Customize Natsumi</html:${categoryHeader}>
+            </hbox>
+        `);
+        prefsView.insertBefore(appearanceNode, homePane);
+    }
+
+    addGroupbox(
+        "natsumiBrowserAppearance",
+        "Browser Appearance",
+        "Customize your overall browser look and feel.",
+        "chrome://natsumi/content/icons/lucide/window.svg"
+    );
     addLayoutPane();
     addThemesPane();
     addWindowMaterialPane();
@@ -3050,7 +3037,12 @@ function addPreferencesPanes() {
     addFontsPane();
     addSDL2Pane();
 
-    prefsView.insertBefore(sidebarNode, homePane);
+    addGroupbox(
+        "natsumiSidebarTabs",
+        "Sidebar &amp; Tabs",
+        "Tweak your sidebar and tabs.",
+        "chrome://natsumi/content/icons/lucide/sidebar.svg"
+    );
     addSidebarTabsPane();
     addSidebarPinnedTabsPane();
     addSidebarWorkspacesPane();
@@ -3058,16 +3050,31 @@ function addPreferencesPanes() {
     addSidebarButtonsPane();
     addTabsBehaviorPane();
 
-    prefsView.insertBefore(compactModeNode, homePane);
+    addGroupbox(
+        "natsumiCompactMode",
+        "Compact Mode",
+        "Compact Mode lets you have more space for web content.",
+        "chrome://natsumi/content/icons/lucide/proportions.svg"
+    );
     addCompactStylesPane();
     addCompactBehaviorPane();
 
-    prefsView.insertBefore(glimpseNode, homePane);
+    addGroupbox(
+        "natsumiGlimpse",
+        "Glimpse",
+        "Quickly preview links with a floating overlay.",
+        "chrome://natsumi/content/icons/lucide/glimpse.svg"
+    );
     addGlimpseBehaviorPane();
     addGlimpseKeyPane();
     addGlimpseAccessibilityPane();
 
-    prefsView.insertBefore(miniPlayerNode, homePane);
+    addGroupbox(
+        "natsumiMiniplayer",
+        "Miniplayer",
+        "Quickly control media from the navigation bar or sidebar.",
+        "chrome://natsumi/content/icons/lucide/music.svg"
+    );
     addMiniplayerBehaviorPane();
     addMiniplayerLayoutPane();
 
@@ -3076,7 +3083,12 @@ function addPreferencesPanes() {
         pipDisabled = ucApi.Prefs.get("natsumi.pip.disabled").value;
     }
     if (!pipDisabled) {
-        prefsView.insertBefore(pipNode, homePane);
+        addGroupbox(
+            "natsumiPictureInPicture",
+            "Picture-in-Picture",
+            "Customize your Picture-in-Picture window.",
+            "chrome://natsumi/content/icons/lucide/pip.svg"
+        );
         addPipMaterialPane();
         addPipBehaviorPane();
     }
@@ -3086,7 +3098,12 @@ function addPreferencesPanes() {
         pdfjsDisabled = ucApi.Prefs.get("natsumi.pdfjs.disabled").value;
     }
     if (!pdfjsDisabled) {
-        prefsView.insertBefore(pdfjsNode, homePane);
+        addGroupbox(
+            "natsumiPDFViewer",
+            "PDF Viewer",
+            "Natsumi gives your browser's PDF viewer a redesign for a more modern and organized feel.",
+            "chrome://natsumi/content/icons/lucide/page.svg"
+        );
         addPDFMaterialPane();
         addPDFCompactPane();
     }
@@ -3096,16 +3113,31 @@ function addPreferencesPanes() {
         urlbarDisabled = ucApi.Prefs.get("natsumi.urlbar.disabled").value;
     }
     if (!urlbarDisabled) {
-        prefsView.insertBefore(urlbarNode, homePane);
+        addGroupbox(
+            "natsumiURLBar",
+            "URL Bar",
+            "Tweak how you want your URL bar to look.",
+            "chrome://natsumi/content/icons/lucide/link.svg"
+        );
         addURLbarLayoutPane();
         addURLbarBehaviorPane();
     }
 
-    prefsView.insertBefore(startupNode, homePane);
+    addGroupbox(
+        "natsumiStartup",
+        "Startup",
+        "Open your browser in style!",
+        "chrome://natsumi/content/icons/lucide/startup.svg"
+    );
     addStartupAnimationsPane();
     addStartupSoundsPane();
 
-    prefsView.insertBefore(miscNode, homePane);
+    addGroupbox(
+        "natsumiMiscellaneous",
+        "Miscellaneous",
+        "All other settings you may need.",
+        "chrome://natsumi/content/icons/lucide/settings.svg"
+    );
     addMiscPreferencesPane();
     addMiscPanelsPane();
     addMiscShortcutsPane();
