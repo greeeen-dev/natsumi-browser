@@ -383,6 +383,10 @@ SOFTWARE.
         min-height: 32px;
         margin-bottom: var(--space-xlarge);
 
+        &[hidden] {
+          display: none;
+        }
+
         .natsumi-category-icon {
           min-width: 16px;
           height: 16px;

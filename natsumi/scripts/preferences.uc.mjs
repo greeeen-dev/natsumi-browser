@@ -1399,6 +1399,15 @@ function addLayoutPane() {
         "Choose the layout you want for your browser."
     );
 
+    let separationSlider = new SliderChoice(
+        "6",
+        "30",
+        "6",
+        "Browser Separation",
+        "Change the separation of the web page",
+        "natsumi.theme.browser-separation",
+    )
+
     let novaIslandsCheckbox = new CheckboxChoice(
         "natsumi.theme.islands",
         "natsumiIslandsButton",
@@ -1477,15 +1486,7 @@ function addLayoutPane() {
         windowControlsDescription
     );
 
-    let separationSlider = new SliderChoice(
-        "6",
-        "30",
-        "6",
-        "Browser Separation",
-        "Change the separation of the web page",
-        "natsumi.theme.browser-separation",
-    )
-
+    layoutSelection.registerExtras("natsumiBrowserSeparationSlider", separationSlider);
     layoutSelection.registerExtras("natsumiIslandsButtonBox", novaIslandsCheckbox);
     layoutSelection.registerExtras("natsumiIslandsGradientButtonBox", novaIslandsGradientCheckbox);
     layoutSelection.registerExtras("natsumiIslandsHazeButtonBox", novaIslandsHazeCheckbox);
@@ -1496,7 +1497,6 @@ function addLayoutPane() {
     layoutSelection.registerExtras("natsumiShowAddonsButtonBox", addonsButtonCheckbox);
     layoutSelection.registerExtras("natsumiShowBookmarksOnHoverBox", bookmarksOnHoverCheckbox);
     layoutSelection.registerExtras("natsumiForceWinControlsToLeftBox", windowControlsCheckbox);
-    layoutSelection.registerExtras("natsumiBrowserSeparationSlider", separationSlider);
 
     for (let layout in layouts) {
         layoutSelection.registerOption(layout, layouts[layout]);
@@ -1623,83 +1623,6 @@ function addThemesPane() {
     });
 }
 
-function addWindowMaterialPane() {
-    // Create theme selection
-    let windowMaterialSelectionMac = new RadioPreference(
-        "natsumiWindowMaterialMac",
-        "natsumi.theme.use-legacy-translucency",
-        "Window material",
-        "Choose which material to use for the window background.",
-    );
-    let windowMaterialSelectionWindows = new RadioPreference(
-        "natsumiWindowMaterialWindows",
-        "widget.windows.mica.toplevel-backdrop",
-        "Window material",
-        "Choose which material to use for the window background.",
-    );
-
-    for (let windowMaterial in windowMaterialsMac) {
-        windowMaterialSelectionMac.registerOption(windowMaterial, windowMaterialsMac[windowMaterial]);
-    }
-    for (let windowMaterial in windowMaterialsWindows) {
-        windowMaterialSelectionWindows.registerOption(windowMaterial, windowMaterialsWindows[windowMaterial]);
-    }
-
-    let windowMaterialsNode;
-
-    // Set listeners for each button
-    let windowMaterialButtons = [];
-    let targetPref = "natsumi.theme.use-legacy-translucency";
-
-    if (Services.appinfo.OS.toLowerCase() === "darwin") {
-        windowMaterialsNode = windowMaterialSelectionMac.generateNode();
-        windowMaterialButtons = windowMaterialsNode.querySelectorAll(".natsumi-radio-choice");
-    } else if (Services.appinfo.OS.toLowerCase() === "winnt") {
-        windowMaterialsNode = windowMaterialSelectionWindows.generateNode();
-        windowMaterialButtons = windowMaterialsNode.querySelectorAll(".natsumi-radio-choice");
-        targetPref = "widget.windows.mica.toplevel-backdrop";
-
-        // Add DWMBlurGlass/MicaForEveryone warning
-        let windowsExternalMaterialNotice = convertToXUL(`
-            <div id="natsumiWindowsExternalMaterialWarning" class="natsumi-settings-info warning">
-                <div class="natsumi-settings-info-icon"></div>
-                <div class="natsumi-settings-info-text">
-                    If you use something like DWMBlurGlass or MicaForEveryone to enable translucency, you may need to
-                    manage window materials for your browser there.
-                </div>
-            </div>
-        `)
-        let firstRadio = windowMaterialsNode.querySelector(".natsumi-radio-choice");
-        firstRadio.parentNode.insertBefore(windowsExternalMaterialNotice, firstRadio);
-    } else {
-        // We're not on Windows or macOS
-        return;
-    }
-
-    windowMaterialButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            let selectedValue = button.getAttribute("value");
-            console.log("Changing key:", selectedValue === "true");
-
-            if (targetPref === "natsumi.theme.use-legacy-translucency") {
-                ucApi.Prefs.set(targetPref, selectedValue === "true");
-            } else {
-                setStringPreference(targetPref, parseInt(selectedValue));
-            }
-            windowMaterialButtons.forEach((btn) => {
-                btn.removeAttribute("selected")
-                let radioCheck = btn.querySelector(".radio-check");
-                radioCheck.removeAttribute("selected");
-            });
-            button.setAttribute("selected", "true");
-            let radioCheck = button.querySelector(".radio-check");
-            radioCheck.setAttribute("selected", "true");
-        });
-    });
-
-    addToGroupbox(windowMaterialsNode, "natsumiBrowserAppearance");
-}
-
 function addColorsPane() {
     // Create color selection
     let colorSelection = new MultipleChoicePreference(
@@ -1747,6 +1670,7 @@ function addColorsPane() {
     //customColorPickerUi.init();
 }
 
+// Text & Iconography
 function addIconsPane() {
     // Create icons selection
     let iconSelection = new MultipleChoicePreference(
@@ -1777,7 +1701,7 @@ function addIconsPane() {
 
     let iconNode = iconSelection.generateNode();
 
-    addToGroupbox(iconNode, "natsumiBrowserAppearance");
+    addToGroupbox(iconNode, "natsumiTextIcons");
 }
 
 function addFontsPane() {
@@ -1818,255 +1742,53 @@ function addFontsPane() {
         setStringPreference("natsumi.theme.font", event.target.value);
     })
 
-    addToGroupbox(fontNode, "natsumiBrowserAppearance");
+    addToGroupbox(fontNode, "natsumiTextIcons");
 }
 
-function addSDL2Pane() {
+// Sidebar & Buttons
+function addSidebarAppearancePane() {
     // Create choices group
-    let sdl2Group = new OptionsGroup(
-        "natsumiSDL2",
-        "Starlight Design 2",
-        "Starlight Design 2 is an extension to Starlight Design aimed at enhancing visuals and contrast."
+    let sidebarAppearanceGroup = new OptionsGroup(
+        "natsumiSidebarAppearance",
+        "Appearance",
+        "Tweak how the sidebar looks."
     );
 
-    sdl2Group.registerOption("natsumiEnableSDL2", new CheckboxChoice(
-        "natsumi.theme.disable-sdl2",
-        "natsumiEnableSDL2",
-        "Enable Starlight Design 2 (SDL2)",
-        "",
-        true
+    sidebarAppearanceGroup.registerOption("natsumiSidebarPinnedToolbarTop", new CheckboxChoice(
+        "natsumi.theme.pinned-toolbar-on-top",
+        "natsumiSidebarPinnedToolbarTop",
+        "Display Pinned Toolbar above pinned tabs"
     ));
 
-    let sdl2Subgroup = new OptionsGroup(
-        "natsumiSDL2Options",
-        "",
-        ""
-    );
-
-    sdl2Subgroup.registerOption("natsumiSDL2Backdrop", new CheckboxChoice(
-        "natsumi.theme.no-content-backdrop",
-        "natsumiSDL2Backdrop",
-        "Enable web content backdrop",
-        "This does not affect browser.tabs.allow_transparent_browser.",
-        true,
-        false,
-        "natsumi.theme.disable-sdl2",
-        true
-    ));
-
-    sdl2Group.registerOption("natsumiSDL2Options", sdl2Subgroup);
-
-    let sdl2Node = sdl2Group.generateNode();
-
-    addToGroupbox(sdl2Node, "natsumiBrowserAppearance");
-}
-
-// Sidebar & Tabs
-function addSidebarTabsPane() {
-    // Ensure Blade is always used when custom styles is off
-    let selectedOverride = null;
-    if (ucApi.Prefs.get("natsumi.tabs.use-custom-type").exists()) {
-        if (!(ucApi.Prefs.get("natsumi.tabs.use-custom-type").value)) {
-            selectedOverride = "default";
+    if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").exists()) {
+        if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").value) {
+            sidebarAppearanceGroup.registerOption("natsumiSidebarTopToolbar", new CheckboxChoice(
+                "natsumi.sidebar.top-toolbar",
+                "natsumiSidebarTopToolbar",
+                "Top toolbar",
+                "Creates a new top toolbar in the sidebar.",
+                false,
+                true
+            ));
         }
     }
 
-    // Create theme selection
-    let tabDesignSelection = new MultipleChoicePreference(
-        "natsumiTabDesign",
-        "natsumi.tabs.type",
-        "Tab design",
-        "Choose the design you want for your tabs.",
-        selectedOverride,
-        "natsumi.tabs.use-custom-type"
-    );
-
-    for (let style in tabDesigns) {
-        tabDesignSelection.registerOption(style, tabDesigns[style]);
-    }
-
-    // Blade options
-    tabDesignSelection.registerExtras("natsumiTabBladeLegacyColor", new CheckboxChoice(
-        "natsumi.tabs.blade-legacy-color",
-        "natsumiTabBladeLegacyColor",
-        "Use legacy Blade highlight color"
-    ));
-    tabDesignSelection.registerExtras("natsumiTabBrokenScaling", new CheckboxChoice(
-        "natsumi.theme.buggy-scaling",
-        "natsumiTabBrokenScaling",
-        "My desktop environment can't scale properly",
-        "Applies a 0.5px offset to Blade highlight to account for scaling issues."
-    ));
-    tabDesignSelection.registerExtras("natsumiTabAbsoluteFontSize", new CheckboxChoice(
-        "natsumi.tabs.absolute-font-size",
-        "natsumiTabAbsoluteFontSize",
-        "Use absolute font size",
-        "Sets font size to use 12px instead of (global font size) + 1px."
+    sidebarAppearanceGroup.registerOption("natsumiSidebarShowControls", new CheckboxChoice(
+        "natsumi.sidebar.disable-bottom-toolbar",
+        "natsumiSidebarShowControls",
+        "Show Sidebar controls",
+        "This will disable the bottom toolbar."
     ));
 
-    // Fusion options
-    tabDesignSelection.registerExtras("natsumiTabFusionHighlight", new CheckboxChoice(
-        "natsumi.tabs.fusion-highlight",
-        "natsumiTabFusionHighlight",
-        "Enable Fusion tab highlight",
-        "This will add a Photon (Firefox Quantum)-like highlight to Fusion."
+    sidebarAppearanceGroup.registerOption("natsumiSidebarAutohideBottomToolbar", new CheckboxChoice(
+        "natsumi.sidebar.autohide-bottom-toolbar",
+        "natsumiSidebarAutohideBottomToolbar",
+        "Hide Bottom Toolbar when empty"
     ));
 
-    // Material options
-    tabDesignSelection.registerExtras("natsumiTabMaterialAlternate", new CheckboxChoice(
-        "natsumi.tabs.material-alt-design",
-        "natsumiTabMaterialAlternate",
-        "Use alternative design for Material tabs",
-        "This will make tabs have a similar design to toolbar buttons."
-    ));
+    let sidebarAppearanceNode = sidebarAppearanceGroup.generateNode();
 
-    // Global tab options
-    tabDesignSelection.registerExtras("natsumiTabGrayout", new CheckboxChoice(
-        "natsumi.tabs.disable-grayout-unloaded",
-        "natsumiTabGrayout",
-        "Gray out unloaded tabs",
-        "",
-        true
-    ));
-
-    let tabGrayoutSubgroup = new OptionsGroup(
-        "natsumiTabGrayoutOptions",
-        "",
-        ""
-    );
-
-    tabGrayoutSubgroup.registerOption("natsumiTabsCrossout", new CheckboxChoice(
-        "natsumi.tabs.disable-crossout-title",
-        "natsumiTabsCrossout",
-        "Cross out labels for unloaded tabs",
-        "",
-        true,
-        false,
-        "natsumi.tabs.disable-grayout-unloaded",
-        true
-    ));
-
-    tabDesignSelection.registerExtras("natsumiTabGrayoutOptions", tabGrayoutSubgroup);
-
-    // Tab font size offset slider
-    let fontOffsetSlider = new SliderChoice(
-        "0",
-        "12",
-        "0",
-        "Tab font size offset",
-        "",
-        "natsumi.theme.font-size-offset",
-    )
-
-    tabDesignSelection.registerExtras("natsumiTabFontSizeOffset", fontOffsetSlider);
-
-    let tabDesignNode = tabDesignSelection.generateNode();
-
-    // Set listeners for each button
-    let tabDesignButtons = tabDesignNode.querySelectorAll(".natsumi-mc-choice");
-    tabDesignButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            let selectedValue = button.getAttribute("value");
-
-            // Reset Floorp tab styles if needed
-            if (selectedValue !== "classic") {
-                // Check if we're on Floorp
-                if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
-                    if (ucApi.Prefs.get("natsumi.browser.type").value !== "floorp") {
-                        return;
-                    }
-                } else {
-                    // Assume we're on Firefox
-                    return;
-                }
-
-                let resetStyle = resetTabStyleIfNeeded();
-                if (resetStyle) {
-                    let tabStyleResetObject = new NatsumiNotification(
-                        "Heads up: your tab style was reset to Proton.",
-                        "If you want to use other tab styles, simply enable the Classic tab design in settings.",
-                        "chrome://natsumi/content/icons/lucide/info.svg",
-                        10000
-                    )
-                    tabStyleResetObject.addToContainer();
-                }
-            }
-        });
-    });
-
-    addToGroupbox(tabDesignNode, "natsumiSidebarTabs");
-}
-
-function addSidebarPinnedTabsPane() {
-    // Ensure Blade is always used when custom styles is off
-    let selectedOverride = null;
-    if (ucApi.Prefs.get("natsumi.tabs.pinned-use-custom-type").exists()) {
-        if (!(ucApi.Prefs.get("natsumi.tabs.pinned-use-custom-type").value)) {
-            selectedOverride = "default";
-        }
-    }
-
-    // Create theme selection
-    let pinnedTabDesignSelection = new MultipleChoicePreference(
-        "natsumiPinnedTabDesign",
-        "natsumi.tabs.pinned-type",
-        "Pinned tabs",
-        "Choose the design you want for your tabs.",
-        selectedOverride,
-        "natsumi.tabs.pinned-use-custom-type"
-    );
-
-    for (let style in pinnedTabDesigns) {
-        pinnedTabDesignSelection.registerOption(style, pinnedTabDesigns[style]);
-    }
-
-    // Tab font size offset slider
-    let pinnedTabsWidthSlider = new SliderChoice(
-        "40",
-        "200",
-        "40",
-        "Pinned tab minimum width",
-        "",
-        "natsumi.tabs.pinned-tabs-width",
-    )
-
-    pinnedTabDesignSelection.registerExtras("natsumiPinnedTabsWidth", pinnedTabsWidthSlider);
-
-    let pinnedTabDesignNode = pinnedTabDesignSelection.generateNode();
-
-    // Set listeners for each button
-    let pinnedTabDesignButtons = pinnedTabDesignNode.querySelectorAll(".natsumi-mc-choice");
-    pinnedTabDesignButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            let selectedValue = button.getAttribute("value");
-
-            // Reset Floorp tab styles if needed
-            if (selectedValue !== "classic") {
-                // Check if we're on Floorp
-                if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
-                    if (ucApi.Prefs.get("natsumi.browser.type").value !== "floorp") {
-                        return;
-                    }
-                } else {
-                    // Assume we're on Firefox
-                    return;
-                }
-
-                let resetStyle = resetTabStyleIfNeeded();
-                if (resetStyle) {
-                    let tabStyleResetObject = new NatsumiNotification(
-                        "Heads up: your tab style was reset to Proton.",
-                        "If you want to use other tab styles, simply enable the Classic tab design in settings.",
-                        "chrome://natsumi/content/icons/lucide/info.svg",
-                        10000
-                    )
-                    tabStyleResetObject.addToContainer();
-                }
-            }
-        });
-    });
-
-    addToGroupbox(pinnedTabDesignNode, "natsumiSidebarTabs");
+    addToGroupbox(sidebarAppearanceNode, "natsumiSidebar");
 }
 
 function addSidebarWorkspacesPane() {
@@ -2147,7 +1869,7 @@ function addSidebarWorkspacesPane() {
 
     let sidebarWorkspacesNode = workspacesGroup.generateNode();
 
-    addToGroupbox(sidebarWorkspacesNode, "natsumiSidebarTabs");
+    addToGroupbox(sidebarWorkspacesNode, "natsumiSidebar");
 }
 
 function addSidebarPanelSidebarPane() {
@@ -2222,7 +1944,7 @@ function addSidebarPanelSidebarPane() {
     let firstCheckbox = panelSidebarNode.querySelector("checkbox");
     firstCheckbox.parentNode.insertBefore(panelSidebarDisabledNotice, firstCheckbox);
 
-    addToGroupbox(panelSidebarNode, "natsumiSidebarTabs");
+    addToGroupbox(panelSidebarNode, "natsumiSidebar");
 }
 
 function addSidebarButtonsPane() {
@@ -2232,12 +1954,6 @@ function addSidebarButtonsPane() {
         "Buttons",
         "Tweak the buttons visible in the sidebar."
     );
-
-    buttonsGroup.registerOption("natsumiSidebarPinnedToolbarTop", new CheckboxChoice(
-        "natsumi.theme.pinned-toolbar-on-top",
-        "natsumiSidebarPinnedToolbarTop",
-        "Display Pinned Toolbar above pinned tabs"
-    ));
 
     buttonsGroup.registerOption("natsumiSidebarHideClearTabs", new CheckboxChoice(
         "natsumi.sidebar.hide-clear-tabs",
@@ -2292,39 +2008,6 @@ function addSidebarButtonsPane() {
 
     buttonsGroup.registerOption("natsumiSidebarClearTabsOptions", clearTabsSubgroup);
 
-    buttonsGroup.registerOption("natsumiSidebarReplaceNewTab", new CheckboxChoice(
-        "natsumi.tabs.replace-new-tab",
-        "natsumiSidebarReplaceNewTab",
-        "Replace New Tab",
-        "This will let you open new tabs through the URL bar instead. Warning: This will override browser.urlbar.openintab."
-    ));
-
-    if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").exists()) {
-        if (ucApi.Prefs.get("natsumi.experiments.top-toolbar").value) {
-            buttonsGroup.registerOption("natsumiSidebarTopToolbar", new CheckboxChoice(
-                "natsumi.sidebar.top-toolbar",
-                "natsumiSidebarTopToolbar",
-                "Top toolbar",
-                "Creates a new top toolbar in the sidebar.",
-                false,
-                true
-            ));
-        }
-    }
-
-    buttonsGroup.registerOption("natsumiSidebarShowControls", new CheckboxChoice(
-        "natsumi.sidebar.disable-bottom-toolbar",
-        "natsumiSidebarShowControls",
-        "Show Sidebar controls",
-        "This will disable the bottom toolbar."
-    ));
-
-    buttonsGroup.registerOption("natsumiSidebarAutohideBottomToolbar", new CheckboxChoice(
-        "natsumi.sidebar.autohide-bottom-toolbar",
-        "natsumiSidebarAutohideBottomToolbar",
-        "Hide Bottom Toolbar when empty"
-    ));
-
     buttonsGroup.registerOption("natsumiSidebarHideNewTab", new CheckboxChoice(
         "natsumi.tabs.hide-new-tab-button",
         "natsumiSidebarHideNewTab",
@@ -2354,7 +2037,215 @@ function addSidebarButtonsPane() {
 
     let sidebarButtonsNode = buttonsGroup.generateNode();
 
-    addToGroupbox(sidebarButtonsNode, "natsumiSidebarTabs");
+    addToGroupbox(sidebarButtonsNode, "natsumiSidebar");
+}
+
+// Tabs
+function addTabDesignPane() {
+    // Ensure Blade is always used when custom styles is off
+    let selectedOverride = null;
+    if (ucApi.Prefs.get("natsumi.tabs.use-custom-type").exists()) {
+        if (!(ucApi.Prefs.get("natsumi.tabs.use-custom-type").value)) {
+            selectedOverride = "default";
+        }
+    }
+
+    // Create theme selection
+    let tabDesignSelection = new MultipleChoicePreference(
+        "natsumiTabDesign",
+        "natsumi.tabs.type",
+        "Tab design",
+        "Choose the design you want for your tabs.",
+        selectedOverride,
+        "natsumi.tabs.use-custom-type"
+    );
+
+    for (let style in tabDesigns) {
+        tabDesignSelection.registerOption(style, tabDesigns[style]);
+    }
+
+    // Tab font size offset slider
+    let fontOffsetSlider = new SliderChoice(
+        "0",
+        "12",
+        "0",
+        "Tab font size offset",
+        "",
+        "natsumi.theme.font-size-offset",
+    )
+
+    tabDesignSelection.registerExtras("natsumiTabFontSizeOffset", fontOffsetSlider);
+
+    // Blade options
+    tabDesignSelection.registerExtras("natsumiTabBladeLegacyColor", new CheckboxChoice(
+        "natsumi.tabs.blade-legacy-color",
+        "natsumiTabBladeLegacyColor",
+        "Use legacy Blade highlight color"
+    ));
+    tabDesignSelection.registerExtras("natsumiTabBrokenScaling", new CheckboxChoice(
+        "natsumi.theme.buggy-scaling",
+        "natsumiTabBrokenScaling",
+        "My desktop environment can't scale properly",
+        "Applies a 0.5px offset to Blade highlight to account for scaling issues."
+    ));
+    tabDesignSelection.registerExtras("natsumiTabAbsoluteFontSize", new CheckboxChoice(
+        "natsumi.tabs.absolute-font-size",
+        "natsumiTabAbsoluteFontSize",
+        "Use absolute font size",
+        "Sets font size to use 12px instead of (global font size) + 1px."
+    ));
+
+    // Fusion options
+    tabDesignSelection.registerExtras("natsumiTabFusionHighlight", new CheckboxChoice(
+        "natsumi.tabs.fusion-highlight",
+        "natsumiTabFusionHighlight",
+        "Enable Fusion tab highlight",
+        "This will add a Photon (Firefox Quantum)-like highlight to Fusion."
+    ));
+
+    // Material options
+    tabDesignSelection.registerExtras("natsumiTabMaterialAlternate", new CheckboxChoice(
+        "natsumi.tabs.material-alt-design",
+        "natsumiTabMaterialAlternate",
+        "Use alternative design for Material tabs",
+        "This will make tabs have a similar design to toolbar buttons."
+    ));
+
+    // Global tab options
+    tabDesignSelection.registerExtras("natsumiTabGrayout", new CheckboxChoice(
+        "natsumi.tabs.disable-grayout-unloaded",
+        "natsumiTabGrayout",
+        "Gray out unloaded tabs",
+        "",
+        true
+    ));
+
+    let tabGrayoutSubgroup = new OptionsGroup(
+        "natsumiTabGrayoutOptions",
+        "",
+        ""
+    );
+
+    tabGrayoutSubgroup.registerOption("natsumiTabsCrossout", new CheckboxChoice(
+        "natsumi.tabs.disable-crossout-title",
+        "natsumiTabsCrossout",
+        "Cross out labels for unloaded tabs",
+        "",
+        true,
+        false,
+        "natsumi.tabs.disable-grayout-unloaded",
+        true
+    ));
+
+    tabDesignSelection.registerExtras("natsumiTabGrayoutOptions", tabGrayoutSubgroup);
+
+    let tabDesignNode = tabDesignSelection.generateNode();
+
+    // Set listeners for each button
+    let tabDesignButtons = tabDesignNode.querySelectorAll(".natsumi-mc-choice");
+    tabDesignButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            let selectedValue = button.getAttribute("value");
+
+            // Reset Floorp tab styles if needed
+            if (selectedValue !== "classic") {
+                // Check if we're on Floorp
+                if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
+                    if (ucApi.Prefs.get("natsumi.browser.type").value !== "floorp") {
+                        return;
+                    }
+                } else {
+                    // Assume we're on Firefox
+                    return;
+                }
+
+                let resetStyle = resetTabStyleIfNeeded();
+                if (resetStyle) {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Heads up: your tab style was reset to Proton.",
+                        "If you want to use other tab styles, simply enable the Classic tab design in settings.",
+                        "chrome://natsumi/content/icons/lucide/info.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                }
+            }
+        });
+    });
+
+    addToGroupbox(tabDesignNode, "natsumiTabs");
+}
+
+function addPinnedTabsPane() {
+    // Ensure Blade is always used when custom styles is off
+    let selectedOverride = null;
+    if (ucApi.Prefs.get("natsumi.tabs.pinned-use-custom-type").exists()) {
+        if (!(ucApi.Prefs.get("natsumi.tabs.pinned-use-custom-type").value)) {
+            selectedOverride = "default";
+        }
+    }
+
+    // Create theme selection
+    let pinnedTabDesignSelection = new MultipleChoicePreference(
+        "natsumiPinnedTabDesign",
+        "natsumi.tabs.pinned-type",
+        "Pinned tabs",
+        "Choose the design you want for your tabs.",
+        selectedOverride,
+        "natsumi.tabs.pinned-use-custom-type"
+    );
+
+    for (let style in pinnedTabDesigns) {
+        pinnedTabDesignSelection.registerOption(style, pinnedTabDesigns[style]);
+    }
+
+    // Tab font size offset slider
+    let pinnedTabsWidthSlider = new SliderChoice(
+        "40",
+        "200",
+        "40",
+        "Pinned tab minimum width",
+        "",
+        "natsumi.tabs.pinned-tabs-width",
+    )
+
+    pinnedTabDesignSelection.registerExtras("natsumiPinnedTabsWidth", pinnedTabsWidthSlider);
+
+    let pinnedTabDesignNode = pinnedTabDesignSelection.generateNode();
+
+    // Set listeners for each button
+    let pinnedTabDesignButtons = pinnedTabDesignNode.querySelectorAll(".natsumi-mc-choice");
+    pinnedTabDesignButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            let selectedValue = button.getAttribute("value");
+
+            // Reset Floorp tab styles if needed
+            if (selectedValue !== "classic") {
+                // Check if we're on Floorp
+                if (ucApi.Prefs.get("natsumi.browser.type").exists()) {
+                    if (ucApi.Prefs.get("natsumi.browser.type").value !== "floorp") {
+                        return;
+                    }
+                } else {
+                    // Assume we're on Firefox
+                    return;
+                }
+
+                let resetStyle = resetTabStyleIfNeeded();
+                if (resetStyle) {
+                    let tabStyleResetObject = new NatsumiNotification(
+                        "Heads up: your tab style was reset to Proton.",
+                        "If you want to use other tab styles, simply enable the Classic tab design in settings.",
+                        "chrome://natsumi/content/icons/lucide/info.svg",
+                        10000
+                    )
+                    tabStyleResetObject.addToContainer();
+                }
+            }
+        });
+    });
+
+    addToGroupbox(pinnedTabDesignNode, "natsumiTabs");
 }
 
 function addTabsBehaviorPane() {
@@ -2365,6 +2256,13 @@ function addTabsBehaviorPane() {
         "Tweak how you want tabs to behave."
     );
 
+    tabsBehaviorGroup.registerOption("natsumiSidebarReplaceNewTab", new CheckboxChoice(
+        "natsumi.tabs.replace-new-tab",
+        "natsumiSidebarReplaceNewTab",
+        "Replace New Tab",
+        "This will let you open new tabs through the URL bar instead. Warning: This will override browser.urlbar.openintab."
+    ));
+
     tabsBehaviorGroup.registerOption("natsumiTabsSwitcherUnpinnedOnly", new CheckboxChoice(
         "natsumi.tabs.tab-switcher-unpinned-only",
         "natsumiTabsSwitcherUnpinnedOnly",
@@ -2373,7 +2271,7 @@ function addTabsBehaviorPane() {
 
     let tabsBehaviorNode = tabsBehaviorGroup.generateNode();
 
-    addToGroupbox(tabsBehaviorNode, "natsumiSidebarTabs");
+    addToGroupbox(tabsBehaviorNode, "natsumiTabs");
 }
 
 function addCompactStylesPane() {
@@ -2950,6 +2848,123 @@ function addMiscPreferencesPane() {
     addToGroupbox(miscPreferencesNode, "natsumiMiscellaneous");
 }
 
+function addMiscWindowMaterialPane() {
+    // Create theme selection
+    let windowMaterialSelectionMac = new RadioPreference(
+        "natsumiWindowMaterialMac",
+        "natsumi.theme.use-legacy-translucency",
+        "Window material",
+        "Choose which material to use for the window background.",
+    );
+    let windowMaterialSelectionWindows = new RadioPreference(
+        "natsumiWindowMaterialWindows",
+        "widget.windows.mica.toplevel-backdrop",
+        "Window material",
+        "Choose which material to use for the window background.",
+    );
+
+    for (let windowMaterial in windowMaterialsMac) {
+        windowMaterialSelectionMac.registerOption(windowMaterial, windowMaterialsMac[windowMaterial]);
+    }
+    for (let windowMaterial in windowMaterialsWindows) {
+        windowMaterialSelectionWindows.registerOption(windowMaterial, windowMaterialsWindows[windowMaterial]);
+    }
+
+    let windowMaterialsNode;
+
+    // Set listeners for each button
+    let windowMaterialButtons = [];
+    let targetPref = "natsumi.theme.use-legacy-translucency";
+
+    if (Services.appinfo.OS.toLowerCase() === "darwin") {
+        windowMaterialsNode = windowMaterialSelectionMac.generateNode();
+        windowMaterialButtons = windowMaterialsNode.querySelectorAll(".natsumi-radio-choice");
+    } else if (Services.appinfo.OS.toLowerCase() === "winnt") {
+        windowMaterialsNode = windowMaterialSelectionWindows.generateNode();
+        windowMaterialButtons = windowMaterialsNode.querySelectorAll(".natsumi-radio-choice");
+        targetPref = "widget.windows.mica.toplevel-backdrop";
+
+        // Add DWMBlurGlass/MicaForEveryone warning
+        let windowsExternalMaterialNotice = convertToXUL(`
+            <div id="natsumiWindowsExternalMaterialWarning" class="natsumi-settings-info warning">
+                <div class="natsumi-settings-info-icon"></div>
+                <div class="natsumi-settings-info-text">
+                    If you use something like DWMBlurGlass or MicaForEveryone to enable translucency, you may need to
+                    manage window materials for your browser there.
+                </div>
+            </div>
+        `)
+        let firstRadio = windowMaterialsNode.querySelector(".natsumi-radio-choice");
+        firstRadio.parentNode.insertBefore(windowsExternalMaterialNotice, firstRadio);
+    } else {
+        // We're not on Windows or macOS
+        return;
+    }
+
+    windowMaterialButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            let selectedValue = button.getAttribute("value");
+            console.log("Changing key:", selectedValue === "true");
+
+            if (targetPref === "natsumi.theme.use-legacy-translucency") {
+                ucApi.Prefs.set(targetPref, selectedValue === "true");
+            } else {
+                setStringPreference(targetPref, parseInt(selectedValue));
+            }
+            windowMaterialButtons.forEach((btn) => {
+                btn.removeAttribute("selected")
+                let radioCheck = btn.querySelector(".radio-check");
+                radioCheck.removeAttribute("selected");
+            });
+            button.setAttribute("selected", "true");
+            let radioCheck = button.querySelector(".radio-check");
+            radioCheck.setAttribute("selected", "true");
+        });
+    });
+
+    addToGroupbox(windowMaterialsNode, "natsumiMiscellaneous");
+}
+
+function addMiscSDL2Pane() {
+    // Create choices group
+    let sdl2Group = new OptionsGroup(
+        "natsumiSDL2",
+        "Starlight Design 2",
+        "Starlight Design 2 is an extension to Starlight Design aimed at enhancing visuals and contrast."
+    );
+
+    sdl2Group.registerOption("natsumiEnableSDL2", new CheckboxChoice(
+        "natsumi.theme.disable-sdl2",
+        "natsumiEnableSDL2",
+        "Enable Starlight Design 2 (SDL2)",
+        "",
+        true
+    ));
+
+    let sdl2Subgroup = new OptionsGroup(
+        "natsumiSDL2Options",
+        "",
+        ""
+    );
+
+    sdl2Subgroup.registerOption("natsumiSDL2Backdrop", new CheckboxChoice(
+        "natsumi.theme.no-content-backdrop",
+        "natsumiSDL2Backdrop",
+        "Enable web content backdrop",
+        "This does not affect browser.tabs.allow_transparent_browser.",
+        true,
+        false,
+        "natsumi.theme.disable-sdl2",
+        true
+    ));
+
+    sdl2Group.registerOption("natsumiSDL2Options", sdl2Subgroup);
+
+    let sdl2Node = sdl2Group.generateNode();
+
+    addToGroupbox(sdl2Node, "natsumiMiscellaneous");
+}
+
 function addMiscPanelsPane() {
     // Create choices group
     let miscPanelsGroup = new OptionsGroup(
@@ -3030,24 +3045,37 @@ function addPreferencesPanes() {
         "chrome://natsumi/content/icons/lucide/window.svg"
     );
     addLayoutPane();
-    addThemesPane();
-    addWindowMaterialPane();
     addColorsPane();
-    addIconsPane();
-    addFontsPane();
-    addSDL2Pane();
+    addThemesPane();
 
     addGroupbox(
-        "natsumiSidebarTabs",
-        "Sidebar &amp; Tabs",
-        "Tweak your sidebar and tabs.",
+        "natsumiTextIcons",
+        "Text &amp; Iconography",
+        "Tweak how text and icons appear on the browser.",
+        "chrome://natsumi/content/icons/lucide/text.svg"
+    );
+    addIconsPane();
+    addFontsPane();
+
+    addGroupbox(
+        "natsumiSidebar",
+        "Sidebar &amp; Buttons",
+        "Tweak your sidebar and buttons.",
         "chrome://natsumi/content/icons/lucide/sidebar.svg"
     );
-    addSidebarTabsPane();
-    addSidebarPinnedTabsPane();
+    addSidebarAppearancePane();
     addSidebarWorkspacesPane();
     addSidebarPanelSidebarPane();
     addSidebarButtonsPane();
+
+    addGroupbox(
+        "natsumiTabs",
+        "Tabs",
+        "Tweak how your tabs look and behave.",
+        "chrome://natsumi/content/icons/lucide/browsing.svg"
+    );
+    addTabDesignPane();
+    addPinnedTabsPane();
     addTabsBehaviorPane();
 
     addGroupbox(
@@ -3139,6 +3167,8 @@ function addPreferencesPanes() {
         "chrome://natsumi/content/icons/lucide/settings.svg"
     );
     addMiscPreferencesPane();
+    addMiscWindowMaterialPane();
+    addMiscSDL2Pane();
     addMiscPanelsPane();
     addMiscShortcutsPane();
     addMiscInteractionsPane();
