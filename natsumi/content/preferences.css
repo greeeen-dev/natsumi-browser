@@ -63,7 +63,8 @@ SOFTWARE.
         &::before {
           content: "";
           position: absolute;
-          width: 100%;
+          width: -moz-available;
+          margin-right: var(--space-medium);
           height: 72px;
           background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
           z-index: 999;

@@ -2252,7 +2252,7 @@ function addTabsBehaviorPane() {
     // Create choices group
     let tabsBehaviorGroup = new OptionsGroup(
         "natsumiTabsBehavior",
-        "Tabs behavior",
+        "Behavior",
         "Tweak how you want tabs to behave."
     );
 
