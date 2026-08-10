@@ -474,7 +474,7 @@ toolbarseparator.proton-zap::before {
     }
   }
 
-  &#nav-bar-customization-target toolbarbutton {
+  &#nav-bar-customization-target toolbarbutton:not(#urlbar-searchmode-switcher) {
     max-height: var(--natsumi-button-height) !important;
     min-height: var(--natsumi-button-height) !important;
   }

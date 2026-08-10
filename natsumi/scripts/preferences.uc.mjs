@@ -1282,8 +1282,8 @@ function addGroupbox(id, name, description, icon = null) {
 
     if (!hasRedesignV2) {
         let labelFragment = convertToXUL(`
-            <hbox id="natsumiAppearanceCategory" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
-                <html:${categoryHeader}>Browser Appearance</html:${categoryHeader}>
+            <hbox id="${id}" class="subcategory" data-category="paneNatsumiSettings" hidden="true">
+                <html:${categoryHeader}>${name}</html:${categoryHeader}>
             </hbox>
         `);
         prefsView.insertBefore(labelFragment, homePane);

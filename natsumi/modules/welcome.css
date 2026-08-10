@@ -248,6 +248,10 @@ SOFTWARE.
       #natsumi-welcome-progress-bar {
         gap: 6px;
 
+        &[hidden] {
+          display: none;
+        }
+
         .natsumi-welcome-progress {
           min-width: 32px;
           height: 32px;
