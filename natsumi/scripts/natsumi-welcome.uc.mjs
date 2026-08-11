@@ -122,6 +122,9 @@ class NatsumiWelcome {
                     <image id="natsumi-corner-icon-image"></image>
                     <div id="natsumi-corner-icon-label">Natsumi Browser</div>
                 </div>
+                <div id="natsumi-skip-button">
+                    <div id="natsumi-skip-label">Skip setup</div>
+                </div>
             </div>
         `);
         this.drumRolls = convertToXUL(`
@@ -224,13 +227,13 @@ class NatsumiWelcome {
         selectionObject.classList.add("selected");
     }
 
-    next() {
+    next(skip = false) {
         if (this.node.classList.contains("natsumi-welcome-initial-animation")) {
             this.node.classList.remove("natsumi-welcome-initial-animation");
             this.node.classList.add("natsumi-welcome-ready");
         }
 
-        if (this.step === this.panes.length) {
+        if (this.step === this.panes.length || skip) {
             // Let the drumroll commence
             ucApi.Prefs.set("natsumi.welcome.viewed", true);
 
@@ -565,6 +568,10 @@ class NatsumiXPStartupAnimation extends NatsumiBaseStartupAnimation {
 
 function handleNextButton() {
     natsumiWelcomeObject.next();
+}
+
+function handleSkipButton() {
+    natsumiWelcomeObject.next(true);
 }
 
 function setupWelcome() {
@@ -1341,6 +1348,10 @@ if (!cssEnabled || !settingsEnabled) {
     // Add event handler for next button
     let nextButton = document.getElementById("natsumi-welcome-button-next");
     nextButton.addEventListener("click", handleNextButton);
+
+    // Add event handler for skip button
+    let skipButton = document.getElementById("natsumi-skip-button");
+    skipButton.addEventListener("click", handleSkipButton);
 
     // Set tab style if needed
     let isFloorp = false;

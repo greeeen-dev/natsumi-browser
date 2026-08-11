@@ -336,6 +336,31 @@ SOFTWARE.
     }
   }
 
+  #natsumi-skip-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    height: 32px;
+    padding-inline: 10px;
+    align-items: center;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: var(--natsumi-button-hover-color);
+    }
+
+    &:active {
+      background-color: var(--natsumi-button-active-color);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    }
+
+    #natsumi-skip-label {
+      font-size: small;
+    }
+  }
+
   #natsumi-welcome-button-next {
     min-width: 66px !important;
     min-height: 40px !important;
@@ -415,6 +440,11 @@ SOFTWARE.
       opacity: 1;
     }
 
+    #natsumi-skip-button {
+      transition-delay: calc(var(--natsumi-global-delay) + 4.7s), 0s, 0s;
+      opacity: 1;
+    }
+
     #natsumi-slogan-1, #natsumi-slogan-2 {
       animation: text-appear 0.5s ease;
       animation-fill-mode: forwards;
@@ -477,6 +507,11 @@ SOFTWARE.
 
     #natsumi-corner-icon {
       opacity: 0;
+    }
+
+    #natsumi-skip-button {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .natsumi-welcome-button {
