@@ -37,6 +37,7 @@ import {NatsumiNotification} from "./notifications.sys.mjs";
 let shortcutsMap = {
     "compactMode": {
         "name": "Compact Mode",
+        "icon": "chrome://natsumi/content/icons/lucide/proportions.svg",
         "shortcuts": {
             "toggleCompactMode": {
                 "name": "Toggle Compact Mode"
@@ -51,6 +52,7 @@ let shortcutsMap = {
     },
     "glimpse": {
         "name": "Glimpse",
+        "icon": "chrome://natsumi/content/icons/lucide/glimpse.svg",
         "shortcuts": {
             "closeGlimpse": {
                 "name": "Close Glimpse Tab"
@@ -77,6 +79,7 @@ let shortcutsMap = {
     },
     "splitView": {
         "name": "Split View",
+        "icon": "chrome://natsumi/content/icons/lucide/split-view.svg",
         "shortcuts": {
             "natsumiSplitTabs": {
                 "name": "Split Tabs"
@@ -88,6 +91,7 @@ let shortcutsMap = {
     },
     "navigation": {
         "name": "Navigation",
+        "icon": "chrome://natsumi/content/icons/lucide/browsing.svg",
         "shortcuts": {
             "goBackKb": {
                 "name": "Back"
@@ -123,6 +127,7 @@ let shortcutsMap = {
     },
     "page": {
         "name": "Page Options",
+        "icon": "chrome://natsumi/content/icons/lucide/file.svg",
         "shortcuts": {
             "copyCurrentUrl": {
                 "name": "Copy Current URL"
@@ -149,6 +154,7 @@ let shortcutsMap = {
     },
     "editing": {
         "name": "Edit Controls",
+        "icon": "chrome://natsumi/content/icons/lucide/pen.svg",
         "shortcuts": {
             "key_copy": {
                 "name": "Copy"
@@ -172,6 +178,7 @@ let shortcutsMap = {
     },
     "search": {
         "name": "Search & Find",
+        "icon": "chrome://natsumi/content/icons/lucide/search.svg",
         "shortcuts": {
             "key_search": {
                 "name": "Focus Search"
@@ -195,6 +202,7 @@ let shortcutsMap = {
     },
     "windowsTabs": {
         "name": "Windows & Tabs",
+        "icon": "chrome://natsumi/content/icons/lucide/window.svg",
         "shortcuts": {
             "key_close": {
                 "name": "Close Tab"
@@ -257,6 +265,7 @@ let shortcutsMap = {
     },
     "history": {
         "name": "History",
+        "icon": "chrome://natsumi/content/icons/lucide/history.svg",
         "shortcuts": {
             "key_gotoHistory": {
                 "name": "Show History Sidebar"
@@ -271,6 +280,7 @@ let shortcutsMap = {
     },
     "bookmarks": {
         "name": "Bookmarks",
+        "icon": "chrome://natsumi/content/icons/lucide/bookmarks.svg",
         "shortcuts": {
             "bookmarkAllTabsKb": {
                 "name": "Bookmark All Tabs"
@@ -291,10 +301,8 @@ let shortcutsMap = {
     },
     "tools": {
         "name": "Tools",
+        "icon": "chrome://natsumi/content/icons/lucide/toolkit.svg",
         "shortcuts": {
-            "toggleNatsumiToolkit": {
-                "name": "Toggle Toolkit"
-            },
             "key_openDownloads": {
                 "name": "Open Downloads"
             },
@@ -311,6 +319,7 @@ let shortcutsMap = {
     },
     "workspaces": {
         "name": "Workspaces",
+        "icon": "chrome://natsumi/content/icons/lucide/workspaces.svg",
         "browser": "floorp",
         "shortcuts": {
             "cycleWorkspaces": {
@@ -323,6 +332,7 @@ let shortcutsMap = {
     },
     "devtools": {
         "name": "Developer Tools",
+        "icon": "chrome://natsumi/content/icons/lucide/developer.svg",
         "shortcuts": {
             "key_toggleToolbox": {
                 "name": "Toggle Developer Tools"
@@ -364,6 +374,7 @@ let shortcutsMap = {
     },
     "other": {
         "name": "Other",
+        "icon": "chrome://natsumi/content/icons/lucide/settings.svg",
         "shortcuts": {
             "toggleBrowserLayout": {
                 "name": "Toggle Browser Layout"
@@ -504,14 +515,29 @@ class NatsumiShortcutsPrefPane {
         let prefsPane = document.getElementById("mainPrefPane");
 
         // Create heading
-        let shortcutsNode = convertToXUL(`
-            <hbox id="natsumiShortcutsCategory" class="subcategory" data-category="paneNatsumiShortcuts" hidden="true">
-                <html:${categoryHeader}>Customize Keyboard Shortcuts</html:${categoryHeader}>
-                <div id="natsumi-shortcut-reset">Reset</div>
-                <div id="natsumi-shortcut-import">Import</div>
-                <div id="natsumi-shortcut-export">Export</div>
-            </hbox>
-        `);
+        let shortcutsNode;
+
+        if (!hasRedesignV2) {
+            shortcutsNode = convertToXUL(`
+                <hbox id="natsumiShortcutsCategory" class="subcategory" data-category="paneNatsumiShortcuts" hidden="true">
+                    <html:${categoryHeader}>Customize Keyboard Shortcuts</html:${categoryHeader}>
+                    <div id="natsumi-shortcut-reset">Reset</div>
+                    <div id="natsumi-shortcut-import">Import</div>
+                    <div id="natsumi-shortcut-export">Export</div>
+                </hbox>
+            `);
+        } else {
+            shortcutsNode = convertToXUL(`
+                <hbox id="natsumiShortcutsCategory" class="subcategory natsumi-category-header" data-category="paneNatsumiShortcuts" hidden="true">
+                    <html:div class="natsumi-category-icon" style="background-image: url('chrome://natsumi/content/icons/lucide/meta.svg')"></html:div>
+                    <html:${categoryHeader}>Keyboard Shortcuts</html:${categoryHeader}>
+                    <div id="natsumi-shortcut-reset">Reset</div>
+                    <div id="natsumi-shortcut-import">Import</div>
+                    <div id="natsumi-shortcut-export">Export</div>
+                </hbox>
+            `);
+        }
+
         prefsPane.appendChild(shortcutsNode);
 
         // Set event handlers for import/export buttons
@@ -569,18 +595,43 @@ class NatsumiShortcutsPrefPane {
         // Create container for each category
         for (let categoryKey in shortcutsMap) {
             const categoryName = shortcutsMap[categoryKey].name;
+            const categoryIcon = shortcutsMap[categoryKey].icon;
             const categoryShortcuts = shortcutsMap[categoryKey].shortcuts;
             const categoryId = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
 
             // Create groupbox
             let nodeString = `
-                <groupbox id="natsumiKBS${categoryId}Group" data-category="paneNatsumiShortcuts" hidden="true">
-                    <html:h2>$</html:h2>
+                <groupbox id="natsumiKBS${categoryId}Group" class="natsumi-groupbox" data-category="paneNatsumiShortcuts" hidden="true">
+                    <html:div class="natsumi-groupbox-label natsumi-self-margin">
+                        <html:div class="natsumi-groupbox-icon"></html:div>
+                        <html:div class="natsumi-groupbox-heading"></html:div>
+                    </html:div>
                     <div class="natsumi-categorized-shortcuts-container"></div>
                 </groupbox>
-            `
+            `;
+
+            if (!hasRedesignV2) {
+                nodeString = `
+                    <groupbox id="natsumiKBS${categoryId}Group" data-category="paneNatsumiShortcuts" hidden="true">
+                        <html:h2></html:h2>
+                        <div class="natsumi-categorized-shortcuts-container"></div>
+                    </groupbox>
+                `;
+            }
+
             let categoryFragment = convertToXUL(nodeString);
-            categoryFragment.querySelector("h2").textContent = categoryName;
+
+            if (!hasRedesignV2) {
+                categoryFragment.querySelector("h2").textContent = categoryName;
+            } else {
+                categoryFragment.querySelector(".natsumi-groupbox-heading").textContent = categoryName;
+                categoryFragment.querySelector(".natsumi-groupbox-icon").style.setProperty("--natsumi-icon-url", `url('${categoryIcon}')`);
+
+                if (!categoryIcon) {
+                    categoryFragment.querySelector(".natsumi-groupbox-icon").setAttribute("hidden", "");
+                }
+            }
+
             prefsPane.appendChild(categoryFragment);
 
             // Use actual element instead of document fragment
@@ -683,6 +734,49 @@ class NatsumiShortcutsPrefPane {
         document.addEventListener("keydown", this.onKeyDown.bind(this));
 
         this.initialized = true;
+    }
+
+    notifyConflict(conflictShortcut) {
+        let conflictName = conflictShortcut;
+
+        for (let categoryKey in shortcutsMap) {
+            const categoryShortcuts = shortcutsMap[categoryKey].shortcuts;
+
+            if (categoryShortcuts[conflictShortcut]) {
+                conflictName = categoryShortcuts[conflictShortcut].name;
+                break;
+            }
+        }
+
+        let notificationObject = new NatsumiNotification(
+            "This keybind cannot be used!",
+            `Conflicts with: ${conflictName}`,
+            "chrome://natsumi/content/icons/lucide/warning.svg",
+            10000,
+            "warning"
+        )
+        notificationObject.addButton(
+            "Unregister this shortcut",
+            () => {
+                let conflictShortcutObject = browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcuts[conflictShortcut];
+                let conflictCustomizationData = {
+                    "customKeybinds": false,
+                    "unregistered": true,
+                    "shortcutMode": conflictShortcutObject.shortcutMode
+                }
+                let neverSaved = true;
+                ucApi.Windows.forEach((browserDocument) => {
+                    if (browserDocument.body.natsumiKBSManager) {
+                        browserDocument.body.natsumiKBSManager.updateShortcut(conflictShortcut, conflictCustomizationData, true, neverSaved);
+                    }
+                    neverSaved = false;
+                });
+                this.updateShortcutKeybindsDisplay(document.getElementById(conflictShortcut));
+            },
+            null,
+            true
+        )
+        notificationObject.addToContainer();
     }
 
     async resetAllShortcuts() {
@@ -906,46 +1000,7 @@ class NatsumiShortcutsPrefPane {
             let conflictShortcut = browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.checkConflicts(this.selected.id, keyCombi);
 
             if (conflictShortcut) {
-                let conflictName = conflictShortcut;
-
-                for (let categoryKey in shortcutsMap) {
-                    const categoryShortcuts = shortcutsMap[categoryKey].shortcuts;
-
-                    if (categoryShortcuts[conflictShortcut]) {
-                        conflictName = categoryShortcuts[conflictShortcut].name;
-                        break;
-                    }
-                }
-
-                let notificationObject = new NatsumiNotification(
-                    "This keybind cannot be used!",
-                    `Conflicts with: ${conflictName}`,
-                    "chrome://natsumi/content/icons/lucide/warning.svg",
-                    10000,
-                    "warning"
-                )
-                notificationObject.addButton(
-                    "Unregister this shortcut",
-                    () => {
-                        let conflictShortcutObject = browserWindow.gBrowser.ownerDocument.body.natsumiKBSManager.shortcuts[conflictShortcut];
-                        let conflictCustomizationData = {
-                            "customKeybinds": false,
-                            "unregistered": true,
-                            "shortcutMode": conflictShortcutObject.shortcutMode
-                        }
-                        let neverSaved = true;
-                        ucApi.Windows.forEach((browserDocument) => {
-                            if (browserDocument.body.natsumiKBSManager) {
-                                browserDocument.body.natsumiKBSManager.updateShortcut(conflictShortcut, conflictCustomizationData, true, neverSaved);
-                            }
-                            neverSaved = false;
-                        });
-                        this.updateShortcutKeybindsDisplay(document.getElementById(conflictShortcut));
-                    },
-                    null,
-                    true
-                )
-                notificationObject.addToContainer();
+                this.notifyConflict(conflictShortcut);
                 this.toggleShortcutEdit(this.selected);
                 return;
             }
@@ -1030,7 +1085,10 @@ class NatsumiShortcutsPrefPane {
             unassignedDisplay.classList.add("natsumi-shortcut-unassigned");
             unassignedDisplay.textContent = "Not assigned";
             keybindDisplay.appendChild(unassignedDisplay);
+            shortcutElement.setAttribute("unassigned", "");
             return;
+        } else {
+            shortcutElement.removeAttribute("unassigned");
         }
 
         // Display modifier keys
@@ -1152,6 +1210,8 @@ class NatsumiShortcutsPrefPane {
         if (currentlySelected) {
             currentlySelected.removeAttribute("selected");
         }
+
+        shortcutElement.setAttribute("natsumi-shortcut-mode", `${shortcutObject.shortcutMode}`);
 
         // Set selected value
         selectedNode.setAttribute("selected", "");

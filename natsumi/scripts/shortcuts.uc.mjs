@@ -142,14 +142,18 @@ export class NatsumiKeyboardShortcut {
         }
     }
 
-    resetShortcut() {
+    resetKeybind() {
         this.meta = this.originalCombo.meta;
         this.ctrl = this.originalCombo.ctrl;
         this.alt = this.originalCombo.alt;
         this.shift = this.originalCombo.shift;
         this.key = this.originalCombo.key;
-        this.setShortcutMode(this.originalCombo.shortcutMode);
         this.customized = false;
+    }
+
+    resetShortcut() {
+        this.resetKeybind();
+        this.setShortcutMode(this.originalCombo.shortcutMode);
     }
 }
 
@@ -607,6 +611,8 @@ class NatsumiKBSManager {
             if (shortcut.convertForMac && shortcut.ctrl && !shortcut.meta && !shortcut.customized) {
                 shortcut.meta = true;
                 shortcut.ctrl = false;
+                shortcut.originalCombo["meta"] = true;
+                shortcut.originalCombo["ctrl"] = false;
             }
         }
     }
@@ -1081,7 +1087,7 @@ class NatsumiKBSManager {
         return {"meta": metaPressed, "ctrl": ctrlPressed, "alt": altPressed, "shift": shiftPressed, "key": key};
     }
 
-    checkConflicts(targetShortcut, keyCombination) {
+    checkConflicts(targetShortcut, keyCombination = null) {
         let ignoreCheck = [];
 
         // Populate dictionary of shortcuts to check for conflicts
@@ -1093,6 +1099,10 @@ class NatsumiKBSManager {
             }
             if (shortcutName === targetShortcut || shortcut.interceptedBy === targetShortcut) {
                 ignoreCheck.push(shortcutName);
+
+                if (!keyCombination) {
+                    keyCombination = shortcut.originalCombo;
+                }
             }
         }
 
@@ -1119,6 +1129,11 @@ class NatsumiKBSManager {
                 return shortcutName; // Return the name of the conflicting shortcut
             }
         }
+    }
+
+    checkResetConflicts(targetShortcut) {
+        // Shorthand for checkConflicts(targetShortcut, null)
+        return this.checkConflicts(targetShortcut);
     }
 
     ignoreShortcutHandling(duration, ignoreHandler = null) {

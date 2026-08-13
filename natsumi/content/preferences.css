@@ -355,7 +355,7 @@ SOFTWARE.
 
   body[natsumi-preferences-redesign] {
     @media -moz-pref("browser.settings-redesign.enabled") {
-      groupbox[data-category="paneNatsumiSettings"] {
+      groupbox.natsumi-groupbox {
         border: 1px solid light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.04));
         border-radius: var(--card-border-radius);
         background-color: light-dark(#fff, #23222b);
@@ -407,6 +407,10 @@ SOFTWARE.
           align-items: center;
           margin-top: -4px;
           gap: var(--space-small);
+
+          &.natsumi-self-margin {
+            margin-bottom: var(--space-xlarge);
+          }
 
           .natsumi-groupbox-icon {
             min-width: 16px;

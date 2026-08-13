@@ -239,7 +239,7 @@ SOFTWARE.
     list-style-image: url("../../../icons/lucide/bookmark.svg") !important;
   }
 
-  #star-button[starred="true"] {
+  #star-button[starred] {
     stroke: var(--natsumi-colors-primary);
     list-style-image: url("../../../icons/lucide/bookmark-check.svg") !important;
 

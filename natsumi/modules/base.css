@@ -84,6 +84,8 @@ body > * {
   --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
   --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, black) !important;
   --color-accent-primary-active: color-mix(in srgb, var(--color-accent-primary) 30%, black) !important;
+  --button-background-color-hover: var(--button-background-color-menu-hover);
+  --button-background-color-active: var(--button-background-color-menu-active);
   --button-background-color-menu-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, white);
   --button-background-color-menu-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
   --button-background-color-ghost-hover: var(--button-background-color-menu-hover);
@@ -93,6 +95,7 @@ body > * {
   --button-background-color-primary-active: color-mix(in srgb, var(--button-background-color-primary) 70%, black);
   --promo-background-color: var(--button-background-color-menu-hover) !important;
   --promo-background-color-vibrant: var(--button-background-color-menu-hover) !important;
+  --trustpanel-background: var(--button-background-color-menu-hover) !important;
 
   @media (prefers-color-scheme: dark) {
     --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, white) !important;
