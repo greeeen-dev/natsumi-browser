@@ -62,6 +62,18 @@ SOFTWARE.
       }
     }
 
+    * {
+      --box-button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, white);
+      --box-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
+      --button-background-color-selected: color-mix(in srgb, var(--natsumi-primary-color) 70%, white) !important;
+
+      @media (prefers-color-scheme: dark) {
+        --box-button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, black);
+        --box-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);
+        --button-background-color-selected: color-mix(in srgb, var(--natsumi-primary-color) 70%, black) !important;
+      }
+    }
+
     @media -moz-pref("natsumi.home.custom-background") {
       body {
         background-image: var(--natsumi-home-bg) !important;
@@ -72,14 +84,16 @@ SOFTWARE.
       display: none !important;
     }
 
-    .toggle-button[aria-pressed="true"] {
-      background-color: var(--natsumi-primary-color) !important;
+    @media not -moz-pref("browser.nova.enabled") {
+      .toggle-button[aria-pressed="true"] {
+        background-color: var(--natsumi-primary-color) !important;
 
-      &:hover {
-        background-color: color-mix(in srgb, var(--natsumi-primary-color) 15%, #ebebeb) !important;
+        &:hover {
+          background-color: color-mix(in srgb, var(--natsumi-primary-color) 15%, #ebebeb) !important;
 
-        @media (prefers-color-scheme: dark) {
-          background-color: color-mix(in srgb, var(--natsumi-primary-color) 15%, #202020) !important;
+          @media (prefers-color-scheme: dark) {
+            background-color: color-mix(in srgb, var(--natsumi-primary-color) 15%, #202020) !important;
+          }
         }
       }
     }

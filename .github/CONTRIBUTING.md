@@ -62,6 +62,19 @@ open a Pull request.
 - **Do not attempt to add support for any browser Natsumi intentionally does not support.** Natsumi does not support such
   browsers either due to significant compatibility issues, poor reputation or stances against Natsumi's core values.
 
+### 3.2. Code contributions during maintenance mode
+The project may, at times, enter maintenance mode due to circumstances making active development difficult, though this is
+usually rare. When maintenance mode is active, the maintainers will focus entirely on keeping Natsumi stable and
+compatible with the latest version of Firefox and other compatible forks, while feature updates will either be very
+infrequent or completely halted.
+
+As a community contributor, you are welcome to continue submitting Pull Requests even when maintenance mode is active.
+However, if your contribution includes any new features, getting them reviewed and merged into the project's source code
+may take longer than usual or be left unmerged until maintenance mode ends.
+
+**Maintenance mode is currently active from August 30, 2026 to June 1, 2028. This section applies to all contributions
+until maintenance mode ends.**
+
 ## 4. Guidelines enforcement
 All contributions shall be subject to this repository's Code of Conduct, as well as any other policies described on the
 Guidelines. The Code of Conduct and Contributing Guidelines only provide a rough idea of the expectations on contributors;

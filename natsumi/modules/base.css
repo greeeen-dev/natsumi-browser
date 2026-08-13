@@ -80,6 +80,39 @@ body > * {
   font-family: var(--natsumi-custom-font) !important;
 }
 
+* {
+  --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+  --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, black) !important;
+  --color-accent-primary-active: color-mix(in srgb, var(--color-accent-primary) 30%, black) !important;
+  --button-background-color-hover: var(--button-background-color-menu-hover);
+  --button-background-color-active: var(--button-background-color-menu-active);
+  --button-background-color-menu-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, white);
+  --button-background-color-menu-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
+  --button-background-color-ghost-hover: var(--button-background-color-menu-hover);
+  --button-background-color-ghost-active: var(--button-background-color-menu-active);
+  --button-background-color-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
+  --button-background-color-primary-hover: color-mix(in srgb, var(--button-background-color-primary) 85%, black);
+  --button-background-color-primary-active: color-mix(in srgb, var(--button-background-color-primary) 70%, black);
+  --promo-background-color: var(--button-background-color-menu-hover) !important;
+  --promo-background-color-vibrant: var(--button-background-color-menu-hover) !important;
+  --trustpanel-background: var(--button-background-color-menu-hover) !important;
+
+  @media (prefers-color-scheme: dark) {
+    --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, white) !important;
+    --color-accent-primary-active: color-mix(in srgb, var(--color-accent-primary) 30%, white) !important;
+    --button-background-color-menu-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, black);
+    --button-background-color-menu-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);
+  }
+}
+
+toolbarseparator.proton-zap::before {
+  border-image: linear-gradient(90deg, var(--natsumi-colors-primary), var(--natsumi-primary-color)) 1 !important;
+
+  @media (prefers-color-scheme: dark) {
+    border-image: linear-gradient(90deg, var(--natsumi-primary-color), white) 1 !important;
+  }
+}
+
 :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
   &[chromehidden=""] #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     margin-right: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
@@ -89,7 +122,6 @@ body > * {
 
     .browserSidebarContainer {
       border: var(--natsumi-border-width) solid var(--natsumi-browser-border-color);
-      border-radius: var(--natsumi-browser-border-radius-override, var(--natsumi-browser-border-radius)) !important;
       margin: 0 !important;
       overflow: hidden;
 
@@ -105,19 +137,23 @@ body > * {
         }
       }
 
-      &:has(.devtools-toolbox-side-iframe) {
-        .browserContainer browser {
-          border-radius: var(--natsumi-browser-border-radius) 0 0 var(--natsumi-browser-border-radius) !important;
+      @media not -moz-pref("natsumi.theme.disable-browser-radius") {
+        border-radius: var(--natsumi-browser-border-radius-override, var(--natsumi-browser-border-radius)) !important;
+
+        &:has(.devtools-toolbox-side-iframe) {
+          .browserContainer browser {
+            border-radius: var(--natsumi-browser-border-radius) 0 0 var(--natsumi-browser-border-radius) !important;
+          }
+
+          .devtools-toolbox-side-iframe {
+            border-radius: 0 var(--natsumi-browser-border-radius) var(--natsumi-browser-border-radius) 0 !important;
+          }
         }
 
-        .devtools-toolbox-side-iframe {
-          border-radius: 0 var(--natsumi-browser-border-radius) var(--natsumi-browser-border-radius) 0 !important;
-        }
-      }
-
-      @media not (-moz-platform: macos) {
-        browser {
-          border-radius: var(--natsumi-browser-border-radius) !important;
+        @media not (-moz-platform: macos) {
+          browser {
+            border-radius: calc(var(--natsumi-browser-border-radius) - 1px) !important;
+          }
         }
       }
     }
@@ -344,11 +380,28 @@ body > * {
   }
 }
 
+:root {
+  --natsumi-button-height: 40px;
+  --natsumi-button-padding: 4px;
+  --natsumi-tab-max-height: 44px;
+
+  &[uidensity="compact"] {
+    --natsumi-button-height: 32px;
+    --natsumi-button-padding: 2px;
+    --natsumi-tab-max-height: 36px;
+  }
+
+  &[uidensity="touch"] {
+    --natsumi-button-height: 44px;
+    --natsumi-button-padding: 8px;
+  }
+}
+
 #nav-bar-customization-target, #PanelUI-button, #nora-statusbar, #status-bar, #natsumi-top-toolbar, #natsumi-bottom-toolbar,
 #TabsToolbar-customization-target {
   & > toolbarbutton, & > toolbaritem {
     &:not(#urlbar-container):not(#PanelUI-menu-button):not(#workspaces-toolbar-button) {
-      padding-inline: 4px !important;
+      padding-inline: var(--natsumi-button-padding) !important;
     }
   }
 
@@ -422,6 +475,11 @@ body > * {
         }
       }
     }
+  }
+
+  &#nav-bar-customization-target toolbarbutton:not(#urlbar-searchmode-switcher) {
+    max-height: var(--natsumi-button-height) !important;
+    min-height: var(--natsumi-button-height) !important;
   }
 
   #fxa-toolbar-menu-button {
@@ -571,8 +629,8 @@ body > * {
 /* Fullscreen alert */
 
 #fullscreen-warning {
-  --natsumi-fullscreen-button: url('chrome://global/skin/media/picture-in-picture-enter-fullscreen-button.svg');
-  --natsumi-fullscreen-exit-button: url('chrome://global/skin/media/picture-in-picture-exit-fullscreen-button.svg');
+  --natsumi-fullscreen-button: url('chrome://natsumi/content/icons/lucide/fullscreen.svg');
+  --natsumi-fullscreen-exit-button: url('chrome://natsumi/content/icons/lucide/fullscreen-exit.svg');
 
   &::before {
     display: none !important;
@@ -606,8 +664,10 @@ body > * {
       background-position: center;
       transform: translate(-50%, -50%);
       mask-image: var(--natsumi-fullscreen-button);
-      mask-size: 28px;
+      mask-size: 16px;
       mask-position: center;
+      -moz-context-properties: stroke, fill;
+      stroke: black;
 
       @media (prefers-color-scheme: dark) {
         background-color: white;

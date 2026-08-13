@@ -61,16 +61,16 @@ function waitForAudioLoad(audio) {
 
 function waitForAudioPlay(audio) {
     return new Promise((resolve, reject) => {
-        const onLoad = () => {
-            audio.removeEventListener('playing', onLoad);
-            resolve();
+        const onLoad = (event) => {
+            audio.removeEventListener('timeupdate', onLoad);
+            resolve(event.target.currentTime);
         };
         const onError = (e) => {
             audio.removeEventListener('error', onError);
             reject(e);
         };
 
-        audio.addEventListener('playing', onLoad);
+        audio.addEventListener('timeupdate', onLoad);
         audio.addEventListener('error', onError);
     });
 }
@@ -121,6 +121,9 @@ class NatsumiWelcome {
                 <div id="natsumi-corner-icon">
                     <image id="natsumi-corner-icon-image"></image>
                     <div id="natsumi-corner-icon-label">Natsumi Browser</div>
+                </div>
+                <div id="natsumi-skip-button">
+                    <div id="natsumi-skip-label">Skip setup</div>
                 </div>
             </div>
         `);
@@ -224,13 +227,13 @@ class NatsumiWelcome {
         selectionObject.classList.add("selected");
     }
 
-    next() {
+    next(skip = false) {
         if (this.node.classList.contains("natsumi-welcome-initial-animation")) {
             this.node.classList.remove("natsumi-welcome-initial-animation");
             this.node.classList.add("natsumi-welcome-ready");
         }
 
-        if (this.step === this.panes.length) {
+        if (this.step === this.panes.length || skip) {
             // Let the drumroll commence
             ucApi.Prefs.set("natsumi.welcome.viewed", true);
 
@@ -339,12 +342,12 @@ class NatsumiWelcome {
         setTimeout(() => {
             // Show welcome complete drumroll
             document.body.setAttribute("natsumi-welcome-drumroll-complete", "");
-        }, 2800);
+        }, 2600);
 
         setTimeout(() => {
             // Remove drumrolls
             document.body.setAttribute("natsumi-welcome-complete-full", "");
-        }, 4300);
+        }, 4100);
 
         setTimeout(() => {
             // We're finally through with the welcome
@@ -373,7 +376,7 @@ class NatsumiWelcome {
                 )
                 tabStyleResetObject.addToContainer();
             }
-        }, 4800);
+        }, 4600);
     }
 }
 
@@ -567,6 +570,10 @@ function handleNextButton() {
     natsumiWelcomeObject.next();
 }
 
+function handleSkipButton() {
+    natsumiWelcomeObject.next(true);
+}
+
 function setupWelcome() {
     natsumiWelcomeObject = new NatsumiWelcome();
 }
@@ -661,6 +668,9 @@ function createColorsPane() {
         </div>
         <div class="natsumi-welcome-selection" pref="natsumi.theme.accent-color" type="string" value="lavender-purple">
             <div id="natsumi-welcome-lavender-purple" class="natsumi-welcome-selection-preview"></div>
+        </div>
+        <div class="natsumi-welcome-selection" pref="natsumi.theme.accent-color" type="string" value="silver">
+            <div id="natsumi-welcome-silver" class="natsumi-welcome-selection-preview"></div>
         </div>
         <div class="natsumi-welcome-selection" pref="natsumi.theme.accent-color" type="string" value="system">
             <div id="natsumi-welcome-system-accent" class="natsumi-welcome-selection-preview"></div>
@@ -875,6 +885,17 @@ function createTabsPane() {
             </div>
             <div class="natsumi-welcome-selection-label">
                 Clicky
+            </div>
+        </div>
+        <div class="natsumi-welcome-selection" pref="natsumi.tabs.type" type="string" value="neutron">
+            <div id="natsumi-welcome-tabs-neutron" class="natsumi-welcome-selection-preview">
+                <div class='natsumi-welcome-tab'>
+                    <div class='natsumi-welcome-tab-icon'></div>
+                    <div class='natsumi-welcome-tab-text'></div>
+                </div>
+            </div>
+            <div class="natsumi-welcome-selection-label">
+                Neutron
             </div>
         </div>
         <div class="natsumi-welcome-selection" pref="natsumi.tabs.type" type="string" value="classic">
@@ -1305,9 +1326,14 @@ if (!cssEnabled || !settingsEnabled) {
     audio.addEventListener("playing", () => {console.log("playing", Date.now())});
 
     // Start welcomer
-    waitForAudioPlay(audio).then(() => {
+    waitForAudioPlay(audio).then((currentTime) => {
         console.log("start", Date.now());
-        natsumiWelcomeObject.start();
+
+        if (currentTime > 0.15) {
+            natsumiWelcomeObject.start();
+        } else {
+            setTimeout(() => {natsumiWelcomeObject.start()}, (0.15 - currentTime) * 1000);
+        }
     }).catch((error) => {
         console.warn("Failed to play audio:", error);
         natsumiWelcomeObject.start();
@@ -1322,6 +1348,10 @@ if (!cssEnabled || !settingsEnabled) {
     // Add event handler for next button
     let nextButton = document.getElementById("natsumi-welcome-button-next");
     nextButton.addEventListener("click", handleNextButton);
+
+    // Add event handler for skip button
+    let skipButton = document.getElementById("natsumi-skip-button");
+    skipButton.addEventListener("click", handleSkipButton);
 
     // Set tab style if needed
     let isFloorp = false;

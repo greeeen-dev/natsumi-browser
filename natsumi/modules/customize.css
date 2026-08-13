@@ -50,6 +50,22 @@ SOFTWARE.
     display: flex;
   }
 
+  #sidebar-container {
+    padding-top: calc(var(--natsumi-single-toolbar-offset, 0px) + var(--natsumi-pinned-toolbar-height, 32px) + 8px + var(--natsumi-top-toolbar-compact-offset, 0px)) !important;
+  }
+
+  #vertical-tabs {
+    @media not -moz-pref("natsumi.sidebar.disable-bottom-toolbar") {
+      padding-bottom: calc(var(--natsumi-bottom-toolbar-height, 28px) + 6px + var(--natsumi-browser-separation)) !important;
+    }
+  }
+
+  @media not -moz-pref("natsumi.theme.pinned-toolbar-on-top") {
+    #sidebar-container {
+      --natsumi-top-toolbar-margin: calc(var(--natsumi-pinned-toolbar-height, -8px) + 8px);
+    }
+  }
+
   #natsumi-bottom-toolbar {
     translate: var(--natsumi-left-offset, 0) calc(-40vh + var(--natsumi-statusbar-offset, 0px));
     min-width: 36px !important;

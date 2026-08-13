@@ -142,14 +142,18 @@ export class NatsumiKeyboardShortcut {
         }
     }
 
-    resetShortcut() {
+    resetKeybind() {
         this.meta = this.originalCombo.meta;
         this.ctrl = this.originalCombo.ctrl;
         this.alt = this.originalCombo.alt;
         this.shift = this.originalCombo.shift;
         this.key = this.originalCombo.key;
-        this.setShortcutMode(this.originalCombo.shortcutMode);
         this.customized = false;
+    }
+
+    resetShortcut() {
+        this.resetKeybind();
+        this.setShortcutMode(this.originalCombo.shortcutMode);
     }
 }
 
@@ -607,6 +611,8 @@ class NatsumiKBSManager {
             if (shortcut.convertForMac && shortcut.ctrl && !shortcut.meta && !shortcut.customized) {
                 shortcut.meta = true;
                 shortcut.ctrl = false;
+                shortcut.originalCombo["meta"] = true;
+                shortcut.originalCombo["ctrl"] = false;
             }
         }
     }
@@ -754,6 +760,8 @@ class NatsumiKBSManager {
                         originalKeyNode.removeAttribute("disabled");
                     }
                 }
+
+                this.applyMenuKey(shortcutName);
             } else {
                 // Set modifiers
                 let modifiers = [];
@@ -801,6 +809,38 @@ class NatsumiKBSManager {
         mainKeyset.parentNode.insertBefore(mainKeyset, mainKeyset.nextSibling);
         if (devtoolsKeyset) {
             devtoolsKeyset.parentNode.insertBefore(devtoolsKeyset, devtoolsKeyset.nextSibling);
+        }
+    }
+
+    applyMenuKey(shortcut) {
+        let shortcutObject = this.shortcuts[shortcut];
+
+        if (!(shortcutObject instanceof NatsumiNativeKeyboardShortcut)) {
+            console.warn(`${shortcut} is not a native shortcut, cannot apply key for menu item`);
+            return;
+        }
+
+        let correspondingMenuItems = document.querySelectorAll(`menuitem:is([key='${shortcut}'], [natsumi-original-key='${shortcut}'])`);
+
+        for (let menuItem of correspondingMenuItems) {
+            if (shortcutObject.unregistered) {
+                if (!menuItem.hasAttribute("natsumi-original-key")) {
+                    menuItem.setAttribute("natsumi-original-key", menuItem.getAttribute("key"));
+                }
+
+                menuItem.removeAttribute("key");
+            } else if (shortcutObject.customized) {
+                if (!menuItem.hasAttribute("natsumi-original-key")) {
+                    menuItem.setAttribute("natsumi-original-key", menuItem.getAttribute("key"));
+                }
+
+                menuItem.setAttribute("key", `natsumiCustomized_${shortcut}`);
+            } else {
+                if (menuItem.hasAttribute("natsumi-original-key")) {
+                    menuItem.setAttribute("key", menuItem.getAttribute("natsumi-original-key"));
+                    menuItem.removeAttribute("natsumi-original-key");
+                }
+            }
         }
     }
 
@@ -1047,7 +1087,7 @@ class NatsumiKBSManager {
         return {"meta": metaPressed, "ctrl": ctrlPressed, "alt": altPressed, "shift": shiftPressed, "key": key};
     }
 
-    checkConflicts(targetShortcut, keyCombination) {
+    checkConflicts(targetShortcut, keyCombination = null) {
         let ignoreCheck = [];
 
         // Populate dictionary of shortcuts to check for conflicts
@@ -1059,6 +1099,10 @@ class NatsumiKBSManager {
             }
             if (shortcutName === targetShortcut || shortcut.interceptedBy === targetShortcut) {
                 ignoreCheck.push(shortcutName);
+
+                if (!keyCombination) {
+                    keyCombination = shortcut.originalCombo;
+                }
             }
         }
 
@@ -1085,6 +1129,11 @@ class NatsumiKBSManager {
                 return shortcutName; // Return the name of the conflicting shortcut
             }
         }
+    }
+
+    checkResetConflicts(targetShortcut) {
+        // Shorthand for checkConflicts(targetShortcut, null)
+        return this.checkConflicts(targetShortcut);
     }
 
     ignoreShortcutHandling(duration, ignoreHandler = null) {

@@ -158,13 +158,14 @@ SOFTWARE.
 }
 
 .natsumi-miniplayer {
+  --animation-duration: 0.2s;
   border-radius: var(--natsumi-tab-border-radius);
   background: var(--natsumi-mat-hz-background);
   backdrop-filter: var(--natsumi-mat-hz-backdrop);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   min-width: 100%;
-  min-height: 36px;
-  transition: min-height 0.2s ease, max-width 0.2s ease;
+  min-height: var(--natsumi-miniplayer-min-height);
+  transition: min-height var(--animation-duration) ease, max-width var(--animation-duration) ease;
   flex-direction: column;
   overflow: hidden;
   margin-top: 5px !important;
@@ -182,13 +183,13 @@ SOFTWARE.
 
       @media -moz-pref("natsumi.miniplayer.disable-artwork") {
         --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
-        transition: background 0.5s ease, min-height 0.2s ease;
+        transition: background 0.5s ease, min-height var(--animation-duration) ease;
         background: var(--natsumi-mat-th-background);
       }
 
       &:not([miniplayer-has-artwork]) {
         --natsumi-primary-color: oklch(from var(--natsumi-miniplayer-artwork-color) 0.825 0.1 h) !important;
-        transition: background 0.5s ease, min-height 0.2s ease;
+        transition: background 0.5s ease, min-height var(--animation-duration) ease;
         background: var(--natsumi-mat-th-background);
       }
     }
@@ -204,8 +205,8 @@ SOFTWARE.
 
   &::before {
     content: "";
-    width: calc(100% + 10px);
-    height: calc(100% + 10px);
+    width: calc(var(--natsumi-miniplayer-max-width, 100%) + 10px);
+    height: calc(var(--natsumi-miniplayer-max-height, 100%) + 10px);
     position: absolute;
     left: -5px;
     top: -5px;
@@ -214,7 +215,8 @@ SOFTWARE.
     background-position: center;
     z-index: -1;
     filter: blur(2px) brightness(0.6);
-    transition: width 0.2s ease, height 0.2s ease, top 0.2s ease, left 0.2s ease;
+    transition: width var(--animation-duration) ease, height var(--animation-duration) ease,
+                top var(--animation-duration) ease, left var(--animation-duration) ease;
 
     @media -moz-pref("natsumi.miniplayer.disable-artwork") {
       display: none;
@@ -222,11 +224,15 @@ SOFTWARE.
   }
 
   &:hover, &[pinned] {
-    min-height: 128px;
+    @media -moz-pref("sidebar.verticalTabs") {
+      min-height: var(--natsumi-miniplayer-max-height);
+    }
+
+    @media not -moz-pref("sidebar.verticalTabs") {
+      max-width: var(--natsumi-miniplayer-max-width) !important;
+    }
 
     &[natsumi-no-scrubber] {
-      min-height: 110px;
-
       .natsumi-miniplayer-scrubber-container {
         display: none !important;
       }
@@ -235,10 +241,10 @@ SOFTWARE.
 
   &:not(:hover):not([pinned]) {
     &::before {
-      width: calc(100% + 50px);
-      height: calc(100% + 50px);
-      left: -25px;
-      top: -25px;
+      width: calc(var(--natsumi-miniplayer-max-width, 100%) + 30px);
+      height: calc(var(--natsumi-miniplayer-max-height, 100%) + 30px);
+      left: -15px;
+      top: calc(calc(var(--natsumi-miniplayer-max-height, 100%) + 30px - var(--natsumi-miniplayer-min-height)) / -2);
     }
 
     .natsumi-miniplayer-info-container {
@@ -274,7 +280,7 @@ SOFTWARE.
 
   .natsumi-miniplayer-info-container {
     flex-direction: column;
-    transition: margin 0.2s ease, opacity 0.2s ease;
+    transition: margin var(--animation-duration) ease, opacity var(--animation-duration) ease;
     padding: 4px !important;
   }
 
@@ -285,7 +291,7 @@ SOFTWARE.
   .natsumi-miniplayer-site-container {
     padding: 4px !important;
     border-radius: 8px !important;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color var(--animation-duration) ease, box-shadow var(--animation-duration) ease;
     flex: 1;
 
     .natsumi-miniplayer-site-icon {
@@ -329,7 +335,8 @@ SOFTWARE.
     height: 24px;
     padding: 5px !important;
     border-radius: 8px !important;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    transition: background-color var(--animation-duration) ease, box-shadow var(--animation-duration) ease,
+                opacity var(--animation-duration) ease;
     -moz-context-properties: stroke, fill;
     stroke: white;
     background-image: url("../icons/lucide/pin.svg");
@@ -800,7 +807,6 @@ SOFTWARE.
 
     @media not -moz-pref("sidebar.verticalTabs") {
       display: flex !important;
-      min-height: 40px;
       margin: 0 6px !important;
       flex-align: row !important;
       align-items: center;
@@ -818,7 +824,6 @@ SOFTWARE.
 
   .natsumi-miniplayer {
     @media not -moz-pref("sidebar.verticalTabs") {
-      min-height: 32px !important;
       min-width: 32px !important;
       height: 32px !important;
       margin-top: 0 !important;
@@ -845,23 +850,19 @@ SOFTWARE.
       }
     }
 
-    .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
-      transition: margin 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    }
-
-    &:hover, &[pinned] {
-      @media -moz-pref("sidebar.verticalTabs") {
-        min-height: calc(var(--tab-collapsed-background-width) + 112px) !important;
-      }
-
-      @media not -moz-pref("sidebar.verticalTabs") {
-        max-width: 176px !important;
-      }
+    .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button,
+    .natsumi-miniplayer-mute-button, .natsumi-miniplayer-pin-button {
+      transition: margin var(--animation-duration) ease, background-color 0.2s ease, box-shadow 0.2s ease, opacity var(--animation-duration) ease;
     }
 
     &:not(:hover):not([pinned]) {
       @media -moz-pref("sidebar.verticalTabs") {
         min-height: var(--tab-collapsed-background-width) !important;
+
+        &::before {
+          height: calc(var(--natsumi-miniplayer-min-height, 100%) + 30px) !important;
+          top: -15px !important;
+        }
 
         .natsumi-miniplayer-prevtrack-button, .natsumi-miniplayer-pauseplay-button, .natsumi-miniplayer-nexttrack-button, .natsumi-miniplayer-mute-button {
           margin-bottom: -100% !important;
@@ -888,6 +889,31 @@ SOFTWARE.
         }
       }
     }
+  }
+}
+
+@media -moz-pref("sidebar.verticalTabs") {
+  #sidebar-container[sidebar-launcher-expanded], #sidebar-main[sidebar-launcher-expanded] {
+    .natsumi-miniplayer {
+      --natsumi-miniplayer-min-height: 36px;
+      --natsumi-miniplayer-max-height: 128px;
+
+      &[natsumi-no-scrubber] {
+        --natsumi-miniplayer-max-height: 110px;
+      }
+    }
+  }
+
+  #sidebar-container:not([sidebar-launcher-expanded]), #sidebar-main:not([sidebar-launcher-expanded]) {
+    --natsumi-miniplayer-max-height: 172px;
+    --natsumi-miniplayer-min-height: 32px;
+  }
+}
+
+@media not -moz-pref("sidebar.verticalTabs") {
+  .natsumi-miniplayer {
+    --natsumi-miniplayer-max-width: 176px;
+    --natsumi-miniplayer-min-height: 32px;
   }
 }
 

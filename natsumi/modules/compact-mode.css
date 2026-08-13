@@ -76,6 +76,12 @@ SOFTWARE.
       .browserSidebarContainer {
         border: none !important;
         border-radius: 0 !important;
+
+        @media not (-moz-platform: macos) {
+          browser {
+            border-radius: 0 !important;
+          }
+        }
       }
     }
 
@@ -264,6 +270,16 @@ SOFTWARE.
           padding-top: calc(90px + var(--natsumi-pinned-toolbar-height)) !important;
         }
       }
+
+      &:has(#pinned-tabs-container:empty) {
+        @media not -moz-pref("natsumi.theme.single-toolbar") {
+          padding-top: calc(20px + var(--natsumi-pinned-toolbar-height)) !important;
+        }
+
+        @media -moz-pref("natsumi.theme.single-toolbar") {
+          padding-top: calc(90px + var(--natsumi-pinned-toolbar-height)) !important;
+        }
+      }
     }
 
     &[natsumi-custom-theme-has-image] {
@@ -349,6 +365,14 @@ SOFTWARE.
       left: calc(var(--natsumi-compact-offset) * -1) !important;
       opacity: 0 !important;
 
+      @media not -moz-pref("sidebar.verticalTabs") {
+        margin-inline: 2px !important;
+
+        @media not -moz-pref("browser.nova.enabled") {
+          margin-inline: 7px !important;
+        }
+      }
+
       @media -moz-pref("sidebar.position_start") {
         left: calc(var(--natsumi-compact-offset) * -1) !important;
       }
@@ -422,7 +446,7 @@ SOFTWARE.
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.6) !important;
         --natsumi-compact-bookmarks-height: 0px;
         --natsumi-compact-tabs-height: 0px;
-        --natsumi-compact-offset: calc(40px + var(--natsumi-compact-bookmarks-height) + var(--natsumi-compact-tabs-height) - var(--natsumi-compact-hoverable));
+        --natsumi-compact-offset: calc(var(--natsumi-button-height) + var(--natsumi-compact-bookmarks-height) + var(--natsumi-compact-tabs-height) - var(--natsumi-compact-hoverable));
         top: calc(var(--natsumi-compact-offset) * -1) !important;
         opacity: 0 !important;
 
@@ -466,7 +490,7 @@ SOFTWARE.
         }
 
         @media not -moz-pref("sidebar.verticalTabs") {
-          --natsumi-compact-tabs-height: 44px !important;
+          --natsumi-compact-tabs-height: var(--natsumi-tab-max-height) !important;
         }
       }
 
@@ -510,7 +534,7 @@ SOFTWARE.
       &:has(#navigator-toolbox toolbarbutton[open], #urlbar[focused], #navigator-toolbox .tab-group-label-container[open]) {
         @media not -moz-pref("natsumi.theme.compact-smaller-sidebar") {
           #sidebar-main, #sidebar-container {
-            --natsumi-toolbar-height: 40px;
+            --natsumi-toolbar-height: var(--natsumi-button-height);
             top: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
             --natsumi-sidebar-height-offset: var(--natsumi-sidebar-height-override, var(--natsumi-toolbar-height)) !important;
           }

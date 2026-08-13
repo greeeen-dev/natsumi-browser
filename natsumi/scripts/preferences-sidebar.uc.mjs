@@ -66,7 +66,7 @@ function addSidebarSubcategory(categoryButton) {
     // Get all subcategories
     const mainPrefPane = document.getElementById("mainPrefPane");
     const settingPane = mainPrefPane.querySelector(`setting-pane[data-category="${categoryName}"]`);
-    let allSubcategories = mainPrefPane.querySelectorAll(`hbox.subcategory[data-category="${categoryName}"]`);
+    let allSubcategories = mainPrefPane.querySelectorAll(`hbox.subcategory[data-category="${categoryName}"]:not(.natsumi-category-header)`);
     let categoryShadowButton = categoryButton.shadowRoot.querySelector("button");
 
     if (allSubcategories.length <= 1) {
@@ -110,7 +110,7 @@ function addSidebarSubcategory(categoryButton) {
 
         switch (subcategoryElementName) {
             case "groupbox":
-                subcategoryHeader = subcategory.querySelector("h2").textContent;
+                subcategoryHeader = subcategory.querySelector(".natsumi-groupbox-heading").textContent;
                 break;
             case "moz-fieldset":
                 subcategoryHeader = subcategory.getAttribute("label");
@@ -172,7 +172,7 @@ function addSidebarSubcategory(categoryButton) {
                 highestPosSubcategory = subcategory;
             }
 
-            if (topPos > highestPos && topPos <= 130) {
+            if (topPos > highestPos && topPos <= 140) {
                 highestPos = topPos;
                 highestPosSubcategory = subcategory;
             }

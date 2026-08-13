@@ -30,6 +30,17 @@ SOFTWARE.
 
 */
 
+// A note for whoever is going to work on this during my absence:
+//
+// If the workspaces manager is not working, this is the hint I was talking about.
+// Go into your browser toolbox and look for the module that has the code for workspaces.
+// This seems to be at chrome://noraneko/content/assets/js/index28.js as of writing this.
+// If the code has moved to a different filename, change workspacesModulePath to account
+// for it. You don't need to add backwards compatibility for older Floorp versions like
+// I have, though you can just let me know and I'll do it.
+//
+// Good luck, and have fun! :3
+
 export let workspacesModulePath = "chrome://noraneko/content/assets/js/index28.js";
 
 // Get Floorp version

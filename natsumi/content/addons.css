@@ -41,11 +41,19 @@ SOFTWARE.
       * {
         --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
         --button-background-color-primary: var(--color-accent-primary) !important;
-        --button-background-color-primary: var(--color-accent-primary) !important;
         --button-background-color-primary-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
         --button-background-color-primary-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+        --button-background-color-ghost-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, white);
+        --button-background-color-ghost-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
+        --button-background-color-ghost-selected: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
         --page-nav-button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
         --page-nav-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, transparent) !important;
+
+        @media (prefers-color-scheme: dark) {
+          --button-background-color-ghost-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, black);
+          --button-background-color-ghost-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);
+          --button-background-color-ghost-selected: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);
+        }
       }
 
       #page-header {

@@ -139,6 +139,15 @@ class NatsumiUpdater {
     }
 
     notifyNewUpdate() {
+        // Ensure we aren't at the onboarding screen
+        if (ucApi.Prefs.get("natsumi.welcome.viewed").exists) {
+            if (!ucApi.Prefs.get("natsumi.welcome.viewed").value) {
+                return;
+            }
+        } else {
+            return;
+        }
+
         this.checkForUpdates().then((updateData) => {
             if (updateData.available) {
                 let notificationObject = new NatsumiNotification(

@@ -63,7 +63,8 @@ SOFTWARE.
         &::before {
           content: "";
           position: absolute;
-          width: 100%;
+          width: -moz-available;
+          margin-right: var(--space-medium);
           height: 72px;
           background: linear-gradient(180deg, var(--natsumi-background-color) 40px, transparent 72px);
           z-index: 999;
@@ -94,7 +95,7 @@ SOFTWARE.
         --box-button-background-color-hover: color-mix(in srgb, var(--color-accent-primary) 20%, transparent) !important;
         --box-button-background-color-active: color-mix(in srgb, var(--color-accent-primary) 30%, transparent) !important;
         --page-nav-button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent) !important;
-        --page-nav-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, transparent) !important;
+        --page-nav-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent) !important;
         --link-color: var(--natsumi-content-color);
         --link-color-hover: var(--natsumi-hover-color);
         --link-color-active: var(--natsumi-active-color);
@@ -354,7 +355,7 @@ SOFTWARE.
 
   body[natsumi-preferences-redesign] {
     @media -moz-pref("browser.settings-redesign.enabled") {
-      groupbox[data-category="paneNatsumiSettings"] {
+      groupbox.natsumi-groupbox {
         border: 1px solid light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.04));
         border-radius: var(--card-border-radius);
         background-color: light-dark(#fff, #23222b);
@@ -373,6 +374,68 @@ SOFTWARE.
           margin-top: -4px !important;
           font-weight: var(--font-weight-heading);
           font-size: var(--font-size-large) !important;
+        }
+      }
+
+      .natsumi-category-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-small);
+        min-height: 32px;
+        margin-bottom: var(--space-xlarge);
+
+        &[hidden] {
+          display: none;
+        }
+
+        .natsumi-category-icon {
+          min-width: 16px;
+          height: 16px;
+          background-size: 16px;
+          -moz-context-properties: stroke, stroke-opacity !important;
+          stroke: currentColor;
+        }
+
+        h1, h2 {
+          margin: 0 !important;
+        }
+      }
+
+      .natsumi-groupbox {
+        .natsumi-groupbox-label {
+          display: flex;
+          align-items: center;
+          margin-top: -4px;
+          gap: var(--space-small);
+
+          &.natsumi-self-margin {
+            margin-bottom: var(--space-xlarge);
+          }
+
+          .natsumi-groupbox-icon {
+            min-width: 16px;
+            height: 16px;
+            background-image: var(--natsumi-icon-url);
+            background-size: 16px;
+            -moz-context-properties: stroke, stroke-opacity !important;
+            stroke: currentColor;
+          }
+
+          .natsumi-groupbox-heading {
+            font-size: var(--font-size-large);
+            font-weight: 600;
+          }
+        }
+
+        .natsumi-groupbox-content {
+          margin-block: 1rem 0 !important;
+          display: flex;
+          flex-direction: column;
+
+          .natsumi-group-label {
+            font-weight: 600;
+            font-size: 15px !important;
+          }
         }
       }
     }

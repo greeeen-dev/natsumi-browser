@@ -29,30 +29,22 @@ SOFTWARE.
 
 */
 
-import { NatsumiActorWrapper } from "./actors/js-actors.js";
+window.addEventListener("DOMContentLoaded", (event) => {
+    let targetDoc = event.target;
 
-let JSWindowActors = {
-    NatsumiWeb: {
-        parent: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebParent.sys.mjs"
-        },
-        child: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebChild.sys.mjs",
-            events: {
-                DOMContentLoaded: {}
-            },
-        },
-        allFrames: true,
-        safeForUntrustedWebProcess: true,
-        matches: [
-            "https://natsumi.greeeen.dev/*"
-        ]
+    if (targetDoc.URL === "about:robots") {
+        try {
+            let robotsButton = targetDoc.getElementById("errorTryAgain");
+            robotsButton.addEventListener("click", () => {
+                if (robotsButton.hasAttribute("natsumi-easter-egg")) {
+                    // >:3
+                    targetDoc.defaultView.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+                } else {
+                    robotsButton.setAttribute("natsumi-easter-egg", "");
+                }
+            });
+        } catch(e) {
+            console.error(e);
+        }
     }
-}
-
-try {
-    let actorWrapper = new NatsumiActorWrapper();
-    actorWrapper.addWindowActors(JSWindowActors);
-} catch (e) {
-    console.error("Failed to add Natsumi JS Window Actors:", e);
-}
+});

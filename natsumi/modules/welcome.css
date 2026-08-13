@@ -248,6 +248,10 @@ SOFTWARE.
       #natsumi-welcome-progress-bar {
         gap: 6px;
 
+        &[hidden] {
+          display: none;
+        }
+
         .natsumi-welcome-progress {
           min-width: 32px;
           height: 32px;
@@ -332,6 +336,31 @@ SOFTWARE.
     }
   }
 
+  #natsumi-skip-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    height: 32px;
+    padding-inline: 10px;
+    align-items: center;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: var(--natsumi-button-hover-color);
+    }
+
+    &:active {
+      background-color: var(--natsumi-button-active-color);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    }
+
+    #natsumi-skip-label {
+      font-size: small;
+    }
+  }
+
   #natsumi-welcome-button-next {
     min-width: 66px !important;
     min-height: 40px !important;
@@ -390,7 +419,7 @@ SOFTWARE.
   }
 
   &.natsumi-welcome-initial-animation {
-    --natsumi-global-delay: 0.5s;
+    --natsumi-global-delay: 0s;
     animation: icon-fadein-background 10s ease;
     animation-delay: var(--natsumi-global-delay);
 
@@ -408,6 +437,11 @@ SOFTWARE.
 
     #natsumi-corner-icon {
       transition-delay: calc(var(--natsumi-global-delay) + 4.7s);
+      opacity: 1;
+    }
+
+    #natsumi-skip-button {
+      transition-delay: calc(var(--natsumi-global-delay) + 4.7s), 0s, 0s;
       opacity: 1;
     }
 
@@ -452,7 +486,7 @@ SOFTWARE.
 
   #natsumi-welcome-content-body {
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: hidden;
     height: calc(100% - 48px) !important;
   }
 
@@ -465,10 +499,19 @@ SOFTWARE.
       background-color: var(--natsumi-mat-sd-background);
       border: var(--natsumi-mat-sd-border);
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3) !important;
+
+      #natsumi-welcome-content-body {
+        overflow-y: scroll;
+      }
     }
 
     #natsumi-corner-icon {
       opacity: 0;
+    }
+
+    #natsumi-skip-button {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .natsumi-welcome-button {
@@ -639,6 +682,10 @@ SOFTWARE.
 
         &#natsumi-welcome-lavender-purple {
           background-color: #d4bbff;
+        }
+
+        &#natsumi-welcome-silver {
+          background-color: #c5c5c5;
         }
 
         &#natsumi-welcome-system-accent {
@@ -923,14 +970,6 @@ SOFTWARE.
         }
       }
 
-      #natsumi-welcome-tabs-classic {
-        .natsumi-welcome-tab {
-          background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
-          border-radius: 3px;
-          box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
-        }
-      }
-
       #natsumi-welcome-tabs-clicky {
         .natsumi-welcome-tab {
           background: light-dark(
@@ -948,6 +987,35 @@ SOFTWARE.
           box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1);
           border-radius: 3px;
         }
+      }
+    }
+
+    #natsumi-welcome-tabs-neutron {
+      .natsumi-welcome-tab {
+        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+      }
+    }
+
+    #natsumi-welcome-tabs-classic {
+      .natsumi-welcome-tab {
+        background-color: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7));
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 1px 2px 0px;
+
+        @media -moz-pref("browser.nova.enabled") {
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background: linear-gradient(light-dark(rgb(255, 255, 255), #252428)) padding-box,
+                      linear-gradient(96deg, #b89cff 20.68%, light-dark(#ff9565, #764edd) 79.34%) border-box !important;
+        }
+      }
+    }
+
+    @media not -moz-pref("browser.nova.enabled") {
+      .natsumi-welcome-selection:has(#natsumi-welcome-tabs-neutron) {
+        display: none !important;
       }
     }
 

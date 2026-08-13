@@ -28,7 +28,7 @@ SOFTWARE.
 
 @media -moz-pref("natsumi.theme.icons", "fluent") {
   /* Toolbar icons */
-  .toolbarbutton-icon, #fxa-avatar-image, .searchbar-search-icon {
+  toolbarbutton:not(#appMenu-zoomReduce-button2, #appMenu-zoomEnlarge-button2) .toolbarbutton-icon, #fxa-avatar-image, .searchbar-search-icon {
     -moz-context-properties: stroke, fill, fill-opacity, stroke-opacity !important;
     fill: var(--toolbarbutton-icon-fill) !important;
   }
@@ -242,7 +242,7 @@ SOFTWARE.
     list-style-image: url("../../../icons/fluent/bookmark.svg") !important;
   }
 
-  #star-button[starred="true"] {
+  #star-button[starred] {
     fill: var(--natsumi-colors-primary);
     list-style-image: url("../../../icons/fluent/bookmark-check.svg") !important;
 
@@ -403,6 +403,14 @@ SOFTWARE.
       -moz-context-properties: fill, fill-opacity !important;
       fill: currentColor !important;
     }
+  }
+
+  /* Tab mute button */
+  .tab-audio-button {
+    --natsumi-button-icon: url("chrome://natsumi/content/icons/fluent/volume.svg");
+    --natsumi-button-icon-muted: url("chrome://natsumi/content/icons/fluent/volume-off.svg");
+    --natsumi-button-fill: light-dark(black, white);
+    --natsumi-button-stroke: none;
   }
 }
 

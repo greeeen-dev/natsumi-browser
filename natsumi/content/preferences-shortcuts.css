@@ -72,6 +72,16 @@ SOFTWARE.
     background-image: url("../icons/lucide/upload.svg");
   }
 
+  .natsumi-category-header {
+    #natsumi-shortcut-reset {
+      margin-inline: auto 0;
+    }
+
+    #natsumi-shortcut-import {
+      margin-inline: 0;
+    }
+  }
+
   .natsumi-categorized-shortcuts-container {
     flex-direction: column !important;
     gap: 4px;
@@ -79,12 +89,45 @@ SOFTWARE.
 
   .natsumi-shortcut-row {
     background-color: light-dark(white, black);
-    padding: 8px !important;
     border: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.2));
     border-radius: 6px;
     flex-direction: column !important;
     overflow: hidden;
     min-height: 44px;
+
+    .natsumi-shortcut-info {
+      padding-block: 8px;
+      padding-right: 8px;
+
+      &::before {
+        content: "";
+        width: 4px;
+        height: 42px;
+        margin-block: -8px;
+        margin-right: 8px;
+        background: var(--natsumi-primary-color);
+      }
+    }
+
+    &[natsumi-shortcut-mode="0"] .natsumi-shortcut-info {
+      --natsumi-primary-color: oklch(from #ffffff 0.825 0.1 h);
+    }
+
+    &[natsumi-shortcut-mode="1"] .natsumi-shortcut-info {
+      --natsumi-primary-color: oklch(from blue 0.825 0.1 h);
+    }
+
+    &[natsumi-shortcut-mode="2"] .natsumi-shortcut-info {
+      --natsumi-primary-color: oklch(from green 0.825 0.1 h);
+    }
+
+    &[natsumi-shortcut-mode="3"] .natsumi-shortcut-info {
+      --natsumi-primary-color: oklch(from orange 0.825 0.1 h);
+    }
+
+    &[unassigned] .natsumi-shortcut-info {
+      --natsumi-primary-color: #c5c5c5 !important;
+    }
 
     .natsumi-shortcut-name {
       margin: auto 0;
@@ -96,7 +139,7 @@ SOFTWARE.
       min-height: 26px;
       min-width: 100px;
       margin-left: auto;
-      border-radius: 4px;
+      border-radius: 8px;
       justify-content: center;
       border: 1px solid color-mix(in srgb, var(--natsumi-keybind-color) 10%, transparent);
       background-color: color-mix(in srgb, var(--natsumi-keybind-color) 5%, transparent);
@@ -189,9 +232,8 @@ SOFTWARE.
     .natsumi-shortcut-conflict {
       display: none;
       pointer-events: none;
-      margin-top: 10px;
       flex-direction: column;
-      padding-top: 10px;
+      padding: 10px 8px 8px;
       border-top: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
     }
 

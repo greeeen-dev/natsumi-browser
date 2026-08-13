@@ -1,8 +1,3 @@
-// ==UserScript==
-// @include   main
-// @ignorecache
-// ==/UserScript==
-
 /*
 
 Natsumi Browser - Welcome to your personal internet.
@@ -29,30 +24,21 @@ SOFTWARE.
 
 */
 
-import { NatsumiActorWrapper } from "./actors/js-actors.js";
+/* ==== Mute/unmute button ==== */
 
-let JSWindowActors = {
-    NatsumiWeb: {
-        parent: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebParent.sys.mjs"
-        },
-        child: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebChild.sys.mjs",
-            events: {
-                DOMContentLoaded: {}
-            },
-        },
-        allFrames: true,
-        safeForUntrustedWebProcess: true,
-        matches: [
-            "https://natsumi.greeeen.dev/*"
-        ]
-    }
-}
+#tabbrowser-arrowscrollbox .tab-audio-button {
+  &::part(button) {
+    --button-background-color-ghost-hover: var(--natsumi-button-hover-color) !important;
+    --button-background-color-ghost-active: var(--natsumi-button-active-color) !important;
+    transition: background-color 0.2s ease;
+    border-radius: 10px !important;
+    -moz-context-properties: stroke, fill, fill-opacity, stroke-opacity !important;
+    background-image: var(--natsumi-button-icon, url("chrome://browser/skin/tabbrowser/tab-audio-playing-small.svg")) !important;
+    stroke: var(--natsumi-button-stroke, var(--button-icon-stroke)) !important;
+    fill: var(--natsumi-button-fill, var(--button-icon-fill)) !important;
+  }
 
-try {
-    let actorWrapper = new NatsumiActorWrapper();
-    actorWrapper.addWindowActors(JSWindowActors);
-} catch (e) {
-    console.error("Failed to add Natsumi JS Window Actors:", e);
+  &[muted]::part(button) {
+    background-image: var(--natsumi-button-icon-muted, url("chrome://browser/skin/tabbrowser/tab-audio-muted-small.svg")) !important;
+  }
 }

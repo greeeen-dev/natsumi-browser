@@ -1,8 +1,3 @@
-// ==UserScript==
-// @include   main
-// @ignorecache
-// ==/UserScript==
-
 /*
 
 Natsumi Browser - Welcome to your personal internet.
@@ -29,30 +24,25 @@ SOFTWARE.
 
 */
 
-import { NatsumiActorWrapper } from "./actors/js-actors.js";
+/* ==== Pinned tabs design (Neutron) ==== */
+/* A Proton-like tab design for Firefox Nova, ported to pinned tabs */
 
-let JSWindowActors = {
-    NatsumiWeb: {
-        parent: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebParent.sys.mjs"
-        },
-        child: {
-            esModuleURI: "chrome://natsumi/content/scripts/actors/NatsumiWebChild.sys.mjs",
-            events: {
-                DOMContentLoaded: {}
-            },
-        },
-        allFrames: true,
-        safeForUntrustedWebProcess: true,
-        matches: [
-            "https://natsumi.greeeen.dev/*"
-        ]
+@media -moz-pref("natsumi.tabs.pinned-use-custom-type") and -moz-pref("natsumi.tabs.pinned-type", "neutron") and -moz-pref("browser.nova.enabled") {
+  #pinned-tabs-container, #vertical-pinned-tabs-container {
+    .tabbrowser-tab {
+      & > .tab-stack > .tab-background {
+        border-radius: 8px !important;
+        border: none !important;
+        background-image: none !important;
+      }
     }
-}
 
-try {
-    let actorWrapper = new NatsumiActorWrapper();
-    actorWrapper.addWindowActors(JSWindowActors);
-} catch (e) {
-    console.error("Failed to add Natsumi JS Window Actors:", e);
+    .tabbrowser-tab[selected], .tabbrowser-tab[natsumi-glimpse-selected] {
+      & > .tab-stack > .tab-background {
+        background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
+        box-shadow: var(--box-shadow-level-1) !important;
+        outline-color: var(--tab-selected-outline-color);
+      }
+    }
+  }
 }

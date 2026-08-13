@@ -90,7 +90,7 @@ SOFTWARE.
         transition: scale 0.2s ease;
       }
 
-      &:active:not([style*="transform"]):not(:has(.tab-close-button:hover)) .tab-stack {
+      &:active:not([style*="transform"]):not(:has(.tab-close-button:active), :has(.tab-audio-button:active)) .tab-stack {
         scale: 0.95 !important;
       }
 
@@ -189,87 +189,6 @@ SOFTWARE.
       &:has(.tab-close-button:active) {
         opacity: 0.5;
       }
-    }
-  }
-
-  /* Pinned tabs */
-  #pinned-tabs-container, #vertical-pinned-tabs-container {
-    --tab-height-with-margin-padding: calc(41px + (2 * var(--tab-block-margin, 2px)));
-
-    .tab-background {
-      border: none !important;
-      border-radius: var(--natsumi-tab-border-radius) !important;
-      transition: background-color 0.2s ease;
-    }
-
-    .tabbrowser-tab {
-      .tab-stack {
-        transition: scale 0.2s ease;
-      }
-
-      &:active:not([style*="transform"]) .tab-stack {
-        scale: 0.95 !important;
-      }
-    }
-
-    @media not -moz-pref("natsumi.tabs.disable-pinned-tabs-favicon") {
-      .tab-background::before {
-        content: "";
-        width: 200% !important;
-        height: 200% !important;
-        left: 50% !important;
-        top: 50% !important;
-        translate: -50% -50% !important;
-        opacity: 0;
-        transition: opacity 0.2s ease !important;
-      }
-
-      .tab-background::after {
-        background-color: transparent;
-        transition: background-color 0.2s ease;
-      }
-    }
-
-    .tabbrowser-tab[selected], .tabbrowser-tab[natsumi-glimpse-selected] {
-      &[style*="--natsumi-tab-icon"] {
-        .tab-background {
-          background: transparent !important;
-          overflow: clip !important;
-          position: relative !important;
-        }
-
-        .tab-background::before {
-          background-image: var(--natsumi-tab-icon);
-          background-position: center;
-          background-size: contain !important;
-          position: absolute;
-          background-clip: padding-box !important;
-          filter: blur(20px) saturate(200%);
-          border-radius: var(--natsumi-tab-border-radius);
-          opacity: 1;
-        }
-
-        .tab-background::after {
-          content: "";
-          position: absolute;
-          margin-right: 2px !important;
-          margin-top: 2px !important;
-          width: calc(100% - 4px);
-          height: calc(100% - 4px);
-          background: var(--natsumi-mat-hz-background);
-          border-radius: calc(var(--natsumi-tab-border-radius) - 2px);
-
-          @media not -moz-pref("sidebar.verticalTabs") {
-            margin-left: 2px !important;
-          }
-        }
-      }
-    }
-  }
-
-  #tabbrowser-tabs[expanded] {
-    #pinned-tabs-container, #vertical-pinned-tabs-container {
-      --tab-height-with-margin-padding: calc(45px + (2 * var(--tab-block-margin, 2px)));
     }
   }
 

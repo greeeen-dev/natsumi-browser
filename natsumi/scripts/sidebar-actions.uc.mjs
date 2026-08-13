@@ -125,7 +125,7 @@ class NatsumiUnpinnedTabsClearer {
 
         console.log(tabs);
 
-        gBrowser.removeTabs(tabs);
+        gBrowser.removeTabs(Array.from(tabs));
     }
 }
 

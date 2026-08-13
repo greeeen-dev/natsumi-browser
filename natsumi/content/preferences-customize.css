@@ -316,20 +316,28 @@ SOFTWARE.
 
   #natsumiColorsGroup {
     .natsumi-mc-choice {
-      width: 100px;
-      min-width: 100px;
-      min-height: 100px;
+      width: 80px;
+      min-width: 80px;
+      min-height: 80px;
       flex: 0;
       padding-bottom: 0;
+      overflow: hidden;
+      border-radius: 42px 42px 42px 10px;
+      display: grid;
+      grid-template-columns: 1fr;
+
+      &.selected {
+        border-radius: 46px 46px 46px 14px !important;
+      }
 
       .natsumi-mc-choice-image-container {
         width: 80px;
         height: 80px;
         min-height: 80px;
-        margin: 10px;
-        border-radius: 40px;
         background-color: var(--natsumi-primary-color);
         overflow: hidden;
+        grid-row-start: 1;
+        grid-column-start: 1;
 
         &::before {
           content: "";
@@ -347,10 +355,34 @@ SOFTWARE.
           background-color: var(--natsumi-colors-secondary);
         }
       }
+
+      &:hover {
+        &::before {
+          content: "";
+          background: rgba(255, 255, 255, 0.4);
+          width: 80px;
+          height: 80px;
+          grid-row-start: 1;
+          grid-column-start: 1;
+          z-index: 1;
+        }
+
+        .natsumi-mc-choice-label {
+          opacity: 1;
+        }
+      }
     }
 
     .natsumi-mc-choice-label {
-      display: none;
+      display: flex;
+      grid-row-start: 1;
+      grid-column-start: 1;
+      text-align: center;
+      align-items: center;
+      color: black;
+      padding-inline: 5px;
+      opacity: 0;
+      z-index: 1;
     }
   }
 
@@ -737,6 +769,150 @@ SOFTWARE.
   @media (not -moz-pref("natsumi.tabs.use-custom-type")) or (not -moz-pref("natsumi.tabs.type", "material")) {
     #natsumiTabMaterialAlternate {
       display: none !important;
+    }
+  }
+
+  #natsumiPinnedTabDesignGroup {
+    .natsumi-mc-choice-image-browser {
+      display: grid;
+      grid-template-columns: 1fr;
+      overflow: hidden;
+
+      &::before {
+        grid-row-start: 1;
+        grid-column-start: 1;
+        margin-left: auto;
+        margin-right: 0;
+        margin-bottom: 0;
+        height: calc(100% - 10px);
+        width: 10px;
+        border-right: none;
+        border-bottom: none;
+        border-radius: 5px 0 0 0;
+      }
+
+      .natsumi-mc-tab {
+        width: calc(50% - 10px);
+        margin-top: 16px;
+        height: 16px;
+        grid-row-start: 1;
+        grid-column-start: 1;
+
+        &[selected] {
+          margin-left: 4px;
+        }
+
+        &:not([selected]) {
+          margin-left: calc(50% - 4px);
+        }
+
+        .natsumi-mc-tab-icon {
+          background-image: url("chrome://natsumi/content/icons/natsumi-glass.png");
+          background-size: 12px;
+          width: 12px;
+          height: 12px;
+          margin: auto;
+        }
+      }
+    }
+
+    #pinned-tab-dynamic {
+      .natsumi-mc-tab {
+        height: 24px;
+        display: grid;
+        border-radius: 6px;
+        overflow: hidden;
+
+        &[selected] {
+          box-shadow: var(--box-shadow-level-1) !important;
+
+          &::before {
+            content: "";
+            grid-row-start: 1;
+            grid-column-start: 1;
+            width: 200% !important;
+            height: 200% !important;
+            margin: -25%;
+            background-image: url("chrome://natsumi/content/icons/natsumi-glass.png");
+            background-position: center;
+            background-size: contain;
+            background-clip: padding-box;
+            filter: blur(20px) saturate(200%);
+          }
+
+          &::after {
+            content: "";
+            grid-row-start: 1;
+            grid-column-start: 1;
+            z-index: 0;
+            background: var(--natsumi-mat-hz-background);
+            margin: 2px;
+            border-radius: 4px;
+          }
+
+          .natsumi-mc-tab-icon {
+            grid-row-start: 1;
+            grid-column-start: 1;
+            z-index: 1;
+          }
+        }
+
+        &:not([selected]) {
+          background-color: color-mix(in srgb, currentColor 7%, transparent);
+        }
+      }
+    }
+
+    #pinned-tab-neutron {
+      .natsumi-mc-tab {
+        border-radius: 4px;
+
+        &[selected] {
+          background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
+          box-shadow: var(--box-shadow-level-1) !important;
+        }
+
+        &:not([selected]) {
+          background-color: color-mix(in srgb, currentColor 7%, transparent);
+        }
+      }
+    }
+
+    #pinned-tab-classic {
+      .natsumi-mc-tab {
+        &:not([selected]) {
+          background-color: color-mix(in srgb, currentColor 7%, transparent);
+        }
+      }
+
+      @media -moz-pref("browser.nova.enabled") {
+        .natsumi-mc-tab {
+          border-radius: 8px;
+
+          &[selected] {
+            border: 1px solid transparent;
+            background: linear-gradient(light-dark(rgb(255, 255, 255), #252428)) padding-box,
+                        linear-gradient(96deg, #b89cff 20.68%, light-dark(#ff9565, #764edd) 79.34%) border-box !important;
+          }
+        }
+      }
+
+      @media not -moz-pref("browser.nova.enabled") {
+        .natsumi-mc-tab {
+          border-radius: 4px;
+
+          &[selected] {
+            background: light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
+            box-shadow: var(--box-shadow-level-1) !important;
+          }
+        }
+      }
+    }
+
+    @media not -moz-pref("browser.nova.enabled") {
+      .natsumi-mc-choice:has(#pinned-tab-neutron) {
+        display: none !important;
+      }
     }
   }
 

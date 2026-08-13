@@ -1,0 +1,91 @@
+@-moz-document url-prefix(about:) {
+  * {
+    --color-accent-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+    --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, black) !important;
+    --color-accent-primary-active: color-mix(in srgb, var(--color-accent-primary) 30%, black) !important;
+    --button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent);
+    --button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
+    --button-background-color-primary: var(--color-accent-primary) !important;
+    --button-background-color-primary-hover: color-mix(in srgb, var(--color-accent-primary) 85%, black);
+    --button-background-color-primary-active: color-mix(in srgb, var(--color-accent-primary) 70%, black);
+    --button-background-color-ghost-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, white);
+    --button-background-color-ghost-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
+    --button-background-color-ghost-selected: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
+
+    @media (prefers-color-scheme: dark) {
+      --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, white) !important;
+      --color-accent-primary-active: color-mix(in srgb, var(--color-accent-primary) 30%, white) !important;
+      --button-background-color-ghost-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, black);
+      --button-background-color-ghost-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);
+      --button-background-color-ghost-selected: color-mix(in srgb, var(--natsumi-primary-color) 70%, black);
+    }
+  }
+}
+
+@-moz-document url-prefix(about:config) {
+  html, #toolbar {
+    --natsumi-background-color: color-mix(in srgb, var(--natsumi-primary-color) 10%, white 90%);
+    background-color: var(--natsumi-background-color) !important;
+
+    @media (prefers-color-scheme: dark) {
+      --natsumi-background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%);
+    }
+  }
+}
+
+@-moz-document url-prefix(about:profiles), url-prefix(about:about), url-prefix(about:robots), url-prefix(about:support),
+               url-prefix(about:buildconfig), url-prefix(about:cache), url-prefix(about:crashes),
+               url-prefix(about:debugging), url-prefix(about:firefoxview), url-prefix(about:license),
+               url-prefix(about:logging), url-prefix(about:loginsimportreport), url-prefix(about:memory),
+               url-prefix(about:pdf), url-prefix(about:policies), url-prefix(about:serviceworkers),
+               url-prefix(about:translations), url-prefix(about:unloads), url-prefix(about:url-classifier),
+               url-prefix(about:webrtc), url-prefix(about:editprofile) {
+  html, body {
+    --natsumi-background-color: color-mix(in srgb, var(--natsumi-primary-color) 10%, white 90%);
+    background-color: var(--natsumi-background-color) !important;
+
+    @media (prefers-color-scheme: dark) {
+      --natsumi-background-color: color-mix(in srgb, var(--natsumi-colors-secondary) 20%, #0f0f0f 80%);
+    }
+  }
+}
+
+@-moz-document url-prefix(about:hub) {
+  * {
+    --color-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+    --color-primary-content: light-dark(white, black);
+  }
+}
+
+@-moz-document url-prefix(about:keyboard) {
+  * {
+    --color-primary: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color)) !important;
+    --color-primary-content: light-dark(white, black);
+  }
+
+  .customkeys-sidebar-actions {
+    display: none !important;
+  }
+
+  #table {
+    display: none !important;
+  }
+
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &::before {
+      content: "Keyboard Shortcuts are managed by Natsumi";
+      opacity: 0.5;
+      font-size: large;
+      font-weight: bold;
+    }
+
+    &::after {
+      content: "You can customize Keyboard Shortcuts in Preferences.";
+      opacity: 0.5;
+    }
+  }
+}

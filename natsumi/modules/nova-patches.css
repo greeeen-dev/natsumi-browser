@@ -144,6 +144,34 @@ SOFTWARE.
       border: 1px solid var(--chrome-content-separator-color) !important;
     }
 
+    :root[sizemode="maximized"] {
+      #browser {
+        padding: 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation) !important;
+      }
+
+      #sidebar-container {
+        border: 1px solid var(--chrome-content-separator-color) !important;
+        border-radius: var(--natsumi-browser-border-radius) !important;
+
+        &[sidebar-panel-open] {
+          @media -moz-pref("sidebar.position_start") {
+            border-start-end-radius: 0 !important;
+            border-end-end-radius: 0 !important;
+          }
+
+          @media not -moz-pref("sidebar.position_start") {
+          border-start-start-radius: 0 !important;
+          border-end-start-radius: 0 !important;
+        }
+        }
+      }
+
+      #navigator-toolbox {
+        margin: var(--natsumi-browser-separation) !important;
+        border-radius: var(--natsumi-browser-border-radius) !important;
+      }
+    }
+
     @media -moz-pref("natsumi.theme.islands-haze") {
       @media -moz-pref("natsumi.theme.islands-content-haze") {
         #tabbrowser-tabbox .browserStack {
@@ -482,6 +510,10 @@ SOFTWARE.
         #sidebar-main, #sidebar-container {
           --natsumi-sidebar-height-override: calc(42px + var(--natsumi-browser-separation)) !important;
           --natsumi-compact-sidebar-offset: 1px;
+
+          @media not -moz-pref("sidebar.verticalTabs") {
+            --natsumi-sidebar-height-override: calc(86px + var(--natsumi-browser-separation)) !important;
+          }
         }
 
         #natsumi-pinned-toolbar {
@@ -581,16 +613,6 @@ SOFTWARE.
     }
   }
 
-  @media not -moz-pref("natsumi.theme.single-toolbar") {
-    #urlbar:not([open]) {
-      margin-block: 4px !important;
-
-      .urlbar-input-container {
-        max-height: 30px !important;
-      }
-    }
-  }
-
   #sidebar-box {
     background-color: transparent !important;
   }
@@ -606,7 +628,6 @@ SOFTWARE.
   #urlbar:not([open]) {
     .urlbar-input-container {
       border: 1px solid transparent !important;
-      padding: 1px !important;
     }
 
     .urlbar-background {
@@ -660,7 +681,6 @@ SOFTWARE.
   .urlbar-input-container {
     margin-top: 0 !important;
     background: transparent !important;
-    min-height: 30px;
   }
 
   #PersonalToolbar {

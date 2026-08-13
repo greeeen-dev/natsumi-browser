@@ -40,7 +40,7 @@ SOFTWARE.
     }
 
     .tab-group-label-container {
-      min-height: calc(var(--natsumi-tab-height) - 4px) !important;
+      height: calc(var(--natsumi-tab-height) - 4px) !important;
       padding: 0 !important;
       border-radius: var(--natsumi-tab-border-radius) !important;
       margin: 2px var(--tab-inner-inline-margin) !important;
