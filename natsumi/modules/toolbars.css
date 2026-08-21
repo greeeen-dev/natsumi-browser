@@ -33,6 +33,7 @@ SOFTWARE.
   --natsumi-toolbar-separation: calc(var(--natsumi-browser-separation) - 6px);
   display: flex !important;
   position: absolute;
+  background-color: transparent !important;
   width: calc(var(--natsumi-sidebar-width) - calc(2 * var(--natsumi-toolbar-margin)));
   margin-inline: var(--natsumi-toolbar-margin);
   top: calc(5px + var(--natsumi-button-height) + var(--natsumi-top-toolbar-offset, 0px) + var(--natsumi-pinned-tabs-height) + var(--natsumi-toolbar-offset) + var(--natsumi-toolbar-separation));
