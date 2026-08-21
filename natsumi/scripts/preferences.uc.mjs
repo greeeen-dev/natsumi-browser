@@ -3222,6 +3222,16 @@ function goodGirlBoyEnby() {
 
     let defaultBrowserNodes = document.querySelectorAll("#isDefaultPane");
 
+    if (defaultBrowserNodes.length === 0) {
+        let goodGirlBoyEnbyObserver = new MutationObserver(() => {
+            goodGirlBoyEnby();
+            goodGirlBoyEnbyObserver.disconnect();
+        });
+        let homePane = document.querySelector(`setting-pane[data-category="paneHome"]`);
+        goodGirlBoyEnbyObserver.observe(homePane, {attributes: true, attributeFilter: ["hidden"]});
+        return;
+    }
+
     for (let defaultBrowser of defaultBrowserNodes) {
         let currentMessage = defaultBrowser.getAttribute("message");
 
