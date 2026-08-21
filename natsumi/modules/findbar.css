@@ -58,7 +58,7 @@ SOFTWARE.
   /*noinspection CssInvalidFunction*/
   findbar {
     display: flex !important;
-    position: absolute;
+    position: fixed;
     top: 20px;
     width: min(550px, 90%);
     right: 20px;
@@ -141,6 +141,8 @@ SOFTWARE.
           box-shadow: none !important;
           width: 100% !important;
           border: none !important;
+          border-radius: 8px !important;
+          padding-inline: 4px !important;
 
           /*noinspection CssInvalidFunction*/
 
