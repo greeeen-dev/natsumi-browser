@@ -69,7 +69,12 @@ class NatsumiWorkspacesWrapper {
         if (isFiredragon) {
             workspacesContext = this.workspacesModule.default.getCtx();
         } else {
-            workspacesContext = this.workspacesModule._.getCtx();
+            try {
+                workspacesContext = this.workspacesModule._.getCtx();
+            } catch(e) {
+                console.error("Failed to get workspaces context, you probably need to bump the index number for the module filepath. Create a new issue on GitHub for this.");
+                throw e;
+            }
         }
 
         // Set init to true

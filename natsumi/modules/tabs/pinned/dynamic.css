@@ -87,7 +87,7 @@ SOFTWARE.
         .tab-background::after {
           content: "";
           position: absolute;
-          margin-right: 2px !important;
+          margin-inline: 2px !important;
           margin-top: 2px !important;
           width: calc(100% - 4px);
           height: calc(100% - 4px);

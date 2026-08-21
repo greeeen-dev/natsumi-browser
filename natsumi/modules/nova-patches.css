@@ -142,33 +142,28 @@ SOFTWARE.
       background-image: none !important;
       background-color: var(--toolbar-background-color) !important;
       border: 1px solid var(--chrome-content-separator-color) !important;
+      margin: var(--natsumi-browser-separation) !important;
+      border-radius: var(--natsumi-browser-border-radius) !important;
     }
 
-    :root[sizemode="maximized"] {
-      #browser {
-        padding: 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation) !important;
-      }
+    #browser {
+      padding: 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation) !important;
+    }
 
-      #sidebar-container {
-        border: 1px solid var(--chrome-content-separator-color) !important;
-        border-radius: var(--natsumi-browser-border-radius) !important;
+    #sidebar-container {
+      border: 1px solid var(--chrome-content-separator-color) !important;
+      border-radius: var(--natsumi-browser-border-radius) !important;
 
-        &[sidebar-panel-open] {
-          @media -moz-pref("sidebar.position_start") {
-            border-start-end-radius: 0 !important;
-            border-end-end-radius: 0 !important;
-          }
+      &[sidebar-panel-open] {
+        @media -moz-pref("sidebar.position_start") {
+          border-start-end-radius: 0 !important;
+          border-end-end-radius: 0 !important;
+        }
 
-          @media not -moz-pref("sidebar.position_start") {
+        @media not -moz-pref("sidebar.position_start") {
           border-start-start-radius: 0 !important;
           border-end-start-radius: 0 !important;
         }
-        }
-      }
-
-      #navigator-toolbox {
-        margin: var(--natsumi-browser-separation) !important;
-        border-radius: var(--natsumi-browser-border-radius) !important;
       }
     }
 
