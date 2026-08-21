@@ -11,6 +11,8 @@
     --button-background-color-ghost-hover: color-mix(in srgb, var(--natsumi-primary-color) 50%, white);
     --button-background-color-ghost-active: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
     --button-background-color-ghost-selected: color-mix(in srgb, var(--natsumi-primary-color) 70%, white);
+    --box-button-background-color-hover: color-mix(in srgb, var(--natsumi-primary-color) 20%, transparent);
+    --box-button-background-color-active: color-mix(in srgb, var(--natsumi-primary-color) 30%, transparent);
 
     @media (prefers-color-scheme: dark) {
       --color-accent-primary-hover: color-mix(in srgb, var(--color-accent-primary) 60%, white) !important;
