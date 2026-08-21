@@ -1029,6 +1029,10 @@ body[natsumi-editing-theme] {
   }
 }
 
+#sidebar-container[width="0"] {
+  width: unset !important;
+}
+
 @media not -moz-pref("sidebar.verticalTabs") {
   #tabbrowser-tabs {
     &::before {
