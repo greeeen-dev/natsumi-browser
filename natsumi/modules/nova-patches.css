@@ -28,6 +28,8 @@ SOFTWARE.
 
 @media -moz-pref("browser.nova.enabled") {
   /* Standard mode */
+  /* Most of the code here will probably be rewritten once the final version of Nova drops, */
+  /* because Mozilla reverted a lot for FF156. */
   @media not -moz-pref("natsumi.theme.islands") {
     #navigator-toolbox {
       margin-block-end: unset !important;
@@ -148,6 +150,7 @@ SOFTWARE.
 
     #browser {
       padding: 0 var(--natsumi-browser-separation) var(--natsumi-browser-separation) !important;
+      gap: var(--natsumi-browser-separation) !important;
     }
 
     #sidebar-container {
@@ -251,7 +254,7 @@ SOFTWARE.
     }
 
     @media not -moz-pref("natsumi.sidebar.floorp-floating-panel") {
-      :root:not([inDOMFullscreen="true"]):not([drawtitle])[chromehidden=""] body[natsumi-panel-sidebar-enabled] {
+      :root:not([inDOMFullscreen="true"]):not([drawtitle]):is([chromehidden=""], :not([chromehidden])) body[natsumi-panel-sidebar-enabled] {
         &:not([natsumi-panel-sidebar-on-right]) {
           #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
             margin-left: 0 !important;
@@ -305,7 +308,7 @@ SOFTWARE.
     }
 
     @media -moz-pref("natsumi.sidebar.floorp-floating-panel") {
-      :root:not([inDOMFullscreen="true"]):not([drawtitle])[chromehidden=""] {
+      :root:not([inDOMFullscreen="true"]):not([drawtitle]):is([chromehidden=""], :not([chromehidden])) {
         body:not([natsumi-panel-sidebar-on-right]) #panel-sidebar-select-box {
           margin-left: var(--natsumi-browser-separation) !important;
         }
@@ -323,19 +326,19 @@ SOFTWARE.
     }
 
     @media -moz-pref("natsumi.theme.single-toolbar") {
-      :root:not([inDOMFullscreen="true"]):not([drawtitle])[chromehidden=""] #panel-sidebar-select-box {
+      :root:not([inDOMFullscreen="true"]):not([drawtitle]):is([chromehidden=""], :not([chromehidden])) #panel-sidebar-select-box {
         margin-top: var(--natsumi-browser-separation) !important;
       }
     }
 
     @media -moz-pref("sidebar.position_start") {
-      :root:not([inDOMFullscreen="true"])[chromehidden=""] body[natsumi-compact-mode] #sidebar-box {
+      :root:not([inDOMFullscreen="true"]):is([chromehidden=""], :not([chromehidden])) body[natsumi-compact-mode] #sidebar-box {
         margin-right: 0 !important;
       }
     }
 
     @media not -moz-pref("sidebar.position_start") {
-      :root:not([inDOMFullscreen="true"])[chromehidden=""] body[natsumi-compact-mode] #sidebar-box {
+      :root:not([inDOMFullscreen="true"]):is([chromehidden=""], :not([chromehidden])) body[natsumi-compact-mode] #sidebar-box {
         margin-left: 0 !important;
       }
 
@@ -360,7 +363,7 @@ SOFTWARE.
       }
     }
 
-    :root:not([inDOMFullscreen="true"]):not([drawtitle])[chromehidden=""] #panel-sidebar-splitter {
+    :root:not([inDOMFullscreen="true"]):not([drawtitle]):is([chromehidden=""], :not([chromehidden])) #panel-sidebar-splitter {
       margin-inline: calc(var(--natsumi-browser-separation) / -2 - 2px) !important;
     }
 

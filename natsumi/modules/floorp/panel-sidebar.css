@@ -204,7 +204,7 @@ SOFTWARE.
     margin-left: 0 !important;
   }
 
-  :root[chromehidden=""] body[natsumi-panel-sidebar-on-right][natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+  :root:is([chromehidden=""], :not([chromehidden])) body[natsumi-panel-sidebar-on-right][natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     --natsumi-right-sidebar-margin-override: 0 !important;
     margin-right: 0 !important;
   }
@@ -357,7 +357,7 @@ SOFTWARE.
       transition: scale 0.3s ease, opacity 0.3s ease, translate 0.3s ease;
     }
 
-    :root:not([inDOMFullscreen="true"]):not([drawtitle])[chromehidden=""] body[natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) {
+    :root:not([inDOMFullscreen="true"]):not([drawtitle]):is([chromehidden=""], :not([chromehidden])) body[natsumi-panel-sidebar-active]:not([natsumi-panel-sidebar-floating]) {
       #panel-sidebar-box {
         z-index: 10;
       }

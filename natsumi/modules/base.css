@@ -114,7 +114,7 @@ toolbarseparator.proton-zap::before {
 }
 
 :root:not([inDOMFullscreen="true"]):not([drawtitle]) {
-  &[chromehidden=""] #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
+  &:is([chromehidden=""], :not([chromehidden])) #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
     margin-right: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
     margin-bottom: var(--natsumi-tabbox-margin-override, var(--natsumi-browser-separation)) !important;
     box-shadow: none !important;
@@ -189,7 +189,7 @@ toolbarseparator.proton-zap::before {
     }
   }
 
-  &[chromehidden=""]:has(#sidebar-main[hidden], #sidebar-container[hidden]) {
+  &:is([chromehidden=""], :not([chromehidden])):has(#sidebar-main[hidden], #sidebar-container[hidden]) {
     @media (not -moz-pref("browser.nova.enabled")) or (not -moz-pref("natsumi.theme.islands")) {
       #browser:not([data-is-child="true"]) #tabbrowser-tabbox {
         margin-left: var(--natsumi-browser-separation) !important;
@@ -815,8 +815,14 @@ toolbarseparator.proton-zap::before {
   }
 }
 
-#vertical-pinned-tabs-splitter[hidden="true"] {
-  display: none !important;
+#vertical-pinned-tabs-splitter {
+  &:not(:hover) {
+    opacity: 0;
+  }
+
+  &[hidden="true"] {
+    display: none !important;
+  }
 }
 
 /* Downloads button */
