@@ -443,6 +443,7 @@ SOFTWARE.
   .natsumi-miniplayer-scrubber-container {
     padding-inline: 4px !important;
     margin-top: 6px;
+    min-height: 12px;
     color: white;
 
     @media -moz-pref("natsumi.miniplayer.disable-artwork") {
@@ -479,10 +480,28 @@ SOFTWARE.
       }
 
       &:not([pulsing]) {
-        transition: background-color 0.2s ease;
+        transition: background-color 0.2s ease, height 0.2s ease, border-radius 0.2s ease;
       }
 
-      &:hover, &:active {
+      &[natsumi-scrubber-scroll]:hover {
+        height: 12px;
+        border-radius: 6px;
+        cursor: none;
+
+        &::before {
+          height: 12px;
+          border-radius: 6px;
+          min-width: 12px;
+        }
+
+        &::after {
+          margin-top: 0;
+          scale: 1 !important;
+          opacity: 0;
+        }
+      }
+
+      &:hover:not([natsumi-scrubber-scroll]), &:active:not([natsumi-scrubber-scroll]) {
         &::after {
           scale: 1.2;
         }
@@ -502,6 +521,7 @@ SOFTWARE.
         grid-row-start: 1;
         grid-column-start: 1;
         background-color: var(--natsumi-primary-color);
+        transition: height 0.2s ease, border-radius 0.2s ease;
 
         @media -moz-pref("natsumi.miniplayer.disable-artwork") {
           background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
@@ -519,7 +539,7 @@ SOFTWARE.
         grid-row-start: 1;
         grid-column-start: 1;
         background-color: var(--natsumi-primary-color);
-        transition: scale 0.2s ease;
+        transition: scale 0.2s ease, margin-top 0.2s ease, opacity 0.2s ease;
 
         @media -moz-pref("natsumi.miniplayer.disable-artwork") {
           background-color: light-dark(var(--natsumi-colors-primary), var(--natsumi-primary-color));
