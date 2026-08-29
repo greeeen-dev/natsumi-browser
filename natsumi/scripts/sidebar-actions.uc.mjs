@@ -81,7 +81,7 @@ class NatsumiUnpinnedTabsClearer {
         if (ucApi.Prefs.get("natsumi.sidebar.clear-keep-selected").exists()) {
             if (ucApi.Prefs.get("natsumi.sidebar.clear-keep-selected").value) {
                 tabs = tabsList.querySelectorAll(
-                    "tab:not([hidden='true']):not([multiselected='true']):not([selected='true'])"
+                    "tab:not([hidden='true']):not([multiselected]):not([selected])"
                 );
             }
         }
