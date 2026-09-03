@@ -115,17 +115,24 @@ def _get_windows_path(browser: BrowserEntry):
     return path
 
 def _get_linux_path(browser: BrowserEntry):
-    browser_path = home + f'/.{browser.name_universal}'
-    path = home + browser_path + '/Profiles'
+    xdg_config_home = os.environ.get(
+        'XDG_CONFIG_HOME',
+        home + '/.config'
+    )
+    
+    fallback_paths = [
+        home + f'/.{browser.name_universal}',
+        xdg_config_home + f'/{browser.name_universal}',
+    ]
 
-    if os.path.exists(browser_path):
-        if os.path.exists(path):
-            return path
+    for browser_path in fallback_paths:
+        profiles_path = browser_path + '/Profiles'
 
-        else:
-            if os.path.exists(browser_path):
-                return browser_path
-
+        if os.path.exists(profiles_path):
+            return profiles_path
+        
+        if os.path.exists(browser_path):
+            return browser_path
     raise NotADirectoryError('Browser is not installed')
 
 def _get_flatpak_path(browser: BrowserEntry):
