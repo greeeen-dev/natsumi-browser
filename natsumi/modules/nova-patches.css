@@ -702,3 +702,63 @@ SOFTWARE.
     --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-0));
   }
 }
+
+/* ==== Firefox 157 patches ==== */
+
+/* 157 dropped the megabar breakout positioning and anchors the results view to */
+/* the input container, so the floating URL bar needs the extra rules below. */
+/* Gated on .urlbarView-background, which only the new URL bar has. */
+
+@keyframes floating-urlbar-panel-appear {
+  0% {
+    scale: 0.95;
+    opacity: 0;
+  }
+
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+:root:has(#urlbar > .urlbarView > .urlbarView-background) {
+  @media (not -moz-pref("natsumi.urlbar.disabled")) and (not -moz-pref("natsumi.urlbar.do-not-float")) {
+    #urlbar[open] {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      margin-inline: auto !important;
+      translate: none !important;
+    }
+
+    #urlbar-container {
+      min-height: var(--urlbar-container-height, 40px) !important;
+    }
+
+    #navigator-toolbox:has(#urlbar[open]) {
+      z-index: 3 !important;
+    }
+
+    #urlbar[open] > .urlbar-background {
+      inset: 0 0 calc(-1 * var(--urlbar-joint-background-overlap, 24px)) 0 !important;
+      border-end-start-radius: 0 !important;
+      border-end-end-radius: 0 !important;
+    }
+
+    #urlbar[open] > .urlbarView > .urlbarView-background {
+      inset-block-start: calc(-1 * var(--urlbar-joint-background-overlap, 24px)) !important;
+      inset-inline: -7px !important;
+      border-start-start-radius: 0 !important;
+      border-start-end-radius: 0 !important;
+      background-color: var(--natsumi-mat-th-background) !important;
+      border: var(--natsumi-mat-hz-border) !important;
+      box-shadow: var(--natsumi-mat-hz-shadow) !important;
+    }
+
+    #urlbar[open] > .urlbarView {
+      animation: floating-urlbar-panel-appear 0.2s ease !important;
+      animation-fill-mode: forwards !important;
+      transform-origin: top center !important;
+    }
+  }
+}
