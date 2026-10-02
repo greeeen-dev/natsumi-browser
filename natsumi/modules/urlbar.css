@@ -584,13 +584,20 @@ SOFTWARE.
         }
       }
     }
+  }
 
+  &:not([taskbartab]) body[natsumi-append-installed] #urlbar {
     &[open] {
       --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
       --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-05)) !important;
       --toolbar-field-focus-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
       --urlbarView-highlight-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
       color-scheme: unset !important;
+
+      &:not([natsumi-urlbar-legacy]) {
+        position: fixed !important;
+        flex-direction: column !important;
+      }
 
       @media -moz-pref("natsumi.urlbar.do-not-float") {
         .urlbar-input-container {
@@ -864,6 +871,24 @@ SOFTWARE.
           margin-inline: 7px !important;
           margin-block: 0 7px !important;
           padding-block-start: 0 !important;
+
+          &:not([natsumi-urlbar-legacy]) {
+            display: flex !important;
+            min-width: calc(100% - 14px) !important;
+
+            .urlbarView-background {
+              display: none !important;
+            }
+
+            #urlbar-results {
+              min-width: 100% !important;
+              border-top: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+
+              .urlbarView-row {
+                padding: 0 !important;
+              }
+            }
+          }
 
           &[noresults] {
             display: none !important;

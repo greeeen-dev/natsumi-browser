@@ -72,6 +72,10 @@ SOFTWARE.
   }
 }
 
+#navigator-toolbox {
+  z-index: 3 !important;
+}
+
 #nav-bar {
   border: none !important;
 }

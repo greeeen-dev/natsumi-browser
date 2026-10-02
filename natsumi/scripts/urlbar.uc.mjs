@@ -183,6 +183,16 @@ class NatsumiURLBarController {
         if (verticalNewTabButton) {
             verticalNewTabButton.setAttribute("command", "NatsumiKBS:natsumiNewTab");
         }
+
+        // Remove urlbarView popover
+        let urlbarView = this.urlBarNode.querySelector(".urlbarView");
+
+        if (urlbarView.hasAttribute("popover")) {
+            urlbarView.removeAttribute("popover");
+        } else {
+            this.urlBarNode.setAttribute("natsumi-urlbar-legacy", "");
+            urlbarView.setAttribute("natsumi-urlbar-legacy", "");
+        }
     }
 
     selectUrlbarContents() {
