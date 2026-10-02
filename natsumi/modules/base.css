@@ -893,6 +893,10 @@ splitter:hover {
   }
 }
 
+#sidebar-container {
+  --fullscreen-menubar-shift: 0 !important;
+}
+
 :root[sidebar-expand-on-hover] {
   #sidebar-main, #sidebar-container {
     background: transparent !important;

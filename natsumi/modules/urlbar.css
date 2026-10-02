@@ -29,11 +29,33 @@ SOFTWARE.
 @keyframes floating-urlbar-appear {
   0% {
     scale: 0.95;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes floating-urlbar-appear-legacy {
+  0% {
+    scale: 0.95;
     backdrop-filter: saturate(1) contrast(1) blur(0);
   }
 
   100% {
     scale: 1;
+    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+  }
+}
+
+@keyframes floating-urlbar-appear-background {
+  0% {
+    opacity: 0;
+    backdrop-filter: saturate(1) contrast(1) blur(0);
+  }
+
+  100% {
+    opacity: 1;
     backdrop-filter: var(--natsumi-mat-hz-backdrop);
   }
 }
@@ -220,6 +242,10 @@ SOFTWARE.
           &:hover, &[open] {
             background-color: var(--natsumi-button-hover-color) !important;
           }
+        }
+
+        #trust-label {
+          white-space: nowrap;
         }
 
         #notification-popup-box {
@@ -616,6 +642,11 @@ SOFTWARE.
         animation: floating-urlbar-appear 0.2s ease !important;
         animation-fill-mode: forwards !important;
 
+        &[natsumi-urlbar-legacy] {
+          animation: floating-urlbar-appear-legacy 0.2s ease !important;
+          animation-fill-mode: forwards !important;
+        }
+
         @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
           --urlbar-margin-inline: 5px !important;
         }
@@ -857,9 +888,17 @@ SOFTWARE.
         #urlbar-background, .urlbar-background {
           border-radius: 12px !important;
           background-color: var(--natsumi-mat-th-background) !important;
-          animation: floating-urlbar-appear-opacity 0.2s ease !important;
+          animation: floating-urlbar-appear-background 0.2s ease !important;
+          backdrop-filter: var(--natsumi-mat-hz-backdrop);
           box-shadow: var(--natsumi-mat-hz-shadow) !important;
           border: var(--natsumi-mat-hz-border) !important;
+        }
+
+        &[natsumi-urlbar-legacy] {
+          #urlbar-background, .urlbar-background {
+            animation: floating-urlbar-appear-opacity 0.2s ease !important;
+            backdrop-filter: none !important;
+          }
         }
 
         .urlbar-input-container, .urlbarView {
@@ -878,6 +917,10 @@ SOFTWARE.
 
             .urlbarView-background {
               display: none !important;
+            }
+
+            .urlbarView-body-outer {
+              width: 100% !important;
             }
 
             #urlbar-results {
