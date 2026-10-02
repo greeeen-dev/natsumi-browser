@@ -604,6 +604,11 @@ SOFTWARE.
           list-style-image: url("../icons/lucide/shield-safe.svg");
         }
 
+        &.secure.inactive #trust-icon {
+          stroke: currentColor;
+          list-style-image: url("../icons/lucide/shield-disabled.svg");
+        }
+
         &.insecure #trust-icon {
           stroke: red;
           list-style-image: url("../icons/lucide/shield-unsafe.svg");
