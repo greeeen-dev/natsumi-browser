@@ -27,6 +27,15 @@ SOFTWARE.
 import {NatsumiNotification} from "./notifications.sys.mjs";
 import * as ucApi from "chrome://userchromejs/content/uc_api.sys.mjs";
 
+const lazy = {};
+
+XPCOMUtils.defineLazyServiceGetter(
+    lazy,
+    "QueryStringStripper",
+    "@mozilla.org/url-query-string-stripper;1",
+    Ci.nsIURLQueryStringStripper
+);
+
 let urlCleaner;
 
 function getCurrentUrl() {
@@ -41,12 +50,8 @@ function getCurrentUrl() {
         // Get clean URL
         let cleanedLink;
 
-        if (!urlCleaner) {
-            urlCleaner = Cc["@mozilla.org/url-query-string-stripper;1"].createInstance(Ci.nsIURLQueryStringStripper);
-        }
-
         try {
-            cleanedLink = urlCleaner.stripForCopyOrShare(gBrowser.currentURI);
+            cleanedLink = lazy.QueryStringStripper.stripForCopyOrShare(gBrowser.currentURI);
         } catch(e) {
             console.warn("Failed to get clean URL, falling back to current URL:", e);
         }

@@ -72,6 +72,10 @@ SOFTWARE.
   }
 }
 
+#navigator-toolbox {
+  z-index: 3 !important;
+}
+
 #nav-bar {
   border: none !important;
 }
@@ -887,6 +891,10 @@ splitter:hover {
   #tabbrowser-tabpanels .deck-selected {
     box-shadow: 0px 0px 30px light-dark(rgb(255, 255, 255), rgba(106, 106, 120, 0.7)) !important;
   }
+}
+
+#sidebar-container {
+  --fullscreen-menubar-shift: 0 !important;
 }
 
 :root[sidebar-expand-on-hover] {

@@ -29,11 +29,33 @@ SOFTWARE.
 @keyframes floating-urlbar-appear {
   0% {
     scale: 0.95;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes floating-urlbar-appear-legacy {
+  0% {
+    scale: 0.95;
     backdrop-filter: saturate(1) contrast(1) blur(0);
   }
 
   100% {
     scale: 1;
+    backdrop-filter: var(--natsumi-mat-hz-backdrop);
+  }
+}
+
+@keyframes floating-urlbar-appear-background {
+  0% {
+    opacity: 0;
+    backdrop-filter: saturate(1) contrast(1) blur(0);
+  }
+
+  100% {
+    opacity: 1;
     backdrop-filter: var(--natsumi-mat-hz-backdrop);
   }
 }
@@ -220,6 +242,10 @@ SOFTWARE.
           &:hover, &[open] {
             background-color: var(--natsumi-button-hover-color) !important;
           }
+        }
+
+        #trust-label {
+          white-space: nowrap;
         }
 
         #notification-popup-box {
@@ -578,19 +604,31 @@ SOFTWARE.
           list-style-image: url("../icons/lucide/shield-safe.svg");
         }
 
+        &.secure.inactive #trust-icon {
+          stroke: currentColor;
+          list-style-image: url("../icons/lucide/shield-disabled.svg");
+        }
+
         &.insecure #trust-icon {
           stroke: red;
           list-style-image: url("../icons/lucide/shield-unsafe.svg");
         }
       }
     }
+  }
 
+  &:not([taskbartab]) body[natsumi-append-installed] #urlbar {
     &[open] {
       --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
       --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-05)) !important;
       --toolbar-field-focus-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
       --urlbarView-highlight-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
       color-scheme: unset !important;
+
+      &:not([natsumi-urlbar-legacy]) {
+        position: fixed !important;
+        flex-direction: column !important;
+      }
 
       @media -moz-pref("natsumi.urlbar.do-not-float") {
         .urlbar-input-container {
@@ -608,6 +646,11 @@ SOFTWARE.
         border-radius: 12px !important;
         animation: floating-urlbar-appear 0.2s ease !important;
         animation-fill-mode: forwards !important;
+
+        &[natsumi-urlbar-legacy] {
+          animation: floating-urlbar-appear-legacy 0.2s ease !important;
+          animation-fill-mode: forwards !important;
+        }
 
         @media -moz-pref("natsumi.theme.single-toolbar") and -moz-pref("sidebar.verticalTabs") {
           --urlbar-margin-inline: 5px !important;
@@ -850,9 +893,17 @@ SOFTWARE.
         #urlbar-background, .urlbar-background {
           border-radius: 12px !important;
           background-color: var(--natsumi-mat-th-background) !important;
-          animation: floating-urlbar-appear-opacity 0.2s ease !important;
+          animation: floating-urlbar-appear-background 0.2s ease !important;
+          backdrop-filter: var(--natsumi-mat-hz-backdrop);
           box-shadow: var(--natsumi-mat-hz-shadow) !important;
           border: var(--natsumi-mat-hz-border) !important;
+        }
+
+        &[natsumi-urlbar-legacy] {
+          #urlbar-background, .urlbar-background {
+            animation: floating-urlbar-appear-opacity 0.2s ease !important;
+            backdrop-filter: none !important;
+          }
         }
 
         .urlbar-input-container, .urlbarView {
@@ -864,6 +915,28 @@ SOFTWARE.
           margin-inline: 7px !important;
           margin-block: 0 7px !important;
           padding-block-start: 0 !important;
+
+          &:not([natsumi-urlbar-legacy]) {
+            display: flex !important;
+            min-width: calc(100% - 14px) !important;
+
+            .urlbarView-background {
+              display: none !important;
+            }
+
+            .urlbarView-body-outer {
+              width: 100% !important;
+            }
+
+            #urlbar-results {
+              min-width: 100% !important;
+              border-top: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+
+              .urlbarView-row {
+                padding: 0 !important;
+              }
+            }
+          }
 
           &[noresults] {
             display: none !important;
