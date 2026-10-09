@@ -13,9 +13,18 @@
       url = "github:MrOtherGuy/fx-autoconfig";
       flake = false;
     };
+    # Pinned to a tagged release rather than tracking the default
+    # branch, since the repo doesn't publish separate release assets --
+    # a tag is the closest equivalent. To update: bump the tag here, then
+    # `nix flake update natsumi`. Check https://github.com/greeeen-dev/natsumi-browser/tags
+    # for what's available.
+    natsumi = {
+      url = "github:greeeen-dev/natsumi-browser/v6.12.4";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, fx-autoconfig }:
+  outputs = { self, nixpkgs, fx-autoconfig, natsumi }:
     let
       mkNatsumiModule = { isHomeManager }:
         { config, lib, pkgs, ... }:
@@ -492,7 +501,7 @@
             # (its Nix store path, which changes whenever flake.lock points
             # at a different commit), so it's obvious at a glance whether a
             # rebuild actually picked up a newer pin.
-            echo "${self.rev or self.dirtyRev or "unknown"}" > "$chrome_dir/.natsumi-commit"
+            echo "${builtins.baseNameOf (toString natsumi)}" > "$chrome_dir/.natsumi-commit"
 
             cat > "$chrome_dir/utils/chrome.manifest" <<'EOF'
             content userchromejs ./
@@ -615,8 +624,8 @@
 
             natsumiSource = mkOption {
               type = types.path;
-              default = ../.;
-              description = "Source tree for Natsumi Browser. Defaults to this repo's own root, since this flake lives inside it.";
+              default = natsumi;
+              description = "Source tree for Natsumi Browser (defaults to this flake's pinned input).";
             };
 
             desktopNameSuffix = mkOption {
