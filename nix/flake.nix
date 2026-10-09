@@ -473,9 +473,9 @@
             # manifest loads through these, not through files of its own.
             # Synced, not overlaid: a file removed upstream gets removed
             # here too.
-            "$rsync" -a --delete ${cfg.fxAutoconfigSource}/profile/chrome/utils/. "$chrome_dir/utils/"
-            "$rsync" -a --delete ${cfg.fxAutoconfigSource}/profile/chrome/CSS/. "$chrome_dir/CSS/"
-            "$rsync" -a --delete ${cfg.fxAutoconfigSource}/profile/chrome/resources/. "$chrome_dir/resources/"
+            "$rsync" -a --checksum --delete ${cfg.fxAutoconfigSource}/profile/chrome/utils/. "$chrome_dir/utils/"
+            "$rsync" -a --checksum --delete ${cfg.fxAutoconfigSource}/profile/chrome/CSS/. "$chrome_dir/CSS/"
+            "$rsync" -a --checksum --delete ${cfg.fxAutoconfigSource}/profile/chrome/resources/. "$chrome_dir/resources/"
 
             # Natsumi itself goes into chrome/natsumi/ (its own subfolder,
             # not flattened into chrome/ root) -- synced at exactly the
@@ -491,7 +491,7 @@
             # folders just synced above (natsumi's repo doesn't ship
             # utils/CSS/resources itself, so without these, --delete would
             # see them as "not in source" and remove them).
-            "$rsync" -a --delete \
+            "$rsync" -a --checksum --delete \
               --exclude '/utils/' --exclude '/CSS/' --exclude '/resources/' \
               --exclude '/chrome.manifest' --exclude '/.natsumi-commit' \
               ${cfg.natsumiSource}/. "$chrome_dir/"
