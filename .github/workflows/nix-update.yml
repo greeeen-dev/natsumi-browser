@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "0 6 */2 * *" # roughly every 2 days
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/nix-update.yml"
 
 permissions:
   contents: write
