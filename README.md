@@ -196,6 +196,11 @@ After following either of the above steps, if you are interested in ensuring tha
 latest version of Natsumi as new changes are released, you can simply clone the repository into the `chrome`
 folder. This can be followed up with `git pull` from time-to-time.
 
+### Nix / NixOS
+If you're on Nix or NixOS, there's a flake-based module (`programs.natsumi`) that installs both Natsumi
+and Natsumi Append declaratively for Firefox, LibreWolf, or Floorp -- no manual file copying needed.
+See [`nix/README.md`](nix) for setup instructions.
+
 ## Browser configs (in about:config)
 > [!NOTE]
 > This is a non-exhaustive list. Most of these options are available in preferences.

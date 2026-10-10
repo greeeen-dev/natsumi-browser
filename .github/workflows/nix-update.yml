@@ -1,0 +1,61 @@
+name: Update Nix flake
+
+on:
+  schedule:
+    - cron: "0 6 */2 * *" # roughly every 2 days
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/nix-update.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Switch to the latest upstream Natsumi tag
+        id: tag
+        run: |
+          latest=$(git ls-remote --tags --refs https://github.com/greeeen-dev/natsumi-browser.git \
+            | sed 's|.*refs/tags/||' \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
+            | sort -V | tail -n1)
+          current=$(grep -oE 'natsumi-browser/v[0-9]+\.[0-9]+\.[0-9]+' nix/flake.nix | head -n1 | cut -d/ -f2)
+          echo "current=$current latest=$latest"
+          if [ -n "$current" ] && [ -n "$latest" ] && [ "$latest" != "$current" ]; then
+            sed -i "s|natsumi-browser/$current|natsumi-browser/$latest|" nix/flake.nix
+            echo "bumped=$latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Only the inputs that matter to consumers; nixpkgs is left alone since
+      # most users override it with `inputs.nixpkgs.follows`, and bumping it
+      # would just add a lockfile commit every run.
+      - name: Update flake.lock
+        working-directory: nix
+        run: nix flake update fx-autoconfig natsumi
+
+      - name: Commit and push
+        run: |
+          git add -A nix
+          if git diff --cached --quiet; then
+            echo "Nothing to update."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "${{ steps.tag.outputs.bumped }}" ]; then
+            msg="nix: bump natsumi to ${{ steps.tag.outputs.bumped }}"
+          else
+            msg="nix: update flake.lock"
+          fi
+          git commit -m "$msg"
+          git push
