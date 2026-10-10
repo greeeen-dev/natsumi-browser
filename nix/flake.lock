@@ -16,6 +16,23 @@
         "type": "github"
       }
     },
+    "natsumi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791512525,
+        "narHash": "sha256-Ur0+WjTEEY9MpGNSfLD+QzT9rcAxhv0db+oQtyOABCM=",
+        "owner": "greeeen-dev",
+        "repo": "natsumi-browser",
+        "rev": "d4e53042f3cd840babc38a2bc754225511f640b3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "greeeen-dev",
+        "ref": "v6.12.4",
+        "repo": "natsumi-browser",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1790822859,
@@ -35,6 +52,7 @@
     "root": {
       "inputs": {
         "fx-autoconfig": "fx-autoconfig",
+        "natsumi": "natsumi",
         "nixpkgs": "nixpkgs"
       }
     }
