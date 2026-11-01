@@ -1980,6 +1980,17 @@ function addSidebarButtonsPane() {
         true
     ));
 
+    clearTabsSubgroup.registerOption("natsumiSidebarClearUnloaded", new CheckboxChoice(
+        "natsumi.sidebar.clear-unloaded",
+        "natsumiSidebarClearUnloaded",
+        "Only clear unloaded tabs",
+        "Any loaded tabs will be kept when using the clear unpinned tabs button.",
+        false,
+        false,
+        "natsumi.sidebar.hide-clear-tabs",
+        true
+    ));
+
     clearTabsSubgroup.registerOption("natsumiSidebarClearOpenTab", new CheckboxChoice(
         "natsumi.sidebar.clear-open-newtab",
         "natsumiSidebarClearOpenTab",
