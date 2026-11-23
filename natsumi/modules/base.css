@@ -73,7 +73,7 @@ SOFTWARE.
 }
 
 #navigator-toolbox {
-  z-index: 3 !important;
+  z-index: calc(var(--browser-area-z-index-tabbox) + 1) !important;
 }
 
 #nav-bar {

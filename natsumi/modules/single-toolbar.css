@@ -30,7 +30,6 @@ SOFTWARE.
     #navigator-toolbox {
       width: var(--natsumi-sidebar-width) !important;
       min-height: 85px !important;
-      z-index: 1 !important;
     }
 
     #ai-window-box {

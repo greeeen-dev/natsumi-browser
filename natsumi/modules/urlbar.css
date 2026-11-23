@@ -81,6 +81,7 @@ SOFTWARE.
 
     #urlbar-container {
       --urlbar-container-height: 40px !important;
+      max-height: var(--urlbar-container-height);
     }
 
     &[uidensity="compact"] {
@@ -625,14 +626,27 @@ SOFTWARE.
       --urlbarView-highlight-color: light-dark(var(--color-gray-100), var(--color-gray-05)) !important;
       color-scheme: unset !important;
 
-      &:not([natsumi-urlbar-legacy]) {
-        position: fixed !important;
-        flex-direction: column !important;
-      }
-
       @media -moz-pref("natsumi.urlbar.do-not-float") {
         .urlbar-input-container {
           padding-block: 5px !important;
+        }
+
+        &:not([natsumi-urlbar-legacy]) {
+          @media -moz-pref("browser.nova.enabled") {
+            .urlbar-background {
+              clip-path: unset !important;
+              width: calc(100% + 14px) !important;
+              translate: -8px 0;
+            }
+
+            .urlbarView {
+              translate: 0 -4px;
+            }
+          }
+
+          @media -moz-pref("natsumi.theme.single-toolbar") {
+            min-width: min(400px, 50vw) !important;
+          }
         }
       }
 
@@ -646,6 +660,11 @@ SOFTWARE.
         border-radius: 12px !important;
         animation: floating-urlbar-appear 0.2s ease !important;
         animation-fill-mode: forwards !important;
+
+        &:not([natsumi-urlbar-legacy]) {
+          position: fixed !important;
+          flex-direction: column !important;
+        }
 
         &[natsumi-urlbar-legacy] {
           animation: floating-urlbar-appear-legacy 0.2s ease !important;
@@ -930,7 +949,7 @@ SOFTWARE.
 
             #urlbar-results {
               min-width: 100% !important;
-              border-top: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1));
+              border-top: 1px solid light-dark(rgba(20, 20, 20, 0.1), rgba(235, 235, 235, 0.1)) !important;
 
               .urlbarView-row {
                 padding: 0 !important;
