@@ -254,4 +254,8 @@ SOFTWARE.
   #vertical-tabs, #TabsToolbar {
     will-change: unset !important;
   }
+
+  #vertical-tabs:not([style*="translate:"]) {
+    translate: 0 0;
+  }
 }

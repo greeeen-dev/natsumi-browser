@@ -73,7 +73,7 @@ SOFTWARE.
 }
 
 #navigator-toolbox {
-  z-index: 3 !important;
+  z-index: calc(var(--browser-area-z-index-tabbox) + 1) !important;
 }
 
 #nav-bar {
@@ -413,7 +413,7 @@ toolbarseparator.proton-zap::before {
     padding-inline: 4px 8px !important;
   }
 
-  & > toolbaritem toolbarbutton {
+  & > toolbaritem > toolbarbutton, & > toolbarpaletteitem > toolbarbutton {
     padding-inline: 0 !important;
   }
 

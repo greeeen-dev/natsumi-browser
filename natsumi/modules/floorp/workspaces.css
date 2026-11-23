@@ -312,7 +312,7 @@ SOFTWARE.
       #natsumi-workspace-indicator-icon {
         min-width: 16px;
         height: 16px;
-        margin-right: var(--tab-icon-end-margin) !important;
+        margin-right: var(--tab-icon-margin-inline-end, var(--tab-icon-end-margin)) !important;
         background-image: var(--natsumi-workspace-icon);
       }
 

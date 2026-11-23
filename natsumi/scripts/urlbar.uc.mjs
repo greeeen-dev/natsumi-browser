@@ -186,12 +186,33 @@ class NatsumiURLBarController {
 
         // Remove urlbarView popover
         let urlbarView = this.urlBarNode.querySelector(".urlbarView");
+        let isFloating = true;
 
-        if (urlbarView.hasAttribute("popover")) {
-            urlbarView.removeAttribute("popover");
-        } else {
+        if (ucApi.Prefs.get("natsumi.urlbar.do-not-float").exists) {
+            isFloating = !ucApi.Prefs.get("natsumi.urlbar.do-not-float").value;
+        }
+
+        if (!urlbarView.hasAttribute("popover")) {
             this.urlBarNode.setAttribute("natsumi-urlbar-legacy", "");
             urlbarView.setAttribute("natsumi-urlbar-legacy", "");
+        } else {
+            if (isFloating) {
+                urlbarView.removeAttribute("popover");
+            }
+
+            Services.prefs.addObserver("natsumi.urlbar.do-not-float", () => {
+                let isFloating = true;
+
+                if (ucApi.Prefs.get("natsumi.urlbar.do-not-float").exists) {
+                    isFloating = !ucApi.Prefs.get("natsumi.urlbar.do-not-float").value;
+                }
+
+                if (isFloating) {
+                    urlbarView.removeAttribute("popover");
+                } else {
+                    urlbarView.setAttribute("popover", "manual");
+                }
+            });
         }
     }
 
