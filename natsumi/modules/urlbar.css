@@ -652,8 +652,8 @@ SOFTWARE.
 
       @media not -moz-pref("natsumi.urlbar.do-not-float") {
         top: 25vh !important;
-        width: 60% !important;
-        left: 50% !important;
+        width: 60vw !important;
+        left: 50vw !important;
         max-width: 900px !important;
         translate: -50% 0 !important;
         opacity: 1 !important;
