@@ -129,10 +129,18 @@ SOFTWARE.
 
     .urlbar-page-action, .urlbar-revert-button {
       border-radius: 14px !important;
-      width: var(--natsumi-urlbar-button-size) !important;
+      min-width: var(--natsumi-urlbar-button-size) !important;
       height: var(--natsumi-urlbar-button-size) !important;
       padding: 5px !important;
       transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+      #translations-button-icon {
+        margin-left: 0 !important;
+      }
+
+      #translations-button-locale, #translations-button-circle-arrows {
+        margin-right: 0 !important;
+      }
 
       &:hover {
         background-color: var(--natsumi-button-hover-color) !important;
