@@ -1137,4 +1137,10 @@ SOFTWARE.
       --trustpanel-image-nova: url("chrome://global/skin/illustrations/kit-concerned.svg") !important;
     }
   }
+
+  #urlbar-zoom-button {
+    --natsumi-button-height: 20px !important;
+    padding-inline: 5px !important;
+    border-radius: 10px !important;
+  }
 }

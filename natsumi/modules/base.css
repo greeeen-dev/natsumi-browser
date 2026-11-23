@@ -413,7 +413,7 @@ toolbarseparator.proton-zap::before {
     padding-inline: 4px 8px !important;
   }
 
-  & > toolbaritem toolbarbutton {
+  & > toolbaritem > toolbarbutton, & > toolbarpaletteitem > toolbarbutton {
     padding-inline: 0 !important;
   }
 
