@@ -41,7 +41,7 @@ SOFTWARE.
 //
 // Good luck, and have fun! :3
 
-export let workspacesModulePath = "chrome://noraneko/content/assets/js/index33.js";
+export let workspacesModulePath = "chrome://noraneko/content/assets/js/index35.js";
 
 // Get Floorp version
 let floorpVersion = AppConstants.MOZ_APP_VERSION_DISPLAY.split("@")[0];
@@ -53,8 +53,14 @@ let patchVersion = parseInt(floorpVersion.split(".")[2]);
 // Get Firedragon status
 let isFiredragon = AppConstants.MOZ_APP_BASENAME.toLowerCase() === "firedragon";
 
-if (minorVersion >= 17) {
-    // Floorp 12.17.0+ (do nothing)
+if (minorVersion >= 20) {
+    // Floorp 12.20.0+
+} else if (minorVersion >= 18) {
+    // Floorp 12.18.0+
+    workspacesModulePath = "chrome://noraneko/content/assets/js/index34.js"
+} else if (minorVersion >= 17) {
+    // Floorp 12.17.0+
+    workspacesModulePath = "chrome://noraneko/content/assets/js/index33.js"
 } else if (minorVersion >= 14) {
     // Floorp 12.14.0+
     workspacesModulePath = "chrome://noraneko/content/assets/js/index28.js";
