@@ -101,32 +101,43 @@ SOFTWARE.
 
       &::before {
         content: "";
-        width: 4px;
+        min-width: 24px;
         height: 42px;
         margin-block: -8px;
         margin-right: 8px;
         background: var(--natsumi-primary-color);
+        background-image: var(--natsumi-shortcut-mode-icon);
+        background-size: 16px;
+        background-position: center;
+        background-repeat: no-repeat;
+        -moz-context-properties: stroke, stroke-opacity !important;
+        stroke: black;
       }
     }
 
     &[natsumi-shortcut-mode="0"] .natsumi-shortcut-info {
       --natsumi-primary-color: oklch(from #ffffff 0.825 0.1 h);
+      --natsumi-shortcut-mode-icon: url("../icons/lucide/kbs-browser.svg");
     }
 
     &[natsumi-shortcut-mode="1"] .natsumi-shortcut-info {
       --natsumi-primary-color: oklch(from blue 0.825 0.1 h);
+      --natsumi-shortcut-mode-icon: url("../icons/lucide/kbs-double-tap.svg");
     }
 
     &[natsumi-shortcut-mode="2"] .natsumi-shortcut-info {
       --natsumi-primary-color: oklch(from green 0.825 0.1 h);
+      --natsumi-shortcut-mode-icon: url("../icons/lucide/kbs-dualrun.svg");
     }
 
     &[natsumi-shortcut-mode="3"] .natsumi-shortcut-info {
       --natsumi-primary-color: oklch(from orange 0.825 0.1 h);
+      --natsumi-shortcut-mode-icon: url("../icons/lucide/kbs-website.svg");
     }
 
     &[unassigned] .natsumi-shortcut-info {
       --natsumi-primary-color: #c5c5c5 !important;
+      --natsumi-shortcut-mode-icon: url("../icons/lucide/close.svg");
     }
 
     .natsumi-shortcut-name {
