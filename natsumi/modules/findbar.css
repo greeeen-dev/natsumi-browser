@@ -28,13 +28,13 @@ SOFTWARE.
 
 @keyframes initial-animation {
   from {
-    top: 0;
+    translate: 0;
     opacity: 0;
     filter: blur(5px);
   }
 
   to {
-    top: 20px;
+    translate: 0 20px;
     opacity: 1;
     filter: blur(0);
   }
@@ -59,7 +59,7 @@ SOFTWARE.
   findbar {
     display: flex !important;
     position: fixed;
-    top: 20px;
+    translate: 0 20px;
     width: min(550px, 90%);
     right: 20px;
     min-height: 70px;
@@ -70,7 +70,7 @@ SOFTWARE.
     backdrop-filter: var(--natsumi-mat-hz-backdrop) !important;
     border: var(--natsumi-mat-hz-border-thin) !important;
     opacity: 1;
-    transition: background 0.2s ease, opacity 0.2s ease, visibility 0.2s ease, top 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+    transition: background 0.2s ease, opacity 0.2s ease, visibility 0.2s ease, translate 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
     animation: initial-animation 0.2s ease;
     filter: blur(0);
     box-shadow: var(--natsumi-mat-hz-shadow) !important;
@@ -85,7 +85,7 @@ SOFTWARE.
       visibility: inherit !important;
       pointer-events: none !important;
       opacity: 0 !important;
-      top: 0 !important;
+      translate: 0 !important;
       animation: glass-disappear 0.2s linear !important;
       animation-fill-mode: forwards !important;
       filter: blur(5px);
