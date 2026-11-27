@@ -632,7 +632,9 @@ body:not([natsumi-compact-mode]):has(sidebar-main:not([expanded])) #natsumi-bott
 }
 
 #tabbrowser-tabs::after {
+  content: "";
   border-bottom: var(--tabstrip-inner-border) !important;
+  margin-inline: var(--tab-margin-inline-inner);
 }
 
 &:not(:has(#sidebar-container)) #vertical-tabs {
