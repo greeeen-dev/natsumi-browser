@@ -33,8 +33,35 @@ import certifi
 import zipfile
 from pathlib import Path
 
-home = str(Path.home())
+DEBUG = bool(os.environ.get('NATSUMI_DEBUG'))
+
+def debug(message):
+    if DEBUG:
+        print(f'[DEBUG] {message}')
+
+def get_admin():
+    return hasattr(os, 'geteuid') and os.geteuid() == 0
+
+def _resolve_home():
+    """
+    Returns the home directory of the *real* user. When running through sudo/doas,
+    Path.home() may point to /root (or /root-ish), which would hide the user's profiles.
+    """
+    if get_admin():
+        user = os.environ.get('SUDO_USER') or os.environ.get('DOAS_USER')
+        if user and user != 'root':
+            try:
+                import pwd
+                return pwd.getpwnam(user).pw_dir
+            except (ImportError, KeyError):
+                pass
+    return str(Path.home())
+
+home = _resolve_home()
 data_path = str(Path(__file__).parent)
+
+# They all roughly share the same layout
+IS_POSIX = os.name == "posix"
 
 with open(f"{data_path}/installer.json") as file:
     installer_data = json.load(file)
@@ -55,9 +82,6 @@ liable for any such damages or issues.\n\n\
 Additionally, Natsumi uses fx-autoconfig to apply JS scripts to your browser. If your system is\n\
 infected with malware, installing Natsumi may put your browser data at higher risk of being accessed\n\
 maliciously. Please ensure your system is secure before proceeding with installation."
-
-def get_admin():
-    return os.geteuid() == 0
 
 def download_from_git(repository, branch, destination, is_tag=False):
     heads_string = 'heads'
@@ -85,13 +109,18 @@ def download_from_git(repository, branch, destination, is_tag=False):
         os.rename(f".natsumi-installer/{repository.split('/')[1]}-{branch}", f".natsumi-installer/{destination}")
 
 class BrowserEntry:
-    def __init__(self, name, name_universal, name_macos, name_flatpak, name_windows, name_windows_binary):
+    def __init__(self, name, name_universal, name_macos, name_flatpak, name_windows, name_windows_binary,
+                 install_names=None):
         self.name = name
         self.name_universal = name_universal
         self.name_macos = name_macos
         self.name_flatpak = name_flatpak
         self.name_windows = name_windows
         self.name_windows_binary = name_windows_binary
+
+        # Directory names the browser may be installed under on Linux/BSD
+        # (e.g. /usr/lib/<name>, /usr/local/lib/<name>, /opt/<name>)
+        self.install_names = install_names or [name_universal]
 
 def _get_macos_path(browser: BrowserEntry):
     path = home + f'/Library/Application Support/{browser.name_macos}/Profiles'
@@ -107,49 +136,91 @@ def _get_windows_path(browser: BrowserEntry):
     else:
         win_name = browser.name_universal
     path = home + f'\\AppData\\Roaming\\{win_name}\\Profiles'
-    print(path)
+    debug(path)
 
     if not os.path.exists(path):
         raise NotADirectoryError('Browser is not installed')
 
     return path
 
-def _get_linux_path(browser: BrowserEntry):
-    browser_path = home + f'/.{browser.name_universal}'
-    path = home + browser_path + '/Profiles'
+def _xdg_config_home():
+    return os.environ.get('XDG_CONFIG_HOME') or f'{home}/.config'
 
-    if os.path.exists(browser_path):
-        if os.path.exists(path):
-            return path
+def _unix_profile_roots(browser: BrowserEntry):
+    """
+    Every location a profile root (the folder containing profiles.ini and the profile
+    folders) may live in on Linux/BSD, including the newer XDG-compliant locations.
+    """
+    xdg = _xdg_config_home()
+    u = browser.name_universal
+    roots = []
 
+    if u == 'mozilla':
+        roots += [
+            f'{xdg}/mozilla/firefox',               # XDG (new)
+            f'{home}/.config/mozilla/firefox',      # XDG (default, in case XDG_CONFIG_HOME is custom)
+            f'{home}/.mozilla/firefox',             # legacy
+            f'{home}/snap/firefox/common/.mozilla/firefox',  # Snap
+        ]
+    else:
+        roots += [
+            f'{home}/.{u}',                         # legacy
+            f'{xdg}/{u}',                           # XDG
+            f'{xdg}/{u}/{u}',                       # XDG (e.g. LibreWolf)
+        ]
+
+    if browser.name_flatpak:
+        fp = f'{home}/.var/app/{browser.name_flatpak}'
+        if u == 'mozilla':
+            roots += [f'{fp}/.mozilla/firefox', f'{fp}/config/mozilla/firefox']
         else:
-            if os.path.exists(browser_path):
-                return browser_path
+            roots += [f'{fp}/.{u}', f'{fp}/config/{u}', f'{fp}/config/{u}/{u}']
 
-    raise NotADirectoryError('Browser is not installed')
+    return roots
 
-def _get_flatpak_path(browser: BrowserEntry):
-    if not browser.name_flatpak:
-        raise NotADirectoryError('Browser does not support Flatpak')
+def _unix_install_candidates(browser: BrowserEntry):
+    # FreeBSD & co. install third party software under /usr/local
+    prefixes = ['/usr/local/lib', '/usr/lib', '/usr/lib64', '/usr/lib32', '/opt']
+    candidates = []
+    for prefix in prefixes:
+        for name in browser.install_names:
+            candidates.append(f'{prefix}/{name}')
 
-    path = home + f'/.var/app/{browser.name_flatpak}/.{browser.name_universal}'
+    if browser.name_flatpak:
+        for base in ('/var/lib/flatpak', f'{home}/.local/share/flatpak'):
+            for name in browser.install_names:
+                candidates.append(f'{base}/app/{browser.name_flatpak}/current/active/files/lib/{name}')
 
-    if not os.path.exists(path):
-        raise NotADirectoryError('Browser is not installed')
+    return candidates
 
-    return path
+def _looks_like_install(path, browser: BrowserEntry):
+    """Checks that a directory really is a Mozilla-style application directory."""
+    if not os.path.isdir(path):
+        return False
+
+    markers = ['application.ini', 'omni.ja', 'browser/omni.ja']
+    markers += list(browser.install_names)
+    return any(os.path.exists(f'{path}/{marker}') for marker in markers)
+
+def _find_unix_install(browser: BrowserEntry):
+    for candidate in _unix_install_candidates(browser):
+        if _looks_like_install(candidate, browser):
+            return candidate
+    return None
 
 browsers = [
-    BrowserEntry('Firefox', 'mozilla', 'Firefox', 'org.mozilla.firefox', 'Mozilla/Firefox', 'Mozilla Firefox'),
+    BrowserEntry('Firefox', 'mozilla', 'Firefox', 'org.mozilla.firefox', 'Mozilla/Firefox', 'Mozilla Firefox',
+                 install_names=['firefox', 'firefox-esr', 'firefox-developer-edition']),
     BrowserEntry('Floorp', 'floorp', 'Floorp', None, 'Floorp', 'Floorp'),
     BrowserEntry('Waterfox', 'waterfox', 'Waterfox', None, 'Waterfox/Waterfox', 'Waterfox'),
     BrowserEntry('Librewolf', 'librewolf', 'LibreWolf', 'io.gitlab.librewolf-community', 'librewolf', 'librewolf'),
-    BrowserEntry('Glide', 'glide-browser', 'Glide', None, None, None)
+    BrowserEntry('Glide', 'glide-browser', 'Glide', None, None, None,
+                 install_names=['glide-browser', 'glide'])
 ]
 
 def get_profiles(path):
     profiles = []
-    for entry in os.listdir(path):
+    for entry in sorted(os.listdir(path)):
         if not os.path.isdir(f'{path}/{entry}'):
             continue
 
@@ -158,11 +229,37 @@ def get_profiles(path):
 
     return profiles
 
+def _collect_unix_profiles(browser: BrowserEntry):
+    """Gathers profiles from every existing root. Returns (profile_paths, roots_used)."""
+    profiles = []
+    roots_used = []
+    seen = set()
+
+    for root in _unix_profile_roots(browser):
+        for candidate in (root, f'{root}/Profiles'):
+            if not os.path.isdir(candidate):
+                continue
+
+            found = get_profiles(candidate)
+            if not found:
+                continue
+
+            roots_used.append(candidate)
+            for profile in found:
+                real = os.path.realpath(profile)
+                if real in seen:
+                    continue
+                seen.add(real)
+                profiles.append(profile)
+
+    return profiles, roots_used
+
 def prompt_for_path(message):
     while True:
         user_input = input(f"{message}\nFile path (type 'exit' to quit): ").strip()
         if user_input.lower() == 'exit':
             sys.exit(0)
+        user_input = os.path.expanduser(user_input)
         if os.path.exists(user_input):
             return user_input
         print("Path does not exist. Please try again.")
@@ -183,70 +280,69 @@ def select_browser():
             sys.exit(0)
 
 def detect_install_and_profiles(browser):
-    # Detect install path
     install_path = None
     profile_paths = []
-    try:
-        if sys.platform == 'darwin':
-            install_path = f'/Applications/{browser.name_macos}.app/Contents/Resources'
-            profile_root = _get_macos_path(browser)
-        elif sys.platform.startswith('linux'):
-            install_path = f'/usr/lib/{browser.name_universal}'
-            try:
-                profile_root = _get_linux_path(browser)
-            except NotADirectoryError:
-                if browser.name_flatpak:
-                    try:
-                        profile_root = _get_flatpak_path(browser)
-                    except NotADirectoryError:
-                        profile_root = None
-                else:
-                    profile_root = None
-        else:
-            raise NotImplementedError('Unsupported platform')
-    except NotADirectoryError:
-        profile_root = None
+    roots_used = []
 
-    print(f"[DEBUG] Detected install_path: {install_path}")
-    print(f"[DEBUG] os.path.isdir(install_path): {os.path.isdir(install_path) if install_path else 'N/A'}")
-    print(f"[DEBUG] Detected profile_root: {profile_root}")
-    print(f"[DEBUG] os.path.isdir(profile_root): {os.path.isdir(profile_root) if profile_root else 'N/A'}")
+    if sys.platform == 'darwin':
+        install_path = f'/Applications/{browser.name_macos}.app/Contents/Resources'
+        try:
+            roots_used = [_get_macos_path(browser)]
+            profile_paths = get_profiles(roots_used[0])
+        except NotADirectoryError:
+            pass
+    elif IS_POSIX:
+        install_path = _find_unix_install(browser)
+        profile_paths, roots_used = _collect_unix_profiles(browser)
+    else:
+        raise NotImplementedError('Unsupported platform')
+
+    debug(f"Detected install_path: {install_path}")
+    debug(f"Detected profile roots: {roots_used}")
+    debug(f"Detected profiles: {profile_paths}")
 
     if not install_path or not os.path.isdir(install_path):
         if sys.platform == 'darwin':
             os_specific_instructions = "On macOS, this would be /path/to/Browser.app/Contents/Resources."
         else:
-            os_specific_instructions = "On Linux, this would be the folder the browser's binary is located in."
+            os_specific_instructions = f"On {sys.platform.rstrip('0123456789').capitalize()}, this would be the folder the browser's binary is located in."
 
         install_path = prompt_for_path(
             f"Could not detect install location for {browser.name}. Please enter the browser's install location.\n{os_specific_instructions}"
         )
-        print(f"[DEBUG] User provided install_path: {install_path}")
-        print(f"[DEBUG] os.path.isdir(install_path): {os.path.isdir(install_path)}")
+        debug(f"User provided install_path: {install_path}")
 
-    if not profile_root or not os.path.isdir(profile_root):
-        profile_root = prompt_for_path(f"Could not detect profiles directory for {browser.name}.")
-        print(f"[DEBUG] User provided profile_root: {profile_root}")
-        print(f"[DEBUG] os.path.isdir(profile_root): {os.path.isdir(profile_root)}")
-
-    # Get profiles
-    profile_paths = get_profiles(profile_root)
     if not profile_paths:
-        print(f"No profiles found in {profile_root}.")
+        print(f"No profiles found for {browser.name}.")
 
         if sys.platform == 'darwin':
             os_specific_instructions = "On macOS, this would usually be /Users/user/Library/Application Support/Browser/Profiles."
         else:
-            os_specific_instructions = "On Linux, this would be the parent folder to your profile folders (e.g. /home/user/.browser)."
+            os_specific_instructions = (
+                "This is the folder containing your profile folders and profiles.ini,\n"
+                "e.g. ~/.config/mozilla/firefox or ~/.mozilla/firefox."
+            )
 
-        profile_root = prompt_for_path(
-            f"Please enter a valid profile directory for {browser.name}.\n{os_specific_instructions}"
-        )
-        print(f"[DEBUG] User provided profile_root (no profiles): {profile_root}")
-        print(f"[DEBUG] os.path.isdir(profile_root): {os.path.isdir(profile_root)}")
-        profile_paths = get_profiles(profile_root)
+        while not profile_paths:
+            profile_root = prompt_for_path(
+                f"Please enter a valid profile directory for {browser.name}.\n{os_specific_instructions}"
+            )
+            debug(f"User provided profile_root: {profile_root}")
+            if os.path.isdir(profile_root):
+                profile_paths = get_profiles(profile_root)
+            if not profile_paths:
+                print(f"No profiles found in {profile_root}.")
 
     return install_path, profile_paths
+
+def _chown_tree(path, uid, gid):
+    os.chown(path, uid, gid)
+    for root, dirs, files in os.walk(path):
+        for name in dirs + files:
+            try:
+                os.chown(os.path.join(root, name), uid, gid, follow_symlinks=False)
+            except OSError:
+                pass
 
 def main():
     print('Welcome to the Natsumi installer! >w<')
@@ -302,16 +398,6 @@ def main():
 
     version_to_install = installable_versions[choice]
 
-    # For Flatpak, we may need to check if the user is running as root
-    needs_sudo = False
-    if browser.name_flatpak and '.var/app' in profile:
-        # Check install location
-        if os.path.isdir(f'/var/lib/flatpak/app/{browser.name_flatpak}'):
-            needs_sudo = True
-    elif sys.platform.startswith('linux'):
-        # Check install location
-        needs_sudo = True
-
     # Create temporary directory
     current_dir = os.getcwd()
     if not os.path.exists(f'{current_dir}/.natsumi-installer'):
@@ -321,6 +407,13 @@ def main():
     fx_autoconfig_installed = False
     if os.path.isfile(f'{install_path}/config.js') and os.path.isdir(f'{install_path}/defaults'):
         fx_autoconfig_installed = True
+
+    # Writing into the browser's install directory needs elevated permissions only if we can't write there.
+    # (Works the same on Linux, FreeBSD, macOS and for user-owned installs like Flatpak.)
+    if not fx_autoconfig_installed and not os.access(install_path, os.W_OK) and not get_admin():
+        print(f'Administrator privileges are required to install fx-autoconfig to {install_path}.')
+        print('Please run the installer again using sudo/doas.')
+        sys.exit(1)
 
     if not os.path.exists(f'{profile}/chrome'):
         os.mkdir(f'{profile}/chrome')
@@ -341,10 +434,6 @@ def main():
         sys.exit(1)
 
     if not fx_autoconfig_installed:
-        if needs_sudo and not get_admin():
-            print('Sudo/administrator is required to install Natsumi to this browser.')
-            sys.exit(1)
-
         print('Installing fx-autoconfig...')
         try:
             download_from_git('greeeen-dev/fx-autoconfig', 'master', 'fx-autoconfig')
@@ -369,9 +458,8 @@ def main():
             profile_root = f'{profile}/..'
             if sys.platform == 'darwin':
                 # We need to copy this to ~/.librewolf for some odd reason?
-                home_directory = os.getenv("HOME")
-                os.makedirs(f'{home_directory}/.librewolf', exist_ok=True)
-                profile_root = f'{home_directory}/.librewolf'
+                os.makedirs(f'{home}/.librewolf', exist_ok=True)
+                profile_root = f'{home}/.librewolf'
 
             shutil.copyfile('.natsumi-installer/fx-autoconfig/program/config.js', f'{profile_root}/librewolf.overrides.cfg')
             shutil.copy('.natsumi-installer/fx-autoconfig/program/defaults/pref/config-prefs-librewolf.js', f'{install_path}/defaults/pref/config-prefs.js')
@@ -431,15 +519,19 @@ def main():
             file.write('\n'.join(chrome_manifest))
 
     if get_admin():
+        # Hand the chrome folder back to whoever owns the profile (works with sudo, doas, su...)
         print('Fixing permissions...')
-        os.system(f'chown -R {os.environ["SUDO_USER"]} "{profile}/chrome"')
+        profile_stat = os.stat(profile)
+        _chown_tree(f'{profile}/chrome', profile_stat.st_uid, profile_stat.st_gid)
 
     print('Natsumi installed successfully! ^w^')
 
 if __name__ == '__main__':
     should_prompt_exit = True
     if sys.platform == 'win32':
-        print('This installer only works for macOS and Linux. Please use the Windows installer instead.')
+        print('This installer only works for Unix and Unix-like operating systems. Please use the Windows installer instead.')
+    elif not (sys.platform == 'darwin' or IS_POSIX):
+        print(f'Unsupported platform: {sys.platform}')
     else:
         try:
             main()
