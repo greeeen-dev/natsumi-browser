@@ -825,7 +825,7 @@ SOFTWARE.
       max-width: var(--tab-collapsed-background-width) !important;
     }
 
-    @media not -moz-pref("sidebar.verticalTabs") {
+    @media (not -moz-pref("sidebar.verticalTabs")) and (not -moz-pref("natsumi.miniplayer.disabled")) {
       display: flex !important;
       margin: 0 6px !important;
       flex-align: row !important;
